@@ -92,4 +92,9 @@ struct flickcurl_s {
 
   flickcurl_tag_handler tag_handler;
   void* tag_data;
+
+  /* licenses returned by flickr.photos.licenses.getInfo 
+   * as initialised by flickcurl_read_licenses() 
+   */
+  flickcurl_license** licenses;
 };
