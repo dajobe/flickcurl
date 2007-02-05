@@ -38,8 +38,11 @@
 #include <flickcurl_internal.h>
 
 
-
+#if 0
 #undef OFFLINE
+#else
+#define OFFLINE 1
+#endif
 
 
 /* Debugging only */
@@ -433,22 +436,18 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   flickcurl_photo* photo=NULL;
   int i;
   
-  if(!fc->auth_token) {
-    flickcurl_error(fc, "No auth_token for method flickr.photos.getInfo");
-    return NULL;
-  }
-
-
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
 
-  parameters[count][0]  = "token";
-  parameters[count++][1]= fc->auth_token;
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
 
   parameters[count][0]  = NULL;
 
-
-  flickcurl_set_sig_key(fc, "api_sig");
+  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.photos.getInfo", parameters, count))
     goto tidy;
@@ -532,6 +531,9 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
       case VALUE_TYPE_FLOAT:
       case VALUE_TYPE_URI:
         break;
+
+      case VALUE_TYPE_PERSON_ID:
+        abort();
     }
 
     photo->fields[field].string = string_value;
@@ -617,4 +619,413 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
     doc=NULL;
 
   return photo;
+}
+
+
+static int compare_licenses(const void *a, const void *b)
+{
+  flickcurl_license* l_a=*(flickcurl_license**)a;
+  flickcurl_license* l_b=*(flickcurl_license**)b;
+  return l_a->id - l_b->id;
+}
+
+
+static void flickcurl_read_licenses(flickcurl *fc)
+{
+  const char * parameters[10][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  xmlXPathObjectPtr xpathObj=NULL;
+  xmlNodeSetPtr nodes;
+  const xmlChar* xpathExpr=NULL;
+  int i;
+  int size;
+  
+  /* does not require authentication */
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.photos.licenses.getInfo", parameters, count))
+    goto tidy;
+
+#ifdef OFFLINE
+  flickcurl_debug_set_uri(fc, "file:photos_licenses_getInfo.xml");
+#endif
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  xpathExpr=(const xmlChar*)"/rsp/licenses/license";
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed=1;
+    goto tidy;
+  }
+
+  nodes=xpathObj->nodesetval;
+  size=xmlXPathNodeSetGetLength(nodes);
+  fc->licenses=(flickcurl_license**)calloc(1+size, sizeof(flickcurl_license*));
+
+  for(i=0; i < size; i++) {
+    xmlNodePtr node=nodes->nodeTab[i];
+    xmlAttr* attr;
+    flickcurl_license* l;
+    
+    if(node->type != XML_ELEMENT_NODE) {
+      flickcurl_error(fc, "Got unexpected node type %d", node->type);
+      fc->failed=1;
+      break;
+    }
+    
+    l=(flickcurl_license*)calloc(sizeof(flickcurl_license), 1);
+
+    for(attr=node->properties; attr; attr=attr->next) {
+      const char *attr_name=(const char*)attr->name;
+      char *attr_value;
+      
+      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      strcpy(attr_value, (const char*)attr->children->content);
+      
+      if(!strcmp(attr_name, "id"))
+        l->id=atoi(attr_value);
+      else if(!strcmp(attr_name, "name"))
+        l->name=attr_value;
+      else if(!strcmp(attr_name, "url")) {
+        if(strlen(attr_value))
+          l->url=attr_value;
+        else
+          free(attr_value);
+      }
+    }
+    
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "license: id %d name '%s' url %s\n",
+            l->id, l->name, (l->url ? l->url : "(none)"));
+#endif
+    
+    fc->licenses[i]=l;
+  } /* for nodes */
+
+  qsort(fc->licenses, size, sizeof(flickcurl_license*), compare_licenses);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
+}
+
+
+flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc)
+{
+  if(!fc->licenses)
+    flickcurl_read_licenses(fc);
+  
+  return fc->licenses;
+}
+
+
+flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id)
+{
+  int i;
+  
+  if(!fc->licenses)
+    flickcurl_read_licenses(fc);
+  if(!fc->licenses)
+    return NULL;
+  
+  for(i=0; fc->licenses[i]; i++) {
+    if(fc->licenses[i]->id == id)
+      return fc->licenses[i];
+    
+    if(fc->licenses[i]->id > id)
+      break;
+  }
+  return NULL;
+}
+
+
+static const char* flickcurl_person_field_label[PERSON_FIELD_LAST+1]={
+  "(none)",
+  "isadmin",
+  "ispro",
+  "iconserver",
+  "iconfarm",
+  "username",
+  "realname",
+  "mbox_sha1sum",
+  "location",
+  "photosurl",
+  "profileurl",
+  "mobileurl",
+  "photos_firstdate",
+  "photos_firstdatetaken",
+  "photos_count",
+};
+
+
+const char*
+flickcurl_get_person_field_label(flickcurl_person_field field)
+{
+  if(field <= PERSON_FIELD_LAST)
+    return flickcurl_person_field_label[(int)field];
+  return NULL;
+}
+
+
+static struct {
+  const xmlChar* xpath;
+  flickcurl_person_field field;
+  flickcurl_field_value_type type;
+} person_fields_table[PHOTO_FIELD_LAST + 3]={
+  {
+    (const xmlChar*)"/rsp/person/@nsid",
+    PHOTO_FIELD_none,
+    VALUE_TYPE_PERSON_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@isadmin",
+    PERSON_FIELD_isadmin,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@ispro",
+    PERSON_FIELD_ispro,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@iconserver",
+    PERSON_FIELD_iconserver,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@iconfarm",
+    PERSON_FIELD_iconfarm,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/username",
+    PERSON_FIELD_username,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/realname",
+    PERSON_FIELD_realname,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/mbox_sha1sum",
+    PERSON_FIELD_mbox_sha1sum,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/location",
+    PERSON_FIELD_location,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photosurl",
+    PERSON_FIELD_photosurl,
+    VALUE_TYPE_URI
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/profileurl",
+    PERSON_FIELD_profileurl,
+    VALUE_TYPE_URI
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/mobileurl",
+    PERSON_FIELD_mobileurl,
+    VALUE_TYPE_URI
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photos/firstdate",
+    PERSON_FIELD_photos_firstdate,
+    VALUE_TYPE_UNIXTIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photos/firstdatetaken",
+    PERSON_FIELD_photos_firstdatetaken,
+    VALUE_TYPE_DATETIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photos/count",
+    PERSON_FIELD_photos_count,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  { 
+    NULL,
+    0,
+    0
+  }
+};
+
+
+/* Get information about a person */
+flickcurl_person*
+flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
+{
+  const char * parameters[10][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  int expri;
+  xmlXPathObjectPtr xpathObj=NULL;
+  flickcurl_person* person=NULL;
+  
+  if(!fc->auth_token) {
+    flickcurl_error(fc, "No auth_token for method flickr.people.getInfo");
+    return NULL;
+  }
+
+
+  parameters[count][0]  = "user_id";
+  parameters[count++][1]= user_id;
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.people.getInfo", parameters, count))
+    goto tidy;
+
+#ifdef OFFLINE
+  flickcurl_debug_set_uri(fc, "file:people_getInfo.xml");
+#endif
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  person=(flickcurl_person*)calloc(sizeof(flickcurl_person), 1);
+  
+  for(expri=0; person_fields_table[expri].xpath; expri++) {
+    char *string_value=flickcurl_xpath_eval(fc, xpathCtx, 
+                                            person_fields_table[expri].xpath);
+    flickcurl_field_value_type datatype=person_fields_table[expri].type;
+    int int_value= -1;
+    flickcurl_person_field field=person_fields_table[expri].field;
+    time_t unix_time;
+    
+    if(!string_value) {
+      person->fields[field].string = NULL;
+      person->fields[field].integer= -1;
+      person->fields[field].type   = VALUE_TYPE_NONE;
+      continue;
+    }
+
+    switch(datatype) {
+      case VALUE_TYPE_PERSON_ID:
+        person->nsid=string_value;
+        string_value=NULL;
+        datatype=VALUE_TYPE_NONE;
+        break;
+
+      case VALUE_TYPE_UNIXTIME:
+      case VALUE_TYPE_DATETIME:
+      
+        if(datatype == VALUE_TYPE_UNIXTIME)
+          unix_time=atoi(string_value);
+        else
+          unix_time=curl_getdate((const char*)string_value, NULL);
+        
+        if(unix_time >= 0) {
+          char* new_value=flickcurl_unixtime_to_isotime(unix_time);
+#if FLICKCURL_DEBUG > 1
+          fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
+                  value, (long)unix_time, new_value);
+#endif
+          free(string_value);
+          string_value= new_value;
+          int_value= unix_time;
+          datatype=VALUE_TYPE_DATETIME;
+        } else
+          /* failed to convert, make it a string */
+          datatype=VALUE_TYPE_STRING;
+        break;
+        
+      case VALUE_TYPE_INTEGER:
+      case VALUE_TYPE_BOOLEAN:
+        int_value=atoi(string_value);
+        break;
+        
+      case VALUE_TYPE_NONE:
+      case VALUE_TYPE_STRING:
+      case VALUE_TYPE_FLOAT:
+      case VALUE_TYPE_URI:
+        break;
+
+      case VALUE_TYPE_PHOTO_ID:
+      case VALUE_TYPE_PHOTO_URI:
+        abort();
+    }
+
+    person->fields[field].string = string_value;
+    person->fields[field].integer= int_value;
+    person->fields[field].type   = datatype;
+
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "field %d with %s value: '%s' / %d\n",
+            field, flickcurl_field_value_type_label[datatype], 
+            string_value, int_value);
+#endif
+      
+    if(fc->failed)
+      goto tidy;
+  }
+
+
+ tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
+  
+  if(fc->failed)
+    doc=NULL;
+
+  return person;
 }
