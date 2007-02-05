@@ -243,6 +243,11 @@ cached from the server once only.</p>
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 </pre>
 
+<p><a href="http://www.flickr.com/services/api/flickr.urls.lookupUser.html"><strong>flickr.urls.lookupUser</strong></a> - get a user NSID given an url to a user's profile/photo page. (0.6)</p>
+<pre>
+char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
+</pre>
+
 
 <h2>Library use example</h2>
 
