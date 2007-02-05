@@ -423,6 +423,17 @@ triplr(FILE* fh, flickcurl* fc, const char* photo_id)
                 field_table[f].nspace_uri, field_table[f].name);
 
       object=photo->fields[field].string;
+
+      if(field == PHOTO_FIELD_license) {
+        flickcurl_license* license;
+        license=flickcurl_photos_licenses_getInfo_by_id(fc, 
+                                                        photo->fields[field].integer);
+        if(license) {
+          datatype=VALUE_TYPE_URI;
+          object=license->url;
+        }
+      }
+      
       switch(datatype) {
         case VALUE_TYPE_BOOLEAN:
           datatype_uri= XSD_NS "boolean";
@@ -451,6 +462,7 @@ triplr(FILE* fh, flickcurl* fc, const char* photo_id)
         case VALUE_TYPE_PHOTO_ID:
         case VALUE_TYPE_PHOTO_URI:
         case VALUE_TYPE_UNIXTIME:
+        case VALUE_TYPE_PERSON_ID:
         default:
           break;
       }
