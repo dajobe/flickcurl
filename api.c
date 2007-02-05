@@ -38,7 +38,7 @@
 #include <flickcurl_internal.h>
 
 
-#if 0
+#if 1
 #undef OFFLINE
 #else
 #define OFFLINE 1
