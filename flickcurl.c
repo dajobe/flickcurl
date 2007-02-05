@@ -190,6 +190,20 @@ flickcurl_free(flickcurl *fc)
   if(fc->error_msg)
     free(fc->error_msg);
 
+  if(fc->licenses) {
+    int i;
+    flickcurl_license *license;
+    
+    for(i=0; (license=fc->licenses[i]); i++) {
+      free(license->name);
+      if(license->url)
+        free(license->url);
+      free(license);
+    }
+    
+    free(fc->licenses);
+  }
+  
   free(fc);
 }
 
@@ -512,7 +526,8 @@ flickcurl_invoke(flickcurl *fc)
     xmlParseChunk(fc->xc, NULL, 0, 1);
 
 #ifdef FLICKCURL_DEBUG
-    fprintf(stderr, "Got %d bytes for uri '%s'\n", fc->total_bytes, fc->uri);
+    fprintf(stderr, "Got %d bytes content from URI '%s'\n",
+            fc->total_bytes, fc->uri);
 #endif
 
     doc=fc->xc->myDoc;
@@ -520,10 +535,6 @@ flickcurl_invoke(flickcurl *fc)
       flickcurl_error(fc, "Failed to create XML DOM for document");
       fc->failed=1;
     }
-
-#ifdef FLICKCURL_DEBUG
-    fprintf(stderr, "Got XML DOM for uri '%s'\n", fc->uri);
-#endif
 
     xnp = xmlDocGetRootElement(doc);
     for(attr=xnp->properties; attr; attr=attr->next) {
@@ -592,6 +603,22 @@ flickcurl_free_photo(flickcurl_photo *photo)
     free(photo->uri);
   
   free(photo);
+}
+
+
+void
+flickcurl_free_person(flickcurl_person *person)
+{
+  int i;
+  for(i=0; i <= PERSON_FIELD_LAST; i++) {
+    if(person->fields[i].string)
+      free(person->fields[i].string);
+  }
+  
+  if(person->nsid)
+    free(person->nsid);
+  
+  free(person);
 }
 
 
