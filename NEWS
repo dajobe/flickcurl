@@ -1,21 +1,27 @@
-0.4 flickcurl
-- added triplr
-- released it to the world!
+Flickcurl News
 
-0.3 flickcurl
+2007-02-04  flickcurl 0.5
+- added optional support for using Raptor (http://librdf.org/raptor)
+  for more accurate and prettier serializing triples in triplr
+- released to the world!
+
+2007-02-03  flickcurl 0.4
+- added triplr
+
+2007-02-01  flickcurl 0.3
 - Renamed all symbols to be flickcurl_*
 - Added flickcurl_photo_as_source_uri() to get the image file URLs
   for a photo ID.
 - Config file is now ~/.flickcurl.conf
 - Packaging and licensing
 
-0.2 flickcurl
+2007-01-24  flickcurl 0.2
 - Refactored to have separate flickcurl* object
 - Methods: flickcurl_test_echo, flickcurl_auth_getFullToken,
   flickcurl_photos_getInfo
 - Test program has commands table and help, authentication
 
-0.1 flickcurl
+2007-01-21  flickcurl 0.1
 - First version
 
 

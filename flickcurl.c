@@ -559,7 +559,7 @@ flickcurl_invoke(flickcurl *fc)
 
 
 void
-free_flickcurl_tag(flickcurl_tag *t)
+flickcurl_free_tag(flickcurl_tag *t)
 {
   if(t->id)
     free(t->id);
@@ -574,7 +574,7 @@ free_flickcurl_tag(flickcurl_tag *t)
 
 
 void
-free_flickcurl_photo(flickcurl_photo *photo)
+flickcurl_free_photo(flickcurl_photo *photo)
 {
   int i;
   for(i=0; i <= PHOTO_FIELD_LAST; i++) {
@@ -583,7 +583,7 @@ free_flickcurl_photo(flickcurl_photo *photo)
   }
   
   for(i=0; i < photo->tags_count; i++)
-    free_flickcurl_tag(photo->tags[i]);
+    flickcurl_free_tag(photo->tags[i]);
 
   if(photo->id)
     free(photo->id);

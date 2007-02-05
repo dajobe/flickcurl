@@ -200,7 +200,7 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
               i, (tag->machine_tag ? "machine" : "regular"),
               tag->id, tag->author, tag->raw, tag->cooked);
     }
-    free_flickcurl_photo(photo);
+    flickcurl_free_photo(photo);
   }
   
   return (photo != NULL);

@@ -36,7 +36,12 @@ triplr_SOURCES = triplr.c
 if GETOPT
 triplr_SOURCES += getopt.c flickcurl_getopt.h
 endif
+triplr_CFLAGS=
 triplr_LDADD= libflickcurl.la
+if RAPTOR
+triplr_CFLAGS += @RAPTOR_CFLAGS@
+triplr_LDADD += @RAPTOR_LIBS@
+endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = flickcurl.pc
@@ -47,7 +52,8 @@ README.html README NEWS AUTHORS \
 LICENSE.html LICENSE-2.0.txt NOTICE \
 autogen.sh \
 flickcurl-config.in flickcurl.pc.in \
-flickcurl.rdf.in
+flickcurl.rdf.in \
+example.c
 
 
 # Create some text files from HTML sources

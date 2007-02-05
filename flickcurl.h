@@ -156,8 +156,8 @@ flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
-void free_flickcurl_tag(flickcurl_tag *t);
-void free_flickcurl_photo(flickcurl_photo *photo);
+void flickcurl_free_tag(flickcurl_tag *t);
+void flickcurl_free_photo(flickcurl_photo *photo);
 
 
 

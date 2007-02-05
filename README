@@ -1,26 +1,34 @@
 
-             Flickcurl: A C library for the Flickr Web Service API
+              Flickcurl: C library for the Flickr Web Service API
 
 [1]Dave Beckett
 
-   Flickcurl is a library for calling the core Flickr web service API,
+   Flickcurl is a library for calling the [2]Flickr web service API,
    handling the API signing and the token management plus providing
-   wrappers for a few APIs that I needed to use to get information out of
-   photo machine tags.
+   wrappers for some of the APIs. It uses [3]libcurl to call the [4]REST
+   web service and [5]libxml2
+   to manipulate the XML responses. The current version provides just a
+   few wrappers for reading photo description, sufficient for me to get
+   at the photo information and the machine tags.
 
-   License: LGPL/GPL/Apache 2.0
+   License: LGPL 2.1 / GPL 2 /Apache 2.0
 
    It requires the following libraries to build it:
-     * [2]libcurl
-     * [3]libxml2
+     * [6]libcurl
+     * [7]libxml2 2.6.8 or newer
+     * [8]raptor 1.4.0 (optional), 1.4.14 recommended
 
-   The do the usual ./configure, make and make install sequence to
+   Then do the usual ./configure, make and make install sequence to
    install the library and the flickcurl and triplr utilities.
 
 Flickr API Configuration
 
-   The ~/.flickcurl.conf file should contain the Flickr authentication
-   details in the form:
+   The library needs to know your Flickr API application key,
+   authentication token and shared secret, suitable for calling some of
+   the API calls. To obtain these, you need to [9]apply for API keys at
+   the Flickr Services site. When using the utility programs, this
+   information should be stored in the ~/.flickcurl.conf file so that it
+   can be read at run-time. The configuration file has the format:
 [flickr]
 auth_token=1234567-8901234567890123
 api_key=0123456789abcdef0123456789abcdef
@@ -28,77 +36,184 @@ secret=fedcba9876543210
 
 Utility programs
 
-     * flickcurl - which can call the web service sAPIs plus help turn
-       frobs into auth_tokens and writing the ~/.flickcurl.conf file.
-Flickr API utility 0.4
-Call the Flickr API to get information.
-Usage: flickcurl [OPTIONS] command args...
+  flickcurl - call Flickr web services
 
-Copyright (C) 2007 David Beckett - http://purl.org/net/dajobe/
-License: LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.
-See http://flickcurl.sf.net/LICENSE.html for full terms.
-Flickcurl home page: http://flickcurl.sf.net/
+   This can call some of the web service APIs plus help with
+   authentication by turning [10]mobile authentication method frobs into
+   full auth_tokens with -a NNN-NNN-NNN and writing the ~/.flickcurl.conf
+   file. Use flickcurl -h to get a list of the supported commands and
+   their arguments.
 
-  -h, --help              Print this help, then exit
-  -v, --version           Print the flickcurl version
+   This example calls the [11]photos.getInfo API via the photos-getInfo
+   command on photo 123456789 which decodes the returned XML into fields
+   in a flickcurl_photo structure which are then printed with their
+   datatype, string value and integer value (or -1 if it has none). All
+   dateTime values are converted into both the ISO format string (such as
+   used by Web and XML standards) and unix time integers. Photo tags are
+   also returned when present along with their id, author, raw, cooked
+   and machine tag status.
+$ flickcurl photos-getInfo 196308964
+Found photo with URI http://www.flickr.com/photos/dajobe/196308964/ ID 19630896
+4 and 5 tags
+field dateuploaded (1) with dateTime value: '2006-07-23T18:16:13Z' / 1153678573
+field farm (2) with integer value: '1' / 1
+field isfavorite (3) with boolean value: '0' / 0
+field license (4) with integer value: '1' / 1
+field originalformat (5) with string value: 'jpg' / -1
+field rotation (6) with integer value: '0' / 0
+field server (7) with integer value: '57' / 57
+field dates_lastupdate (8) with dateTime value: '2006-07-23T18:16:14Z' / 115367
+8574
+field dates_posted (9) with dateTime value: '2006-07-23T18:16:13Z' / 1153678573
+field dates_taken (10) with dateTime value: '2006-07-23T05:28:50Z' / 1153632530
+field dates_takengranularity (11) with integer value: '0' / 0
+field editability_canaddmeta (13) with boolean value: '0' / 0
+field editability_cancomment (14) with boolean value: '0' / 0
+field geoperms_iscontact (15) with boolean value: '0' / 0
+field geoperms_isfamily (16) with boolean value: '0' / 0
+field geoperms_isfriend (17) with boolean value: '0' / 0
+field geoperms_ispublic (18) with boolean value: '1' / 1
+field location_accuracy (19) with integer value: '12' / 12
+field location_latitude (20) with float value: '36.620487' / -1
+field location_longitude (21) with float value: '-121.904468' / -1
+field owner_location (22) with string value: 'near Sunnyvale, California, USA'
+/ -1
+field owner_nsid (23) with string value: '13355580@N00' / -1
+field owner_realname (24) with string value: 'Dave Beckett' / -1
+field owner_username (25) with string value: 'dajobe' / -1
+field title (26) with string value: 'Jellyfish at Monterey Aquarium' / -1
+field visibility_isfamily (27) with boolean value: '0' / 0
+field visibility_isfriend (28) with boolean value: '0' / 0
+field visibility_ispublic (29) with boolean value: '1' / 1
+field secret (30) with string value: 'b34cb0af68' / -1
+field originalsecret (31) with string value: 'b34cb0af68' / -1
+0) regular tag: id 94493-196308964-3362 author 13355580@N00 raw 'jellyfish' coo
+ked 'jellyfish'
+1) regular tag: id 94493-196308964-119180 author 13355580@N00 raw 'montereyaqua
+rium' cooked 'montereyaquarium'
+2) regular tag: id 94493-196308964-2443 author 13355580@N00 raw 'monterey' cook
+ed 'monterey'
+3) machine tag: id 94493-196308964-222222222222 author 13355580@N00 raw 'xmlns:
+dc=foo' cooked 'xmlnsdcfoo'
+4) machine tag: id 94493-196308964-222222929222 author 13355580@N00 raw 'dc:sub
+ject=jellyfish' cooked 'jellyfish'
 
-Commands
-  test-echo             Test echo - KEY VALUE
-  photos-getInfo        Get information about a photo - PHOTO-ID
-     * triplr - generate RDF triples from a Flickr photo
-Triplr - triples from flickrs 0.4
-Get Triples from Flickr photos.
-Usage: triplr [OPTIONS] FLICKR-PHOTO-URI
+  triplr - generate RDF triples from a Flickr photo
 
-Copyright (C) 2007 David Beckett - http://purl.org/net/dajobe/
-License: LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.
-See http://flickcurl.sf.net/LICENSE.html for full terms.
-Flickcurl home page: http://flickcurl.sf.net/
+   This utility uses the photos.getInfo API to interpret the description
+   fields and the tags for a photo URI into RDF triples. If [12]raptor is
+   present, it will be used to provide proper serializing to RDF rather
+   than the built in and hacky ntriples/turtle output.
 
-  -d, --debug             Print lots of output
-  -h, --help              Print this help, then exit
-  -o, --output FORMAT     Choose output format 'ntriples' or 'turtle'
-  -v, --version           Print the flickcurl version
+   Machine tags when they are found are scanned for xmlns:prefix=uri and
+   then all other machine tags with that prefix turn into triples.
+   Several prefixes are also pre-defined by the library to automatically
+   get turned into triples without an xmlns, such as blue:, cell:,
+   filter: and geo:. Non-machine tags are not yet interpreted.
+$ triplr http://www.flickr.com/photos/dajobe/196308964/
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/creator> _:person .
+_:person <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>
+<http://xmlns.com/foaf/0.1/#Person> .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/date>
+"2006-07-23T18:16:13Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/rights>
+"1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/date>
+"2007-01-24T21:07:18Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/date>
+"2006-07-23T18:16:13Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/date>
+"2006-07-23T05:28:50Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://www.w3.org/2003/01/geo/wgs84_pos#lat>
+"36.620487"^^<http://www.w3.org/2001/XMLSchema#double> .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://www.w3.org/2003/01/geo/wgs84_pos#long>
+"-121.904468"^^<http://www.w3.org/2001/XMLSchema#double> .
+_:person <http://xmlns.com/foaf/0.1/#name> "Dave Beckett" .
+_:person <http://xmlns.com/foaf/0.1/#nick> "dajobe" .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/title> "Jellyfish at Monterey Aquarium" .
+<http://www.flickr.com/photos/dajobe/196308964/>
+<http://purl.org/dc/elements/1.1/subject> "jellyfish" .
 
-API calls supported
+   If you have raptor installed, you can get nicer RDF triples out and
+   with rapper 1.4.14+, pretty-printed turtle:
+$ triplr -o turtle http://www.flickr.com/photos/dajobe/196308964/
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix blue: <x-urn:blue:#> .
+@prefix cell: <http://www.machinetags.org/wiki/Cell#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix filtr: <x-urn:filtr:> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/#> .
+@prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> .
 
-   auth.getFullToken - turn a frob into an auth_token
+<http://www.flickr.com/photos/dajobe/196308964/>
+    dc:creator [
+        a foaf:Person;
+        foaf:name "Dave Beckett";
+        foaf:nick "dajobe"
+    ];
+    dc:date "2006-07-23T18:16:13Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>
+;
+    dc:rights 1;
+    dc:date "2006-07-23T18:16:14Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>
+, "2006-07-23T18:16:13Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>, "2006-07
+-23T05:28:50Z"^^<http://www.w3.org/2001/XMLSchema#dateTime>;
+    geo:lat 3.6620487E1;
+    geo:long -1.21904468E2;
+    dc:title "Jellyfish at Monterey Aquarium";
+    dc:subject "jellyfish" .
+
+API methods supported
+
+   [13]flickr.auth.getFullToken - turn a [14]mobile authentication method
+   frob of the format NNN-NNN-NNN into full authentication tokens.
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 
-   flickr.photos.getInfo - get information about a photo
+   [15]flickr.photos.getInfo - get information about a photo.
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 
-   flickr.test.echo - echo what is sent
+   [16]flickr.test.echo - echo what is sent.
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
 Library use example
 
+   example.c
+#include <stdio.h>
+#include <flickcurl.h>
+
+int main() {
   flickcurl *fc;
+  flickcurl_photo *photo;
+  flickcurl_photo_field field;
+  int i;
 
   fc=flickcurl_new();
 
+  /* Set configuration, or more likely read from a config file */
   flickcurl_set_api_key(fc, "...");
   flickcurl_set_shared_secret(fc, "...");
   flickcurl_set_auth_token(fc, "...");
 
-  /* or more likely, read some of the above from a config file */
+  photo=flickcurl_photos_getInfo(fc, "123456789"); /* photo ID */
 
-  photo=flickcurl_photos_getInfo(fc, "photo-id");
-
-  flickcurl_photo_field field;
   for(field=0; field <= PHOTO_FIELD_LAST; field++) {
     flickcurl_field_value_type datatype=photo->fields[field].type;
 
-    if(datatype == VALUE_TYPE_NONE)
-      continue;
-
-    fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n",
-            flickcurl_get_photo_field_label(field), field,
-            flickcurl_get_field_value_type_label(datatype),
-            photo->fields[field].string, photo->fields[field].integer);
+    if(datatype != VALUE_TYPE_NONE)
+      fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n",
+              flickcurl_get_photo_field_label(field), field,
+              flickcurl_get_field_value_type_label(datatype),
+              photo->fields[field].string, photo->fields[field].integer);
   }
 
-  int i;
   for(i=0; i < photo->tags_count; i++) {
     flickcurl_tag* tag=photo->tags[i];
     fprintf(stderr, "%d) %s tag: id %s author %s raw '%s' cooked '%s'\n",
@@ -106,16 +221,30 @@ Library use example
             tag->id, tag->author, tag->raw, tag->cooked);
   }
 
-  free_flickcurl_photo(photo);
+  flickcurl_free_photo(photo);
 
   flickcurl_free(fc);
+}
      _________________________________________________________________
 
-   Copyright (C) 2007 [4]Dave Beckett
+   Copyright (C) 2007 [17]Dave Beckett
 
 References
 
    1. http://purl.org/net/dajobe/
-   2. http://curl.haxx.se/libcurl/
-   3. http://xmlsoft.org/
-   4. http://purl.org/net/dajobe/
+   2. http://www.flickr.com/services/api/
+   3. http://curl.haxx.se/libcurl/
+   4. http://www.flickr.com/services/api/request.rest.html
+   5. http://xmlsoft.org/
+   6. http://curl.haxx.se/libcurl/
+   7. http://xmlsoft.org/
+   8. http://librdf.org/raptor/
+   9. http://www.flickr.com/services/api/keys/apply/
+  10. http://www.flickr.com/services/api/auth.howto.mobile.html
+  11. http://www.flickr.com/services/api/flickr.photos.getInfo.html
+  12. http://librdf.org/raptor/
+  13. http://www.flickr.com/services/api/flickr.auth.getFullToken.html
+  14. http://www.flickr.com/services/api/auth.howto.mobile.html
+  15. http://www.flickr.com/services/api/flickr.photos.getInfo.html
+  16. http://www.flickr.com/services/api/flickr.test.echo.html
+  17. http://purl.org/net/dajobe/

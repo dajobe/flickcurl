@@ -2,7 +2,7 @@
 # Copyright (C) 2007 David Beckett http://purl.org/net/dajobe/
 
 AC_PREREQ(2.59)
-AC_INIT(flickcurl, 0.4, http://bugs.librdf.org/)
+AC_INIT(flickcurl, 0.5, http://bugs.librdf.org/)
 AC_CONFIG_SRCDIR([flickcurl.c])
 AC_CONFIG_HEADER([config.h])
 AC_REVISION($Revision: $)dnl
@@ -30,6 +30,7 @@ AC_PROG_LIBTOOL
 # Checks for libraries.
 
 libxml_min_version=2.6.8
+raptor_min_version=1.4.0
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -140,6 +141,56 @@ CPPFLAGS="`$CURL_CONFIG --cflags` $CPPFLAGS"
 LIBCURL_VERSION=`$CURL_CONFIG --version | sed -e 's/^libcurl *//'`
 
 
+AC_ARG_WITH(raptor-config, [  --with-raptor-config=PATH   Location of raptor raptor-config []], raptor_config="$withval", raptor_config="")
+
+if test "X$raptor_config" != "X" ; then
+  AC_MSG_CHECKING(for $raptor_config)
+
+  if test -f $raptor_config ; then
+    RAPTOR_CONFIG=$raptor_config
+    AC_MSG_RESULT(yes)
+  else
+    AC_MSG_RESULT(no - searching PATH)
+  fi
+fi
+if test "X$RAPTOR_CONFIG" = "X"; then
+  AC_CHECK_PROGS(RAPTOR_CONFIG, raptor-config)
+fi
+
+
+AC_ARG_WITH(raptor, [  --with-raptor    Use raptor to serialize (default=auto)], with_raptor="$withval", with_raptor="auto")
+
+RAPTOR_VERSION=
+if test "$with_raptor" != no; then
+  if test "X$RAPTOR_CONFIG" != "X"; then
+    RAPTOR_VERSION=`$RAPTOR_CONFIG --version 2>/dev/null`
+
+    # FIXME - could use raptor-config --decimal-version at some point
+    RAPTOR_VERSION_DEC=`echo $RAPTOR_VERSION | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+    RAPTOR_MIN_VERSION_DEC=`echo $raptor_min_version | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+
+    if test "X$RAPTOR_VERSION" -a $RAPTOR_VERSION_DEC -ge $RAPTOR_MIN_VERSION_DEC; then
+      with_raptor=yes
+    else
+      with_raptor=no
+    fi
+  fi
+fi
+
+AM_CONDITIONAL(RAPTOR, test $with_raptor = yes)
+AC_MSG_CHECKING(whether to use raptor)
+if test "$with_raptor" = yes; then
+  AC_MSG_RESULT(yes)
+  RAPTOR_LIBS="`$RAPTOR_CONFIG --libs`"
+  RAPTOR_CFLAGS="`$RAPTOR_CONFIG --cflags`"
+  AC_SUBST(RAPTOR_LIBS)
+  AC_SUBST(RAPTOR_CFLAGS)
+  AC_DEFINE(HAVE_RAPTOR, 1, [have raptor RDF parser library])
+else
+  AC_MSG_RESULT(no)
+fi
+
+
 dnl compiler checks
 
 AC_DEFUN([FLICKCURL_CC_TRY_FLAG], [
@@ -200,4 +251,5 @@ AC_MSG_RESULT([
 Flickcurl build summary:
   libxml  $LIBXML_VERSION
   curl    $LIBCURL_VERSION
+  raptor  $RAPTOR_VERSION
 ])
