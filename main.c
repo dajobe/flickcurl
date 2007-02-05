@@ -209,8 +209,8 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
     flickcurl_photo_field field;
     int i;
     
-    fprintf(stderr, "Found photo with URI %s ID %s and %d tags\n",
-            photo->uri, photo->id, photo->tags_count);
+    fprintf(stderr, "%s: Found photo with URI %s ID %s and %d tags\n",
+            program, photo->uri, photo->id, photo->tags_count);
 
     for(field=0; field <= PHOTO_FIELD_LAST; field++) {
       flickcurl_field_value_type datatype=photo->fields[field].type;
@@ -247,7 +247,7 @@ command_photos_licenses_getInfo(flickcurl* fc, int argc, char *argv[])
   licenses=flickcurl_photos_licenses_getInfo(fc);
   if(licenses) {
 
-    fprintf(stderr, "Found licenses\n");
+    fprintf(stderr, "%s: Found licenses\n", program);
 
     for(i=0; licenses[i]; i++) {
       flickcurl_license* license=licenses[i];
@@ -259,6 +259,22 @@ command_photos_licenses_getInfo(flickcurl* fc, int argc, char *argv[])
   }
   
   return (licenses != NULL);
+}
+
+
+static int
+command_urls_lookupUser(flickcurl* fc, int argc, char *argv[])
+{
+  char* nsid=NULL;
+  char* url=argv[1];
+  
+  nsid=flickcurl_urls_lookupUser(fc, url);
+
+  if(nsid)
+    fprintf(stderr, "%s: NSID %s for user profile/photo URL %s\n", 
+            program, nsid, url);
+  
+  return (nsid != NULL);
 }
 
 
@@ -279,6 +295,8 @@ static struct {
    command_photos_getInfo,  1, 1},
   {"photos-licenses-getInfo", "", "Get list of available photo licenses", 
    command_photos_licenses_getInfo,  0, 0},
+  {"urls-lookupUser", "URL", "Get a user NSID given the url to a user's photo", 
+   command_urls_lookupUser,  1, 1},
 
   {NULL, NULL, NULL, 0, 0}
 };  
