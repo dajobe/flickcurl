@@ -1029,3 +1029,46 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
 
   return person;
 }
+
+
+char*
+flickcurl_urls_lookupUser(flickcurl* fc, const char* url)
+{
+  const char * parameters[5][2];
+  int count=0;
+  char *nsid=NULL;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+
+  if(!url)
+    return NULL;
+  
+  parameters[count][0]  = "url";
+  parameters[count++][1]= url;
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.urls.lookupUser", parameters, count))
+    goto tidy;
+
+#ifdef OFFLINE
+  flickcurl_debug_set_uri(fc, "file:urls_lookupUser.xml");
+#endif
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(xpathCtx) {
+    nsid=flickcurl_xpath_eval(fc, xpathCtx,
+                              (const xmlChar*)"/rsp/user/@id");
+    xmlXPathFreeContext(xpathCtx);
+  }
+
+  tidy:
+
+  return nsid;
+}
