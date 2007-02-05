@@ -140,10 +140,24 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
   photo=flickcurl_photos_getInfo(fc, argv[1]);
 
   if(photo) {
+    flickcurl_photo_field field;
     int i;
     
     fprintf(stderr, "Found photo with URI %s ID %s and %d tags\n",
             photo->uri, photo->id, photo->tags_count);
+
+    for(field=0; field <= PHOTO_FIELD_LAST; field++) {
+      flickcurl_field_value_type datatype=photo->fields[field].type;
+
+      if(datatype == VALUE_TYPE_NONE)
+        continue;
+      
+      fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
+              flickcurl_get_photo_field_label(field), field,
+              flickcurl_get_field_value_type_label(datatype),
+              photo->fields[field].string, photo->fields[field].integer);
+    }
+    
 
     for(i=0; i < photo->tags_count; i++) {
       flickr_tag* tag=photo->tags[i];

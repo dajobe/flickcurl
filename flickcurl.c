@@ -649,8 +649,20 @@ void
 free_flickr_photo(flickr_photo *photo)
 {
   int i;
+  for(i=0; i <= PHOTO_FIELD_LAST; i++) {
+    if(photo->fields[i].string)
+      free(photo->fields[i].string);
+  }
+  
   for(i=0; i < photo->tags_count; i++)
     free_flickr_tag(photo->tags[i]);
+
+  if(photo->id)
+    free(photo->id);
+  
+  if(photo->uri)
+    free(photo->uri);
+  
   free(photo);
 }
 
@@ -730,28 +742,6 @@ flickcurl_debug_set_uri(flickcurl* fc, const char* uri)
  **********************************************************************
  */
 
-#if 0
-static struct {
-  const char* prefix;
-  const char* namespace_uri;
-} namespace_table[]={
-  { "a", "http://www.w3.org/2000/10/annotation-ns" },
-  { "acl", "http://www.w3.org/2001/02/acls#" },
-  { "dc", "http://purl.org/dc/elements/1.1/" },
-  { "dcterms", "http://purl.org/dc/terms/" },
-  { "exif", "http://nwalsh.com/rdf/exif#" },
-  { "exifi", "http://nwalsh.com/rdf/exif-intrinsic#" },
-  { "flickr", "x-urn:flickr:" },
-  { "foaf", "http://xmlns.com/foaf/0.1/#" },
-  { "geo", "http://www.w3.org/2003/01/geo/wgs84_pos#" },
-  { "i", "http://www.w3.org/2004/02/image-regions#" },
-  { "rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#" },
-  { "rdfs", "http://www.w3.org/2000/01/rdf-schema#" },
-  { "skos", "http://www.w3.org/2004/02/skos/core" }
-};
-#endif
-
-
 /* Flickr test echo */
 int
 flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
@@ -828,101 +818,266 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 }
 
 
-#define VALUE_TYPE_URI       0
-#define VALUE_TYPE_STRING    1
-#define VALUE_TYPE_UNIXTIME  2 /* convered to VALUE_TYPE_DATE_TIME */
-#define VALUE_TYPE_DATE_TIME 3
-#define VALUE_TYPE_PHOTO_ID   4 /* Photo's identifier */
-#define VALUE_TYPE_PHOTO_URI  5 /* Photo's page URI */
-
-static const char* match_type_label[]={
-  "uri",
-  "string",
-  "unix time",
-  "dateTime",
-  "photo id",
-  "photo URI"
+static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
+  "(none)",
+  "dateuploaded",
+  "farm",
+  "isfavorite",
+  "license",
+  "originalformat",
+  "rotation",
+  "server",
+  "dates_lastupdate",
+  "dates_posted",
+  "dates_taken",
+  "dates_takengranularity",
+  "description",
+  "editability_canaddmeta",
+  "editability_cancomment",
+  "geoperms_iscontact",
+  "geoperms_isfamily",
+  "geoperms_isfriend",
+  "geoperms_ispublic",
+  "location_accuracy",
+  "location_latitude",
+  "location_longitude",
+  "owner_location",
+  "owner_nsid",
+  "owner_realname",
+  "owner_username",
+  "title",
+  "visibility_isfamily",
+  "visibility_isfriend",
+  "visibility_ispublic"
 };
+
+
+const char*
+flickcurl_get_photo_field_label(flickcurl_photo_field field)
+{
+  if(field <= PHOTO_FIELD_LAST)
+    return flickcurl_photo_field_label[(int)field];
+  return NULL;
+}
+
+
+static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1]={
+  "(none)",
+  "photo id",
+  "photo URI",
+  "unix time",
+  "boolean",
+  "dateTime",
+  "float",
+  "integer",
+  "string",
+  "uri"
+};
+
+
+const char*
+flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
+{
+  if(datatype <= VALUE_TYPE_LAST)
+    return flickcurl_field_value_type_label[(int)datatype];
+  return NULL;
+}
 
 
 static struct {
   const xmlChar* xpath;
-  const char* predicate_uri;
-  int type;
-} match_table[]={
-  /* ID */
+  flickcurl_photo_field field;
+  flickcurl_field_value_type type;
+} photo_fields_table[PHOTO_FIELD_LAST + 3]={
   {
     (const xmlChar*)"/rsp/photo/@id",
-    NULL,
+    PHOTO_FIELD_none,
     VALUE_TYPE_PHOTO_ID,
   }
-,
-  /* photopage */
+  ,
   {
     (const xmlChar*)"/rsp/photo/urls/url[@type=\"photopage\"]",
-    "flickr:photopage",
-    VALUE_TYPE_PHOTO_URI,
+    PHOTO_FIELD_none,
+    VALUE_TYPE_PHOTO_URI
   }
-,
-  /* Owner name */
+  ,
   {
-    (const xmlChar*)"/rsp/photo/owner/@realname",
-    "dc:creator",
-    VALUE_TYPE_STRING,
+    (const xmlChar*)"/rsp/photo/@dateuploaded",
+    PHOTO_FIELD_dateuploaded,
+    VALUE_TYPE_UNIXTIME
   }
-,
-  /* Title */
+  ,
   {
-    (const xmlChar*)"/rsp/photo/title",
-    "dc:title",
-    VALUE_TYPE_STRING,
+    (const xmlChar*)"/rsp/photo/@farm",
+    PHOTO_FIELD_farm,
+    VALUE_TYPE_INTEGER
   }
-,
-  /* Description */
+  ,
   {
-    (const xmlChar*)"/rsp/photo/description",
-    "dc:description",
-    VALUE_TYPE_STRING,
+    (const xmlChar*)"/rsp/photo/@isfavorite",
+    PHOTO_FIELD_isfavorite,
+    VALUE_TYPE_BOOLEAN
   }
-,
-  /* Posted date */
+  ,
   {
-    (const xmlChar*)"/rsp/photo/dates/@posted",
-    "flickr:postedDate",
-    VALUE_TYPE_UNIXTIME,
+    (const xmlChar*)"/rsp/photo/@license",
+    PHOTO_FIELD_license,
+    VALUE_TYPE_INTEGER
   }
-,
-  /* Photo taken date */
+  ,
   {
-    (const xmlChar*)"/rsp/photo/dates/@taken",
-    "flickr:takenDate",
-    VALUE_TYPE_DATE_TIME,
+    (const xmlChar*)"/rsp/photo/@originalformat",
+    PHOTO_FIELD_originalformat,
+    VALUE_TYPE_STRING
   }
-,
-  /* Last update date */
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@rotation",
+    PHOTO_FIELD_rotation,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@server",
+    PHOTO_FIELD_server,
+    VALUE_TYPE_INTEGER
+  }
+  ,
   {
     (const xmlChar*)"/rsp/photo/dates/@lastupdate",
-    "flickr:lastUpdate",
-    VALUE_TYPE_UNIXTIME,
+    PHOTO_FIELD_dates_lastupdate,
+    VALUE_TYPE_UNIXTIME
   }
-,
-  /* location latitude */
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/dates/@posted",
+    PHOTO_FIELD_dates_posted,
+    VALUE_TYPE_UNIXTIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/dates/@taken",
+    PHOTO_FIELD_dates_taken,
+    VALUE_TYPE_DATETIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/dates/@takengranularity",
+    PHOTO_FIELD_dates_takengranularity,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/description",
+    PHOTO_FIELD_description,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/editability/@canaddmeta",
+    PHOTO_FIELD_editability_canaddmeta,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/editability/@cancomment",
+    PHOTO_FIELD_editability_cancomment,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@iscontact",
+    PHOTO_FIELD_geoperms_iscontact,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@isfamily",
+    PHOTO_FIELD_geoperms_isfamily,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@isfriend",
+    PHOTO_FIELD_geoperms_isfriend,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@ispublic",
+    PHOTO_FIELD_geoperms_ispublic,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/@accuracy",
+    PHOTO_FIELD_location_accuracy,
+    VALUE_TYPE_INTEGER
+  }
+  ,
   {
     (const xmlChar*)"/rsp/photo/location/@latitude",
-    "geo:latitude",
-    VALUE_TYPE_STRING,
+    PHOTO_FIELD_location_latitude,
+    VALUE_TYPE_FLOAT
   }
-,
-  /* location longitude */
+  ,
   {
     (const xmlChar*)"/rsp/photo/location/@longitude",
-    "geo:longitude",
-    VALUE_TYPE_STRING,
+    PHOTO_FIELD_location_longitude,
+    VALUE_TYPE_FLOAT
   }
-,
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@location",
+    PHOTO_FIELD_owner_location,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@nsid",
+    PHOTO_FIELD_owner_nsid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@realname",
+    PHOTO_FIELD_owner_realname,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@username",
+    PHOTO_FIELD_owner_username,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/title",
+    PHOTO_FIELD_title,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/visibility/@isfamily",
+    PHOTO_FIELD_visibility_isfamily,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/visibility/@isfriend",
+    PHOTO_FIELD_visibility_isfriend,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/visibility/@ispublic",
+    PHOTO_FIELD_visibility_ispublic,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
   { 
     NULL,
-    NULL,
+    0,
     0
   }
 };
@@ -981,53 +1136,79 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
 
   photo=(flickr_photo*)calloc(sizeof(flickr_photo), 1);
   
-  for(expri=0; match_table[expri].xpath; expri++) {
-    char *value=flickcurl_xpath_eval(fc, xpathCtx, match_table[expri].xpath);
-    int datatype=match_table[expri].type;
+  for(expri=0; photo_fields_table[expri].xpath; expri++) {
+    char *string_value=flickcurl_xpath_eval(fc, xpathCtx, 
+                                            photo_fields_table[expri].xpath);
+    flickcurl_field_value_type datatype=photo_fields_table[expri].type;
+    int int_value= -1;
+    flickcurl_photo_field field=photo_fields_table[expri].field;
+    time_t unix_time;
     
-    if(!value)
-      continue;
-
-    
-    if(VALUE_TYPE_PHOTO_ID == datatype) {
-      photo->id=strdup(value);
+    if(!string_value) {
+      photo->fields[field].string = NULL;
+      photo->fields[field].integer= -1;
+      photo->fields[field].type   = VALUE_TYPE_NONE;
       continue;
     }
 
-    if(VALUE_TYPE_PHOTO_URI == datatype) {
-      photo->uri=strdup(value);
-      continue;
-    }
+    switch(datatype) {
+      case VALUE_TYPE_PHOTO_ID:
+        photo->id=string_value;
+        string_value=NULL;
+        datatype=VALUE_TYPE_NONE;
+        break;
 
-    if(datatype == VALUE_TYPE_UNIXTIME || datatype == VALUE_TYPE_DATE_TIME) {
-      time_t unix_time;
+      case VALUE_TYPE_PHOTO_URI:
+        photo->uri=string_value;
+        string_value=NULL;
+        datatype=VALUE_TYPE_NONE;
+        break;
+
+      case VALUE_TYPE_UNIXTIME:
+      case VALUE_TYPE_DATETIME:
       
-      if(datatype == VALUE_TYPE_UNIXTIME)
-        unix_time=atoi(value);
-      else
-        unix_time=curl_getdate((const char*)value, NULL);
-      
-      if(unix_time >= 0) {
-        char* new_value=unixtime_to_isotime(unix_time);
+        if(datatype == VALUE_TYPE_UNIXTIME)
+          unix_time=atoi(string_value);
+        else
+          unix_time=curl_getdate((const char*)string_value, NULL);
+        
+        if(unix_time >= 0) {
+          char* new_value=unixtime_to_isotime(unix_time);
 #if FLICKCURL_DEBUG > 1
-        fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
-                value, (long)unix_time, new_value);
+          fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
+                  value, (long)unix_time, new_value);
 #endif
-        free(value);
-        value=new_value;
-        datatype=VALUE_TYPE_DATE_TIME;
-      } else
-        /* failed to convert, make it a string */
-        datatype=VALUE_TYPE_STRING;
+          free(string_value);
+          string_value= new_value;
+          int_value= unix_time;
+          datatype=VALUE_TYPE_DATETIME;
+        } else
+          /* failed to convert, make it a string */
+          datatype=VALUE_TYPE_STRING;
+        break;
+        
+      case VALUE_TYPE_INTEGER:
+      case VALUE_TYPE_BOOLEAN:
+        int_value=atoi(string_value);
+        break;
+        
+      case VALUE_TYPE_NONE:
+      case VALUE_TYPE_STRING:
+      case VALUE_TYPE_FLOAT:
+      case VALUE_TYPE_URI:
+        break;
     }
 
-    fprintf(stderr, "predicate URI: %s with %s value: '%s'\n",
-            match_table[expri].predicate_uri, 
-            match_type_label[datatype],
-            value);
+    photo->fields[field].string = string_value;
+    photo->fields[field].integer= int_value;
+    photo->fields[field].type   = datatype;
+
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "field %d with %s value: '%s' / %d\n",
+            field, flickcurl_field_value_type_label[datatype], 
+            string_value, int_value);
+#endif
       
-    free(value);
-    
     if(fc->failed)
       goto tidy;
   }
