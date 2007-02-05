@@ -1,3 +1,7 @@
+0.4 flickcurl
+- added triplr
+- released it to the world!
+
 0.3 flickcurl
 - Renamed all symbols to be flickcurl_*
 - Added flickcurl_photo_as_source_uri() to get the image file URLs
@@ -13,3 +17,7 @@
 
 0.1 flickcurl
 - First version
+
+
+Dave Beckett
+http://purl.org/net/dajobe/

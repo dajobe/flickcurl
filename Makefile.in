@@ -14,6 +14,23 @@
 
 @SET_MAKE@
 
+#
+# Makefile.am
+#
+# Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+# 
+# This file is licensed under the following three licenses as alternatives:
+#   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+#   2. GNU General Public License (GPL) V2 or any newer version
+#   3. Apache License, V2.0 or any newer version
+# 
+# You may not use this file except in compliance with at least one of
+# the above three licenses.
+# 
+# See LICENSE.html or LICENSE.txt at the top of this package for the
+# complete terms and further detail along with the license texts for
+# the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
+
 
 
 
@@ -40,8 +57,9 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-bin_PROGRAMS = flickcurl$(EXEEXT)
-@GETOPT_TRUE@am__append_1 = getopt.c flickcurl_getopt.h flickcurl_internal.h
+bin_PROGRAMS = flickcurl$(EXEEXT) triplr$(EXEEXT)
+@GETOPT_TRUE@am__append_1 = getopt.c flickcurl_getopt.h
+@GETOPT_TRUE@am__append_2 = getopt.c flickcurl_getopt.h
 DIST_COMMON = README $(am__configure_deps) $(include_HEADERS) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in $(srcdir)/flickcurl-config.in \
@@ -76,12 +94,15 @@ am_libflickcurl_la_OBJECTS = flickcurl.lo md5.lo vsnprintf.lo \
 libflickcurl_la_OBJECTS = $(am_libflickcurl_la_OBJECTS)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am__flickcurl_SOURCES_DIST = main.c getopt.c flickcurl_getopt.h \
-	flickcurl_internal.h
+am__flickcurl_SOURCES_DIST = main.c getopt.c flickcurl_getopt.h
 @GETOPT_TRUE@am__objects_1 = getopt.$(OBJEXT)
 am_flickcurl_OBJECTS = main.$(OBJEXT) $(am__objects_1)
 flickcurl_OBJECTS = $(am_flickcurl_OBJECTS)
 flickcurl_DEPENDENCIES = libflickcurl.la
+am__triplr_SOURCES_DIST = triplr.c getopt.c flickcurl_getopt.h
+am_triplr_OBJECTS = triplr.$(OBJEXT) $(am__objects_1)
+triplr_OBJECTS = $(am_triplr_OBJECTS)
+triplr_DEPENDENCIES = libflickcurl.la
 binSCRIPT_INSTALL = $(INSTALL_SCRIPT)
 SCRIPTS = $(bin_SCRIPTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
@@ -95,9 +116,10 @@ LTCOMPILE = $(LIBTOOL) --tag=CC --mode=compile $(CC) $(DEFS) \
 CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-SOURCES = $(libflickcurl_la_SOURCES) $(flickcurl_SOURCES)
+SOURCES = $(libflickcurl_la_SOURCES) $(flickcurl_SOURCES) \
+	$(triplr_SOURCES)
 DIST_SOURCES = $(libflickcurl_la_SOURCES) \
-	$(am__flickcurl_SOURCES_DIST)
+	$(am__flickcurl_SOURCES_DIST) $(am__triplr_SOURCES_DIST)
 pkgconfigDATA_INSTALL = $(INSTALL_DATA)
 DATA = $(pkgconfig_DATA)
 includeHEADERS_INSTALL = $(INSTALL_HEADER)
@@ -220,12 +242,16 @@ lib_LTLIBRARIES = libflickcurl.la
 include_HEADERS = flickcurl.h
 flickcurl_SOURCES = main.c $(am__append_1)
 flickcurl_LDADD = libflickcurl.la
-libflickcurl_la_SOURCES = flickcurl.c md5.c vsnprintf.c config.c api.c
+libflickcurl_la_SOURCES = flickcurl.c md5.c vsnprintf.c config.c api.c \
+flickcurl_internal.h
+
+triplr_SOURCES = triplr.c $(am__append_2)
+triplr_LDADD = libflickcurl.la
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = flickcurl.pc
 EXTRA_DIST = \
 ChangeLog \
-README NEWS AUTHORS \
+README.html README NEWS AUTHORS \
 LICENSE.html LICENSE-2.0.txt NOTICE \
 autogen.sh \
 flickcurl-config.in flickcurl.pc.in \
@@ -234,7 +260,7 @@ flickcurl.rdf.in
 
 # Create some text files from HTML sources
 LYNX = lynx
-HTML_TO_TEXT = TERM=vt100 $(LYNX) -dump -nolist
+HTML_TO_TEXT = TERM=vt100 $(LYNX) -dump
 SUFFIXES = .html .txt
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -373,6 +399,9 @@ installcheck-binPROGRAMS: $(bin_PROGRAMS)
 flickcurl$(EXEEXT): $(flickcurl_OBJECTS) $(flickcurl_DEPENDENCIES) 
 	@rm -f flickcurl$(EXEEXT)
 	$(LINK) $(flickcurl_LDFLAGS) $(flickcurl_OBJECTS) $(flickcurl_LDADD) $(LIBS)
+triplr$(EXEEXT): $(triplr_OBJECTS) $(triplr_DEPENDENCIES) 
+	@rm -f triplr$(EXEEXT)
+	$(LINK) $(triplr_LDFLAGS) $(triplr_OBJECTS) $(triplr_LDADD) $(LIBS)
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	test -z "$(bindir)" || $(mkdir_p) "$(DESTDIR)$(bindir)"
@@ -420,6 +449,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/md5.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/triplr.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vsnprintf.Plo@am__quote@
 
 .c.o:
@@ -781,6 +811,9 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 
 
 .html.txt:
+	$(HTML_TO_TEXT) $< > $@
+
+README: README.html
 	$(HTML_TO_TEXT) $< > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

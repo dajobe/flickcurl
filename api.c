@@ -44,7 +44,7 @@
 
 /* Debugging only */
 #ifdef OFFLINE
-void flickcurl_debug_set_uri(flickcurl* fc, const char* uri);
+static void flickcurl_debug_set_uri(flickcurl* fc, const char* uri);
 #endif
 
 

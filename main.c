@@ -394,6 +394,7 @@ main(int argc, char *argv[])
 
     fputs("\n", stdout);
 
+    puts(HELP_TEXT("a", "auth FROB       ", "Authenticate with a FROB and write auth config"));
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 

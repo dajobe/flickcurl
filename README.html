@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Flickcurl: A C library for the Flickr Web Service API</title>
+</head>
+<body>
+
+<h1 style="text-align:center">Flickcurl: A C library for the Flickr Web Service API</h1>
+<h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
+
+
+<p>Flickcurl is a library for calling the core Flickr web service
+API, handling the API signing and the token management plus providing
+wrappers for a few APIs that I needed to use to get information out
+of photo machine tags.
+</p>
+
+<p>License: LGPL/GPL/Apache 2.0</p>
+
+<p>It requires the following libraries to build it:</p>
+<ul>
+<li><a href="http://curl.haxx.se/libcurl/">libcurl</a></li>
+<li><a href="http://xmlsoft.org/">libxml2</a></li>
+</ul>
+
+<p>The do the usual <code>./configure</code>, <code>make</code> and
+<code>make install</code> sequence to install the library and
+the flickcurl and triplr utilities.</p>
+
+
+<h2>Flickr API Configuration</h2>
+
+<p>The <code>~/.flickcurl.conf</code> file should contain the Flickr
+authentication details in the form:</p>
+<pre>
+[flickr]
+auth_token=1234567-8901234567890123
+api_key=0123456789abcdef0123456789abcdef
+secret=fedcba9876543210
+</pre>
+
+
+<h2>Utility programs</h2>
+
+<ul>
+
+<li><stron>flickcurl</strong> - which can call the web service sAPIs
+plus help turn frobs into auth_tokens and writing
+the <code>~/.flickcurl.conf</code> file.
+<pre>
+Flickr API utility 0.4
+Call the Flickr API to get information.
+Usage: flickcurl [OPTIONS] command args...
+
+Copyright (C) 2007 David Beckett - http://purl.org/net/dajobe/
+License: LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.
+See http://flickcurl.sf.net/LICENSE.html for full terms.
+Flickcurl home page: http://flickcurl.sf.net/
+
+  -h, --help              Print this help, then exit
+  -v, --version           Print the flickcurl version
+
+Commands
+  test-echo             Test echo - KEY VALUE
+  photos-getInfo        Get information about a photo - PHOTO-ID
+</pre>
+</li>
+<li><strong>triplr</strong> - generate RDF triples from a Flickr photo
+<pre>
+Triplr - triples from flickrs 0.4
+Get Triples from Flickr photos.
+Usage: triplr [OPTIONS] FLICKR-PHOTO-URI
+
+Copyright (C) 2007 David Beckett - http://purl.org/net/dajobe/
+License: LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.
+See http://flickcurl.sf.net/LICENSE.html for full terms.
+Flickcurl home page: http://flickcurl.sf.net/
+
+  -d, --debug             Print lots of output
+  -h, --help              Print this help, then exit
+  -o, --output FORMAT     Choose output format 'ntriples' or 'turtle'
+  -v, --version           Print the flickcurl version
+</pre>
+</li>
+</ul>
+
+
+<h2>API calls supported</h2>
+
+<p><strong>auth.getFullToken</strong> - turn a frob into an auth_token
+</p>
+<pre>
+char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
+</pre>
+
+
+<p><strong>flickr.photos.getInfo</strong> - get information about a photo
+</p>
+<pre>
+flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+</pre>
+
+<p><strong>flickr.test.echo</strong> - echo what is sent
+</p>
+<pre>
+int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
+</pre>
+
+
+<h2>Library use example</h2>
+
+<pre>
+  flickcurl *fc;
+
+  fc=flickcurl_new();
+
+  flickcurl_set_api_key(fc, "...");
+  flickcurl_set_shared_secret(fc, "...");
+  flickcurl_set_auth_token(fc, "...");
+
+  /* or more likely, read some of the above from a config file */
+
+  photo=flickcurl_photos_getInfo(fc, "photo-id");
+
+  flickcurl_photo_field field;
+  for(field=0; field &lt;= PHOTO_FIELD_LAST; field++) {
+    flickcurl_field_value_type datatype=photo-&gt;fields[field].type;
+    
+    if(datatype == VALUE_TYPE_NONE)
+      continue;
+    
+    fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
+            flickcurl_get_photo_field_label(field), field,
+            flickcurl_get_field_value_type_label(datatype),
+            photo-&gt;fields[field].string, photo-&gt;fields[field].integer);
+  }
+
+  int i;
+  for(i=0; i &lt; photo-&gt;tags_count; i++) {
+    flickcurl_tag* tag=photo-&gt;tags[i];
+    fprintf(stderr, "%d) %s tag: id %s author %s raw '%s' cooked '%s'\n",
+            i, (tag-&gt;machine_tag ? "machine" : "regular"),
+            tag-&gt;id, tag-&gt;author, tag-&gt;raw, tag-&gt;cooked);
+  }
+
+  free_flickcurl_photo(photo);
+
+  flickcurl_free(fc);
+</pre>
+
+<hr />
+
+<p>Copyright (C) 2007 <a href="http://purl.org/net/dajobe/">Dave Beckett</a></p>
+
+</body>
+</html>
+
