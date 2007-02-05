@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+  <Project>
+    <name>Flickcurl</name>
+    <homepage rdf:resource="http://librdf.org/flickcurl/"/>
+
+    <shortdesc xml:lang="en">Flickcurl Flickr API Library.</shortdesc>
+
+    <description xml:lang="en">A free software / Open Source C
+    library that provides a C API to the Flickr API web
+    services.</description>
+
+    <maintainer>
+      <foaf:Person>
+	<foaf:name>Dave Beckett</foaf:name>
+	<foaf:homepage rdf:resource="http://purl.org/net/dajobe/"/>
+	<foaf:mbox_sha1sum>970987f991961f2553a1bf2574166fa29befbccb</foaf:mbox_sha1sum>
+      </foaf:Person>
+    </maintainer>
+
+    <release>
+      <Version>
+        <name>stable</name>
+	<created>2007-01-24</created>
+	<revision>@VERSION@</revision>
+      </Version>
+    </release>
+
+    <download-page rdf:resource="http://download.librdf.org/sources/"/>
+    <download-mirror rdf:resource="http://sourceforge.net/projects/librdf/" />
+
+    <!-- Licensing details -->
+    <license rdf:resource="http://usefulinc.com/doap/licenses/gpl"/>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/lgpl"/>
+    <license rdf:resource="http://usefulinc.com/doap/licenses/asl20"/>
+
+    <!-- source repository -->
+    <repository>
+      <SVNRepository>
+	<location rdf:resource="http://svn.librdf.org/repository/flickcurl/" />
+	<browse rdf:resource="http://svn.librdf.org/view/flickcurl/" />
+      </SVNRepository>
+    </repository>
+  </Project>
+
+
+  <!--
+       optional administravia:
+       authoring tools can add more here if they'd like.
+   -->
+  <rdf:Description rdf:about="">
+    <foaf:maker>
+      <foaf:Person>
+	<foaf:name>Dave Beckett</foaf:name>
+	<foaf:homepage rdf:resource="http://purl.org/net/dajobe/"/>
+	<foaf:mbox_sha1sum>970987f991961f2553a1bf2574166fa29befbccb</foaf:mbox_sha1sum>
+      </foaf:Person>
+    </foaf:maker>
+  </rdf:Description>
+
+</rdf:RDF>
+<!-- 
+Local variables:
+mode:nxml
+End:
+-->

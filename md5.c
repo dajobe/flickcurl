@@ -1,15 +1,10 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * rdf_digest_md5.c - MD5 Message Digest Algorithm
+ * md5.c - MD5 Message Digest Algorithm
  *
- * $Id: rdf_digest_md5.c 8550 2006-02-11 06:10:01Z cmdjb $
- *
- * Copyright (C) 2000-2006, David Beckett http://purl.org/net/dajobe/
- * Copyright (C) 2000-2004, University of Bristol, UK http://www.bristol.ac.uk/
+ * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 
- * This package is Free Software and part of Redland http://librdf.org/
- * 
- * It is licensed under the following three licenses as alternatives:
+ * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
  *   2. GNU General Public License (GPL) V2 or any newer version
  *   3. Apache License, V2.0 or any newer version

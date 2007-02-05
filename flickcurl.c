@@ -1,6 +1,21 @@
-/*
- * flickcurl - Invoke Flickr API via CURL
+/* -*- Mode: c; c-basic-offset: 2 -*-
  *
+ * flickcurl.c - Flickcurl core functions for the Flickr API
+ *
+ * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * 
+ * This file is licensed under the following three licenses as alternatives:
+ *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+ *   2. GNU General Public License (GPL) V2 or any newer version
+ *   3. Apache License, V2.0 or any newer version
+ * 
+ * You may not use this file except in compliance with at least one of
+ * the above three licenses.
+ * 
+ * See LICENSE.html or LICENSE.txt at the top of this package for the
+ * complete terms and further detail along with the license texts for
+ * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
+ * 
  */
 
 #include <stdio.h>
@@ -20,95 +35,8 @@
 #include <unistd.h>
 #endif
 
-#include <libxslt/xslt.h>
-#include <libxslt/xsltInternals.h>
-#include <libxslt/transform.h>
-#include <libxslt/xsltutils.h>
-
-
-#include <curl/curl.h>
-#include <curl/types.h>
-#include <curl/easy.h>
-
-
 #include <flickcurl.h>
-
-
-#undef OFFLINE
-
-
-extern char* MD5_string(char *string);
-extern char* my_vsnprintf(const char *message, va_list arguments);
-
-/* Prepare Flickr API request - form URI */
-static int flickcurl_prepare(flickcurl *fc, const char* method, const char* parameters[][2], int count);
-
-/* Invoke Flickr API at URi prepared above and get back an XML document */
-static xmlDocPtr flickcurl_invoke(flickcurl *fc);
-
-/* Debugging only */
-#ifdef OFFLINE
-void flickcurl_debug_set_uri(flickcurl* fc, const char* uri);
-#endif
-
-
-struct flickcurl_s {
-  int total_bytes;
-
-  /* Something failed */
-  int failed;
-  /* Flickr API error code */
-  int error_code;
-  /* Flickr API error message */
-  char* error_msg;
-  
-  int status_code;
-
-  char uri[2048];
-
-  CURL* curl_handle;
-  char error_buffer[CURL_ERROR_SIZE];
-  int curl_init_here;
-
-  char* user_agent;
-
-  /* proxy URL string or NULL for none */
-  char* proxy;
-  
-  void* error_data;
-  flickcurl_message_handler error_handler;
-
-  char *http_accept;
-
-  /* XML parser */
-  xmlParserCtxtPtr xc;
-
-  /* The next three fields need to be set before authenticated
-   * operations can be done (in most cases).
-   */
-
-  /* Flickr shared secret - flickcurl_set_shared_secret() */
-  char* secret;
-
-  /* Flickr application/api key  - flickcurl_set_api_key() */
-  char* api_key;
-
-  /* Flickr authentication token - flickcurl_set_auth_token() */
-  char* auth_token;
-
-
-  /* signature parameter (shared) for authenticated calls ("api_sig"
-   * usually) or  NULL for where it is not needed - flickcurl_set_sig_key()
-   */
-  char* sig_key;
-
-  /* Flickr API method to invoke - set by flickr_prepare */
-  char* method;
-
-  flickcurl_tag_handler tag_handler;
-  void* tag_data;
-};
-
+#include <flickcurl_internal.h>
 
 
 const char* const flickcurl_short_copyright_string = "Copyright 2007 David Beckett.";
@@ -142,8 +70,8 @@ flickcurl_error_varargs(flickcurl* fc, const char *message,
 }
 
   
-static void
-flickcurl_error(flickcurl* fc, const char *message, ...) 
+void
+flickcurl_error(flickcurl* fc, const char *message, ...)
 {
   va_list arguments;
 
@@ -414,7 +342,7 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 }
 
 
-static int
+int
 flickcurl_prepare(flickcurl *fc, const char* method,
                   const char* parameters[][2], int count)
 {
@@ -514,7 +442,7 @@ flickcurl_prepare(flickcurl *fc, const char* method,
 }
 
 
-static xmlDocPtr
+xmlDocPtr
 flickcurl_invoke(flickcurl *fc)
 {
   struct curl_slist *slist=NULL;
@@ -631,7 +559,7 @@ flickcurl_invoke(flickcurl *fc)
 
 
 void
-free_flickr_tag(flickr_tag *t)
+free_flickcurl_tag(flickcurl_tag *t)
 {
   if(t->id)
     free(t->id);
@@ -646,7 +574,7 @@ free_flickr_tag(flickr_tag *t)
 
 
 void
-free_flickr_photo(flickr_photo *photo)
+free_flickcurl_photo(flickcurl_photo *photo)
 {
   int i;
   for(i=0; i <= PHOTO_FIELD_LAST; i++) {
@@ -655,7 +583,7 @@ free_flickr_photo(flickr_photo *photo)
   }
   
   for(i=0; i < photo->tags_count; i++)
-    free_flickr_tag(photo->tags[i]);
+    free_flickcurl_tag(photo->tags[i]);
 
   if(photo->id)
     free(photo->id);
@@ -667,8 +595,8 @@ free_flickr_photo(flickr_photo *photo)
 }
 
 
-static char*
-unixtime_to_isotime(time_t unix_time)
+char*
+flickcurl_unixtime_to_isotime(time_t unix_time)
 {
   struct tm* structured_time;
 #define ISO_DATE_FORMAT "%Y-%m-%dT%H:%M:%SZ"
@@ -687,7 +615,7 @@ unixtime_to_isotime(time_t unix_time)
 }
 
 
-static char*
+char*
 flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
                      const xmlChar* xpathExpr) 
 {
@@ -727,558 +655,45 @@ flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
 }
 
 
-#ifdef OFFLINE
-static void
-flickcurl_debug_set_uri(flickcurl* fc, const char* uri)
-{
-  strcpy(fc->uri, uri);
-}
-#endif
-
 
 /*
- **********************************************************************
- * Flickr API Calls
- **********************************************************************
+ * Get a photo's image source URIs
+ * @c can be s,m,t,b for sizes, o for original, otherwise default
+ * http://www.flickr.com/services/api/misc.urls.html
  */
-
-/* Flickr test echo */
-int
-flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
-{
-  const char * parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int rc=0;
-  
-  parameters[count][0]  = key;
-  parameters[count++][1]= value;
-
-  parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
-
-  if(flickcurl_prepare(fc, "flickr.test.echo", parameters, count)) {
-    rc=1;
-    goto tidy;
-  }
-
-  doc=flickcurl_invoke(fc);
-  if(!doc) {
-    rc=1;
-    goto tidy;
-  }
-
-  fprintf(stderr, "Flickr echo returned %d bytes\n", fc->total_bytes);
-  
-  tidy:
-  
-  return rc;
-}
-
-
-/* Flickr auth.getFullToken - turn a frob into an auth_token */
 char*
-flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
+flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
 {
-  const char * parameters[10][2];
-  int count=0;
-  char *auth_token=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  char buf[1024];
+  char *result;
+  size_t len;
   
-  parameters[count][0]   = "mini_token";
-  parameters[count++][1] = (char*)frob;
-
-  parameters[count][0]   = NULL;
-
-  flickcurl_set_sig_key(fc, "api_sig");
-
-  if(flickcurl_prepare(fc, "flickr.auth.getFullToken", parameters, count))
-    goto tidy;
-
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:auth.getFullToken.xml");
-#endif
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-  
-  xpathCtx = xmlXPathNewContext(doc);
-  if(xpathCtx) {
-    auth_token=flickcurl_xpath_eval(fc, xpathCtx,
-                                    (const xmlChar*)"/rsp/auth/token");
-    xmlXPathFreeContext(xpathCtx);
+  if(c == 'o') {
+    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{o-secret}_o.(jpg|gif|png) */
+    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s_o.%s", 
+            photo->fields[PHOTO_FIELD_farm].string,
+            photo->fields[PHOTO_FIELD_server].string,
+            photo->id,
+            photo->fields[PHOTO_FIELD_originalsecret].string,
+            photo->fields[PHOTO_FIELD_originalformat].string);
+  } else if (c == 'm' || c == 's' || c == 't' || c == 'b') {
+    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}_[mstb].jpg */
+    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s_%c.jpg",
+            photo->fields[PHOTO_FIELD_farm].string,
+            photo->fields[PHOTO_FIELD_server].string,
+            photo->id,
+            photo->fields[PHOTO_FIELD_secret].string,
+            c);
+  } else {
+    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}.jpg */
+    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s.jpg",
+            photo->fields[PHOTO_FIELD_farm].string,
+            photo->fields[PHOTO_FIELD_server].string,
+            photo->id,
+            photo->fields[PHOTO_FIELD_secret].string);
   }
-
-  tidy:
-
-  return auth_token;
-}
-
-
-static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
-  "(none)",
-  "dateuploaded",
-  "farm",
-  "isfavorite",
-  "license",
-  "originalformat",
-  "rotation",
-  "server",
-  "dates_lastupdate",
-  "dates_posted",
-  "dates_taken",
-  "dates_takengranularity",
-  "description",
-  "editability_canaddmeta",
-  "editability_cancomment",
-  "geoperms_iscontact",
-  "geoperms_isfamily",
-  "geoperms_isfriend",
-  "geoperms_ispublic",
-  "location_accuracy",
-  "location_latitude",
-  "location_longitude",
-  "owner_location",
-  "owner_nsid",
-  "owner_realname",
-  "owner_username",
-  "title",
-  "visibility_isfamily",
-  "visibility_isfriend",
-  "visibility_ispublic"
-};
-
-
-const char*
-flickcurl_get_photo_field_label(flickcurl_photo_field field)
-{
-  if(field <= PHOTO_FIELD_LAST)
-    return flickcurl_photo_field_label[(int)field];
-  return NULL;
-}
-
-
-static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1]={
-  "(none)",
-  "photo id",
-  "photo URI",
-  "unix time",
-  "boolean",
-  "dateTime",
-  "float",
-  "integer",
-  "string",
-  "uri"
-};
-
-
-const char*
-flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
-{
-  if(datatype <= VALUE_TYPE_LAST)
-    return flickcurl_field_value_type_label[(int)datatype];
-  return NULL;
-}
-
-
-static struct {
-  const xmlChar* xpath;
-  flickcurl_photo_field field;
-  flickcurl_field_value_type type;
-} photo_fields_table[PHOTO_FIELD_LAST + 3]={
-  {
-    (const xmlChar*)"/rsp/photo/@id",
-    PHOTO_FIELD_none,
-    VALUE_TYPE_PHOTO_ID,
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/urls/url[@type=\"photopage\"]",
-    PHOTO_FIELD_none,
-    VALUE_TYPE_PHOTO_URI
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/@dateuploaded",
-    PHOTO_FIELD_dateuploaded,
-    VALUE_TYPE_UNIXTIME
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/@farm",
-    PHOTO_FIELD_farm,
-    VALUE_TYPE_INTEGER
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/@isfavorite",
-    PHOTO_FIELD_isfavorite,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/@license",
-    PHOTO_FIELD_license,
-    VALUE_TYPE_INTEGER
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/@originalformat",
-    PHOTO_FIELD_originalformat,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/@rotation",
-    PHOTO_FIELD_rotation,
-    VALUE_TYPE_INTEGER
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/@server",
-    PHOTO_FIELD_server,
-    VALUE_TYPE_INTEGER
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/dates/@lastupdate",
-    PHOTO_FIELD_dates_lastupdate,
-    VALUE_TYPE_UNIXTIME
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/dates/@posted",
-    PHOTO_FIELD_dates_posted,
-    VALUE_TYPE_UNIXTIME
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/dates/@taken",
-    PHOTO_FIELD_dates_taken,
-    VALUE_TYPE_DATETIME
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/dates/@takengranularity",
-    PHOTO_FIELD_dates_takengranularity,
-    VALUE_TYPE_INTEGER
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/description",
-    PHOTO_FIELD_description,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/editability/@canaddmeta",
-    PHOTO_FIELD_editability_canaddmeta,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/editability/@cancomment",
-    PHOTO_FIELD_editability_cancomment,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/geoperms/@iscontact",
-    PHOTO_FIELD_geoperms_iscontact,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/geoperms/@isfamily",
-    PHOTO_FIELD_geoperms_isfamily,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/geoperms/@isfriend",
-    PHOTO_FIELD_geoperms_isfriend,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/geoperms/@ispublic",
-    PHOTO_FIELD_geoperms_ispublic,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/location/@accuracy",
-    PHOTO_FIELD_location_accuracy,
-    VALUE_TYPE_INTEGER
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/location/@latitude",
-    PHOTO_FIELD_location_latitude,
-    VALUE_TYPE_FLOAT
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/location/@longitude",
-    PHOTO_FIELD_location_longitude,
-    VALUE_TYPE_FLOAT
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/owner/@location",
-    PHOTO_FIELD_owner_location,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/owner/@nsid",
-    PHOTO_FIELD_owner_nsid,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/owner/@realname",
-    PHOTO_FIELD_owner_realname,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/owner/@username",
-    PHOTO_FIELD_owner_username,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/title",
-    PHOTO_FIELD_title,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/visibility/@isfamily",
-    PHOTO_FIELD_visibility_isfamily,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/visibility/@isfriend",
-    PHOTO_FIELD_visibility_isfriend,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  {
-    (const xmlChar*)"/rsp/photo/visibility/@ispublic",
-    PHOTO_FIELD_visibility_ispublic,
-    VALUE_TYPE_BOOLEAN
-  }
-  ,
-  { 
-    NULL,
-    0,
-    0
-  }
-};
-
-
-/* Get information about a photo */
-flickr_photo*
-flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
-{
-  const char * parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  int expri;
-  xmlXPathObjectPtr xpathObj=NULL;
-  xmlNodeSetPtr nodes;
-  const xmlChar* xpathExpr=NULL;
-  flickr_photo* photo=NULL;
-  int i;
-  
-  if(!fc->auth_token) {
-    flickcurl_error(fc, "No auth_token for method flickr.photos.getInfo");
-    return NULL;
-  }
-
-
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-
-  parameters[count][0]  = "token";
-  parameters[count++][1]= fc->auth_token;
-
-  parameters[count][0]  = NULL;
-
-
-  flickcurl_set_sig_key(fc, "api_sig");
-
-  if(flickcurl_prepare(fc, "flickr.photos.getInfo", parameters, count))
-    goto tidy;
-
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:photos_getInfo.xml");
-#endif
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photo=(flickr_photo*)calloc(sizeof(flickr_photo), 1);
-  
-  for(expri=0; photo_fields_table[expri].xpath; expri++) {
-    char *string_value=flickcurl_xpath_eval(fc, xpathCtx, 
-                                            photo_fields_table[expri].xpath);
-    flickcurl_field_value_type datatype=photo_fields_table[expri].type;
-    int int_value= -1;
-    flickcurl_photo_field field=photo_fields_table[expri].field;
-    time_t unix_time;
-    
-    if(!string_value) {
-      photo->fields[field].string = NULL;
-      photo->fields[field].integer= -1;
-      photo->fields[field].type   = VALUE_TYPE_NONE;
-      continue;
-    }
-
-    switch(datatype) {
-      case VALUE_TYPE_PHOTO_ID:
-        photo->id=string_value;
-        string_value=NULL;
-        datatype=VALUE_TYPE_NONE;
-        break;
-
-      case VALUE_TYPE_PHOTO_URI:
-        photo->uri=string_value;
-        string_value=NULL;
-        datatype=VALUE_TYPE_NONE;
-        break;
-
-      case VALUE_TYPE_UNIXTIME:
-      case VALUE_TYPE_DATETIME:
-      
-        if(datatype == VALUE_TYPE_UNIXTIME)
-          unix_time=atoi(string_value);
-        else
-          unix_time=curl_getdate((const char*)string_value, NULL);
-        
-        if(unix_time >= 0) {
-          char* new_value=unixtime_to_isotime(unix_time);
-#if FLICKCURL_DEBUG > 1
-          fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
-                  value, (long)unix_time, new_value);
-#endif
-          free(string_value);
-          string_value= new_value;
-          int_value= unix_time;
-          datatype=VALUE_TYPE_DATETIME;
-        } else
-          /* failed to convert, make it a string */
-          datatype=VALUE_TYPE_STRING;
-        break;
-        
-      case VALUE_TYPE_INTEGER:
-      case VALUE_TYPE_BOOLEAN:
-        int_value=atoi(string_value);
-        break;
-        
-      case VALUE_TYPE_NONE:
-      case VALUE_TYPE_STRING:
-      case VALUE_TYPE_FLOAT:
-      case VALUE_TYPE_URI:
-        break;
-    }
-
-    photo->fields[field].string = string_value;
-    photo->fields[field].integer= int_value;
-    photo->fields[field].type   = datatype;
-
-#if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "field %d with %s value: '%s' / %d\n",
-            field, flickcurl_field_value_type_label[datatype], 
-            string_value, int_value);
-#endif
-      
-    if(fc->failed)
-      goto tidy;
-  }
-
-
-  /* Now do tags */
-  xpathExpr=(const xmlChar*)"/rsp/photo/tags/tag";
-  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
-  if(!xpathObj) {
-    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
-                    xpathExpr);
-    fc->failed=1;
-    goto tidy;
-  }
-  
-  nodes=xpathObj->nodesetval;
-  for(i=0; i < xmlXPathNodeSetGetLength(nodes); i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
-    xmlAttr* attr;
-    flickr_tag* t;
-    
-    if(node->type != XML_ELEMENT_NODE) {
-      flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
-      break;
-    }
-    
-    t=(flickr_tag*)calloc(sizeof(flickr_tag), 1);
-    t->photo=photo;
-    
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
-      char *attr_value;
-      
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
-      
-      if(!strcmp(attr_name, "id"))
-        t->id=attr_value;
-      else if(!strcmp(attr_name, "author"))
-        t->author=attr_value;
-      else if(!strcmp(attr_name, "raw"))
-        t->raw=attr_value;
-    }
-    
-    t->cooked=(char*)malloc(strlen((const char*)node->children->content)+1);
-    strcpy(t->cooked, (const char*)node->children->content);
-    
-#if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "tag: id %s author %s raw '%s' cooked '%s'\n",
-            t->id, t->author, t->raw, t->cooked);
-#endif
-    
-    if(fc->tag_handler)
-      fc->tag_handler(fc->tag_data, t);
-    
-    photo->tags[photo->tags_count++]=t;
-  } /* for nodes */
-  
-
-
- tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
-  if(xpathObj)
-    xmlXPathFreeObject(xpathObj);
-  
-  if(fc->failed)
-    doc=NULL;
-
-  return photo;
+  len=strlen(buf);
+  result=(char*)malloc(len+1);
+  strcpy(result, buf);
+  return result;
 }

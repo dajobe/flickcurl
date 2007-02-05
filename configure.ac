@@ -2,7 +2,7 @@
 # Copyright (C) 2007 David Beckett http://purl.org/net/dajobe/
 
 AC_PREREQ(2.59)
-AC_INIT(flickcurl, 0.2, http://bugs.librdf.org/)
+AC_INIT(flickcurl, 0.3, http://bugs.librdf.org/)
 AC_CONFIG_SRCDIR([flickcurl.c])
 AC_CONFIG_HEADER([config.h])
 AC_REVISION($Revision: $)dnl
@@ -33,7 +33,7 @@ libxml_min_version=2.6.8
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([getopt.h stdlib.h string.h unistd.h])
+AC_CHECK_HEADERS([errno.h getopt.h stdlib.h string.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -189,6 +189,7 @@ fi
 AC_SUBST(STANDARD_CFLAGS)
 
 AC_CONFIG_FILES([Makefile
+flickcurl.rdf
 flickcurl.pc])
 
 AC_CONFIG_FILES([flickcurl-config], [chmod +x flickcurl-config])

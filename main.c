@@ -1,16 +1,47 @@
-/*
- * flickcurl - Invoke Flickr API via CURL
+/* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * USAGE: flickcurl OPTIONS command args
+ * flickcurl utility - Invoke the Flickrcurl library
  *
- * To authenticate:
+ * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * 
+ * This file is licensed under the following three licenses as alternatives:
+ *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+ *   2. GNU General Public License (GPL) V2 or any newer version
+ *   3. Apache License, V2.0 or any newer version
+ * 
+ * You may not use this file except in compliance with at least one of
+ * the above three licenses.
+ * 
+ * See LICENSE.html or LICENSE.txt at the top of this package for the
+ * complete terms and further detail along with the license texts for
+ * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
+ * 
+ *
+ * USAGE: flickcurl [OPTIONS] flickr-api-command args...
+ *
+ * ~/.flickcurl.conf should contain the authentication details in the form:
+ * [flickr]
+ * auth_token=1234567-8901234567890123
+ * api_key=0123456789abcdef0123456789abcdef
+ * secret=fedcba9876543210
+ *
+ * To authenticate from a FROB - to generate an auth_token from a FROB use:
  *   flickcurl -a FROB
  * FROB like 123-456-789
+ * which will write a new ~/.flickcurl.conf with the auth_token received
+ *
+ * Flickr API Calls:
+ *
+ * flickcurl test-echo KEY VALUE
+ *   This method does not require authentication.
+ * Echoes back the KEY and VALUE received - an API test.
  *
  * flickcurl photo-getinfo PHOTO-ID
- * PHOTO-ID like 123456789
- * This method does not require authentication.
- * -- http://www.flickr.com/services/api/flickr.photos.getInfo.html
+ *   PHOTO-ID like 123456789
+ *   This method does not require authentication.
+ *   -- http://www.flickr.com/services/api/flickr.photos.getInfo.html
+ * Gets information about a photo including its tags
+ *
  *
  */
 
@@ -22,8 +53,14 @@
 #include <config.h>
 #endif
 
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+#ifdef HAVE_ERRNO_H
+#include <errno.h>
 #endif
 
 /* many places for getopt */
@@ -31,9 +68,6 @@
 #include <getopt.h>
 #else
 #include <flickcurl_getopt.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 
 #include <flickcurl.h>
@@ -120,7 +154,7 @@ command_test_echo(flickcurl* fc, int argc, char *argv[])
 
 
 #if 0
-static void command_flickcurl_tag_handler(void *user_data, flickr_tag* tag)
+static void command_flickcurl_tag_handler(void *user_data, flickcurl_tag* tag)
 {
   fprintf(stderr, "%s: photo %s tag: id %s author %s raw '%s' cooked '%s'\n",
           program, tag->photo->id,
@@ -128,10 +162,11 @@ static void command_flickcurl_tag_handler(void *user_data, flickr_tag* tag)
 }
 #endif
 
+
 static int
 command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 {
-  flickr_photo* photo;
+  flickcurl_photo* photo;
 
 #if 0
   flickcurl_set_tag_handler(fc, command_flickcurl_tag_handler, NULL);
@@ -160,11 +195,12 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
     
 
     for(i=0; i < photo->tags_count; i++) {
-      flickr_tag* tag=photo->tags[i];
-      fprintf(stderr, "tag %d): id %s author %s raw '%s' cooked '%s'\n",
-              i, tag->id, tag->author, tag->raw, tag->cooked);
+      flickcurl_tag* tag=photo->tags[i];
+      fprintf(stderr, "%d) %s tag: id %s author %s raw '%s' cooked '%s'\n",
+              i, (tag->machine_tag ? "machine" : "regular"),
+              tag->id, tag->author, tag->raw, tag->cooked);
     }
-    free_flickr_photo(photo);
+    free_flickcurl_photo(photo);
   }
   
   return (photo != NULL);
@@ -191,20 +227,31 @@ static struct {
 
 static const char *title_format_string="Flickr API utility %s\n";
 
+static const char* config_filename=".flickcurl.conf";
+static const char* config_section="flickr";
+
 
 int
 main(int argc, char *argv[]) 
 {
   flickcurl *fc;
   int rc=0;
-  const char* config_file="flickr.conf";
   int usage=0;
   int help=0;
   int cmd_index= -1;
   int read_auth=1;
   int i;
+  const char* home;
+  char config_path[1024];
   
   program=my_basename(argv[0]);
+
+  home=getenv("HOME");
+  if(home)
+    sprintf(config_path, "%s/%s", home, config_filename);
+  else
+    strcpy(config_path, config_filename);
+  
 
   while (!usage && !help)
   {
@@ -239,15 +286,20 @@ main(int argc, char *argv[])
 
           flickcurl_set_auth_token(fc, auth_token);
           
-          fh=fopen(config_file, "w");
-          fputs("[flickr]\n", fh);
-          fprintf(fh,
-                  "[flickr]\napi_key=%s\nsecret=%s\nauth_token=%s\n", 
-                  flickcurl_get_api_key(fc),
-                  flickcurl_get_shared_secret(fc),
-                  flickcurl_get_auth_token(fc));
-          fclose(fh);
-          read_auth=0;
+          fh=fopen(config_path, "w");
+          if(!fh) {
+            fprintf(stderr, "%s: Failed to write to config filename %s: %s\n",
+                    program, config_path, strerror(errno));
+          } else {
+            fputs("[flickr]\n", fh);
+            fprintf(fh,
+                    "[flickr]\napi_key=%s\nsecret=%s\nauth_token=%s\n", 
+                    flickcurl_get_api_key(fc),
+                    flickcurl_get_shared_secret(fc),
+                    flickcurl_get_auth_token(fc));
+            fclose(fh);
+            read_auth=0;
+          }
         }
         
         break;
@@ -281,7 +333,7 @@ main(int argc, char *argv[])
     goto usage;
 
 
-  /* Initialise the Flickr library */
+  /* Initialise the Flickcurl library */
   fc=flickcurl_new();
   if(!fc) {
     rc=1;
@@ -290,8 +342,11 @@ main(int argc, char *argv[])
 
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
-  if(read_auth && !access((const char*)config_file, R_OK)) {
-    if(read_ini_config(config_file, "flickr", fc, my_set_config_var_handler)) {
+  if(read_auth && !access((const char*)config_path, R_OK)) {
+    if(read_ini_config(config_path, config_section, fc,
+                       my_set_config_var_handler)) {
+      fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
+              program, config_path, strerror(errno));
       rc=1;
       goto tidy;
     }
@@ -350,7 +405,7 @@ main(int argc, char *argv[])
   }
 
 
-  /* Perform the Flickr API call */
+  /* Perform the API call */
   rc=commands[cmd_index].handler(fc, argc, argv);
 
  tidy:

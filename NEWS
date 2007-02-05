@@ -1,5 +1,15 @@
+0.3 flickcurl
+- Renamed all symbols to be flickcurl_*
+- Added flickcurl_photo_as_source_uri() to get the image file URLs
+  for a photo ID.
+- Config file is now ~/.flickcurl.conf
+- Packaging and licensing
+
 0.2 flickcurl
-Second version
+- Refactored to have separate flickcurl* object
+- Methods: flickcurl_test_echo, flickcurl_auth_getFullToken,
+  flickcurl_photos_getInfo
+- Test program has commands table and help, authentication
 
 0.1 flickcurl
-First version
+- First version

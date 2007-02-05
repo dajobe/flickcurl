@@ -1,3 +1,23 @@
+/* -*- Mode: c; c-basic-offset: 2 -*-
+ *
+ * config.c - INI configuration file handling
+ *
+ * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * 
+ * This file is licensed under the following three licenses as alternatives:
+ *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+ *   2. GNU General Public License (GPL) V2 or any newer version
+ *   3. Apache License, V2.0 or any newer version
+ * 
+ * You may not use this file except in compliance with at least one of
+ * the above three licenses.
+ * 
+ * See LICENSE.html or LICENSE.txt at the top of this package for the
+ * complete terms and further detail along with the license texts for
+ * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
+ * 
+ */
+
 #include <stdio.h>
 #include <string.h>
 
@@ -15,6 +35,9 @@
 
 #undef CONFIG_DEBUG
 
+/*
+ * FIXME - where do you start.  This just needs a pile of error checking
+ */
 int
 read_ini_config(const char* filename, const char* application,
                 void* user_data, set_config_var_handler handler)
@@ -22,6 +45,7 @@ read_ini_config(const char* filename, const char* application,
   FILE* fh;
   char buf[256];
   int in_section=0;
+  int lineno=1;
   
   if(access((const char*)filename, R_OK))
     return 1;
@@ -34,11 +58,20 @@ read_ini_config(const char* filename, const char* application,
     size_t len;
     char *line;
     char *p;
+    int warned=0;
     
     for(line=buf, len=0; !feof(fh); ) {
       int c=fgetc(fh);
-      if(c == '\n')
+      if(c == '\n') {
+        lineno++;
         break;
+      }
+
+      if(len > 255) {
+        if(!warned++)
+          fprintf(stderr, "read_ini_config(): line %d truncated\n", lineno);
+        continue;
+      }
       *line++=c;
       len++;
     }

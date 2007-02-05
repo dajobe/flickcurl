@@ -41,13 +41,14 @@ POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
 bin_PROGRAMS = flickcurl$(EXEEXT)
-@GETOPT_TRUE@am__append_1 = getopt.c flickcurl_getopt.h
+@GETOPT_TRUE@am__append_1 = getopt.c flickcurl_getopt.h flickcurl_internal.h
 DIST_COMMON = README $(am__configure_deps) $(include_HEADERS) \
 	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
 	$(srcdir)/config.h.in $(srcdir)/flickcurl-config.in \
-	$(srcdir)/flickcurl.pc.in $(top_srcdir)/configure AUTHORS \
-	COPYING ChangeLog INSTALL NEWS config.guess config.sub depcomp \
-	install-sh ltmain.sh missing
+	$(srcdir)/flickcurl.pc.in $(srcdir)/flickcurl.rdf.in \
+	$(top_srcdir)/configure AUTHORS COPYING COPYING.LIB ChangeLog \
+	INSTALL NEWS config.guess config.sub depcomp install-sh \
+	ltmain.sh missing
 subdir = .
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -57,7 +58,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno configure.status.lineno
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = flickcurl.pc flickcurl-config
+CONFIG_CLEAN_FILES = flickcurl.rdf flickcurl.pc flickcurl-config
 am__vpath_adj_setup = srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`;
 am__vpath_adj = case $$p in \
     $(srcdir)/*) f=`echo "$$p" | sed "s|^$$srcdirstrip/||"`;; \
@@ -71,11 +72,12 @@ libLTLIBRARIES_INSTALL = $(INSTALL)
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libflickcurl_la_LIBADD =
 am_libflickcurl_la_OBJECTS = flickcurl.lo md5.lo vsnprintf.lo \
-	config.lo
+	config.lo api.lo
 libflickcurl_la_OBJECTS = $(am_libflickcurl_la_OBJECTS)
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
-am__flickcurl_SOURCES_DIST = main.c getopt.c flickcurl_getopt.h
+am__flickcurl_SOURCES_DIST = main.c getopt.c flickcurl_getopt.h \
+	flickcurl_internal.h
 @GETOPT_TRUE@am__objects_1 = getopt.$(OBJEXT)
 am_flickcurl_OBJECTS = main.$(OBJEXT) $(am__objects_1)
 flickcurl_OBJECTS = $(am_flickcurl_OBJECTS)
@@ -218,19 +220,27 @@ lib_LTLIBRARIES = libflickcurl.la
 include_HEADERS = flickcurl.h
 flickcurl_SOURCES = main.c $(am__append_1)
 flickcurl_LDADD = libflickcurl.la
-libflickcurl_la_SOURCES = flickcurl.c md5.c vsnprintf.c config.c
+libflickcurl_la_SOURCES = flickcurl.c md5.c vsnprintf.c config.c api.c
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = flickcurl.pc
 EXTRA_DIST = \
-ChangeLog README NEWS AUTHORS \
+ChangeLog \
+README NEWS AUTHORS \
+LICENSE.html LICENSE-2.0.txt NOTICE \
 autogen.sh \
-flickcurl-config.in flickcurl.pc.in
+flickcurl-config.in flickcurl.pc.in \
+flickcurl.rdf.in
 
+
+# Create some text files from HTML sources
+LYNX = lynx
+HTML_TO_TEXT = TERM=vt100 $(LYNX) -dump -nolist
+SUFFIXES = .html .txt
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .html .txt .c .lo .o .obj
 am--refresh:
 	@:
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
@@ -281,6 +291,8 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
+flickcurl.rdf: $(top_builddir)/config.status $(srcdir)/flickcurl.rdf.in
+	cd $(top_builddir) && $(SHELL) ./config.status $@
 flickcurl.pc: $(top_builddir)/config.status $(srcdir)/flickcurl.pc.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 flickcurl-config: $(top_builddir)/config.status $(srcdir)/flickcurl-config.in
@@ -402,6 +414,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/api.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/config.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/flickcurl.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/getopt.Po@am__quote@
@@ -766,6 +779,9 @@ uninstall-am: uninstall-binPROGRAMS uninstall-binSCRIPTS \
 	uninstall-includeHEADERS uninstall-info-am \
 	uninstall-libLTLIBRARIES uninstall-pkgconfigDATA
 
+
+.html.txt:
+	$(HTML_TO_TEXT) $< > $@
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

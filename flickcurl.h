@@ -1,9 +1,22 @@
-/*
+/* -*- Mode: c; c-basic-offset: 2 -*-
  *
+ * flickcurl.h - Flickcurl API
  *
+ * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * 
+ * This file is licensed under the following three licenses as alternatives:
+ *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
+ *   2. GNU General Public License (GPL) V2 or any newer version
+ *   3. Apache License, V2.0 or any newer version
+ * 
+ * You may not use this file except in compliance with at least one of
+ * the above three licenses.
+ * 
+ * See LICENSE.html or LICENSE.txt at the top of this package for the
+ * complete terms and further detail along with the license texts for
+ * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
+ * 
  */
-
-#include <libxml/xpathInternals.h>
 
 
 typedef enum {
@@ -37,7 +50,9 @@ typedef enum {
   PHOTO_FIELD_visibility_isfamily,
   PHOTO_FIELD_visibility_isfriend,
   PHOTO_FIELD_visibility_ispublic,
-  PHOTO_FIELD_LAST = PHOTO_FIELD_visibility_ispublic
+  PHOTO_FIELD_secret,
+  PHOTO_FIELD_originalsecret,
+  PHOTO_FIELD_LAST = PHOTO_FIELD_originalsecret
 } flickcurl_photo_field;
 
 
@@ -60,23 +75,25 @@ typedef struct flickcurl_s flickcurl;
 
 struct flickcurl_photo_s;
 
-typedef struct flickr_tag_s
+typedef struct flickcurl_tag_s
 {
-  struct flickr_photo_s* photo;
+  struct flickcurl_photo_s* photo;
   char* id;
   char* author;
   char* raw;
   char* cooked;
-} flickr_tag;
+  int machine_tag;
+} flickcurl_tag;
 
-typedef struct flickr_photo_s
+
+typedef struct flickcurl_photo_s
 {
   /* photo id */
   char *id;
   /* photo page uri */
   char *uri;
   
-  flickr_tag* tags[20];
+  flickcurl_tag* tags[20];
   int tags_count;
   
   struct {
@@ -84,14 +101,14 @@ typedef struct flickr_photo_s
     int integer;
     flickcurl_field_value_type type;
   } fields[PHOTO_FIELD_LAST + 1];
-} flickr_photo;
+} flickcurl_photo;
 
 
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
 
 typedef void (*set_config_var_handler)(void* userdata, const char* key, const char* value);
 
-typedef void (*flickcurl_tag_handler)(void *user_data, flickr_tag* tag);
+typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
 
 
 extern const char* const flickcurl_short_copyright_string;
@@ -128,20 +145,19 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 const char* flickcurl_get_photo_field_label(flickcurl_photo_field field);
 const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype);
 
+/* utility methods */
+char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
+
 
 /* Flickr API calls */
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 
-flickr_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
-/* helper */
-void flickcurl_getInfo(flickcurl *fc, xmlDocPtr doc);
-
-
-void free_flickr_tag(flickr_tag *t);
-void free_flickr_photo(flickr_photo *photo);
+void free_flickcurl_tag(flickcurl_tag *t);
+void free_flickcurl_photo(flickcurl_photo *photo);
 
 
 
