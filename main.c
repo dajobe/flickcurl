@@ -164,6 +164,37 @@ static void command_flickcurl_tag_handler(void *user_data, flickcurl_tag* tag)
 
 
 static int
+command_people_getInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_person* person;
+
+  person=flickcurl_people_getInfo(fc, argv[1]);
+
+  if(person) {
+    flickcurl_person_field field;
+    
+    fprintf(stderr, "Found person with ID %s\n", person->nsid);
+
+    for(field=0; field <= PERSON_FIELD_LAST; field++) {
+      flickcurl_field_value_type datatype=person->fields[field].type;
+
+      if(datatype == VALUE_TYPE_NONE)
+        continue;
+      
+      fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
+              flickcurl_get_person_field_label(field), field,
+              flickcurl_get_field_value_type_label(datatype),
+              person->fields[field].string, person->fields[field].integer);
+    }
+    
+    flickcurl_free_person(person);
+  }
+  
+  return (person != NULL);
+}
+
+
+static int
 command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_photo* photo;
@@ -207,18 +238,47 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_licenses_getInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_license** licenses;
+  int i;
+  
+  licenses=flickcurl_photos_licenses_getInfo(fc);
+  if(licenses) {
+
+    fprintf(stderr, "Found licenses\n");
+
+    for(i=0; licenses[i]; i++) {
+      flickcurl_license* license=licenses[i];
+      fprintf(stderr, "%d) license: id %d name '%s' url %s\n",
+              i, license->id, license->name, 
+              license->url ? license->url : "(none)");
+      
+    }
+  }
+  
+  return (licenses != NULL);
+}
+
+
 static struct {
   const char*     name;
+  const char*     args;
   const char*     description;
   command_handler handler;
   int             min;
   int             max;
 } commands[] = {
   /* name, min, handler */
-  {"test-echo", "Test echo - KEY VALUE",
+  {"test-echo", "KEY VALUE", "Test echo of KEY VALUE",
    command_test_echo,  2, 2},
-  {"photos-getInfo", "Get information about a photo - PHOTO-ID", 
+  {"people-getInfo", "USER-ID", "Get information about one person with id USER-ID", 
+   command_people_getInfo,  1, 1},
+  {"photos-getInfo", "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
    command_photos_getInfo,  1, 1},
+  {"photos-licenses-getInfo", "", "Get list of available photo licenses", 
+   command_photos_licenses_getInfo,  0, 0},
 
   {NULL, NULL, NULL, 0, 0}
 };  
@@ -400,7 +460,8 @@ main(int argc, char *argv[])
 
     fputs("\nCommands\n", stdout);
     for(i=0; commands[i].name; i++)
-      printf("  %-20s  %s\n", commands[i].name, commands[i].description);
+      printf("  %-25s %s\n    %s\n", commands[i].name, commands[i].args,
+             commands[i].description);
 
     exit(0);
   }
