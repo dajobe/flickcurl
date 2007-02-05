@@ -215,10 +215,28 @@ frob of the format <em>NNN-NNN-NNN</em> into full authentication tokens.
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 </pre>
 
+<p>
+<a href="http://www.flickr.com/services/api/flickr.people.getInfo.html"><strong>flickr.people.getInfo</strong></a> - get information about a user. (0.6)</p>
+<pre>
+flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
+const char* flickcurl_get_person_field_label(flickcurl_person_field field);
+void flickcurl_free_person(flickcurl_person *person);
+</pre>
+
 <p><a href="http://www.flickr.com/services/api/flickr.photos.getInfo.html"><strong>flickr.photos.getInfo</strong></a> - get information about a photo.</p>
 <pre>
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+const char* flickcurl_get_photo_field_label(flickcurl_photo_field field);
+void flickcurl_free_photo(flickcurl_photo *photo);
 </pre>
+
+<p><a href="http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html">h<strong>flickr.photos.licenses.getInfo</strong></a> - fetch a list of available photo licenses. (0.6)</p>
+<pre>
+flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
+flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
+</pre>
+<p>Both return pointers to shared, static copies of the license info,
+cached from the server once only.</p>
 
 <p><a href="http://www.flickr.com/services/api/flickr.test.echo.html"><strong>flickr.test.echo</strong></a> - echo what is sent.</p>
 <pre>
