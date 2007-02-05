@@ -203,6 +203,8 @@ flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id
 
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
+char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
+
 void flickcurl_free_tag(flickcurl_tag *t);
 void flickcurl_free_photo(flickcurl_photo *photo);
 /* void flickcurl_free_license(flickcurl_person *license); */
