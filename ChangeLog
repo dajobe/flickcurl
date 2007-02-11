@@ -1,0 +1,46 @@
+2007-02-05  Dave Beckett  <dave@dajobe.org>
+
+	* README.html: Added flickcurl_urls_lookupUser
+
+	* main.c; Added command_urls_lookupUser and urls-lookupUser command
+
+	* flickcurl.h: Added flickcurl_urls_lookupUser
+
+	* api.c: (flickcurl_urls_lookupUser): Added
+
+2007-02-04  Dave Beckett  <dave@dajobe.org>
+	* api.c: online
+
+	* triplr.c: When a photo license field is found, look up the license
+	URI with flickcurl_photos_licenses_getInfo_by_id()
+
+	* main.c: Added command_people_getInfo,
+	command_photos_licenses_getInfo and corresponding as
+	people-getInfo and photos-licenses-getInfo
+
+	* flickcurl.c (flickcurl_free): Tidy licenses found.
+	(flickcurl_free_person): Added.
+
+	* api.c: (flickcurl_photos_getInfo): auth_token is optional.
+	(flickcurl_get_person_field_label, flickcurl_people_getInfo,
+	flickcurl_photos_licenses_getInfo,
+	flickcurl_photos_licenses_getInfo_by_id, flickcurl_free_person):
+	Added
+	(compare_licenses, flickcurl_read_licenses): Added to implement
+	flickcurl_photos_licenses_getInfo() and
+	flickcurl_photos_licenses_getInfo_by_id().
+
+	* flickcurl.h: Added VALUE_TYPE_PERSON_ID
+	Added flickcurl_license, flickcurl_person_field, flickcurl_person
+	Added:
+	const char* flickcurl_get_person_field_label(flickcurl_person_field field);
+	flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
+	flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
+	flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
+	void flickcurl_free_person(flickcurl_person *person);
+
+	* flickcurl_internal.h: Added licenses to struct flickcurl_s
+
+	* configure.ac: 0.6
+
+	* Imported flickcurl 0.1 - 0.5 from tarballs
