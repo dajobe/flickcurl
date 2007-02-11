@@ -1,6 +1,9 @@
 Flickcurl News
 
-2007-02-XX  flickcurl 0.6
+2007-02-XX  flickcurl 0.7
+- nothing yet
+
+2007-02-11  flickcurl 0.6
 - Added API call flickcurl.licenses.getInfo:
   struct flickcurl_license,
   flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc),
