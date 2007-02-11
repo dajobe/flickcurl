@@ -1,6 +1,10 @@
 2007-02-11  Dave Beckett  <dave@dajobe.org>
 
-	* Snapshotted flickcurl_0_6 for 0.6 release (SVN 27)
+	* Snapshotted flickcurl_0_6 for 0.6 release (SVN 29)
+
+	* Makefile.am, README.html, coverage.html: Added coverage doc
+
+	* configure.ac: AC_INIT tweak
 
 2007-02-05  Dave Beckett  <dave@dajobe.org>
 
