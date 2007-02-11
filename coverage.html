@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Flickcurl: Flickr API coverage</title>
+  <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+  <style type="text/css">
+.unsupported { color: #666666 }
+.supported { color: green; font-weight: bold }
+span.coverage { font-weight: bold}
+  </style>
+</head>
+<body>
+
+<h1 style="text-align:center">Flickcurl: Flickr API coverage</h1>
+<h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
+
+<p>This page summarizes the Flickr API calls that are supported
+by <a href="http://librdf.org/flickcurl/">Flickcurl</a>.  API
+calls are marked as follows as <span class="supported">supported</span>
+or <span class="unsupported">unsupported</span>.
+</p>
+
+<p>Current Flickr API coverage by Flickcurl: 
+<!-- next line updated by update-coverage -->
+<span class="coverage">6.0% (6/100)</span>
+</p>
+
+
+<h2>Flickr API</h2>
+
+<h3>activity</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.activity.userComments.html">flickr.activity.userComments</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.activity.userPhotos.html">flickr.activity.userPhotos</a></li>
+</ul>
+
+
+<h3>auth</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.auth.checkToken.html">flickr.auth.checkToken</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.auth.getFrob.html">flickr.auth.getFrob</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.auth.getFullToken.html">flickr.auth.getFullToken</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.auth.getToken.html">flickr.auth.getToken</a></li>
+</ul>
+
+
+<h3>blogs</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.blogs.getList.html">flickr.blogs.getList</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.blogs.postPhoto.html">flickr.blogs.postPhoto</a></li>
+</ul>
+
+
+<h3>contacts</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.contacts.getList.html">flickr.contacts.getList</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.contacts.getPublicList.html">flickr.contacts.getPublicList</a></li>
+</ul>
+
+
+<h3>favorites</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.add.html">flickr.favorites.add</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.getList.html">flickr.favorites.getList</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.getPublicList.html">flickr.favorites.getPublicList</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.remove.html">flickr.favorites.remove</a></li>
+</ul>
+
+
+<h3>groups</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.browse.html">flickr.groups.browse</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.getInfo.html">flickr.groups.getInfo</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.search.html">flickr.groups.search</a></li>
+</ul>
+
+
+<h3>groups.pools</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.add.html">flickr.groups.pools.add</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.getContext.html">flickr.groups.pools.getContext</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.getGroups.html">flickr.groups.pools.getGroups</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.getPhotos.html">flickr.groups.pools.getPhotos</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.remove.html">flickr.groups.pools.remove</a></li>
+</ul>
+
+
+<h3>interestingness</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.interestingness.getList.html">flickr.interestingness.getList</a></li>
+</ul>
+
+
+<h3>people</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.findByEmail.html">flickr.people.findByEmail</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.findByUsername.html">flickr.people.findByUsername</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getInfo.html">flickr.people.getInfo</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.getPublicGroups.html">flickr.people.getPublicGroups</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.getPublicPhotos.html">flickr.people.getPublicPhotos</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.getUploadStatus.html">flickr.people.getUploadStatus</a></li>
+</ul>
+
+
+<h3>photos</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.addTags.html">flickr.photos.addTags</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.delete.html">flickr.photos.delete</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getAllContexts.html">flickr.photos.getAllContexts</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getContactsPhotos.html">flickr.photos.getContactsPhotos</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getContactsPublicPhotos.html">flickr.photos.getContactsPublicPhotos</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getContext.html">flickr.photos.getContext</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getCounts.html">flickr.photos.getCounts</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getExif.html">flickr.photos.getExif</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getFavorites.html">flickr.photos.getFavorites</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getInfo.html">flickr.photos.getInfo</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getNotInSet.html">flickr.photos.getNotInSet</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getPerms.html">flickr.photos.getPerms</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getRecent.html">flickr.photos.getRecent</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getSizes.html">flickr.photos.getSizes</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getUntagged.html">flickr.photos.getUntagged</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getWithGeoData.html">flickr.photos.getWithGeoData</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getWithoutGeoData.html">flickr.photos.getWithoutGeoData</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.recentlyUpdated.html">flickr.photos.recentlyUpdated</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.removeTag.html">flickr.photos.removeTag</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.search.html">flickr.photos.search</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setDates.html">flickr.photos.setDates</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setMeta.html">flickr.photos.setMeta</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setPerms.html">flickr.photos.setPerms</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setTags.html">flickr.photos.setTags</a></li>
+</ul>
+
+
+<h3>photos.comments</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.addComment.html">flickr.photos.comments.addComment</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.deleteComment.html">flickr.photos.comments.deleteComment</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.editComment.html">flickr.photos.comments.editComment</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.getList.html">flickr.photos.comments.getList</a></li>
+</ul>
+
+
+<h3>photos.geo</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.getLocation.html">flickr.photos.geo.getLocation</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.getPerms.html">flickr.photos.geo.getPerms</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.removeLocation.html">flickr.photos.geo.removeLocation</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.setLocation.html">flickr.photos.geo.setLocation</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.setPerms.html">flickr.photos.geo.setPerms</a></li>
+</ul>
+
+
+<h3>photos.licenses</h3>
+
+<ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html">flickr.photos.licenses.getInfo</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.licenses.setLicense.html">flickr.photos.licenses.setLicense</a></li>
+</ul>
+
+
+<h3>photos.notes</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.notes.add.html">flickr.photos.notes.add</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.notes.delete.html">flickr.photos.notes.delete</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.notes.edit.html">flickr.photos.notes.edit</a></li>
+</ul>
+
+
+<h3>photos.transform</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.transform.rotate.html">flickr.photos.transform.rotate</a></li>
+</ul>
+
+
+<h3>photos.upload</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.upload.checkTickets.html">flickr.photos.upload.checkTickets</a></li>
+</ul>
+
+
+<h3>photosets</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.addPhoto.html">flickr.photosets.addPhoto</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.create.html">flickr.photosets.create</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.delete.html">flickr.photosets.delete</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.editMeta.html">flickr.photosets.editMeta</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.editPhotos.html">flickr.photosets.editPhotos</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.getContext.html">flickr.photosets.getContext</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.getInfo.html">flickr.photosets.getInfo</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.getList.html">flickr.photosets.getList</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.getPhotos.html">flickr.photosets.getPhotos</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.orderSets.html">flickr.photosets.orderSets</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.removePhoto.html">flickr.photosets.removePhoto</a></li>
+</ul>
+
+
+<h3>photosets.comments</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.comments.addComment.html">flickr.photosets.comments.addComment</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.comments.deleteComment.html">flickr.photosets.comments.deleteComment</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.comments.editComment.html">flickr.photosets.comments.editComment</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.comments.getList.html">flickr.photosets.comments.getList</a></li>
+</ul>
+
+
+<h3>reflection</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.reflection.getMethodInfo.html">flickr.reflection.getMethodInfo</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.reflection.getMethods.html">flickr.reflection.getMethods</a></li>
+</ul>
+
+
+<h3>tags</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.tags.getHotList.html">flickr.tags.getHotList</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.tags.getListPhoto.html">flickr.tags.getListPhoto</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.tags.getListUser.html">flickr.tags.getListUser</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.tags.getListUserPopular.html">flickr.tags.getListUserPopular</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.tags.getListUserRaw.html">flickr.tags.getListUserRaw</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.tags.getRelated.html">flickr.tags.getRelated</a></li>
+</ul>
+
+
+<h3>test</h3>
+
+<ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.test.echo.html">flickr.test.echo</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.test.login.html">flickr.test.login</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.test.null.html">flickr.test.null</a></li>
+</ul>
+
+
+<h3>urls</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.getGroup.html">flickr.urls.getGroup</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.getUserPhotos.html">flickr.urls.getUserPhotos</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.getUserProfile.html">flickr.urls.getUserProfile</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.lookupGroup.html">flickr.urls.lookupGroup</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.lookupUser.html">flickr.urls.lookupUser</a></li>
+</ul>
+
+<hr />
+
+<p>Copyright (C) 2007 <a href="http://purl.org/net/dajobe/">Dave Beckett</a></p>
+
+</body>
+</html>
+
