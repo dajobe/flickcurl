@@ -485,7 +485,7 @@ flickcurl_invoke(flickcurl *fc)
 
     memcpy(&uwait, &fc->last_request_time, sizeof(struct timeval));
 
-#if FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG
     fprintf(stderr, "Previous request was at %lu.N%lu\n",
             (unsigned long)uwait.tv_sec, (unsigned long)1000*uwait.tv_usec);
 #endif
@@ -497,7 +497,7 @@ flickcurl_invoke(flickcurl *fc)
       uwait.tv_usec= uwait.tv_usec % 1000000;
     }
 
-#if FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG
     fprintf(stderr, "Next request is no earlier than %lu.N%lu\n",
             (unsigned long)uwait.tv_sec, (unsigned long)1000*uwait.tv_usec);
     fprintf(stderr, "Now is %lu.N%lu\n",
@@ -518,7 +518,7 @@ flickcurl_invoke(flickcurl *fc)
       }
       
       /* Wait until timeval 'wait' happens */
-#if FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG
       fprintf(stderr, "Waiting for %lu sec N%lu nsec period\n",
               (unsigned long)nwait.tv_sec, (unsigned long)nwait.tv_nsec);
 #endif
@@ -526,7 +526,7 @@ flickcurl_invoke(flickcurl *fc)
         struct timespec rem;
         if(nanosleep(&nwait, &rem) < 0 && errno == EINTR) {
           memcpy(&nwait, &rem, sizeof(struct timeval));
-#if FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG
           fprintf(stderr, "EINTR - waiting for %lu sec N%lu nsec period\n",
                   (unsigned long)nwait.tv_sec, (unsigned long)nwait.tv_nsec);
 #endif
