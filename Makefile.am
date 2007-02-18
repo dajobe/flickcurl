@@ -33,6 +33,7 @@ libflickcurl_la_SOURCES = core.c md5.c vsnprintf.c config.c \
 api.c \
 auth-api.c \
 people-api.c \
+urls-api.c \
 flickcurl_internal.h
 
 triplr_SOURCES = triplr.c
