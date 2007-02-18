@@ -207,11 +207,13 @@ AC_DEFUN([FLICKCURL_CC_TRY_FLAG], [
   AC_MSG_RESULT($flickcurl_cc_flag)
 ])
 
+# Just too annoying:
+#  -Wmissing-format-attribute
 possible_warnings="-Wall -Wextra \
 -Wshadow -Wpointer-arith -Wstrict-prototypes -Wmissing-prototypes \
 -Wmissing-declarations -Wnested-externs -Wredundant-decls -Wswitch-enum \
 -Wsign-compare -Werror-implicit-function-declaration -Wwrite-strings
--Wpacked -Wmissing-format-attribute -Wpointer-arith -Wcast-align -Winit-self \
+-Wpacked -Wpointer-arith -Wcast-align -Winit-self \
 -Wunsafe-loop-optimizations -Wdeclaration-after-statement \
 -Wold-style-definition \
 -Wno-missing-field-initializers -Wno-unused-parameter"
