@@ -1072,3 +1072,243 @@ flickcurl_urls_lookupUser(flickcurl* fc, const char* url)
 
   return nsid;
 }
+
+
+/* This is the element name and the label - lazy */
+const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2]={
+  "---",
+  "set",
+  "pool",
+  "prevphoto",
+  "nextphoto",
+  NULL
+};
+
+
+const char*
+flickcurl_get_context_type_field_label(flickcurl_context_type type)
+{
+  if(type > FLICKCURL_CONTEXT_NONE && type <= FLICKCURL_CONTEXT_LAST)
+    return flickcurl_context_type_element[(int)type];
+  return NULL;
+}
+
+
+/**
+ * flickcurl_photos_getContext:
+ * @fc: flickcurl context
+ * @id: photo ID
+ * 
+ * Returns an array of size 3 [prev, next, NULL] flickcurl_context*
+ * or NULL on error
+ * 
+ * Return value: prev, next contexts or NULL
+ **/
+flickcurl_context**
+flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
+{
+  const char * parameters[5][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  flickcurl_context** contexts=NULL;
+  
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.photos.getContext", parameters, count))
+    goto tidy;
+
+#ifdef OFFLINE
+  flickcurl_debug_set_uri(fc, "file:photos_getContext.xml");
+#endif
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  contexts=flickcurl_build_contexts(fc, doc);
+
+ tidy:
+  if(fc->failed)
+    contexts=NULL;
+
+  return contexts;
+}
+
+
+/**
+ * flickcurl_photos_getAllContexts:
+ * @fc: flickcurl context
+ * @id: photo ID
+ * 
+ * Returns an array of size 3 [prev, next, NULL] flickcurl_context*
+ * or NULL on error
+ * 
+ * Return value: prev, next contexts or NULL
+ **/
+flickcurl_context**
+flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
+{
+  const char * parameters[5][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  flickcurl_context** contexts=NULL;
+  
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.photos.getAllContexts", parameters, count))
+    goto tidy;
+
+#ifdef OFFLINE
+  flickcurl_debug_set_uri(fc, "file:photos_getAllContexts.xml");
+#endif
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  contexts=flickcurl_build_contexts(fc, doc);
+
+ tidy:
+  if(fc->failed)
+    contexts=NULL;
+
+  return contexts;
+}
+
+
+/**
+ * flickcurl_groups_pools_getContext:
+ * @fc: flickcurl context
+ * @id: photo ID
+ * 
+ * Returns an array of size 3 [prev, next, NULL] flickcurl_context*
+ * or NULL on error
+ * 
+ * Return value: prev, next contexts or NULL
+ **/
+flickcurl_context**
+flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
+                                  const char* group_id)
+{
+  const char * parameters[5][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  flickcurl_context** contexts=NULL;
+  
+  if(!photo_id || !group_id)
+    return NULL;
+  
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  parameters[count][0]  = "group_id";
+  parameters[count++][1]= group_id;
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.groups.pools.getContext", parameters, count))
+    goto tidy;
+
+#ifdef OFFLINE
+  flickcurl_debug_set_uri(fc, "file:groups_pools_getContext.xml");
+#endif
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  contexts=flickcurl_build_contexts(fc, doc);
+
+ tidy:
+  if(fc->failed)
+    contexts=NULL;
+
+  return contexts;
+}
+
+
+/**
+ * flickcurl_photosets_getContext:
+ * @fc: flickcurl context
+ * @id: photo ID
+ * 
+ * Returns an array of size 3 [prev, next, NULL] flickcurl_context*
+ * or NULL on error
+ * 
+ * Return value: prev, next contexts or NULL
+ **/
+flickcurl_context**
+flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
+                               const char* photoset_id)
+{
+  const char * parameters[5][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  flickcurl_context** contexts=NULL;
+  
+  if(!photo_id || !photoset_id)
+    return NULL;
+  
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  parameters[count][0]  = "photoset_id";
+  parameters[count++][1]= photoset_id;
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.photosets.getContext", parameters, count))
+    goto tidy;
+
+#ifdef OFFLINE
+  flickcurl_debug_set_uri(fc, "file:photosets_getContext.xml");
+#endif
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  contexts=flickcurl_build_contexts(fc, doc);
+
+ tidy:
+  if(fc->failed)
+    contexts=NULL;
+
+  return contexts;
+}
