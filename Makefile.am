@@ -30,6 +30,7 @@ endif
 flickcurl_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = flickcurl.c md5.c vsnprintf.c config.c api.c \
+auth-api.c \
 flickcurl_internal.h
 
 triplr_SOURCES = triplr.c

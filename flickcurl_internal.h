@@ -12,6 +12,13 @@
 #include <curl/easy.h>
 
 
+#if 1
+#undef OFFLINE
+#else
+#define OFFLINE 1
+#endif
+
+
 /* Prepare Flickr API request - form URI */
 int flickcurl_prepare(flickcurl *fc, const char* method, const char* parameters[][2], int count);
 
@@ -108,3 +115,8 @@ struct flickcurl_s {
   /* Delay between HTTP requests in microseconds - default is none (0) */
   long request_delay;
 };
+
+/* Debugging only */
+#ifdef OFFLINE
+static void flickcurl_debug_set_uri(flickcurl* fc, const char* uri);
+#endif

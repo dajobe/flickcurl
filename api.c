@@ -38,19 +38,6 @@
 #include <flickcurl_internal.h>
 
 
-#if 1
-#undef OFFLINE
-#else
-#define OFFLINE 1
-#endif
-
-
-/* Debugging only */
-#ifdef OFFLINE
-static void flickcurl_debug_set_uri(flickcurl* fc, const char* uri);
-#endif
-
-
 #ifdef OFFLINE
 static void
 flickcurl_debug_set_uri(flickcurl* fc, const char* uri)
@@ -98,47 +85,6 @@ flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
   tidy:
   
   return rc;
-}
-
-
-/* Flickr auth.getFullToken - turn a frob into an auth_token */
-char*
-flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
-{
-  const char * parameters[10][2];
-  int count=0;
-  char *auth_token=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  
-  parameters[count][0]   = "mini_token";
-  parameters[count++][1] = (char*)frob;
-
-  parameters[count][0]   = NULL;
-
-  flickcurl_set_sig_key(fc, "api_sig");
-
-  if(flickcurl_prepare(fc, "flickr.auth.getFullToken", parameters, count))
-    goto tidy;
-
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:auth.getFullToken.xml");
-#endif
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-  
-  xpathCtx = xmlXPathNewContext(doc);
-  if(xpathCtx) {
-    auth_token=flickcurl_xpath_eval(fc, xpathCtx,
-                                    (const xmlChar*)"/rsp/auth/token");
-    xmlXPathFreeContext(xpathCtx);
-  }
-
-  tidy:
-
-  return auth_token;
 }
 
 
