@@ -1,5 +1,8 @@
 Flickcurl News
 
+2007-02-XX  flickcurl 0.8
+- Not yet released
+
 2007-02-18  flickcurl 0.7
 - Added API calls returning contexts as a struct flickcurl_context* array
   and of type flickcurl_context_type
