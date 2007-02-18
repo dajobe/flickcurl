@@ -101,4 +101,10 @@ struct flickcurl_s {
    * as initialised by flickcurl_read_licenses() 
    */
   flickcurl_license** licenses;
+
+  /* Time the last request was made */
+  struct timeval last_request_time;
+  
+  /* Delay between HTTP requests in microseconds - default is none (0) */
+  long request_delay;
 };
