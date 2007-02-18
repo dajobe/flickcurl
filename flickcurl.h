@@ -199,6 +199,7 @@ void flickcurl_set_api_key(flickcurl* fc, const char *api_key);
 void flickcurl_set_shared_secret(flickcurl* fc, const char *secret);
 void flickcurl_set_auth_token(flickcurl *fc, const char* auth_token);
 void flickcurl_set_sig_key(flickcurl *fc, const char* sig_key);
+void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
 
 /* get methods */
 const char* flickcurl_get_api_key(flickcurl *fc);
