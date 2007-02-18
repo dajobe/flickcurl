@@ -2,7 +2,7 @@
 # Copyright (C) 2007 David Beckett http://purl.org/net/dajobe/
 
 AC_PREREQ(2.59)
-AC_INIT(Flickcurl, 0.7, http://bugs.librdf.org/, flickcurl)
+AC_INIT(Flickcurl, 0.8, http://bugs.librdf.org/, flickcurl)
 AC_CONFIG_SRCDIR([flickcurl.c])
 AC_CONFIG_HEADER([config.h])
 AC_REVISION($Revision: $)dnl
