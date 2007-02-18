@@ -38,13 +38,6 @@
 #include <flickcurl_internal.h>
 
 
-#if 1
-#undef OFFLINE
-#else
-#define OFFLINE 1
-#endif
-
-
 /*
  * flickr.auth.checkToken - get the credentials attached to an authentication token.
  * Must be signed.
