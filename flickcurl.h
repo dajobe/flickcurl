@@ -114,6 +114,28 @@ typedef struct {
 
 
 typedef enum {
+  FLICKCURL_CONTEXT_NONE,
+  FLICKCURL_CONTEXT_SET,
+  FLICKCURL_CONTEXT_POOL,
+  FLICKCURL_CONTEXT_PREV,
+  FLICKCURL_CONTEXT_NEXT,
+  FLICKCURL_CONTEXT_LAST = FLICKCURL_CONTEXT_NEXT
+} flickcurl_context_type;
+
+
+typedef struct flickcurl_context_s {
+  flickcurl_context_type type;
+  char* id;
+  char* secret; /* may be NULL */
+  int server;   /* may be 0 */
+  int farm;     /* may be 0 */
+  char* title;  /* may be NULL */
+  char* url;    /* may be NULL */
+  char* thumb;  /* may be NULL */
+} flickcurl_context;
+
+
+typedef enum {
   PERSON_FIELD_none,
   PERSON_FIELD_isadmin, /* boolean */
   PERSON_FIELD_ispro, /* boolean */
@@ -186,6 +208,7 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 const char* flickcurl_get_photo_field_label(flickcurl_photo_field field);
 const char* flickcurl_get_person_field_label(flickcurl_person_field field);
 const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype);
+const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
 
 /* utility methods */
 char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
@@ -194,12 +217,18 @@ char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
 /* Flickr API calls */
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 
+flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
+
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 
+flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
+flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
 flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
+
+flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
 
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
@@ -209,6 +238,8 @@ void flickcurl_free_tag(flickcurl_tag *t);
 void flickcurl_free_photo(flickcurl_photo *photo);
 /* void flickcurl_free_license(flickcurl_person *license); */
 void flickcurl_free_person(flickcurl_person *person);
+void flickcurl_free_context(flickcurl_context *context);
+void flickcurl_free_contexts(flickcurl_context** contexts);
 
 
 /* config.c */
