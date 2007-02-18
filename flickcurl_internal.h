@@ -27,6 +27,10 @@ char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xml
 /* invoke an error */
 void flickcurl_error(flickcurl* fc, const char *message, ...);
 
+extern const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2];
+
+flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
+
 /* MD5 as hex string */
 extern char* MD5_string(char *string);
 
