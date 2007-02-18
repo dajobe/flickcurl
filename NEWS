@@ -1,7 +1,24 @@
 Flickcurl News
 
 2007-02-XX  flickcurl 0.7
-- nothing yet
+- Added API calls returning contexts as a struct flickcurl_context* array
+  and of type flickcurl_context_type
+- Added API call flickr.groups.pool.getContext:
+  flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
+- Added API call flickr.photos.getAllContexts:
+  flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
+- Added API call flickr.photos.getContext:
+  flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
+- Added API call flickr.photosets.getContext:
+  flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
+- Added struct flickcurl_context utility functions:
+  const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
+  void flickcurl_free_context(flickcurl_context *context);
+  void flickcurl_free_contexts(flickcurl_context** contexts);
+- Added new flickcurl utility commands for the new APIs:
+  groups-pools-getContext photos-getAllContexts photos-getContext,
+  photosets-getContext 
+
 
 2007-02-11  flickcurl 0.6
 - Added API call flickcurl.licenses.getInfo:
