@@ -47,6 +47,109 @@
  */
 
 
+static struct {
+  const xmlChar* xpath;
+  flickcurl_person_field field;
+  flickcurl_field_value_type type;
+} person_fields_table[PHOTO_FIELD_LAST + 3]={
+  {
+    (const xmlChar*)"/rsp/person/@nsid",
+    PHOTO_FIELD_none,
+    VALUE_TYPE_PERSON_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@isadmin",
+    PERSON_FIELD_isadmin,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@ispro",
+    PERSON_FIELD_ispro,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@iconserver",
+    PERSON_FIELD_iconserver,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/@iconfarm",
+    PERSON_FIELD_iconfarm,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/username",
+    PERSON_FIELD_username,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/realname",
+    PERSON_FIELD_realname,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/mbox_sha1sum",
+    PERSON_FIELD_mbox_sha1sum,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/location",
+    PERSON_FIELD_location,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photosurl",
+    PERSON_FIELD_photosurl,
+    VALUE_TYPE_URI
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/profileurl",
+    PERSON_FIELD_profileurl,
+    VALUE_TYPE_URI
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/mobileurl",
+    PERSON_FIELD_mobileurl,
+    VALUE_TYPE_URI
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photos/firstdate",
+    PERSON_FIELD_photos_firstdate,
+    VALUE_TYPE_UNIXTIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photos/firstdatetaken",
+    PERSON_FIELD_photos_firstdatetaken,
+    VALUE_TYPE_DATETIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/person/photos/count",
+    PERSON_FIELD_photos_count,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  { 
+    NULL,
+    0,
+    0
+  }
+};
+
+
 /*
  * flickr.people.getInfo - get information about a person 
  */
