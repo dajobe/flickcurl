@@ -278,6 +278,95 @@ command_urls_lookupUser(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_contexts_print(FILE* fh, flickcurl_context** contexts)
+{
+  flickcurl_context* context;
+  int i;
+  
+  for(i=0; (context=contexts[i]); i++) {
+    const char* label=flickcurl_get_context_type_field_label(context->type);
+    fprintf(fh, "%d) context type '%s' id %s secret %s server %d farm %d\n  title: %s\n  url: %s\n  thumb: %s\n",
+            i, label, 
+            context->id,
+            (context->secret ? context->secret : "NULL"),
+            context->server, context->farm,
+            (context->title ? context->title : "NULL"),
+            (context->url ? context->url : "NULL"),
+            (context->thumb ? context->thumb : "NULL")
+            );
+  }
+}
+
+
+static int
+command_groups_pools_getContext(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_context** contexts;
+
+  contexts=flickcurl_groups_pools_getContext(fc, argv[1], argv[2]);
+  if(!contexts)
+    return 1;
+  fprintf(stderr, "%s: Pool context of photo %s in pool %s:\n", program,
+          argv[1], argv[2]);
+  command_contexts_print(stderr, contexts);
+  
+  flickcurl_free_contexts(contexts);
+
+  return 0;
+}
+
+static int
+command_photos_getAllContexts(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_context** contexts;
+  
+  contexts=flickcurl_photos_getAllContexts(fc, argv[1]);
+  if(!contexts)
+    return 1;
+  fprintf(stderr, "%s: Photos %s all contexts:\n", program, argv[1]);
+  command_contexts_print(stderr, contexts);
+  
+  flickcurl_free_contexts(contexts);
+
+  return 0;
+}
+
+static int
+command_photos_getContext(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_context** contexts;
+
+  contexts=flickcurl_photos_getContext(fc, argv[1]);
+  if(!contexts)
+    return 1;
+  fprintf(stderr, "%s: Photos %s context:\n", program, argv[1]);
+  command_contexts_print(stderr, contexts);
+  
+  flickcurl_free_contexts(contexts);
+
+  return 0;
+}
+
+static int
+command_photosets_getContext(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_context** contexts;
+
+  contexts=flickcurl_photosets_getContext(fc, argv[1], argv[2]);
+  if(!contexts)
+    return 1;
+  fprintf(stderr, "%s: Photo %s in photoset %s context:\n", program,
+          argv[1], argv[2]);
+  command_contexts_print(stderr, contexts);
+  
+  flickcurl_free_contexts(contexts);
+
+  return 0;
+}
+
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -297,6 +386,15 @@ static struct {
    command_photos_licenses_getInfo,  0, 0},
   {"urls-lookupUser", "URL", "Get a user NSID given the url to a user's photo", 
    command_urls_lookupUser,  1, 1},
+
+  {"groups-pools-getContext", "PHOTO-ID GROUP-ID", "Get next and previous photos for a photo in a group pool.",
+   command_groups_pools_getContext, 2, 2},
+  {"photos-getAllContexts", "PHOTO-ID", "Get all visible sets and pools the photo belongs to.",
+   command_photos_getAllContexts, 1, 1},
+  {"photos-getContext", "PHOTO-ID", "Get next and previous photos for a photo in a group pool.",
+   command_photos_getContext, 1, 1},
+  {"photosets-getContext", "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for a photo in a set.",
+   command_photosets_getContext, 2, 2},
 
   {NULL, NULL, NULL, 0, 0}
 };  
@@ -478,7 +576,7 @@ main(int argc, char *argv[])
 
     fputs("\nCommands\n", stdout);
     for(i=0; commands[i].name; i++)
-      printf("  %-25s %s\n    %s\n", commands[i].name, commands[i].args,
+      printf("  %-28s %s\n    %s\n", commands[i].name, commands[i].args,
              commands[i].description);
 
     exit(0);
