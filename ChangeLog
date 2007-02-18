@@ -1,3 +1,46 @@
+2007-02-17  Dave Beckett  <dave@dajobe.org>
+
+	* main.c: (command_contexts_print): Added helper
+	(command_groups_pools_getContext): Added, calling
+	flickcurl_groups_pools_getContext.
+	(command_photos_getAllContexts): Added, calling
+	flickcurl_photos_getAllContexts.
+	(command_photos_getContext): Added, calling
+	flickcurl_photos_getContext.
+	(command_photosets_getContext): Added, calling
+	flickcurl_photosets_getContext
+
+	* api.c: (flickcurl_get_context_type_field_label): Added helper
+	(flickcurl_groups_pools_getContext,
+	flickcurl_photos_getAllContexts, flickcurl_photos_getContext,
+	flickcurl_photosets_getContext): Added API calls.
+
+	* flickcurl.c: (flickcurl_free_context, flickcurl_free_contexts,
+	flickcurl_build_contexts): Added
+
+	* flickcurl.h: Added flickcurl_context_type enum,
+	flickcurl_context typedef Added
+	flickcurl_get_context_type_field_label,
+	flickcurl_groups_pools_getContext,
+	flickcurl_photos_getAllContexts, flickcurl_photos_getContext,
+	flickcurl_photosets_getContext, API calls.  Added
+	flickcurl_free_context and flickcurl_free_contexts
+
+	* flickcurl_internal.h: Added flickcurl_context_type_element,
+	flickcurl_build_contexts
+
+2007-02-11  Dave Beckett  <dave@dajobe.org>
+
+	* README.html: dc:rights example
+
+	* NEWS, README.html, configure.ac: Bumped to 0.7
+
+	* coverage.html: annoate version it appeared
+
+	* Makefile.am, README.html, coverage.html: Added coverage doc
+
+	* configure.ac: AC_INIT tweak
+
 2007-02-11  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted flickcurl_0_6 for 0.6 release (SVN 31)
