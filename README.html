@@ -219,6 +219,21 @@ frob of the format <em>NNN-NNN-NNN</em> into full authentication tokens.
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 </pre>
 
+<p><a href="http://www.flickr.com/services/api/flickr.groups.pools.getContext.html"><strong>flickr.groups.pools.getContext</strong></a> - get all visible sets and pools the photo belongs to. (0.7)</p>
+<pre>
+flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
+</pre>
+
+<p><a href="http://www.flickr.com/services/api/flickr.photos.getAllContexts.html"><strong>flickr.photos.getAllContexts</strong></a> - get all visible sets and pools the photo belongs to. (0.7)</p>
+<pre>
+flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
+</pre>
+
+<p><a href="http://www.flickr.com/services/api/flickr.photos.getContext.html"><strong>flickr.photos.getContext</strong></a> -  get next and previous photos for a photo in a photostream. (0.7)</p>
+<pre>
+flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
+</pre>
+
 <p>
 <a href="http://www.flickr.com/services/api/flickr.people.getInfo.html"><strong>flickr.people.getInfo</strong></a> - get information about a user. (0.6)</p>
 <pre>
@@ -242,6 +257,11 @@ flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id
 <p>Both return pointers to shared, static copies of the license info,
 cached from the server once only.</p>
 
+<p><a href="http://www.flickr.com/services/api/flickr.photosets.getContext.html"><strong>flickr.photosets.getContext</strong></a> - get next and previous photos for a photo in a set. (0.7)</p>
+<pre>
+flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
+</pre>
+
 <p><a href="http://www.flickr.com/services/api/flickr.test.echo.html"><strong>flickr.test.echo</strong></a> - echo what is sent.</p>
 <pre>
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
@@ -250,6 +270,11 @@ int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 <p><a href="http://www.flickr.com/services/api/flickr.urls.lookupUser.html"><strong>flickr.urls.lookupUser</strong></a> - get a user NSID given an url to a user's profile/photo page. (0.6)</p>
 <pre>
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
+</pre>
+
+<p>Utilities:</p>
+<pre>
+const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
 </pre>
 
 
