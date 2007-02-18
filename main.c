@@ -129,13 +129,14 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 #endif
 
 
-#define GETOPT_STRING "a:hv"
+#define GETOPT_STRING "a:d:hv"
 
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options[] =
 {
   /* name, has_arg, flag, val */
   {"auth",    1, 0, 'a'},
+  {"delay",   1, 0, 'd'},
   {"help",    0, 0, 'h'},
   {"version", 0, 0, 'v'},
   {NULL,      0, 0, 0}
@@ -427,6 +428,7 @@ main(int argc, char *argv[])
   int i;
   const char* home;
   char config_path[1024];
+  int request_delay= -1;
   
   program=my_basename(argv[0]);
 
@@ -488,6 +490,11 @@ main(int argc, char *argv[])
         
         break;
 
+      case 'd':
+        if(optarg)
+          request_delay=atoi(optarg);
+        break;
+        
       case 'h':
         help=1;
         break;
@@ -535,6 +542,10 @@ main(int argc, char *argv[])
       goto tidy;
     }
   }
+
+  if(request_delay >= 0)
+    flickcurl_set_request_delay(fc, request_delay);
+  
   
   for(i=0; commands[i].name; i++)
     if(!strcmp(argv[0], commands[i].name)) {
@@ -579,6 +590,7 @@ main(int argc, char *argv[])
     fputs("\n", stdout);
 
     puts(HELP_TEXT("a", "auth FROB       ", "Authenticate with a FROB and write auth config"));
+    puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
