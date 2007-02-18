@@ -23,7 +23,7 @@ lib_LTLIBRARIES = libflickcurl.la
 
 include_HEADERS = flickcurl.h
 
-flickcurl_SOURCES = main.c
+flickcurl_SOURCES = flickcurl.c
 if GETOPT
 flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
