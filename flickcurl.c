@@ -43,9 +43,9 @@ const char* const flickcurl_short_copyright_string = "Copyright 2007 David Becke
 
 const char* const flickcurl_copyright_string = "Copyright (C) 2007 David Beckett - http://purl.org/net/dajobe/";
 
-const char* const flickcurl_license_string = "LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.\nSee http://flickcurl.sf.net/LICENSE.html for full terms.";
+const char* const flickcurl_license_string = "LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.\nSee http://librdf.org/flickcurl/ for full terms.";
 
-const char* const flickcurl_home_url_string = "http://flickcurl.sf.net/";
+const char* const flickcurl_home_url_string = "http://librdf.org/flickcurl/";
 const char* const flickcurl_version_string = VERSION;
 
 
