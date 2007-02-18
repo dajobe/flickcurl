@@ -342,6 +342,14 @@ flickcurl_set_sig_key(flickcurl *fc, const char* sig_key)
 }
 
 
+void
+flickcurl_set_request_delay(flickcurl *fc, long delay_msec)
+{
+  if(delay_msec >= 0)
+    fc->request_delay=delay_msec;
+}
+
+
 static int
 compare_args(const void *a, const void *b) 
 {
@@ -461,12 +469,68 @@ flickcurl_invoke(flickcurl *fc)
 {
   struct curl_slist *slist=NULL;
   xmlDocPtr doc=NULL;
+  struct timeval now;
 
   if(!fc->uri) {
     flickcurl_error(fc, "No Flickr URI prepared to invoke");
     return NULL;
   }
   
+  gettimeofday(&now, NULL);
+  if(fc->last_request_time.tv_sec) {
+    /* If there was a previous request, check it's not too soon to
+     * do another
+     */
+    struct timeval uwait;
+
+    memcpy(&uwait, &fc->last_request_time, sizeof(struct timeval));
+
+    fprintf(stderr, "Previous request was at %lu.N%lu\n",
+            (unsigned long)uwait.tv_sec, (unsigned long)1000*uwait.tv_usec);
+    
+    /* Calculate in micro-seconds */
+    uwait.tv_usec += 1000 * fc->request_delay;
+    if(uwait.tv_usec >= 1000000) {
+      uwait.tv_sec+= uwait.tv_usec / 1000000;
+      uwait.tv_usec= uwait.tv_usec % 1000000;
+    }
+
+    fprintf(stderr, "Next request is no earlier than %lu.N%lu\n",
+            (unsigned long)uwait.tv_sec, (unsigned long)1000*uwait.tv_usec);
+    fprintf(stderr, "Now is %lu.N%lu\n",
+            (unsigned long)now.tv_sec, (unsigned long)1000*now.tv_usec);
+    
+    if(now.tv_sec > uwait.tv_sec ||
+       (now.tv_sec == uwait.tv_sec && now.tv_usec > uwait.tv_usec)) {
+      /* No need to delay */
+    } else {
+      struct timespec nwait;
+      /* Calculate in nano-seconds */
+      nwait.tv_sec= uwait.tv_sec - now.tv_sec;
+      nwait.tv_nsec= 1000*(uwait.tv_usec - now.tv_usec);
+      if(nwait.tv_nsec < 0) {
+        nwait.tv_sec--;
+        nwait.tv_nsec+= 1000000000;
+      }
+      
+      /* Wait until timeval 'wait' happens */
+      fprintf(stderr, "Waiting for %lu sec N%lu nsec period\n",
+              (unsigned long)nwait.tv_sec, (unsigned long)nwait.tv_nsec);
+      while(1) {
+        struct timespec rem;
+        if(nanosleep(&nwait, &rem) < 0 && errno == EINTR) {
+          memcpy(&nwait, &rem, sizeof(struct timeval));
+          fprintf(stderr, "EINTR - waiting for %lu sec N%lu nsec period\n",
+                  (unsigned long)nwait.tv_sec, (unsigned long)nwait.tv_nsec);
+          continue;
+        }
+        break;
+      }
+    }
+  }
+  memcpy(&fc->last_request_time, &now, sizeof(struct timeval));
+
+
   if(fc->xc) {
     if(fc->xc->myDoc) {
       xmlFreeDoc(fc->xc->myDoc);
