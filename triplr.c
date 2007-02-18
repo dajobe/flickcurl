@@ -118,13 +118,14 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 #endif
 
 
-#define GETOPT_STRING "dho:v"
+#define GETOPT_STRING "Dd:ho:v"
 
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options[] =
 {
   /* name, has_arg, flag, val */
-  {"debug",   0, 0, 'd'},
+  {"debug",   1, 0, 'D'},
+  {"delay",   1, 0, 'd'},
   {"help",    0, 0, 'h'},
   {"output",  1, 0, 'o'},
   {"version", 0, 0, 'v'},
@@ -572,6 +573,7 @@ main(int argc, char *argv[])
   const char *serializer_syntax_name="ntriples";
   raptor_uri* base_uri=NULL;
 #endif
+  int request_delay= -1;
 
   program=my_basename(argv[0]);
 
@@ -608,6 +610,11 @@ main(int argc, char *argv[])
         break;
 
       case 'd':
+        if(optarg)
+          request_delay=atoi(optarg);
+        break;
+        
+      case 'D':
         debug=1;
         break;
         
@@ -774,7 +781,8 @@ main(int argc, char *argv[])
 
     fputs("\n", stdout);
 
-    puts(HELP_TEXT("d", "debug           ", "Print lots of output"));
+    puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
+    puts(HELP_TEXT("D", "debug           ", "Print lots of output"));
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("o", "output FORMAT   ", "Choose output format 'ntriples' or 'turtle'"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
@@ -782,6 +790,9 @@ main(int argc, char *argv[])
     exit(0);
   }
 
+
+  if(request_delay >= 0)
+    flickcurl_set_request_delay(fc, request_delay);
 
   /* Perform the API call */
   rc=triplr(stdout, fc, photo_id);
