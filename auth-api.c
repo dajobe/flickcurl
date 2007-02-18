@@ -50,7 +50,10 @@
  */
 
 
-/* Flickr auth.getFullToken - turn a frob into an auth_token */
+/*
+ * flickr.auth.getFullToken - turn a frob into an auth_token 
+ * Must be signed.
+ */
 char*
 flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 {
