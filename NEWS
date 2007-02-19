@@ -51,6 +51,7 @@ Flickcurl News
   and command person-getInfo in flickcurl utility
 - 6% of API
 
+
 2007-02-04  flickcurl 0.5
 - Added optional support for using Raptor (http://librdf.org/raptor)
   for more accurate and prettier serializing triples in triplr
