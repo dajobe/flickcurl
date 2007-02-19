@@ -1,5 +1,81 @@
 2007-02-18  Dave Beckett  <dave@dajobe.org>
 
+	* triplr.c: Extend help when raptor is present
+
+	* people-api.c: (flickcurl_get_nsid): Added with common code from
+	flickcurl_people_findByEmail, flickcurl_people_findByUsername.
+	(flickcurl_people_findByEmail, flickcurl_people_findByUsername):
+	Updated to use flickcurl_get_nsid.
+
+	* flickcurl.c: Added commands to call flickcurl_people_findByEmail
+	and flickcurl_people_findByUsername
+
+	* people-api.c: (flickcurl_people_findByEmail,
+	flickcurl_people_findByUsername): Added.
+
+	* flickcurl.h: Added
+	char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
+	char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
+
+	* core.c, flickcurl_internal.h: Fix offline/capture defines
+
+	* core.c: use errno.h
+
+	* configure.ac, core.c, flickcurl_internal.h: Added
+	--enable-offline and --enable-capture to configure rather than
+	editing a header file
+
+	* api.c, auth-api.c, core.c, flickcurl_internal.h, people-api.c,
+	urls-api.c: More comprehensive offline and XML capture
+
+	* Makefile.am, api.c, urls-api.c (from /trunk/api.c:67): Copy urls
+	apis from api.c urls-api.c
+
+	* people-api.c: Move person_fields_table from api.c
+
+	* Makefile.am, api.c, people-api.c (from /trunk/api.c:62): Move
+	people calls from api.c to people-api.c
+
+	* auth-api.c: remove offline define
+
+	* Makefile.am, flickcurl.c (from /trunk/main.c:57), main.c: Rename
+	main.c to flickcurl.c
+
+	* Makefile.am, core.c (from /trunk/flickcurl.c:61), flickcurl.c:
+	Rename flickcurl.c to core.c
+
+	* Makefile.am, api.c, auth-api.c (from /trunk/api.c:51),
+	flickcurl_internal.h: Move auth calls from api.c to auth-api.c
+
+	* flickcurl.c: (flickcurl_new): Default to 100ms min delay between
+	requests.
+
+	* configure.ac: Remove  -Wmissing-format-attribute
+	Which is too annoying to fix right now.
+
+	* flickcurl.c: ifdef not if
+
+	* flickcurl.c: (flickcurl_invoke): Wrap debug messages with ifdefs
+
+	* main.c: Added -d/--delay DELAY to set request delay
+
+	* triplr.c: Debug is now -D/--delay
+	-d/--delay DELAY to set request delay
+
+	* flickcurl.c: (flickcurl_set_request_delay): Added to set the
+	inter-request minimum delay.
+	(flickcurl_invoke): Use gettimeofday and nanosleep to enforce the
+	minimum delay between requests.
+
+	* flickcurl.h: Added flickcurl_set_request_delay
+
+	* flickcurl_internal.h: flickcurl gains last_request_time and
+	request_delay fields
+
+	* flickcurl.c: Fix home page url
+
+	* configure.ac: Bumped version to 0.8
+
 	* Snapshotted flickcurl_0_7 for 0.7 release (SVN 48)
 
 2007-02-17  Dave Beckett  <dave@dajobe.org>
