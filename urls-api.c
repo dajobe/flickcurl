@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * api.c - Flickr API calls
+ * urls-api.c - Flickr urls API calls
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 
