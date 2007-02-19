@@ -34,6 +34,9 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_ERRNO_H
+#include <errno.h>
+#endif
 
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
