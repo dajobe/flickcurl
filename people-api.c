@@ -40,11 +40,88 @@
 
 /*
  * flickr.people.findByEmail - get a user's NSID, given their email address
+ * Added in 0.8
  */
+char*
+flickcurl_people_findByEmail(flickcurl* fc, const char* email)
+{
+  const char * parameters[5][2];
+  int count=0;
+  char *nsid=NULL;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+
+  if(!email)
+    return NULL;
+  
+  parameters[count][0]  = "find_email";
+  parameters[count++][1]= email;
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.people.findByEmail", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(xpathCtx) {
+    nsid=flickcurl_xpath_eval(fc, xpathCtx,
+                              (const xmlChar*)"/rsp/user/@nsid");
+    xmlXPathFreeContext(xpathCtx);
+  }
+
+  tidy:
+
+  return nsid;
+}
+
 
 /*
  * flickr.people.findByUsername - get a user's NSID, given their username.
+ * Added in 0.8
  */
+char*
+flickcurl_people_findByUsername(flickcurl* fc, const char* username)
+{
+  const char * parameters[5][2];
+  int count=0;
+  char *nsid=NULL;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+
+  if(!username)
+    return NULL;
+  
+  parameters[count][0]  = "username";
+  parameters[count++][1]= username;
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.people.findByUsername", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(xpathCtx) {
+    nsid=flickcurl_xpath_eval(fc, xpathCtx,
+                              (const xmlChar*)"/rsp/user/@nsid");
+    xmlXPathFreeContext(xpathCtx);
+  }
+
+  tidy:
+
+  return nsid;
+}
 
 
 static struct {
@@ -152,6 +229,7 @@ static struct {
 
 /*
  * flickr.people.getInfo - get information about a person 
+ * Added in 0.6
  */
 flickcurl_person*
 flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
