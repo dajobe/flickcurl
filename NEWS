@@ -2,6 +2,9 @@ Flickcurl News
 
 2007-02-XX  flickcurl 0.8
 - Not yet released
+- Added more help info to 'triplr'
+- Added -d option to 'triplr' and 'flickcurl' to set delay between
+  requests using new flickcurl_set_request_delay().
 - Added:
   char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
   char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
@@ -13,7 +16,7 @@ Flickcurl News
 - Added method to set the minimum delay between web service requests
   void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
   The default is set to 100ms - 10 requests/second.
-- Moved flickr utility code into flickcurl.c
+- Moved 'flickcurl' utility code into flickcurl.c
 - FIXME% of API
 
 
