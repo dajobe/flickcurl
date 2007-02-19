@@ -398,10 +398,8 @@ static struct {
  * Get information about a photo
  *
  * Implements flickr.photos.getInfo (0.5)
- */
-
  * 
- * Return value: 
+ * Return value: #flickcurl_photo or NULL on failure
  **/
 flickcurl_photo*
 flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
