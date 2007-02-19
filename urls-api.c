@@ -39,25 +39,44 @@
 
 
 /*
- * flickr.urls.getGroup - get the url to a group's page.
+ * flickr.urls.getGroup:
+ *
+ * Get the url to a group's page.
  */
 
-/*
- * flickr.urls.getUserPhotos - get the url to a user's photos.
- */
 
 /*
- * flickr.urls.getUserProfile - get the url to a user's profile.
+ * flickr.urls.getUserPhotos:
+ *
+ * Get the url to a user's photos.
  */
 
-/*
- * flickr.urls.lookupGroup - get a group NSID, given the url to a group's page or photo pool.
- */
 
 /*
- * flickr.urls.lookupUser - get a user NSID, given the url to a user's photos or profile.
- * (0.6)
+ * flickr.urls.getUserProfile:
+ *
+ * Get the url to a user's profile.
  */
+
+
+/*
+ * flickr.urls.lookupGroup:
+ *
+ * Get a group NSID, given the url to a group's page or photo pool.
+ */
+
+
+/**
+ * flickcurl_urls_lookupUser - 
+ * @fc: flickcurl context
+ * @url: URL of user's photo or user's profile
+ * 
+ * Get a user NSID, given the url to a user's photos or profile.
+ *
+ * Implements flickr.urls.lookupUser (0.6)
+ * 
+ * Return value: NSID or NULL on failure
+ **/
 char*
 flickcurl_urls_lookupUser(flickcurl* fc, const char* url)
 {

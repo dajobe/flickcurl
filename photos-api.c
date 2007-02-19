@@ -392,12 +392,12 @@ static struct {
 
 /**
  * flickcurl_photos_getInfo:
- * @fc: 
- * @photo_id: 
+ * @fc: flickcurl context
+ * @id: photo ID
  * 
  * Get information about a photo
  *
- * Implements: flickr.photos.getInfo (0.5)
+ * Implements flickr.photos.getInfo (0.5)
  */
 
  * 

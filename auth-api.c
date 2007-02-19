@@ -39,21 +39,33 @@
 
 
 /*
- * flickr.auth.checkToken - get the credentials attached to an authentication token.
+ * flickr.auth.checkToken:
+ *
+ * Get the credentials attached to an authentication token.
  * Must be signed.
  */
 
 
 /*
- * flickr.auth.getFrob - get a frob to be used during authentication.
+ * flickr.auth.getFrob:
+ *
+ * Get a frob to be used during authentication.
  * Must be signed.
  */
 
 
-/*
- * flickr.auth.getFullToken - turn a frob into an auth_token 
+/**
+ * flickcurl_auth_getFullToken:
+ * @fc: flickcurl context
+ * @frob: frob string
+ * 
+ * Turn a frob into an auth_token
+ *
+ * Implements flickr.auth.getFullToken (0.5)
  * Must be signed.
- */
+ * 
+ * Return value: token string or NULL on failure
+ **/
 char*
 flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 {
@@ -91,6 +103,8 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 
 
 /*
- * flickr.auth.getToken - get the auth token for the given frob, if one has been attached. 
+ * flickr.auth.getToken:
+ *
+ * Get the auth token for the given frob, if one has been attached. 
  * Must be signed.
  */

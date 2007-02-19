@@ -44,7 +44,21 @@
  **********************************************************************
  */
 
-/* Flickr test echo */
+
+/**
+ * flickcurl_test_echo:
+ * @fc: flickcurl context
+ * @key: test key
+ * @value: test value
+ * 
+ * A testing method which echo's all parameters back in the response.
+ *
+ * Actually prints the returned byte count to stderr.
+ *
+ * Implements flickr.test.echo (0.5)
+ *
+ * Return value: non-0 on failure
+ **/
 int
 flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
 {
@@ -147,7 +161,8 @@ flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
 }
 
 
-static int compare_licenses(const void *a, const void *b)
+static int
+compare_licenses(const void *a, const void *b)
 {
   flickcurl_license* l_a=*(flickcurl_license**)a;
   flickcurl_license* l_b=*(flickcurl_license**)b;
@@ -155,7 +170,14 @@ static int compare_licenses(const void *a, const void *b)
 }
 
 
-static void flickcurl_read_licenses(flickcurl *fc)
+/**
+ * flickcurl_read_licenses:
+ * @fc: flickcurl context
+ * 
+ * Internal - read licenses
+ **/
+static void
+flickcurl_read_licenses(flickcurl *fc)
 {
   const char * parameters[10][2];
   int count=0;
@@ -250,7 +272,18 @@ static void flickcurl_read_licenses(flickcurl *fc)
 }
 
 
-flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc)
+/**
+ * flickcurl_photos_licenses_getInfo - 
+ * @fc: flickcurl context
+ * 
+ * Get a list of available photo licenses for Flickr.
+ *
+ * Implements flickr.photos.licenses.getInfo (0.6)
+ * 
+ * Return value: an array of #flickcurl_license or NULL on failure
+ **/
+flickcurl_license**
+flickcurl_photos_licenses_getInfo(flickcurl *fc)
 {
   if(!fc->licenses)
     flickcurl_read_licenses(fc);
@@ -259,7 +292,8 @@ flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc)
 }
 
 
-flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id)
+flickcurl_license*
+flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id)
 {
   int i;
   
@@ -332,10 +366,12 @@ flickcurl_get_context_type_field_label(flickcurl_context_type type)
  * @fc: flickcurl context
  * @id: photo ID
  * 
- * Returns an array of size 3 [prev, next, NULL] flickcurl_context*
- * or NULL on error
+ * Get next and previous photos for a photo in a group pool.
  * 
- * Return value: prev, next contexts or NULL
+ * Implements flickr.groups.pools.getContext (0.7)
+ *
+ * Return value: an array of size 3 [prev, next, NULL] flickcurl_context*
+ * or NULL on error
  **/
 flickcurl_context**
 flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
@@ -385,11 +421,13 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
  * flickcurl_photosets_getContext:
  * @fc: flickcurl context
  * @id: photo ID
+ *
+ * Get next and previous photos for a photo in a set.
  * 
- * Returns an array of size 3 [prev, next, NULL] flickcurl_context*
+ * Implements flickr.photosets.getContext (0.7)
+ *
+ * Return value: an array of size 3 [prev, next, NULL] flickcurl_context*
  * or NULL on error
- * 
- * Return value: prev, next contexts or NULL
  **/
 flickcurl_context**
 flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,

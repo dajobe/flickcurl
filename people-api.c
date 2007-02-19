@@ -78,10 +78,17 @@ flickcurl_get_nsid(flickcurl* fc, const char* key, const char* value,
 }
 
 
-/*
- * flickr.people.findByEmail - get a user's NSID, given their email address
- * Added in 0.8
- */
+/**
+ * flickcurl_people_findByEmail:
+ * @fc: flickcurl context
+ * @email: user email address
+ * 
+ * Get a user's NSID, given their email address
+ *
+ * Implements flickr.people.findByEmail (0.8)
+ * 
+ * Return value: NSID or NULL on failure
+ **/
 char*
 flickcurl_people_findByEmail(flickcurl* fc, const char* email)
 {
@@ -90,10 +97,17 @@ flickcurl_people_findByEmail(flickcurl* fc, const char* email)
 }
 
 
-/*
- * flickr.people.findByUsername - get a user's NSID, given their username.
- * Added in 0.8
- */
+/**
+ * flickcurl_people_findByUsername:
+ * @fc: flickcurl context
+ * @username: username
+ * 
+ * Get a user's NSID, given their username address
+ *
+ * Implements flickr.people.findByUsername (0.8)
+ * 
+ * Return value: NSID or NULL on failure
+ **/
 char*
 flickcurl_people_findByUsername(flickcurl* fc, const char* username)
 {
@@ -205,10 +219,20 @@ static struct {
 };
 
 
-/*
- * flickr.people.getInfo - get information about a person 
- * Added in 0.6
- */
+/**
+ * flickcurl_people_getInfo - 
+ * @fc: flickcurl context
+ * @user_id: user NSID
+ * 
+ * Get information about a person
+ *
+ * Implements flickr.people.getInfo (0.6)
+ *
+ * NSID can be found by flickcurl_people_findByEmail() or
+ * flickcurl_people_findByUsername().
+ * 
+ * Return value: #flickcurl_person object or NULL on failure
+ **/
 flickcurl_person*
 flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
 {
@@ -347,13 +371,21 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
 
 
 /*
- * flickr.people.getPublicGroups - get the list of public groups a user is a member of.
+ * flickr.people.getPublicGroups:
+ *
+ * Get the list of public groups a user is a member of.
  */
 
-/*
- * flickr.people.getPublicPhotos - get a list of public photos for the given user.
- */
 
 /*
- * flickr.people.getUploadStatus - get information for the calling user related to photo uploads.
+ * flickr.people.getPublicPhotos:
+ *
+ * Get a list of public photos for the given user.
+ */
+
+
+/*
+ * flickr.people.getUploadStatus:
+ *
+ * Get information for the calling user related to photo uploads.
  */
