@@ -220,6 +220,8 @@ char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 
 flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
 
+char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
+char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
