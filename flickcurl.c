@@ -30,7 +30,7 @@
  * FROB like 123-456-789
  * which will write a new ~/.flickcurl.conf with the auth_token received
  *
- * Flickr API Calls:
+ * API calls are invoked like:
  *
  * flickcurl test-echo KEY VALUE
  *   This method does not require authentication.
@@ -42,6 +42,7 @@
  *   -- http://www.flickr.com/services/api/flickr.photos.getInfo.html
  * Gets information about a photo including its tags
  *
+ * See the help message for full list of supported Flickr API Calls.
  *
  */
 
@@ -162,6 +163,38 @@ static void command_flickcurl_tag_handler(void *user_data, flickcurl_tag* tag)
           tag->id, tag->author, tag->raw, tag->cooked);
 }
 #endif
+
+
+static int
+command_people_findByEmail(flickcurl* fc, int argc, char *argv[])
+{
+  char* nsid=NULL;
+  char* email=argv[1];
+  
+  nsid=flickcurl_people_findByEmail(fc, email);
+
+  if(nsid)
+    fprintf(stderr, "%s: NSID %s for user email %s\n", 
+            program, nsid, email);
+  
+  return (nsid != NULL);
+}
+
+
+static int
+command_people_findByUsername(flickcurl* fc, int argc, char *argv[])
+{
+  char* nsid=NULL;
+  char* user_name=argv[1];
+  
+  nsid=flickcurl_people_findByUsername(fc, user_name);
+
+  if(nsid)
+    fprintf(stderr, "%s: NSID %s for username %s\n", 
+            program, nsid, user_name);
+  
+  return (nsid != NULL);
+}
 
 
 static int
@@ -380,6 +413,12 @@ static struct {
   {"groups-pools-getContext",
    "PHOTO-ID GROUP-ID", "Get next and previous photos for a photo in a group pool.",
    command_groups_pools_getContext, 2, 2},
+  {"people-findByEmail",
+   "EMAIL", "get a user's NSID, given their EMAIl address", 
+   command_people_findByEmail,  1, 1},
+  {"people-findByUsername",
+   "USERNAME", "get a user's NSID, given their USERNAME", 
+   command_people_findByUsername,  1, 1},
   {"people-getInfo",
    "USER-ID", "Get information about one person with id USER-ID", 
    command_people_getInfo,  1, 1},
