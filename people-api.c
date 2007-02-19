@@ -38,12 +38,9 @@
 #include <flickcurl_internal.h>
 
 
-/*
- * flickr.people.findByEmail - get a user's NSID, given their email address
- * Added in 0.8
- */
-char*
-flickcurl_people_findByEmail(flickcurl* fc, const char* email)
+static char*
+flickcurl_get_nsid(flickcurl* fc, const char* key, const char* value,
+                   const char* method)
 {
   const char * parameters[5][2];
   int count=0;
@@ -51,17 +48,17 @@ flickcurl_people_findByEmail(flickcurl* fc, const char* email)
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
 
-  if(!email)
+  if(!value)
     return NULL;
   
-  parameters[count][0]  = "find_email";
-  parameters[count++][1]= email;
+  parameters[count][0]  = key;
+  parameters[count++][1]= value;
 
   parameters[count][0]  = NULL;
 
   flickcurl_set_sig_key(fc, NULL);
 
-  if(flickcurl_prepare(fc, "flickr.people.findByEmail", parameters, count))
+  if(flickcurl_prepare(fc, method, parameters, count))
     goto tidy;
 
   doc=flickcurl_invoke(fc);
@@ -82,45 +79,26 @@ flickcurl_people_findByEmail(flickcurl* fc, const char* email)
 
 
 /*
+ * flickr.people.findByEmail - get a user's NSID, given their email address
+ * Added in 0.8
+ */
+char*
+flickcurl_people_findByEmail(flickcurl* fc, const char* email)
+{
+  return flickcurl_get_nsid(fc, "find_email", email, 
+                            "flickr.people.findByEmail");
+}
+
+
+/*
  * flickr.people.findByUsername - get a user's NSID, given their username.
  * Added in 0.8
  */
 char*
 flickcurl_people_findByUsername(flickcurl* fc, const char* username)
 {
-  const char * parameters[5][2];
-  int count=0;
-  char *nsid=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-
-  if(!username)
-    return NULL;
-  
-  parameters[count][0]  = "username";
-  parameters[count++][1]= username;
-
-  parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
-
-  if(flickcurl_prepare(fc, "flickr.people.findByUsername", parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(xpathCtx) {
-    nsid=flickcurl_xpath_eval(fc, xpathCtx,
-                              (const xmlChar*)"/rsp/user/@nsid");
-    xmlXPathFreeContext(xpathCtx);
-  }
-
-  tidy:
-
-  return nsid;
+  return flickcurl_get_nsid(fc, "username", username, 
+                            "flickr.people.findByUsername");
 }
 
 
