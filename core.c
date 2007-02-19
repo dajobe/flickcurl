@@ -120,7 +120,7 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
   if(rc)
     flickcurl_error(fc, "XML Parsing failed");
 
-#ifdef CAPTURE_XML
+#ifdef CAPTURE
   if(fc->fh)
     fwrite(ptr, size, nmemb, fc->fh);
 #endif

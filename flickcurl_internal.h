@@ -12,8 +12,8 @@
 #include <curl/easy.h>
 
 
-#if defined (WWW_OFFLINE) && defined (CAPTURE_XML)
-#error "Cannot define both WWW_OFFLINE and CAPTURE_XML"
+#if defined (OFFLINE) && defined (CAPTURE)
+#error "Cannot define both OFFLINE and CAPTURE"
 #endif
 
 
@@ -113,7 +113,7 @@ struct flickcurl_s {
   /* Delay between HTTP requests in microseconds - default is none (0) */
   long request_delay;
 
-#ifdef CAPTURE_XML
+#ifdef CAPTURE
   FILE* fh;
 #endif
 };
