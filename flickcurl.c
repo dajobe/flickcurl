@@ -1,3 +1,4 @@
+
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
  * flickcurl utility - Invoke the Flickrcurl library
@@ -410,37 +411,37 @@ static struct {
   int             max;
 } commands[] = {
   /* name, min, handler */
-  {"groups-pools-getContext",
+  {"groups.pools.getContext",
    "PHOTO-ID GROUP-ID", "Get next and previous photos for a photo in a group pool.",
    command_groups_pools_getContext, 2, 2},
-  {"people-findByEmail",
+  {"people.findByEmail",
    "EMAIL", "get a user's NSID, given their EMAIl address", 
    command_people_findByEmail,  1, 1},
-  {"people-findByUsername",
+  {"people.findByUsername",
    "USERNAME", "get a user's NSID, given their USERNAME", 
    command_people_findByUsername,  1, 1},
-  {"people-getInfo",
+  {"people.getInfo",
    "USER-ID", "Get information about one person with id USER-ID", 
    command_people_getInfo,  1, 1},
-  {"photos-getContext",
+  {"photos.getContext",
    "PHOTO-ID", "Get next and previous photos for a photo in a photostream.",
    command_photos_getContext, 1, 1},
-  {"photos-getAllContexts",
+  {"photos.getAllContexts",
    "PHOTO-ID", "Get all visible sets and pools the photo belongs to.",
    command_photos_getAllContexts, 1, 1},
-  {"photos-getInfo",
+  {"photos.getInfo",
    "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
    command_photos_getInfo,  1, 1},
-  {"photos-licenses-getInfo",
+  {"photos.licenses.getInfo",
    "", "Get list of available photo licenses", 
    command_photos_licenses_getInfo,  0, 0},
-  {"photosets-getContext",
+  {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for a photo in a set.",
    command_photosets_getContext, 2, 2},
-  {"test-echo",
+  {"test.echo",
    "KEY VALUE", "Test echo of KEY VALUE",
    command_test_echo,  2, 2},
-  {"urls-lookupUser",
+  {"urls.lookupUser",
    "URL", "Get a user NSID given the url to a user's photo", 
    command_urls_lookupUser,  1, 1},
 
@@ -468,6 +469,7 @@ main(int argc, char *argv[])
   const char* home;
   char config_path[1024];
   int request_delay= -1;
+  char *command=NULL;
   
   program=my_basename(argv[0]);
 
@@ -584,15 +586,25 @@ main(int argc, char *argv[])
 
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
+
+  command=argv[0];
   
+  /* allow old format commands to work */
+  for(i=0; command[i]; i++) {
+    if(command[i] == '-')
+      command[i]='.';
+  }
+  
+  if(!strncmp(command, "flickr.", 7))
+    command+=7;
   
   for(i=0; commands[i].name; i++)
-    if(!strcmp(argv[0], commands[i].name)) {
+    if(!strcmp(command, commands[i].name)) {
       cmd_index=i;
       break;
     }
   if(cmd_index < 0) {
-    fprintf(stderr, "%s: No such command `%s'\n", program, argv[0]);
+    fprintf(stderr, "%s: No such command `%s'\n", program, command);
     usage=1;
     goto usage;
   }
@@ -633,10 +645,11 @@ main(int argc, char *argv[])
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
-    fputs("\nCommands\n", stdout);
+    fputs("\nCommands:\n", stdout);
     for(i=0; commands[i].name; i++)
-      printf("  %-28s %s\n    %s\n", commands[i].name, commands[i].args,
+      printf("    %-28s %s\n      %s\n", commands[i].name, commands[i].args,
              commands[i].description);
+    fputs("  A prefix of `flickr.' may be optionally given\n", stdout);
 
     exit(0);
   }
