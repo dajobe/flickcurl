@@ -186,10 +186,6 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
   if(flickcurl_prepare(fc, "flickr.people.getInfo", parameters, count))
     goto tidy;
 
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:people_getInfo.xml");
-#endif
-
   doc=flickcurl_invoke(fc);
   if(!doc)
     goto tidy;

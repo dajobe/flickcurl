@@ -73,10 +73,6 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
   if(flickcurl_prepare(fc, "flickr.auth.getFullToken", parameters, count))
     goto tidy;
 
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:auth.getFullToken.xml");
-#endif
-
   doc=flickcurl_invoke(fc);
   if(!doc)
     goto tidy;

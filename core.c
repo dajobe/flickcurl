@@ -117,6 +117,10 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
   if(rc)
     flickcurl_error(fc, "XML Parsing failed");
 
+#ifdef CAPTURE_XML
+  if(fc->fh)
+    fwrite(ptr, size, nmemb, fc->fh);
+#endif
   return len;
 }
 
@@ -473,6 +477,27 @@ flickcurl_invoke(flickcurl *fc)
   struct curl_slist *slist=NULL;
   xmlDocPtr doc=NULL;
   struct timeval now;
+#if defined(WWW_OFFLINE) || defined(CAPTURE_XML)
+  char filename[200];
+#endif
+
+#if defined(WWW_OFFLINE) || defined(CAPTURE_XML)
+  if(1)
+    sprintf(filename, "%s.xml", fc->method+7); /* skip "flickr." */
+#endif
+
+#ifdef WWW_OFFLINE
+  if(1) {
+    if(access(filename, R_OK)) {
+      fprintf(stderr, "Method %s cannot run offline - no %s XML result available\n",
+              fc->method, filename);
+      return NULL;
+    }
+    sprintf(fc->uri, "file:%s", filename);
+    fprintf(stderr, "Method %s: running offline using result from %s\n", 
+            fc->method, filename);
+  }
+#endif
 
   if(!fc->uri) {
     flickcurl_error(fc, "No Flickr URI prepared to invoke");
@@ -480,6 +505,7 @@ flickcurl_invoke(flickcurl *fc)
   }
   
   gettimeofday(&now, NULL);
+#ifndef WWW_OFFLINE
   if(fc->last_request_time.tv_sec) {
     /* If there was a previous request, check it's not too soon to
      * do another
@@ -539,8 +565,14 @@ flickcurl_invoke(flickcurl *fc)
       }
     }
   }
+#endif
   memcpy(&fc->last_request_time, &now, sizeof(struct timeval));
 
+#ifdef CAPTURE_XML
+  if(1) {
+    fc->fh=fopen(filename, "wb");
+  }
+#endif
 
   if(fc->xc) {
     if(fc->xc->myDoc) {
@@ -639,6 +671,15 @@ flickcurl_invoke(flickcurl *fc)
       doc=NULL;
     }
   }
+
+#ifdef CAPTURE_XML
+  if(1) {
+    if(fc->fh)
+      fclose(fc->fh);
+    if(fc->failed)
+      remove(filename);
+  }
+#endif
 
   return doc;
 }

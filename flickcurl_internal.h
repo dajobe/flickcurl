@@ -13,9 +13,19 @@
 
 
 #if 1
-#undef OFFLINE
+#define WWW_OFFLINE
 #else
-#define OFFLINE 1
+#undef WWW_OFFLINE
+#endif
+
+#if 0
+#define CAPTURE_XML
+#else
+#undef CAPTURE_XML
+#endif
+
+#if defined (WWW_OFFLINE) && defined (CAPTURE_XML)
+#error "Cannot define both WWW_OFFLINE and CAPTURE_XML"
 #endif
 
 
@@ -114,9 +124,8 @@ struct flickcurl_s {
   
   /* Delay between HTTP requests in microseconds - default is none (0) */
   long request_delay;
-};
 
-/* Debugging only */
-#ifdef OFFLINE
-static void flickcurl_debug_set_uri(flickcurl* fc, const char* uri);
+#ifdef CAPTURE_XML
+  FILE* fh;
 #endif
+};

@@ -80,10 +80,6 @@ flickcurl_urls_lookupUser(flickcurl* fc, const char* url)
   if(flickcurl_prepare(fc, "flickr.urls.lookupUser", parameters, count))
     goto tidy;
 
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:urls_lookupUser.xml");
-#endif
-
   doc=flickcurl_invoke(fc);
   if(!doc)
     goto tidy;

@@ -38,15 +38,6 @@
 #include <flickcurl_internal.h>
 
 
-#ifdef OFFLINE
-static void
-flickcurl_debug_set_uri(flickcurl* fc, const char* uri)
-{
-  strcpy(fc->uri, uri);
-}
-#endif
-
-
 /*
  **********************************************************************
  * Flickr API Calls
@@ -398,10 +389,6 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.getInfo", parameters, count))
     goto tidy;
 
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:photos_getInfo.xml");
-#endif
-
   doc=flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -596,10 +583,6 @@ static void flickcurl_read_licenses(flickcurl *fc)
   if(flickcurl_prepare(fc, "flickr.photos.licenses.getInfo", parameters, count))
     goto tidy;
 
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:photos_licenses_getInfo.xml");
-#endif
-
   doc=flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -786,10 +769,6 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.getContext", parameters, count))
     goto tidy;
 
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:photos_getContext.xml");
-#endif
-
   doc=flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -837,10 +816,6 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
 
   if(flickcurl_prepare(fc, "flickr.photos.getAllContexts", parameters, count))
     goto tidy;
-
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:photos_getAllContexts.xml");
-#endif
 
   doc=flickcurl_invoke(fc);
   if(!doc)
@@ -896,10 +871,6 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.groups.pools.getContext", parameters, count))
     goto tidy;
 
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:groups_pools_getContext.xml");
-#endif
-
   doc=flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -953,10 +924,6 @@ flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
 
   if(flickcurl_prepare(fc, "flickr.photosets.getContext", parameters, count))
     goto tidy;
-
-#ifdef OFFLINE
-  flickcurl_debug_set_uri(fc, "file:photosets_getContext.xml");
-#endif
 
   doc=flickcurl_invoke(fc);
   if(!doc)
