@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * flickcurl.c - Flickcurl core functions for the Flickr API
+ * common.c - Flickcurl common functions
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 
