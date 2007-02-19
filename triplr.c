@@ -769,6 +769,10 @@ main(int argc, char *argv[])
   }
 
   if(help) {
+#ifdef HAVE_RAPTOR
+    int i;
+#endif
+
     printf(title_format_string, flickcurl_version_string);
     puts("Get Triples from Flickr photos.");
     printf("Usage: %s [OPTIONS] FLICKR-PHOTO-URI\n\n", program);
@@ -784,7 +788,22 @@ main(int argc, char *argv[])
     puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
     puts(HELP_TEXT("D", "debug           ", "Print lots of output"));
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
-    puts(HELP_TEXT("o", "output FORMAT   ", "Choose output format 'ntriples' or 'turtle'"));
+#ifdef HAVE_RAPTOR
+    puts(HELP_TEXT("o", "output FORMAT   ", "Set output format to one of:"));
+    for(i=0; 1; i++) {
+      const char *help_name;
+      const char *help_label;
+      if(raptor_serializers_enumerate(i, &help_name, &help_label, NULL, NULL))
+        break;
+      if(!strcmp(help_name, serializer_syntax_name))
+        printf("      %-15s %s (default)\n", help_name, help_label);
+      else
+        printf("      %-15s %s\n", help_name, help_label);
+    }
+    fprintf(stderr, "    via Raptor %s serializers\n", raptor_version_string);
+#else
+    puts(HELP_TEXT("o", "output FORMAT   ", "Set output format to one of 'ntriples' or 'turtle'"));
+#endif
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
     exit(0);
