@@ -191,6 +191,26 @@ else
 fi
 
 
+AC_ARG_ENABLE(offline, [  --enable-offline        Turn on offline use of captured XML web service responses (default disabled).  ], offline="yes", offline="no")	
+AC_MSG_CHECKING(using offline mode)
+AC_MSG_RESULT($offline);
+if test $offline = yes; then
+  AC_DEFINE(OFFLINE, 1, [Offline mode])
+fi
+
+
+AC_ARG_ENABLE(capture, [  --enable-capture        Turn on capturing web service responses (default disabled).  ], capture="yes", capture="no")	
+AC_MSG_CHECKING(capturing web service responses)
+AC_MSG_RESULT($capture);
+if test $capture = yes; then
+  AC_DEFINE(CAPTURE, 1, [Capture web service responses])
+fi
+
+if test $offline = yes -a $capture = yes; then
+  AC_MSG_ERROR(Cannot use both offline mode and capturing web service responses)
+fi
+
+
 dnl compiler checks
 
 AC_DEFUN([FLICKCURL_CC_TRY_FLAG], [

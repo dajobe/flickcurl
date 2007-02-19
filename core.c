@@ -477,16 +477,16 @@ flickcurl_invoke(flickcurl *fc)
   struct curl_slist *slist=NULL;
   xmlDocPtr doc=NULL;
   struct timeval now;
-#if defined(WWW_OFFLINE) || defined(CAPTURE_XML)
+#if defined(OFFLINE) || defined(CAPTURE)
   char filename[200];
 #endif
 
-#if defined(WWW_OFFLINE) || defined(CAPTURE_XML)
+#if defined(OFFLINE) || defined(CAPTURE)
   if(1)
     sprintf(filename, "%s.xml", fc->method+7); /* skip "flickr." */
 #endif
 
-#ifdef WWW_OFFLINE
+#ifdef OFFLINE
   if(1) {
     if(access(filename, R_OK)) {
       fprintf(stderr, "Method %s cannot run offline - no %s XML result available\n",
@@ -505,7 +505,7 @@ flickcurl_invoke(flickcurl *fc)
   }
   
   gettimeofday(&now, NULL);
-#ifndef WWW_OFFLINE
+#ifndef OFFLINE
   if(fc->last_request_time.tv_sec) {
     /* If there was a previous request, check it's not too soon to
      * do another
@@ -568,7 +568,7 @@ flickcurl_invoke(flickcurl *fc)
 #endif
   memcpy(&fc->last_request_time, &now, sizeof(struct timeval));
 
-#ifdef CAPTURE_XML
+#ifdef CAPTURE
   if(1) {
     fc->fh=fopen(filename, "wb");
   }
@@ -672,7 +672,7 @@ flickcurl_invoke(flickcurl *fc)
     }
   }
 
-#ifdef CAPTURE_XML
+#ifdef CAPTURE
   if(1) {
     if(fc->fh)
       fclose(fc->fh);
