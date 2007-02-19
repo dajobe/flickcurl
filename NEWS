@@ -2,6 +2,9 @@ Flickcurl News
 
 2007-02-XX  flickcurl 0.8
 - Not yet released
+- Added:
+  char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
+  char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 - Added configure development/debugging options:
    --enable-capture to capture web service responses into XML files
    --enable-offline to use the XML files to return results when offline
