@@ -29,7 +29,7 @@ flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
 flickcurl_LDADD= libflickcurl.la
 
-libflickcurl_la_SOURCES = core.c md5.c vsnprintf.c config.c \
+libflickcurl_la_SOURCES = common.c md5.c vsnprintf.c config.c \
 api.c \
 auth-api.c \
 people-api.c \
