@@ -564,8 +564,10 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
         t->author=attr_value;
       else if(!strcmp(attr_name, "raw"))
         t->raw=attr_value;
-      else if(!strcmp(attr_name, "machine_tag"))
+      else if(!strcmp(attr_name, "machine_tag")) {
         t->machine_tag=atoi(attr_value);
+        free(attr_value);
+      }
     }
     
     t->cooked=(char*)malloc(strlen((const char*)node->children->content)+1);
