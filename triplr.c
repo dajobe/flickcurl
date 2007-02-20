@@ -577,6 +577,8 @@ main(int argc, char *argv[])
 
   program=my_basename(argv[0]);
 
+  flickcurl_init();
+
   triplr_init();
 #ifdef HAVE_RAPTOR
   raptor_init();
@@ -832,6 +834,8 @@ main(int argc, char *argv[])
   
   raptor_finish();
 #endif
+
+  flickcurl_finish();
 
   return(rc);
 }

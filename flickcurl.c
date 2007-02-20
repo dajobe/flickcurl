@@ -471,6 +471,8 @@ main(int argc, char *argv[])
   int request_delay= -1;
   char *command=NULL;
   
+  flickcurl_init();
+  
   program=my_basename(argv[0]);
 
   home=getenv("HOME");
