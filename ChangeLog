@@ -1,3 +1,52 @@
+2007-02-19  Dave Beckett  <dave@dajobe.org>
+
+	* flickcurl.c, triplr.c: Use flickcurl_init/flickcurl_finish to
+	ensure all of curl/libxml is initialised and cleaned up as far as
+	is possible
+
+	* flickcurl.h: Added flickcurl_init
+
+	* common.c: (flickcurl_init): Added.
+
+	* flickcurl.c: (main): Call flickcurl_finish
+
+	* flickcurl.h: Added flickcurl_finish prototype.
+
+	* common.c: (flickcurl_finish): Added.
+
+	* photos-api.c: (flickcurl_photos_getInfo): return NULL on error
+
+	* flickcurl.c: (main): Init fc and ensure it is freed on help/usage.
+
+	* photos-licenses-api.c: free attribute strings that are atoi()ed
+
+	* photos-api.c: free attribute strings that are atoi()ed
+
+	* common.c: free attribute strings that are atoi()ed
+
+	* triplr.c: (emit_triple): Free uris properly.
+	(main): Init fc and ensure it is freed on help/usage.
+
+	* triplr.c: help to stdout
+
+	* Makefile.am, api.c, photos-licenses-api.c (renamed from
+	api.c r95): Pull photos.licenses API out of api.c into
+	photos-licenses-api.c
+
+	* api.c, auth-api.c, people-api.c, photos-api.c, urls-api.c: autodocs
+
+	* Makefile.am, api.c, photos-api.c (renamed from api.c r90): Pull
+	photos API out of api.c into photos-api.c
+
+	* common.c: common.c
+
+	* Makefile.am, common.c (renamed from core.c r90), core.c: Rename
+	core.c to common.c - files named core* are a bad idea
+
+	* flickcurl.c: Rename commands to match API names
+	Allow old foo-bar commands to work
+	Allow flickr.COMMAND to work
+
 2007-02-18  Dave Beckett  <dave@dajobe.org>
 
 	* triplr.c: Extend help when raptor is present
