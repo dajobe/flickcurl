@@ -2,6 +2,8 @@ Flickcurl News
 
 2007-02-XX  flickcurl 0.8
 - Not yet released
+- Added flickcurl_init() and flickcurl_finish() to do
+  once-per-process initializing and cleanup.
 - Added more help info to 'triplr'
 - Added -d option to 'triplr' and 'flickcurl' to set delay between
   requests using new flickcurl_set_request_delay().
@@ -11,8 +13,8 @@ Flickcurl News
 - Added configure development/debugging options:
    --enable-capture to capture web service responses into XML files
    --enable-offline to use the XML files to return results when offline
-- Split large api.c into auth-api.c, people-api.c and urls-api.c to
-  match the API sections.
+- Split large api.c into auth-api.c, people-api.c, photos-api.c,
+  photos-licenses-api.c and urls-api.c to match the API sections.
 - Added method to set the minimum delay between web service requests
   void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
   The default is set to 100ms - 10 requests/second.
