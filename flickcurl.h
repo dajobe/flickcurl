@@ -187,7 +187,8 @@ flickcurl* flickcurl_new(void);
 /* destructor */
 void flickcurl_free(flickcurl *fc);
 
-/* library cleanup */
+/* library init/cleanup */
+void flickcurl_init(void);
 void flickcurl_finish(void);
 
 /* error handler */
