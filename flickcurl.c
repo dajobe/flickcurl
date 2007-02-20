@@ -33,11 +33,11 @@
  *
  * API calls are invoked like:
  *
- * flickcurl test-echo KEY VALUE
+ * flickcurl test.echo KEY VALUE
  *   This method does not require authentication.
  * Echoes back the KEY and VALUE received - an API test.
  *
- * flickcurl photo-getinfo PHOTO-ID
+ * flickcurl photo.getinfo PHOTO-ID
  *   PHOTO-ID like 123456789
  *   This method does not require authentication.
  *   -- http://www.flickr.com/services/api/flickr.photos.getInfo.html
@@ -459,7 +459,7 @@ static const char* config_section="flickr";
 int
 main(int argc, char *argv[]) 
 {
-  flickcurl *fc;
+  flickcurl *fc=NULL;
   int rc=0;
   int usage=0;
   int help=0;
@@ -624,7 +624,8 @@ main(int argc, char *argv[])
     }
     fprintf(stderr, "Try `%s " HELP_ARG(h, help) "' for more information.\n",
             program);
-    exit(1);
+    rc=1;
+    goto tidy;
   }
 
   if(help) {
@@ -651,7 +652,8 @@ main(int argc, char *argv[])
              commands[i].description);
     fputs("  A prefix of `flickr.' may be optionally given\n", stdout);
 
-    exit(0);
+    rc=0;
+    goto tidy;
   }
 
 
