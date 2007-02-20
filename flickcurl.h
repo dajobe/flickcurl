@@ -187,6 +187,9 @@ flickcurl* flickcurl_new(void);
 /* destructor */
 void flickcurl_free(flickcurl *fc);
 
+/* library cleanup */
+void flickcurl_finish(void);
+
 /* error handler */
 void flickcurl_set_error_handler(flickcurl* fc, flickcurl_message_handler error_handler,  void *error_data);
 void flickcurl_set_tag_handler(flickcurl* fc,  flickcurl_tag_handler tag_handler, void *tag_data);
