@@ -266,8 +266,8 @@ emit_triple(FILE* fh,
   raptor_serialize_statement(serializer, &s);
 
   if(s.subject_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
-    raptor_new_uri(s.subject);
-  raptor_new_uri(s.predicate);
+    raptor_free_uri(s.subject);
+  raptor_free_uri(s.predicate);
   if(s.object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     raptor_free_uri((raptor_uri*)s.object);
   if(datatype_uri)
@@ -560,7 +560,7 @@ static const char* config_section="flickr";
 int
 main(int argc, char *argv[]) 
 {
-  flickcurl *fc;
+  flickcurl *fc=NULL;
   int rc=0;
   int usage=0;
   int help=0;
@@ -765,7 +765,8 @@ main(int argc, char *argv[])
     }
     fprintf(stderr, "Try `%s " HELP_ARG(h, help) "' for more information.\n",
             program);
-    exit(1);
+    rc=1;
+    goto tidy;
   }
 
   if(help) {
@@ -806,7 +807,8 @@ main(int argc, char *argv[])
 #endif
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
-    exit(0);
+    rc=0;
+    goto tidy;
   }
 
 
