@@ -118,9 +118,10 @@ flickcurl_read_licenses(flickcurl *fc)
       attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
-      if(!strcmp(attr_name, "id"))
+      if(!strcmp(attr_name, "id")) {
         l->id=atoi(attr_value);
-      else if(!strcmp(attr_name, "name"))
+        free(attr_value);
+      } else if(!strcmp(attr_name, "name"))
         l->name=attr_value;
       else if(!strcmp(attr_name, "url")) {
         if(strlen(attr_value))
