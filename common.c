@@ -99,7 +99,7 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
   
   if(!fc->xc) {
     xmlParserCtxtPtr xc;
-    
+
     xc = xmlCreatePushParserCtxt(NULL, NULL,
                                  (const char*)ptr, len,
                                  (const char*)fc->uri);
@@ -215,6 +215,14 @@ flickcurl_free(flickcurl *fc)
   }
   
   free(fc);
+}
+
+
+void
+flickcurl_init(void)
+{
+  curl_global_init(CURL_GLOBAL_ALL);
+  xmlInitParser();
 }
 
 
