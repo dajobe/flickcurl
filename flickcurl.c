@@ -664,5 +664,7 @@ main(int argc, char *argv[])
   if(fc)
     flickcurl_free(fc);
 
+  flickcurl_finish();
+
   return(rc);
 }
