@@ -923,11 +923,13 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
         context->id=attr_value;
       else if(!strcmp(attr_name, "secret"))
         context->secret=attr_value;
-      else if(!strcmp(attr_name, "server"))
+      else if(!strcmp(attr_name, "server")) {
         context->server=atoi(attr_value);
-      else if(!strcmp(attr_name, "farm"))
+        free(attr_value);
+      } else if(!strcmp(attr_name, "farm")) {
         context->farm=atoi(attr_value);
-      else if(!strcmp(attr_name, "title"))
+        free(attr_value);
+      } else if(!strcmp(attr_name, "title"))
         context->title=attr_value;
       else if(!strcmp(attr_name, "url"))
         context->url=attr_value;
