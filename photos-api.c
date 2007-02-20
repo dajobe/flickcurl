@@ -593,7 +593,7 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
     xmlXPathFreeObject(xpathObj);
   
   if(fc->failed)
-    doc=NULL;
+    photo=NULL;
 
   return photo;
 }
