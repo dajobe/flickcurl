@@ -219,6 +219,14 @@ flickcurl_free(flickcurl *fc)
 
 
 void
+flickcurl_finish(void)
+{
+  xmlCleanupParser();
+  curl_global_cleanup();
+}
+
+
+void
 flickcurl_set_error_handler(flickcurl* fc, 
                             flickcurl_message_handler error_handler, 
                             void *error_data)
