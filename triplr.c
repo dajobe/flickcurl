@@ -266,8 +266,8 @@ emit_triple(FILE* fh,
   raptor_serialize_statement(serializer, &s);
 
   if(s.subject_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
-    raptor_free_uri(s.subject);
-  raptor_free_uri(s.predicate);
+    raptor_free_uri((raptor_uri*)s.subject);
+  raptor_free_uri((raptor_uri*)s.predicate);
   if(s.object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     raptor_free_uri((raptor_uri*)s.object);
   if(datatype_uri)
