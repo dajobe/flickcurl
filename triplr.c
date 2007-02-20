@@ -800,7 +800,7 @@ main(int argc, char *argv[])
       else
         printf("      %-15s %s\n", help_name, help_label);
     }
-    fprintf(stderr, "    via Raptor %s serializers\n", raptor_version_string);
+    printf("    via Raptor %s serializers\n", raptor_version_string);
 #else
     puts(HELP_TEXT("o", "output FORMAT   ", "Set output format to one of 'ntriples' or 'turtle'"));
 #endif
