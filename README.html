@@ -207,7 +207,9 @@ $ triplr -o turtle http://www.flickr.com/photos/dajobe/196308964/
     ];
     dc:date "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;;
     dc:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt;;
-    dc:date "2006-07-23T18:16:14Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;, "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;, "2006-07-23T05:28:50Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;;
+    dc:date "2006-07-23T18:16:14Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;,
+            "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;,
+            "2006-07-23T05:28:50Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;;
     geo:lat 3.6620487E1;
     geo:long -1.21904468E2;
     dc:title "Jellyfish at Monterey Aquarium";
@@ -216,10 +218,11 @@ $ triplr -o turtle http://www.flickr.com/photos/dajobe/196308964/
 </pre>
 
 
-<h2>API methods supported</h2>
+<h2>Flickr API calls supported</h2>
 
-<p>See the summary of all calls in
+<p>See the
 <a href="coverage.html">Flickcurl API coverage</a>
+summary for the full list of all supported Flickr API calls.
 </p>
 
 <p><a href="http://www.flickr.com/services/api/flickr.auth.getFullToken.html"><strong>flickr.auth.getFullToken</strong></a> - turn a
@@ -228,21 +231,28 @@ frob of the format <em>NNN-NNN-NNN</em> into full authentication tokens.
 </p>
 <pre>
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
+void flickcurl_free_contexts(flickcurl_context** contexts);
 </pre>
 
 <p><a href="http://www.flickr.com/services/api/flickr.groups.pools.getContext.html"><strong>flickr.groups.pools.getContext</strong></a> - get all visible sets and pools the photo belongs to. (0.7)</p>
 <pre>
-flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
+flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc,
+        const char* photo_id, const char* group_id);
+void flickcurl_free_contexts(flickcurl_context** contexts);
 </pre>
 
 <p><a href="http://www.flickr.com/services/api/flickr.photos.getAllContexts.html"><strong>flickr.photos.getAllContexts</strong></a> - get all visible sets and pools the photo belongs to. (0.7)</p>
 <pre>
-flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
+flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc,
+        const char* photo_id);
+void flickcurl_free_contexts(flickcurl_context** contexts);
 </pre>
 
 <p><a href="http://www.flickr.com/services/api/flickr.photos.getContext.html"><strong>flickr.photos.getContext</strong></a> -  get next and previous photos for a photo in a photostream. (0.7)</p>
 <pre>
-flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
+flickcurl_context** flickcurl_photos_getContext(flickcurl* fc,
+        const char* photo_id);
+void flickcurl_free_contexts(flickcurl_context** contexts);
 </pre>
 
 <p>
@@ -265,12 +275,14 @@ void flickcurl_free_photo(flickcurl_photo *photo);
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
 flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
 </pre>
-<p>Both return pointers to shared, static copies of the license info,
+<p>Both return pointers to <em>shared</em>, static copies of the license info,
 cached from the server once only.</p>
 
 <p><a href="http://www.flickr.com/services/api/flickr.photosets.getContext.html"><strong>flickr.photosets.getContext</strong></a> - get next and previous photos for a photo in a set. (0.7)</p>
 <pre>
-flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
+flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc,
+        const char* photo_id, const char* photoset_id);
+void flickcurl_free_contexts(flickcurl_context** contexts);
 </pre>
 
 <p><a href="http://www.flickr.com/services/api/flickr.test.echo.html"><strong>flickr.test.echo</strong></a> - echo what is sent.</p>
@@ -281,6 +293,7 @@ int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 <p><a href="http://www.flickr.com/services/api/flickr.urls.lookupUser.html"><strong>flickr.urls.lookupUser</strong></a> - get a user NSID given an url to a user's profile/photo page. (0.6)</p>
 <pre>
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
+void free(void*);
 </pre>
 
 <p>Utilities:</p>
