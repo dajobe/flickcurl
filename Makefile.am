@@ -54,7 +54,7 @@ pkgconfig_DATA = flickcurl.pc
 
 EXTRA_DIST= \
 ChangeLog \
-README.html coverage.html README NEWS AUTHORS \
+README.html NEWS.html coverage.html README NEWS AUTHORS \
 LICENSE.html LICENSE-2.0.txt NOTICE \
 autogen.sh \
 flickcurl-config.in flickcurl.pc.in \
@@ -72,4 +72,7 @@ SUFFIXES = .html .txt
 	$(HTML_TO_TEXT) $< > $@
 
 README: README.html
+	$(HTML_TO_TEXT) $< > $@
+
+NEWS: NEWS.html
 	$(HTML_TO_TEXT) $< > $@
