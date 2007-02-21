@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>Flickcurl News</title>
+  <link rel="stylesheet" type="text/css" href="stylesheet.css" />
+</head>
+<body>
+
+<h1 style="text-align:center">Flickcurl News</h1>
+
+<h2 id="D2007-02-XX">2007-02-XX Flickcurl 0.8</h2>
+
+<p>Not yet released</p>
+
+<p>Added <code>flickcurl_init()</code> and
+<code>flickcurl_finish()</code> to do once-per-process initializing
+and cleanup.</p>
+
+<p>Added more help info to <code>triplr</code>.</p>
+
+<p>Added a <code>-d</code>&nbsp;<em>DELAY</em> option to
+<code>triplr</code> and <code>flickcurl</code> to set delay between
+requests using new <code>flickcurl_set_request_delay()</code>.</p>
+
+<p>Added API calls <strong>flickr.people.findByEmail</strong> and
+<strong>flickr.people.findByUsername</strong>:</p>
+<pre>
+  char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
+  char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
+</pre>
+
+<p>Added <code>configure</code> development/debugging options:<br />
+<code>--enable-capture</code> to capture web service responses into XML files<br />
+<code>--enable-offline</code> to use the XML files to return results when offline</p>
+
+<p>Split large api.c into auth-api.c, people-api.c, photos-api.c,
+photos-licenses-api.c and urls-api.c to match the API sections.</p>
+
+<p>Added method to set the minimum delay between web service requests:</p>
+<pre>
+void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
+</pre>
+<p>The default is set to 1000ms = 1 request/second.</p>
+
+<p>Moved <code>flickcurl</code> utility code into flickcurl.c</p>
+
+<p>12% of API
+</p>
+
+
+<h2 id="D2007-02-18">2007-02-18 Flickcurl 0.7</h2>
+
+<p>Added API calls returning contexts as a
+<code>struct flickcurl_context*</code> array
+and of type <code>flickcurl_context_type</code></p>
+
+<p>Added API call <strong>flickr.groups.pool.getContext</strong>:</p>
+<pre>
+  flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc,
+        const char* photo_id, const char* group_id);
+</pre>
+
+<p>Added API call <strong>flickr.photos.getAllContexts</strong>:</p>
+<pre>
+  flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc,
+        const char* photo_id);
+</pre>
+
+<p>Added API call <strong>flickr.photos.getContext</strong>:</p>
+<pre>
+  flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, 
+        const char* photo_id);
+</pre>
+
+<p>Added API call <strong>flickr.photosets.getContext</strong>:</p>
+<pre>
+  flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc,
+        const char* photo_id, const char* photoset_id);
+</pre>
+
+<p>Added <code>struct flickcurl_context</code> utility functions:</p>
+<pre>
+  const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
+  void flickcurl_free_context(flickcurl_context *context);
+  void flickcurl_free_contexts(flickcurl_context** contexts);
+</pre>
+
+<p>Added new <code>flickcurl</code> utility commands for the new APIs:
+groups.pools.getContext photos.getAllContexts photos.getContext,
+photosets.getContext </p>
+
+<p>10% of API
+</p>
+
+
+<h2 id="D2007-02-11">2007-02-11 Flickcurl 0.6</h2>
+
+<p>Added API call <strong>flickcurl.licenses.getInfo</strong>:
+<code>struct flickcurl_license</code></p>
+<pre>
+  flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
+</pre>
+<p>and command licenses.getInfo in <code>flickcurl</code> utility</p>
+
+<p>Added helper to look up one license by ID:</p>
+<pre>
+  flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
+</pre>
+
+<p>Triplr updated to use the above to emit URIs instead of integers
+for <code>dc:rights</code></p>
+
+<p>Added API call <strong>flickr.people.getInfo</strong>:
+<code>enum flickcurl_person_field, struct flickcurl_person</code></p>
+<pre>
+  const char* flickcurl_get_person_field_label(flickcurl_person_field field);
+  flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
+  void flickcurl_free_person(flickcurl_person *person);
+</pre>
+<p>and command person.getInfo in <code>flickcurl</code> utility</p>
+
+<p>6% of API</p>
+
+
+<h2 id="D2007-02-04">2007-02-04 Flickcurl 0.5</h2>
+
+<p>Added optional support for using
+<a href="http://librdf.org/raptor">Raptor</a>
+for more accurate and prettier serializing triples in triplr</p>
+
+<p><strong>Released to the world!</strong>
+</p>
+
+<p>3% of API
+</p>
+
+
+<h2 id="D2007-02-03">2007-02-03 Flickcurl 0.4</h2>
+
+<p>Added <code>triplr</code> utility.</p>
+
+<p>3% of API
+</p>
+
+
+<h2 id="D2007-02-01">2007-02-01 Flickcurl 0.3</h2>
+
+<p>Renamed all symbols to be <code>flickcurl_</code>*</p>
+
+<p>Added <code>flickcurl_photo_as_source_uri()</code> to get the
+image file URLs for a photo ID.</p>
+
+<p>Configuration file for the utilities to record the authentication
+is now <code>~/.flickcurl.conf</code></p>
+
+<p>Packaging and licensing</p>
+
+<p>3% of API
+</p>
+
+
+<h2 id="D2007-01-24">2007-01-24 Flickcurl 0.2</h2>
+
+<p>Refactored to have separate <code>flickcurl*</code> object</p>
+
+<p>API calls <strong>flickr.test.echo</strong>,
+<strong>flickr.auth.getFullToken</strong> and
+<strong>flickr.photos.getInfo</strong> with functions
+<code>flickcurl_test_echo</code>,
+<code>flickcurl_auth_getFullToken</code>,
+<code>flickcurl_photos_getInfo</code></p>
+
+<p>Test program has commands table and help, authentication
+</p>
+
+<p>3% of API
+</p>
+
+
+<h2 id="D2007-01-21">2007-01-21 Flickcurl 0.1</h2>
+
+<p>First version</p>
+
+<p>0% of API
+</p>
+
+<hr />
+
+<p>Copyright (C) 2007 <a href="http://purl.org/net/dajobe/">Dave Beckett</a></p>
+
+</body>
+</html>
