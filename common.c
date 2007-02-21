@@ -137,8 +137,8 @@ flickcurl_new(void)
   if(!fc)
     return NULL;
 
-  /* DEFAULT delay between requests is 100ms i.e 10 requests/second max */
-  fc->request_delay=100;
+  /* DEFAULT delay between requests is 1000ms i.e 1 request/second max */
+  fc->request_delay=1000;
   
   if(!fc->curl_handle) {
     fc->curl_handle=curl_easy_init();
