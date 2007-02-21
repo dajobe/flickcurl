@@ -1,5 +1,7 @@
 2007-02-20  Dave Beckett  <dave@dajobe.org>
 
+	* Snapshotted flickcurl_0_8 for 0.8 release (SVN 122)
+
 	* example.c: Add init, finish
 
 	* coverage.html: Now with changes
