@@ -1,4 +1,16 @@
+2007-02-20  Dave Beckett  <dave@dajobe.org>
+
+	* example.c: Add init, finish
+
+	* coverage.html: Now with changes
+
+	* NEWS: NEWS now generated
+
+	* common.c: (flickcurl_new): 1000ms default delay
+
 2007-02-19  Dave Beckett  <dave@dajobe.org>
+
+	* triplr.c: (emit_triple): Casts for raptor_free_uri
 
 	* flickcurl.c, triplr.c: Use flickcurl_init/flickcurl_finish to
 	ensure all of curl/libxml is initialised and cleaned up as far as
