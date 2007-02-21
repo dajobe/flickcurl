@@ -10,6 +10,8 @@ int main() {
   flickcurl_photo *photo;
   flickcurl_photo_field field;
   int i;
+
+  flickcurl_init(); /* optional static initialising of resources */
   
   fc=flickcurl_new();
 
@@ -40,4 +42,6 @@ int main() {
   flickcurl_free_photo(photo);
 
   flickcurl_free(fc);
+
+  flickcurl_finish(); /* optional static free of resources */
 }
