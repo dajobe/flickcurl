@@ -2,22 +2,22 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Flickcurl: C library for the Flickr Web Service API</title>
+  <title>Flickcurl: C library for the Flickr API</title>
   <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
 <body>
 
-<h1 style="text-align:center">Flickcurl: C library for the Flickr Web Service API</h1>
+<h1 style="text-align:center">Flickcurl: C library for the Flickr API</h1>
 <h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
 
 
 <p>Flickcurl is a library for calling the 
-<a href="http://www.flickr.com/services/api/">Flickr web service API</a>,
+<a href="http://www.flickr.com/services/api/">Flickr API</a>,
 handling the API signing and the token management plus providing
 wrappers for some of the APIs.  It uses
 <a href="http://curl.haxx.se/libcurl/">libcurl</a> to call the 
 <a href="http://www.flickr.com/services/api/request.rest.html">REST web service</a>
-and <a href="http://xmlsoft.org/">libxml2</a></li>
+and <a href="http://xmlsoft.org/">libxml2</a>
 to manipulate the XML responses.
 The current version provides just a few
 wrappers for reading photo description, sufficient for me to
@@ -26,7 +26,12 @@ get at the photo information and the machine tags.
 
 <p>License: LGPL 2.1 / GPL 2  /Apache 2.0</p>
 
-<p>It requires the following libraries to build it:</p>
+<p>Download: <a href="http://download.dajobe.org/flickcurl/">http://download.dajobe.org/flickcurl/</a>
+</p>
+
+<p>News: <a href="NEWS.html">Flickcurl News</a></p>
+
+<p>Requirements: Flickcurl requires the following libraries to build:</p>
 <ul>
   <li><a href="http://curl.haxx.se/libcurl/">libcurl</a></li>
   <li><a href="http://xmlsoft.org/">libxml2</a> 2.6.8 or newer</li>
@@ -36,6 +41,12 @@ get at the photo information and the machine tags.
 <p>Then do the usual <code>./configure</code>, <code>make</code> and
 <code>make install</code> sequence to install the library and
 the flickcurl and triplr utilities.</p>
+
+<p>Subversion <a href="http://svn.dajobe.org/view/">browse with viewVC</a>
+or checkout with:</p>
+<pre>
+  svn co http://svn.dajobe.org/repositories/flickcurl/trunk/ flickcurl
+</pre>
 
 
 <h2>Flickr API Configuration</h2>
@@ -58,9 +69,9 @@ secret=fedcba9876543210
 
 <h2>Utility programs</h2>
 
-<h3><code>flickcurl</code> - call Flickr web services</h3>
+<h3><code>flickcurl</code> - call Flickr API</h3>
 
-<p>This can call some of the web service APIs plus help with
+<p>This can call some of the Flickr APIs plus help with
 authentication by turning 
 <a href="http://www.flickr.com/services/api/auth.howto.mobile.html">mobile authentication method</a>
 frobs into full auth_tokens with <code>-a&nbsp;<em>NNN-NNN-NNN</em> </code>
@@ -280,7 +291,7 @@ const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
 
 <h2>Library use example</h2>
 
-<p>example.c</p>
+<p>See <code>example.c</code></p>
 <pre>
 #include &lt;stdio.h&gt;
 #include &lt;flickcurl.h&gt;
@@ -290,6 +301,8 @@ int main() {
   flickcurl_photo *photo;
   flickcurl_photo_field field;
   int i;
+  
+  flickcurl_init(); /* optional static initialising of resources */
   
   fc=flickcurl_new();
 
@@ -320,6 +333,8 @@ int main() {
   flickcurl_free_photo(photo);
 
   flickcurl_free(fc);
+
+  flickcurl_finish(); /* optional static free of resources */
 }
 </pre>
 
