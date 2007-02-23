@@ -17,6 +17,8 @@
 
 bin_PROGRAMS = flickcurl triplr
 
+EXTRA_PROGRAMS = example test
+
 bin_SCRIPTS = flickcurl-config
 
 lib_LTLIBRARIES = libflickcurl.la
@@ -28,6 +30,12 @@ if GETOPT
 flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
 flickcurl_LDADD= libflickcurl.la
+
+example_SOURCES = example.c
+example_LDADD= libflickcurl.la
+
+test_SOURCES = test.c
+test_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = common.c md5.c vsnprintf.c config.c \
 api.c \
