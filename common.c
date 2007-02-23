@@ -608,6 +608,9 @@ flickcurl_invoke(flickcurl *fc)
 #ifdef CAPTURE
   if(1) {
     fc->fh=fopen(filename, "wb");
+    if(!fc->fh)
+      flickcurl_error(fc, "Capture failed to write to %s - %s",
+                      filename, strerror(errno));
   }
 #endif
 
@@ -654,7 +657,8 @@ flickcurl_invoke(flickcurl *fc)
     curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
 
 #ifdef FLICKCURL_DEBUG
-  fprintf(stderr, "Retrieving URI '%s'\n", fc->uri);
+  fprintf(stderr, "Resolving URI '%s' with method %s\n", 
+          fc->uri, (fc->is_write ? "POST" : "GET"));
 #endif
   
   if(curl_easy_perform(fc->curl_handle)) {
