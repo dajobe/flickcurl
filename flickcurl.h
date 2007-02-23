@@ -19,6 +19,17 @@
  */
 
 
+#ifndef FLICKCURL_H
+#define FLICKCURL_H
+
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* needed for xmlDocPtr */
+#include <libxml/tree.h>
+
 typedef enum {
   PHOTO_FIELD_none,
   PHOTO_FIELD_dateuploaded,
@@ -204,6 +215,9 @@ void flickcurl_set_shared_secret(flickcurl* fc, const char *secret);
 void flickcurl_set_auth_token(flickcurl *fc, const char* auth_token);
 void flickcurl_set_sig_key(flickcurl *fc, const char* sig_key);
 void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
+void flickcurl_set_write(flickcurl *fc, int is_write);
+void flickcurl_set_data(flickcurl *fc, void* data, size_t data_length);
+void flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc);
 
 /* get methods */
 const char* flickcurl_get_api_key(flickcurl *fc);
@@ -220,7 +234,10 @@ char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
 
 
 /* Flickr API calls */
+char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
+char* flickcurl_auth_getFrob(flickcurl* fc);
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
+char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 
 flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
 
@@ -251,3 +268,9 @@ void flickcurl_free_contexts(flickcurl_context** contexts);
 
 /* config.c */
 int read_ini_config(const char* filename, const char* application, void* user_data, set_config_var_handler handler);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
