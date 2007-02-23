@@ -213,7 +213,14 @@ flickcurl_free(flickcurl *fc)
     
     free(fc->licenses);
   }
-  
+
+  if(fc->data) {
+    if(fc->data_is_xml)
+      xmlFree(fc->data);
+    else
+      free(fc->data);
+  }
+
   free(fc);
 }
 
@@ -403,6 +410,17 @@ flickcurl_prepare(flickcurl *fc, const char* method,
     free(fc->error_msg);
     fc->error_msg=NULL;
   }
+  /* Default to read */
+  fc->is_write=0;
+  /* Default to no data */
+  if(fc->data) {
+    if(fc->data_is_xml)
+      xmlFree(fc->data);
+    fc->data=NULL;
+    fc->data_length=0;
+    fc->data_is_xml=0;
+  }
+  
   
   if(!method) {
     flickcurl_error(fc, "No method to prepare");
@@ -608,16 +626,32 @@ flickcurl_invoke(flickcurl *fc)
   if(fc->user_agent)
     curl_easy_setopt(fc->curl_handle, CURLOPT_USERAGENT, fc->user_agent);
 
-  /* Insert HTTP Accept: header only */
-  if(fc->http_accept) {
+  /* Insert HTTP Accept: header */
+  if(fc->http_accept)
     slist=curl_slist_append(slist, (const char*)fc->http_accept);
-    curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
-  }
 
-  /* specify URL to get */
+  /* specify URL to call */
   curl_easy_setopt(fc->curl_handle, CURLOPT_URL, fc->uri);
 
   fc->total_bytes=0;
+
+  if(fc->is_write)
+    curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 1); /* Set POST */
+  else
+    curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 0);  /* Set GET */
+
+  if(fc->data) {
+    /* write is POST */
+    curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDS, fc->data);
+    curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDSIZE, fc->data_length);
+    /* Replace default POST content type 'application/x-www-form-urlencoded' */
+    slist=curl_slist_append(slist, (const char*)"Content-Type: application/xml");
+    curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
+    /* curl_easy_setopt(fc->curl_handle, CURLOPT_CUSTOMREQUEST, fc->verb); */
+  }
+
+  if(slist)
+    curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
 
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "Retrieving URI '%s'\n", fc->uri);
@@ -660,9 +694,16 @@ flickcurl_invoke(flickcurl *fc)
     if(!doc) {
       flickcurl_error(fc, "Failed to create XML DOM for document");
       fc->failed=1;
+      goto tidy;
     }
 
     xnp = xmlDocGetRootElement(doc);
+    if(!xnp) {
+      flickcurl_error(fc, "Failed to parse XML");
+      fc->failed=1;
+      goto tidy;
+    }
+
     for(attr=xnp->properties; attr; attr=attr->next) {
       if(!strcmp((const char*)attr->name, "stat")) {
         const char *attr_value=(const char*)attr->children->content;
@@ -687,16 +728,18 @@ flickcurl_invoke(flickcurl *fc)
       }
       flickcurl_error(fc, "Method %s failed with error %d - %s", 
                       fc->method, fc->error_code, fc->error_msg);
-      doc=NULL;
+      fc->failed=1;
     }
   }
 
+  tidy:
+  if(fc->failed)
+    doc=NULL;
+  
 #ifdef CAPTURE
   if(1) {
     if(fc->fh)
       fclose(fc->fh);
-    if(fc->failed)
-      remove(filename);
   }
 #endif
 
@@ -970,4 +1013,44 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
   contexts[count]=NULL;
 
   return contexts;
+}
+
+
+void
+flickcurl_set_write(flickcurl *fc, int is_write)
+{
+  fc->is_write=is_write;
+}
+
+
+void
+flickcurl_set_data(flickcurl *fc, void* data, size_t data_length)
+{
+  if(fc->data) {
+    if(fc->data_is_xml)
+      xmlFree(fc->data);
+  }
+  
+  fc->data=data;
+  fc->data_length=data_length;
+  fc->data_is_xml=0;
+}
+
+
+void
+flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc)
+{
+  xmlChar* mem;
+  int size;
+
+  if(fc->data) {
+    if(fc->data_is_xml)
+      xmlFree(fc->data);
+  }
+
+  xmlDocDumpFormatMemory(doc, &mem, &size, 1); /* format 1 means indent */
+  
+  fc->data=mem;
+  fc->data_length=(size_t)size;
+  fc->data_is_xml=1;
 }
