@@ -217,8 +217,6 @@ flickcurl_free(flickcurl *fc)
   if(fc->data) {
     if(fc->data_is_xml)
       xmlFree(fc->data);
-    else
-      free(fc->data);
   }
 
   free(fc);
