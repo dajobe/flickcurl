@@ -1,3 +1,48 @@
+2007-02-23  Dave Beckett  <dave@dajobe.org>
+
+	* common.c: (flickcurl_free): Only free XML data.
+
+	* test.c: errno
+
+	* common.c: (flickcurl_invoke): Error if capture write fails.
+	Tidy URI debug message
+
+	* test.c: low-level api test
+
+	* Makefile.am: example and test are extra
+
+	* example.c: tidy
+
+	* flickcurl.c: Added new commands and helper functions for
+	flickcurl_auth_checkToken, flickcurl_auth_getFrob,
+	flickcurl_auth_getToken and flickcurl_auth_getFullToken Moved
+	initializing earlier so that '-a' can work again.
+
+2007-02-22  Dave Beckett  <dave@dajobe.org>
+
+	* common.c: (flickcurl_free): Tidy data, data_length and
+	data_is_xml fields.
+	(flickcurl_prepare): Init to read-only, no content data.
+	(flickcurl_invoke): Add Content-Type: application/xml header when
+	sending data.  Use POST when write flag is set.  Handle non XML
+	responses failing gracefully
+	(flickcurl_set_write, flickcurl_set_data, flickcurl_set_xml_data):
+	Added.
+
+	* flickcurl_internal.h: Added is_write, data, data_length and
+	data_is_xml fields to flickcurl*
+
+	* auth-api.c: (flickcurl_auth_checkToken, flickcurl_auth_getFrob
+	and flickcurl_auth_getToken): Added, completing the flickr.auth.*
+	API calls.
+
+	* flickcurl.h: Added flickcurl_set_write, flickcurl_set_data,
+	flickcurl_set_xml_data Added auth API calls:
+	flickcurl_auth_checkToken, flickcurl_auth_getFrob and
+	flickcurl_auth_getToken
+
+	* coverage.html: 0.9
+
 2007-02-20  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted flickcurl_0_8 for 0.8 release (SVN 122)
