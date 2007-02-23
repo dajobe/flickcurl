@@ -401,6 +401,66 @@ command_photosets_getContext(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_auth_getFrob(flickcurl* fc, int argc, char *argv[])
+{
+  char* frob;
+
+  frob=flickcurl_auth_getFrob(fc);
+  if(!frob)
+    return 1;
+  fprintf(stderr, "%s: Got frob: %s\n", program, frob);
+
+  free(frob);
+  return 0;
+}
+
+
+static int
+command_auth_checkToken(flickcurl* fc, int argc, char *argv[])
+{
+  char* perms;
+
+  perms=flickcurl_auth_checkToken(fc, argv[1]);
+  if(!perms)
+    return 1;
+  fprintf(stderr, "%s: Checked token %s and got perms: %s\n", program, 
+          argv[1], perms);
+
+  free(perms);
+  return 0;
+}
+
+
+static int
+command_auth_getToken(flickcurl* fc, int argc, char *argv[])
+{
+  char* perms;
+
+  perms=flickcurl_auth_getToken(fc, argv[1]);
+  if(!perms)
+    return 1;
+  fprintf(stderr, "%s: Got token %s perms: %s\n", program, argv[1], perms);
+
+  free(perms);
+  return 0;
+}
+
+
+static int
+command_auth_getFullToken(flickcurl* fc, int argc, char *argv[])
+{
+  char* perms;
+
+  perms=flickcurl_auth_getFullToken(fc, argv[1]);
+  if(!perms)
+    return 1;
+  fprintf(stderr, "%s: Got full token %s perms: %s\n", program, argv[1], perms);
+
+  free(perms);
+  return 0;
+}
+
 
 static struct {
   const char*     name;
@@ -411,6 +471,18 @@ static struct {
   int             max;
 } commands[] = {
   /* name, min, handler */
+  {"auth.checkToken",
+   "TOKEN", "Get the credentials attached to an authentication token.",
+   command_auth_checkToken, 1, 1},
+  {"auth.getFrob",
+   "", "Get a frob to be used during authentication.",
+   command_auth_getFrob, 0, 0},
+  {"auth.getFullToken",
+   "MINI-TOKEN", "Get the full authentication token for a mini-token.",
+   command_auth_getFullToken, 0, 0},
+  {"auth.getToken",
+   "TOKEN", "Get the auth token for the given frob, if one has been attached.",
+   command_auth_getToken, 0, 0},
   {"groups.pools.getContext",
    "PHOTO-ID GROUP-ID", "Get next and previous photos for a photo in a group pool.",
    command_groups_pools_getContext, 2, 2},
@@ -482,6 +554,25 @@ main(int argc, char *argv[])
     strcpy(config_path, config_filename);
   
 
+  /* Initialise the Flickcurl library */
+  fc=flickcurl_new();
+  if(!fc) {
+    rc=1;
+    goto tidy;
+  }
+
+  flickcurl_set_error_handler(fc, my_message_handler, NULL);
+
+  if(read_auth && !access((const char*)config_path, R_OK)) {
+    if(read_ini_config(config_path, config_section, fc,
+                       my_set_config_var_handler)) {
+      fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
+              program, config_path, strerror(errno));
+      rc=1;
+      goto tidy;
+    }
+  }
+
   while (!usage && !help)
   {
     int c;
@@ -520,12 +611,13 @@ main(int argc, char *argv[])
             fprintf(stderr, "%s: Failed to write to config filename %s: %s\n",
                     program, config_path, strerror(errno));
           } else {
-            fputs("[flickr]\n", fh);
-            fprintf(fh,
-                    "[flickr]\napi_key=%s\nsecret=%s\nauth_token=%s\n", 
-                    flickcurl_get_api_key(fc),
-                    flickcurl_get_shared_secret(fc),
-                    flickcurl_get_auth_token(fc));
+            fputs("[flickr]\nauth_token=", fh);
+            fputs(flickcurl_get_auth_token(fc), fh);
+            fputs("\napi_key=", fh);
+            fputs(flickcurl_get_api_key(fc), fh);
+            fputs("\nsecret=", fh);
+            fputs(flickcurl_get_shared_secret(fc), fh);
+            fputs("\n", fh);
             fclose(fh);
             read_auth=0;
           }
@@ -566,25 +658,6 @@ main(int argc, char *argv[])
   if(usage || help)
     goto usage;
 
-
-  /* Initialise the Flickcurl library */
-  fc=flickcurl_new();
-  if(!fc) {
-    rc=1;
-    goto tidy;
-  }
-
-  flickcurl_set_error_handler(fc, my_message_handler, NULL);
-
-  if(read_auth && !access((const char*)config_path, R_OK)) {
-    if(read_ini_config(config_path, config_section, fc,
-                       my_set_config_var_handler)) {
-      fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
-              program, config_path, strerror(errno));
-      rc=1;
-      goto tidy;
-    }
-  }
 
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
