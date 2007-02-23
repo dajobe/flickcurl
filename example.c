@@ -5,14 +5,15 @@
 #include <stdio.h>
 #include <flickcurl.h>
 
-int main() {
+int main(int argc, char *argv[]);
+
+int main(int argc, char *argv[]) {
   flickcurl *fc;
   flickcurl_photo *photo;
   flickcurl_photo_field field;
   int i;
 
   flickcurl_init(); /* optional static initialising of resources */
-  
   fc=flickcurl_new();
 
   /* Set configuration, or more likely read from a config file */
@@ -40,8 +41,8 @@ int main() {
   }
 
   flickcurl_free_photo(photo);
-
   flickcurl_free(fc);
-
   flickcurl_finish(); /* optional static free of resources */
+
+  return 0;
 }
