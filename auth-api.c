@@ -38,20 +38,97 @@
 #include <flickcurl_internal.h>
 
 
-/*
- * flickr.auth.checkToken:
- *
+/**
+ * flickcurl_auth_checkToken:
+ * @fc: flickcurl context
+ * @frob: frob string
+ * 
  * Get the credentials attached to an authentication token.
- * Must be signed.
- */
-
-
-/*
- * flickr.auth.getFrob:
  *
- * Get a frob to be used during authentication.
+ * Implements flickr.auth.checkToken (0.9)
  * Must be signed.
- */
+ * 
+ * FIXME: Cannot confirm this works, get intermittent results.
+ *
+ * Return value: permissions string or NULL on failure
+ **/
+char*
+flickcurl_auth_checkToken(flickcurl* fc, const char* token)
+{
+  const char * parameters[5][2];
+  int count=0;
+  char *perms=NULL;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  
+  parameters[count][0]   = "auth_token";
+  parameters[count++][1] = (char*)token;
+
+  parameters[count][0]   = NULL;
+
+  flickcurl_set_sig_key(fc, "api_sig");
+
+  if(flickcurl_prepare(fc, "flickr.auth.checkToken", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+  
+  xpathCtx = xmlXPathNewContext(doc);
+  if(xpathCtx) {
+    perms=flickcurl_xpath_eval(fc, xpathCtx,
+                                    (const xmlChar*)"/rsp/auth/perms");
+    xmlXPathFreeContext(xpathCtx);
+  }
+
+  tidy:
+
+  return perms;
+}
+
+
+/**
+ * flickcurl_auth_getFrob:
+ * @fc: flickcurl context
+ * 
+ * Get a frob to be used during authentication
+ *
+ * Implements flickr.auth.getFrob (0.9)
+ * Must be signed.  Does not require authentication.
+ * 
+ * Return value: frob string or NULL on failure
+ **/
+char*
+flickcurl_auth_getFrob(flickcurl* fc)
+{
+  const char * parameters[5][2];
+  int count=0;
+  char *frob=NULL;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  
+  parameters[count][0]   = NULL;
+
+  flickcurl_set_sig_key(fc, "api_sig");
+
+  if(flickcurl_prepare(fc, "flickr.auth.getFrob", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+  
+  xpathCtx = xmlXPathNewContext(doc);
+  if(xpathCtx) {
+    frob=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/frob");
+    xmlXPathFreeContext(xpathCtx);
+  }
+
+  tidy:
+
+  return frob;
+}
 
 
 /**
@@ -102,9 +179,49 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 }
 
 
-/*
- * flickr.auth.getToken:
+/**
+ * flickcurl_auth_getToken:
+ * @fc: flickcurl context
+ * @frob: frob string
+ * 
+ * Get the auth token for the given frob, if one has been attached.
  *
- * Get the auth token for the given frob, if one has been attached. 
+ * Implements flickr.auth.getToken (0.9)
  * Must be signed.
- */
+ * 
+ * Return value: token string or NULL on failure
+ **/
+char*
+flickcurl_auth_getToken(flickcurl* fc, const char* frob)
+{
+  const char * parameters[10][2];
+  int count=0;
+  char *auth_token=NULL;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  
+  parameters[count][0]   = "frob";
+  parameters[count++][1] = (char*)frob;
+
+  parameters[count][0]   = NULL;
+
+  flickcurl_set_sig_key(fc, "api_sig");
+
+  if(flickcurl_prepare(fc, "flickr.auth.getToken", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+  
+  xpathCtx = xmlXPathNewContext(doc);
+  if(xpathCtx) {
+    auth_token=flickcurl_xpath_eval(fc, xpathCtx,
+                                    (const xmlChar*)"/rsp/auth/token");
+    xmlXPathFreeContext(xpathCtx);
+  }
+
+  tidy:
+
+  return auth_token;
+}
