@@ -528,6 +528,9 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
                                    &photo->tags_count);
 
   tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
   if(fc->failed)
     photo=NULL;
 
