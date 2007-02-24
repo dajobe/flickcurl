@@ -103,7 +103,7 @@ typedef struct flickcurl_photo_s {
   /* photo page uri */
   char *uri;
   
-  flickcurl_tag* tags[20];
+  flickcurl_tag** tags;
   int tags_count;
   
   struct {
