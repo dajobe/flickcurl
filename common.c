@@ -1139,9 +1139,6 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
     *tag_count_p=tag_count;
   
  tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
 
