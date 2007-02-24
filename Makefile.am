@@ -41,6 +41,7 @@ groups-pools-api.c \
 people-api.c \
 photos-api.c \
 photos-licenses-api.c \
+photosets-api.c \
 tags-api.c \
 urls-api.c \
 flickcurl_internal.h
