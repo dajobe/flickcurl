@@ -40,6 +40,7 @@ auth-api.c \
 people-api.c \
 photos-api.c \
 photos-licenses-api.c \
+tags-api.c \
 urls-api.c \
 flickcurl_internal.h
 
