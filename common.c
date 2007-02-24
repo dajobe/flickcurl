@@ -184,8 +184,6 @@ flickcurl_free(flickcurl *fc)
     free(fc->api_key);
   if(fc->secret)
     free(fc->secret);
-  if(fc->sig_key)
-    free(fc->sig_key);
   if(fc->auth_token)
     free(fc->auth_token);
   if(fc->method)
@@ -365,11 +363,9 @@ flickcurl_get_auth_token(flickcurl *fc)
 
 
 void
-flickcurl_set_sig_key(flickcurl *fc, const char* sig_key)
+flickcurl_set_sign(flickcurl *fc)
 {
-  if(fc->sig_key)
-    free(fc->sig_key);
-  fc->sig_key=sig_key ? strdup(sig_key) : NULL;
+  fc->sign=1;
 }
 
 
@@ -401,7 +397,7 @@ flickcurl_prepare(flickcurl *fc, const char* method,
 {
   int i;
   char *md5_string=NULL;
-
+  
   fc->failed=0;
   fc->error_code=0;
   if(fc->error_msg) {
@@ -444,9 +440,14 @@ flickcurl_prepare(flickcurl *fc, const char* method,
   parameters[count][0]  = "api_key";
   parameters[count++][1]= fc->api_key;
 
+  if(fc->auth_token) {
+    parameters[count][0]  = "auth_token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
   parameters[count][0]  = NULL;
 
-  if(fc->sig_key) {
+  if(fc->auth_token || fc->sign) {
     size_t buf_len=0;
     char *buf;
     
@@ -469,7 +470,7 @@ flickcurl_prepare(flickcurl *fc, const char* method,
 #endif
     md5_string=MD5_string(buf);
     
-    parameters[count][0]  = fc->sig_key;
+    parameters[count][0]  = "api_sig";
     parameters[count++][1]= md5_string;
 
 #ifdef FLICKCURL_DEBUG
@@ -745,6 +746,9 @@ flickcurl_invoke(flickcurl *fc)
   }
 #endif
 
+  /* reset special flags */
+  fc->sign=0;
+  
   return doc;
 }
 
