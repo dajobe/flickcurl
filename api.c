@@ -75,7 +75,7 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
 
 
 const char*
-flickcurl_get_photo_field_label(flickcurl_photo_field field)
+flickcurl_get_photo_field_label(flickcurl_photo_field_type field)
 {
   if(field <= PHOTO_FIELD_LAST)
     return flickcurl_photo_field_label[(int)field];
@@ -102,35 +102,6 @@ flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
 {
   if(datatype <= VALUE_TYPE_LAST)
     return flickcurl_field_value_type_label[(int)datatype];
-  return NULL;
-}
-
-
-static const char* flickcurl_person_field_label[PERSON_FIELD_LAST+1]={
-  "(none)",
-  "isadmin",
-  "ispro",
-  "iconserver",
-  "iconfarm",
-  "username",
-  "realname",
-  "mbox_sha1sum",
-  "location",
-  "photosurl",
-  "profileurl",
-  "mobileurl",
-  "photos_firstdate",
-  "photos_firstdatetaken",
-  "photos_count",
-  "photos_views"
-};
-
-
-const char*
-flickcurl_get_person_field_label(flickcurl_person_field field)
-{
-  if(field <= PERSON_FIELD_LAST)
-    return flickcurl_person_field_label[(int)field];
   return NULL;
 }
 

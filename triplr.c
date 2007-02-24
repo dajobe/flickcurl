@@ -170,7 +170,7 @@ static struct {
 #define FIELD_FLAGS_PERSON 1
 
 static struct {
-  flickcurl_photo_field field;
+  flickcurl_photo_field_type field;
   const char* nspace_uri;
   const char* name;
   int flags;
@@ -301,7 +301,7 @@ static int
 triplr(FILE* fh, flickcurl* fc, const char* photo_id)
 {
   flickcurl_photo* photo;
-  flickcurl_photo_field field;
+  flickcurl_photo_field_type field;
   int i;
   int need_person=0;
   

@@ -30,6 +30,29 @@ extern "C" {
 /* needed for xmlDocPtr */
 #include <libxml/tree.h>
 
+
+/*
+ * Field data types
+ */
+typedef enum {
+  VALUE_TYPE_NONE, /* empty field */
+  VALUE_TYPE_PHOTO_ID, /* internal */
+  VALUE_TYPE_PHOTO_URI, /* internal */
+  VALUE_TYPE_UNIXTIME,
+  VALUE_TYPE_BOOLEAN,
+  VALUE_TYPE_DATETIME,
+  VALUE_TYPE_FLOAT,
+  VALUE_TYPE_INTEGER,
+  VALUE_TYPE_STRING,
+  VALUE_TYPE_URI,
+  VALUE_TYPE_PERSON_ID, /* internal */
+  VALUE_TYPE_LAST = VALUE_TYPE_PERSON_ID
+} flickcurl_field_value_type;
+  
+
+/*
+ * Fields of a flickcurl_photo*
+ */
 typedef enum {
   PHOTO_FIELD_none,
   PHOTO_FIELD_dateuploaded,
@@ -64,30 +87,26 @@ typedef enum {
   PHOTO_FIELD_secret,
   PHOTO_FIELD_originalsecret,
   PHOTO_FIELD_LAST = PHOTO_FIELD_originalsecret
-} flickcurl_photo_field;
+} flickcurl_photo_field_type;
 
 
-typedef enum {
-  VALUE_TYPE_NONE, /* empty field */
-  VALUE_TYPE_PHOTO_ID, /* internal */
-  VALUE_TYPE_PHOTO_URI, /* internal */
-  VALUE_TYPE_UNIXTIME,
-  VALUE_TYPE_BOOLEAN,
-  VALUE_TYPE_DATETIME,
-  VALUE_TYPE_FLOAT,
-  VALUE_TYPE_INTEGER,
-  VALUE_TYPE_STRING,
-  VALUE_TYPE_URI,
-  VALUE_TYPE_PERSON_ID, /* internal */
-  VALUE_TYPE_LAST = VALUE_TYPE_PERSON_ID
-} flickcurl_field_value_type;
+/* The main object type */
+typedef struct flickcurl_s flickcurl;
   
 
-typedef struct flickcurl_s flickcurl;
-
+/* Forward structure references */
+struct flickcurl_s;
 struct flickcurl_photo_s;
 
+
+/**
+ * flickcurl_tag: 
+ *
+ * Most of these fields may be NULL, 0 for numbers
+ * but not all.  Either 'raw' or 'cooked' MUST appear. 
+ */
 typedef struct flickcurl_tag_s {
+  /* Associated photo object if any */
   struct flickcurl_photo_s* photo;
   char* id;
   char* author;
@@ -99,6 +118,13 @@ typedef struct flickcurl_tag_s {
 } flickcurl_tag;
 
 
+typedef struct {
+  char* string;
+  flickcurl_photo_field_type integer;
+  flickcurl_field_value_type type;
+} flickcurl_photo_field;
+
+
 typedef struct flickcurl_photo_s {
   /* photo id */
   char *id;
@@ -108,11 +134,7 @@ typedef struct flickcurl_photo_s {
   flickcurl_tag** tags;
   int tags_count;
   
-  struct {
-    char* string;
-    int integer;
-    flickcurl_field_value_type type;
-  } fields[PHOTO_FIELD_LAST + 1];
+  flickcurl_photo_field fields[PHOTO_FIELD_LAST + 1];
 } flickcurl_photo;
 
 
@@ -126,17 +148,20 @@ typedef struct {
 } flickcurl_license;
 
 
+/*
+ * Types of photo context: relationship between photo and another item
+ */
 typedef enum {
   FLICKCURL_CONTEXT_NONE,
-  FLICKCURL_CONTEXT_SET,
-  FLICKCURL_CONTEXT_POOL,
-  FLICKCURL_CONTEXT_PREV,
-  FLICKCURL_CONTEXT_NEXT,
+  FLICKCURL_CONTEXT_SET,  /* other thing is a set */
+  FLICKCURL_CONTEXT_POOL, /* other thing is a pool */
+  FLICKCURL_CONTEXT_PREV, /* other thing is a previous photo */
+  FLICKCURL_CONTEXT_NEXT, /* other thing is a next photo */
   FLICKCURL_CONTEXT_LAST = FLICKCURL_CONTEXT_NEXT
 } flickcurl_context_type;
 
 
-typedef struct flickcurl_context_s {
+typedef struct {
   flickcurl_context_type type;
   char* id;
   char* secret; /* may be NULL */
@@ -148,46 +173,51 @@ typedef struct flickcurl_context_s {
 } flickcurl_context;
 
 
+/*
+ * Fields of a flickcurl_person*
+ */
 typedef enum {
   PERSON_FIELD_none,
-  PERSON_FIELD_isadmin, /* boolean */
-  PERSON_FIELD_ispro, /* boolean */
-  PERSON_FIELD_iconserver, /* integer */
-  PERSON_FIELD_iconfarm, /* integer - not in API docs */
-  PERSON_FIELD_username, /* string */
-  PERSON_FIELD_realname, /* string */
-  PERSON_FIELD_mbox_sha1sum, /* string */
-  PERSON_FIELD_location, /* string */
-  PERSON_FIELD_photosurl, /* string */
-  PERSON_FIELD_profileurl, /* string */
-  PERSON_FIELD_mobileurl, /* string - not in API docs */
-  PERSON_FIELD_photos_firstdate, /* dateTime */
+  PERSON_FIELD_isadmin,               /* boolean */
+  PERSON_FIELD_ispro,                 /* boolean */
+  PERSON_FIELD_iconserver,            /* integer */
+  PERSON_FIELD_iconfarm,              /* integer - not in API docs */
+  PERSON_FIELD_username,              /* string */
+  PERSON_FIELD_realname,              /* string */
+  PERSON_FIELD_mbox_sha1sum,          /* string */
+  PERSON_FIELD_location,              /* string */
+  PERSON_FIELD_photosurl,             /* string */
+  PERSON_FIELD_profileurl,            /* string */
+  PERSON_FIELD_mobileurl,             /* string - not in API docs */
+  PERSON_FIELD_photos_firstdate,      /* dateTime */
   PERSON_FIELD_photos_firstdatetaken, /* dateTime */
-  PERSON_FIELD_photos_count, /* integer */
-  PERSON_FIELD_photos_views, /* integer */
+  PERSON_FIELD_photos_count,          /* integer */
+  PERSON_FIELD_photos_views,          /* integer - not in API docs */
   PERSON_FIELD_LAST = PERSON_FIELD_photos_views
-} flickcurl_person_field;
+} flickcurl_person_field_type;
 
+
+typedef struct {
+  char* string;
+  flickcurl_person_field_type integer;
+  flickcurl_field_value_type type;
+} flickcurl_person_field;
+  
 
 typedef struct {
   /* user nsid */
   char *nsid;
 
-  struct {
-    char* string;
-    int integer;
-    flickcurl_field_value_type type;
-  } fields[PERSON_FIELD_LAST + 1];
+  flickcurl_person_field fields[PERSON_FIELD_LAST + 1];
 } flickcurl_person;
 
 
+/* callback handlers */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
-
-typedef void (*set_config_var_handler)(void* userdata, const char* key, const char* value);
-
 typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
 
 
+/* library constants */
 extern const char* const flickcurl_short_copyright_string;
 extern const char* const flickcurl_copyright_string;
 extern const char* const flickcurl_license_string;
@@ -195,48 +225,65 @@ extern const char* const flickcurl_home_url_string;
 extern const char* const flickcurl_version_string;
 
 
-/* constructor */
-flickcurl* flickcurl_new(void);
-
-/* destructor */
-void flickcurl_free(flickcurl *fc);
-
-/* library init/cleanup */
+/* library init - call once before creating anything */
 void flickcurl_init(void);
+/* library cleanup - call once before exit */
 void flickcurl_finish(void);
 
-/* error handler */
-void flickcurl_set_error_handler(flickcurl* fc, flickcurl_message_handler error_handler,  void *error_data);
-void flickcurl_set_tag_handler(flickcurl* fc,  flickcurl_tag_handler tag_handler, void *tag_data);
 
-/* set methods */
-void flickcurl_set_user_agent(flickcurl* fc, const char *user_agent);
-void flickcurl_set_proxy(flickcurl* fc, const char *proxy);
-void flickcurl_set_http_accept(flickcurl* fc, const char *value);
+/* flickcurl* object constructor */
+flickcurl* flickcurl_new(void);
+
+/* flickcurl* object destructor */
+void flickcurl_free(flickcurl *fc);
+
+/* flickcurl* object set methods */
 void flickcurl_set_api_key(flickcurl* fc, const char *api_key);
-void flickcurl_set_shared_secret(flickcurl* fc, const char *secret);
 void flickcurl_set_auth_token(flickcurl *fc, const char* auth_token);
-void flickcurl_set_sign(flickcurl *fc);
-void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
-void flickcurl_set_write(flickcurl *fc, int is_write);
 void flickcurl_set_data(flickcurl *fc, void* data, size_t data_length);
+void flickcurl_set_error_handler(flickcurl* fc, flickcurl_message_handler error_handler,  void *error_data);
+void flickcurl_set_http_accept(flickcurl* fc, const char *value);
+void flickcurl_set_proxy(flickcurl* fc, const char *proxy);
+void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
+void flickcurl_set_shared_secret(flickcurl* fc, const char *secret);
+void flickcurl_set_sign(flickcurl *fc);
+void flickcurl_set_tag_handler(flickcurl* fc,  flickcurl_tag_handler tag_handler, void *tag_data);
+void flickcurl_set_user_agent(flickcurl* fc, const char *user_agent);
+void flickcurl_set_write(flickcurl *fc, int is_write);
 void flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc);
 
-/* get methods */
+/* flickcurl* object set methods */
 const char* flickcurl_get_api_key(flickcurl *fc);
 const char* flickcurl_get_shared_secret(flickcurl *fc);
 const char* flickcurl_get_auth_token(flickcurl *fc);
 
-const char* flickcurl_get_photo_field_label(flickcurl_photo_field field);
-const char* flickcurl_get_person_field_label(flickcurl_person_field field);
+/* other flickcurl class destructors */
+void flickcurl_free_tag(flickcurl_tag *t);
+void flickcurl_free_photo(flickcurl_photo *photo);
+/* void flickcurl_free_license(flickcurl_person *license); */
+void flickcurl_free_person(flickcurl_person *person);
+void flickcurl_free_context(flickcurl_context *context);
+void flickcurl_free_contexts(flickcurl_context** contexts);
+
+
+/* utility methods */
+/* get an image URL for a photo in some size */
+char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
+/* get labels for various field/types */
+const char* flickcurl_get_photo_field_label(flickcurl_photo_field_type field);
+const char* flickcurl_get_person_field_label(flickcurl_person_field_type field);
 const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype);
 const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
 
-/* utility methods */
-char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
+
+/* read a 'INI' style configuration file  */
+typedef void (*set_config_var_handler)(void* userdata, const char* key, const char* value);
+int read_ini_config(const char* filename, const char* application, void* user_data, set_config_var_handler handler);
+
 
 
 /* Flickr API calls */
+
 /* flickr.auth */
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
 char* flickcurl_auth_getFrob(flickcurl* fc);
@@ -256,6 +303,7 @@ flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* p
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 
+/* flickr.photos.licenses */
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
 flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
 
@@ -274,18 +322,6 @@ int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
 /* flickr.urls */
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
-
-/* destructors */
-void flickcurl_free_tag(flickcurl_tag *t);
-void flickcurl_free_photo(flickcurl_photo *photo);
-/* void flickcurl_free_license(flickcurl_person *license); */
-void flickcurl_free_person(flickcurl_person *person);
-void flickcurl_free_context(flickcurl_context *context);
-void flickcurl_free_contexts(flickcurl_context** contexts);
-
-
-/* config.c */
-int read_ini_config(const char* filename, const char* application, void* user_data, set_config_var_handler handler);
 
 #ifdef __cplusplus
 }

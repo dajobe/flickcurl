@@ -196,7 +196,7 @@ command_people_getInfo(flickcurl* fc, int argc, char *argv[])
   person=flickcurl_people_getInfo(fc, argv[1]);
 
   if(person) {
-    flickcurl_person_field field;
+    flickcurl_person_field_type field;
     
     fprintf(stderr, "Found person with ID %s\n", person->nsid);
 
@@ -246,7 +246,7 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
   photo=flickcurl_photos_getInfo(fc, argv[1]);
 
   if(photo) {
-    flickcurl_photo_field field;
+    flickcurl_photo_field_type field;
     
     fprintf(stderr, "%s: Found photo with URI %s ID %s and %d tags\n",
             program, photo->uri, photo->id, photo->tags_count);

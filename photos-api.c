@@ -165,7 +165,7 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
 
 static struct {
   const xmlChar* xpath;
-  flickcurl_photo_field field;
+  flickcurl_photo_field_type field;
   flickcurl_field_value_type type;
 } photo_fields_table[PHOTO_FIELD_LAST + 3]={
   {
@@ -422,7 +422,7 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
                                             photo_fields_table[expri].xpath);
     flickcurl_field_value_type datatype=photo_fields_table[expri].type;
     int int_value= -1;
-    flickcurl_photo_field field=photo_fields_table[expri].field;
+    flickcurl_photo_field_type field=photo_fields_table[expri].field;
     time_t unix_time;
     
     if(!string_value) {
