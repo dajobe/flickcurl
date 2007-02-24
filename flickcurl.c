@@ -532,6 +532,22 @@ command_tags_getListUserRaw(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_tags_getRelated(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag** tags;
+  char *tag=argv[1];
+
+  tags=flickcurl_tags_getRelated(fc, tag);
+  if(!tags)
+    return 1;
+
+  command_print_tags(tags, "Related to Tag", tag);
+  free(tags);
+  return 0;
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -592,6 +608,9 @@ static struct {
   {"tags.getListUserRaw",
    "[TAG]", "Get the raw versions of a given tag (or all tags) for the current user.",
    command_tags_getListUserRaw, 0, 1},
+  {"tags.getRelated",
+   "TAG", "Get a list of tags 'related' to the given tag, based on clustered usage analysis.",
+   command_tags_getRelated, 1, 1},
   {"test.echo",
    "KEY VALUE", "Test echo of KEY VALUE",
    command_test_echo,  2, 2},
