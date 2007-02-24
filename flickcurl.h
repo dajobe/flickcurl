@@ -236,17 +236,21 @@ char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
 
 
 /* Flickr API calls */
+/* flickr.auth */
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
 char* flickcurl_auth_getFrob(flickcurl* fc);
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 
+/* flickr.groups */
 flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
 
+/* flickr.people */
 char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
 char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 
+/* flickr.photos */
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
@@ -254,14 +258,22 @@ flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
 flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
 
+/* flickr.photosets */
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
 
-flickcurl_tag** flickcurl_tags_getListInfo(flickcurl* fc, const char* photo_id);
+/* flickr.tag */
+flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id);
+flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc, const char* user_id);
+flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id, int pop_count);
+flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag);
 
+/* flickr.test */
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
+/* flickr.urls */
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
 
+/* destructors */
 void flickcurl_free_tag(flickcurl_tag *t);
 void flickcurl_free_photo(flickcurl_photo *photo);
 /* void flickcurl_free_license(flickcurl_person *license); */
