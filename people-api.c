@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * people-api.c - Flickr people API calls
+ * people-api.c - Flickr flickr.people.* API calls
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 

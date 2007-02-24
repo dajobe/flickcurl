@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * auth-api.c - Flickr auth API calls
+ * auth-api.c - Flickr flickr.auth.* API calls
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 

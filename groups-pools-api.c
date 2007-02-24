@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * groups-pools-api.c - Flickr groups.pool API calls
+ * groups-pools-api.c - Flickr flickr.groups.pool.* API calls
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 

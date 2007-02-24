@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * photos-licenses.c - Flickr photos.licenses API calls
+ * photos-licenses.c - Flickr flickr.photos.licenses.* API calls
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 
