@@ -209,54 +209,6 @@ flickcurl_get_context_type_field_label(flickcurl_context_type type)
 
 
 /**
- * flickcurl_groups_pools_getContext:
- * @fc: flickcurl context
- * @id: photo ID
- * 
- * Get next and previous photos for a photo in a group pool.
- * 
- * Implements flickr.groups.pools.getContext (0.7)
- *
- * Return value: an array of size 3 [prev, next, NULL] flickcurl_context*
- * or NULL on error
- **/
-flickcurl_context**
-flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
-                                  const char* group_id)
-{
-  const char * parameters[5][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  flickcurl_context** contexts=NULL;
-  
-  if(!photo_id || !group_id)
-    return NULL;
-  
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "group_id";
-  parameters[count++][1]= group_id;
-
-  parameters[count][0]  = NULL;
-
-  if(flickcurl_prepare(fc, "flickr.groups.pools.getContext", parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-  contexts=flickcurl_build_contexts(fc, doc);
-
- tidy:
-  if(fc->failed)
-    contexts=NULL;
-
-  return contexts;
-}
-
-
-/**
  * flickcurl_photosets_getContext:
  * @fc: flickcurl context
  * @id: photo ID

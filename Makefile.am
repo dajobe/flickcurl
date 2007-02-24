@@ -37,6 +37,7 @@ test_LDADD= libflickcurl.la
 libflickcurl_la_SOURCES = common.c md5.c vsnprintf.c config.c \
 api.c \
 auth-api.c \
+groups-pools-api.c \
 people-api.c \
 photos-api.c \
 photos-licenses-api.c \
