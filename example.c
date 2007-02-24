@@ -36,9 +36,12 @@ int main(int argc, char *argv[]) {
   for(i=0; i < photo->tags_count; i++) {
     flickcurl_tag* tag=photo->tags[i];
     fprintf(stderr,
-            "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
+            "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
             i, (tag->machine_tag ? "machine" : "regular"),
-            tag->id, tag->author, tag->authorname, tag->raw, tag->cooked);
+            tag->id, tag->author, 
+            (tag->authorname ? tag->authorname : "(Unknown)"), 
+            tag->raw, tag->cooked,
+            tag->count);
   }
 
   flickcurl_free_photo(photo);
