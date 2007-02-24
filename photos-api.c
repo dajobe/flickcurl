@@ -409,11 +409,7 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   int expri;
-  xmlXPathObjectPtr xpathObj=NULL;
-  xmlNodeSetPtr nodes;
-  const xmlChar* xpathExpr=NULL;
   flickcurl_photo* photo=NULL;
-  int i;
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
@@ -526,72 +522,12 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   }
 
 
-  /* Now do tags */
-  xpathExpr=(const xmlChar*)"/rsp/photo/tags/tag";
-  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
-  if(!xpathObj) {
-    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
-                    xpathExpr);
-    fc->failed=1;
-    goto tidy;
-  }
-  
-  nodes=xpathObj->nodesetval;
-  for(i=0; i < xmlXPathNodeSetGetLength(nodes); i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
-    xmlAttr* attr;
-    flickcurl_tag* t;
-    
-    if(node->type != XML_ELEMENT_NODE) {
-      flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
-      break;
-    }
-    
-    t=(flickcurl_tag*)calloc(sizeof(flickcurl_tag), 1);
-    t->photo=photo;
-    
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
-      char *attr_value;
-      
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
-      
-      if(!strcmp(attr_name, "id"))
-        t->id=attr_value;
-      else if(!strcmp(attr_name, "author"))
-        t->author=attr_value;
-      else if(!strcmp(attr_name, "raw"))
-        t->raw=attr_value;
-      else if(!strcmp(attr_name, "machine_tag")) {
-        t->machine_tag=atoi(attr_value);
-        free(attr_value);
-      }
-    }
-    
-    t->cooked=(char*)malloc(strlen((const char*)node->children->content)+1);
-    strcpy(t->cooked, (const char*)node->children->content);
-    
-#if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "tag: id %s author %s raw '%s' cooked '%s'\n",
-            t->id, t->author, t->raw, t->cooked);
-#endif
-    
-    if(fc->tag_handler)
-      fc->tag_handler(fc->tag_data, t);
-    
-    photo->tags[photo->tags_count++]=t;
-  } /* for nodes */
+  photo->tags=flickcurl_build_tags(fc, photo,
+                                   xpathCtx, 
+                                   (xmlChar*)"/rsp/photo/tags/tag", 
+                                   &photo->tags_count);
 
-
- tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
-  if(xpathObj)
-    xmlXPathFreeObject(xpathObj);
-  
+  tidy:
   if(fc->failed)
     photo=NULL;
 
