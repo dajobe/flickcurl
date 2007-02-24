@@ -56,6 +56,8 @@ extern const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2];
 
 flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
 
+flickcurl_tag** flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* tag_count_p);
+
 /* MD5 as hex string */
 extern char* MD5_string(char *string);
 
