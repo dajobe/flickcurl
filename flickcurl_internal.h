@@ -36,12 +36,16 @@
 #error "Cannot define both OFFLINE and CAPTURE"
 #endif
 
-
+/* flickcurl.c */
 /* Prepare Flickr API request - form URI */
 int flickcurl_prepare(flickcurl *fc, const char* method, const char* parameters[][2], int count);
 
 /* Invoke Flickr API at URi prepared above and get back an XML document */
 xmlDocPtr flickcurl_invoke(flickcurl *fc);
+
+/* common.c */
+/* invoke an error */
+void flickcurl_error(flickcurl* fc, const char *message, ...);
 
 /* Convert a unix timestamp into an ISO string */
 char* flickcurl_unixtime_to_isotime(time_t unix_time);
@@ -49,23 +53,21 @@ char* flickcurl_unixtime_to_isotime(time_t unix_time);
 /* Evaluate an XPath to get the string value */
 char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
-/* invoke an error */
-void flickcurl_error(flickcurl* fc, const char *message, ...);
-
-extern const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2];
-
-flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
-
-flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
-
+/* Build an array of tags */
 flickcurl_tag** flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* tag_count_p);
 
-/* MD5 as hex string */
+
+/* md5.c - MD5 as hex string */
 extern char* MD5_string(char *string);
 
-/* my_vsnprintf */
-extern char* my_vsnprintf(const char *message, va_list arguments);
+/* context.c */
+flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
 
+/* person.c */
+flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
+
+/* vsnprintf.c */
+extern char* my_vsnprintf(const char *message, va_list arguments);
 
 
 struct flickcurl_s {

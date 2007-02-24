@@ -36,6 +36,7 @@ test_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = \
 common.c \
+context.c \
 config.c \
 md5.c \
 person.c \

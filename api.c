@@ -104,23 +104,3 @@ flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
     return flickcurl_field_value_type_label[(int)datatype];
   return NULL;
 }
-
-
-/* This is the element name and the label - lazy */
-const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2]={
-  "---",
-  "set",
-  "pool",
-  "prevphoto",
-  "nextphoto",
-  NULL
-};
-
-
-const char*
-flickcurl_get_context_type_field_label(flickcurl_context_type type)
-{
-  if(type > FLICKCURL_CONTEXT_NONE && type <= FLICKCURL_CONTEXT_LAST)
-    return flickcurl_context_type_element[(int)type];
-  return NULL;
-}
