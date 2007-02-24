@@ -274,15 +274,50 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated</p>
+<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated (8 new)
+<pre>
+char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
+char* flickcurl_auth_getFrob(flickcurl* fc);
+char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
+flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id);
+flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc, const char* user_id);
+flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id, int pop_count);
+flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag);
+flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
+</pre>
+</p>
 
-<p><strong>0.8</strong>: flickr.people.findByEmail, flickr.people.findByUsername</p>
+<p><strong>0.8</strong>: flickr.people.findByEmail, flickr.people.findByUsername (2 new)
+<pre>
+char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
+char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
+</pre>
+</p>
 
-<p><strong>0.7</strong>: flickr.photosets.getContext, flickr.groups.pools.getContext, flickr.photos.getAllContexts, flickr.photos.getContext</p>
+<p><strong>0.7</strong>: flickr.groups.pools.getContext, flickr.photos.getAllContexts, flickr.photos.getContext, flickr.photosets.getContext (4 new)
+<pre>
+flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
+flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
+flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
+flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
+</pre>
+</p>
 
-<p><strong>0.6</strong>: flickr.people.getInfo, flickr.photos.licenses.getInfo, flickr.urls.lookupUser</p>
+<p><strong>0.6</strong>: flickr.people.getInfo, flickr.photos.licenses.getInfo, flickr.urls.lookupUser (3 new)
+<pre>
+flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
+flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
+char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
+</pre>
+</p>
 
-<p><strong>0.5</strong>: flickr.test.echo, flickr.auth.getFullToken, flickr.photos.getInfo</p>
+<p><strong>0.5</strong>: flickr.auth.getFullToken, flickr.photos.getInfo, flickr.test.echo (3 new)
+<pre>
+char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
+flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
+</pre>
+</p>
 
 
 <hr />
