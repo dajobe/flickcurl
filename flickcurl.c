@@ -156,16 +156,6 @@ command_test_echo(flickcurl* fc, int argc, char *argv[])
 }
 
 
-#if 0
-static void command_flickcurl_tag_handler(void *user_data, flickcurl_tag* tag)
-{
-  fprintf(stderr, "%s: photo %s tag: id %s author %s raw '%s' cooked '%s'\n",
-          program, tag->photo->id,
-          tag->id, tag->author, tag->raw, tag->cooked);
-}
-#endif
-
-
 static int
 command_people_findByEmail(flickcurl* fc, int argc, char *argv[])
 {
@@ -234,10 +224,6 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_photo* photo;
 
-#if 0
-  flickcurl_set_tag_handler(fc, command_flickcurl_tag_handler, NULL);
-#endif
-
   photo=flickcurl_photos_getInfo(fc, argv[1]);
 
   if(photo) {
@@ -262,9 +248,10 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 
     for(i=0; i < photo->tags_count; i++) {
       flickcurl_tag* tag=photo->tags[i];
-      fprintf(stderr, "%d) %s tag: id %s author %s raw '%s' cooked '%s'\n",
+      fprintf(stderr,
+              "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
               i, (tag->machine_tag ? "machine" : "regular"),
-              tag->id, tag->author, tag->raw, tag->cooked);
+              tag->id, tag->author, tag->authorname, tag->raw, tag->cooked);
     }
     flickcurl_free_photo(photo);
   }
