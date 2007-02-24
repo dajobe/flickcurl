@@ -451,6 +451,33 @@ command_auth_getFullToken(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_tags_getListInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag** tags;
+  int i;
+  char *photo_id=argv[1];
+  
+  tags=flickcurl_tags_getListInfo(fc, photo_id);
+  if(!tags)
+    return 1;
+
+  fprintf(stderr, "%s: Photo ID %s tags\n", program, photo_id);
+  for(i=0; tags[i]; i++) {
+    flickcurl_tag* tag=tags[i];
+    fprintf(stderr,
+            "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
+            i, (tag->machine_tag ? "machine" : "regular"),
+            tag->id, tag->author,
+            (tag->authorname ? tag->authorname : "(Unknown)"),
+            tag->raw, tag->cooked);
+  }
+
+  free(tags);
+  return 0;
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -499,6 +526,9 @@ static struct {
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for a photo in a set.",
    command_photosets_getContext, 2, 2},
+  {"tags.getListPhoto",
+   "PHOTO-ID", "Get the tag list for a given photo.",
+   command_tags_getListInfo, 1, 1},
   {"test.echo",
    "KEY VALUE", "Test echo of KEY VALUE",
    command_test_echo,  2, 2},
