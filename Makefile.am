@@ -34,7 +34,12 @@ flickcurl_LDADD= libflickcurl.la
 test_SOURCES = test.c
 test_LDADD= libflickcurl.la
 
-libflickcurl_la_SOURCES = common.c md5.c vsnprintf.c config.c \
+libflickcurl_la_SOURCES = \
+common.c \
+config.c \
+md5.c \
+person.c \
+vsnprintf.c \
 api.c \
 auth-api.c \
 groups-pools-api.c \
