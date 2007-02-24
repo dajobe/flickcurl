@@ -255,6 +255,8 @@ flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id
 
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
 
+flickcurl_tag** flickcurl_tags_getListInfo(flickcurl* fc, const char* photo_id);
+
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
