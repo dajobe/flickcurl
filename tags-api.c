@@ -270,14 +270,6 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
                             xpathCtx, 
                             (xmlChar*)"/rsp/who/tags/tag", 
                             NULL);
-  if(tags) {
-    int i;
-    for(i=0; tags[i]; i++) {
-      flickcurl_tag* t=tags[i];
-      t->raw=t->cooked;
-      t->cooked=NULL;
-    }
-  }
     
   tidy:
   if(xpathCtx)
