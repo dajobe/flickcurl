@@ -38,6 +38,39 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_photosets_addPhoto:
+ *
+ * flickr.photosets.addPhoto
+ */
+
+
+/**
+ * flickcurl_photosets_create:
+ *
+ * flickr.photosets.create
+ */
+
+
+/**
+ * flickcurl_photosets_delete:
+ *
+ * flickr.photosets.delete
+ */
+
+
+/**
+ * flickcurl_photosets_editMeta:
+ *
+ * flickr.photosets.editMeta
+ */
+
+
+/**
+ * flickcurl_photosets_editPhotos:
+ *
+ * flickr.photosets.editPhotos
+ */
 
 
 /**
@@ -85,3 +118,38 @@ flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
 
   return contexts;
 }
+
+
+/**
+ * flickcurl_photosets_getInfo:
+ *
+ * flickr.photosets.getInfo
+ */
+
+
+/**
+ * flickcurl_photosets_getList:
+ *
+ * flickr.photosets.getList
+ */
+
+
+/**
+ * flickcurl_photosets_getPhotos:
+ *
+ * flickr.photosets.getPhotos
+ */
+
+
+/**
+ * flickcurl_photosets_orderSets:
+ *
+ * flickr.photosets.orderSets
+ */
+
+
+/**
+ * flickcurl_photosets_removePhoto:
+ *
+ * flickr.photosets.removePhoto
+ */
