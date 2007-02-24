@@ -91,6 +91,7 @@ typedef struct flickcurl_tag_s {
   struct flickcurl_photo_s* photo;
   char* id;
   char* author;
+  char* authorname;
   char* raw;
   char* cooked;
   int machine_tag;
