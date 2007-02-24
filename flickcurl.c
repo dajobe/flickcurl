@@ -835,7 +835,9 @@ main(int argc, char *argv[])
 
   /* Perform the API call */
   rc=commands[cmd_index].handler(fc, argc, argv);
-
+  if(rc)
+    fprintf(stderr, "%s: Command %s failed\n", program, argv[0]);
+  
  tidy:
   if(fc)
     flickcurl_free(fc);
