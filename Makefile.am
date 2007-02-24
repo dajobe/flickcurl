@@ -17,7 +17,7 @@
 
 bin_PROGRAMS = flickcurl triplr
 
-EXTRA_PROGRAMS = example test
+EXTRA_PROGRAMS = test
 
 bin_SCRIPTS = flickcurl-config
 
@@ -30,9 +30,6 @@ if GETOPT
 flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
 flickcurl_LDADD= libflickcurl.la
-
-example_SOURCES = example.c
-example_LDADD= libflickcurl.la
 
 test_SOURCES = test.c
 test_LDADD= libflickcurl.la
