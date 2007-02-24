@@ -1094,6 +1094,8 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
     xmlNodePtr node=nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_tag* t;
+    int saw_clean=0;
+    xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
@@ -1107,7 +1109,7 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
     for(attr=node->properties; attr; attr=attr->next) {
       const char *attr_name=(const char*)attr->name;
       char *attr_value;
-      
+
       attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
@@ -1119,7 +1121,13 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
         t->authorname=attr_value;
       else if(!strcmp(attr_name, "raw"))
         t->raw=attr_value;
-      else if(!strcmp(attr_name, "machine_tag")) {
+      else if(!strcmp(attr_name, "clean")) {
+        t->cooked=attr_value;
+        /* If we see @clean we are expecting
+         * <tag clean="cooked"><raw>raw</raw></tag>
+         */
+        saw_clean=1;
+      } else if(!strcmp(attr_name, "machine_tag")) {
         t->machine_tag=atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "count")) {
@@ -1127,9 +1135,22 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
         free(attr_value);
       }
     }
-    
-    t->cooked=(char*)malloc(strlen((const char*)node->children->content)+1);
-    strcpy(t->cooked, (const char*)node->children->content);
+
+    /* Walk children nodes for <raw> element or text */
+    for(chnode=node->children; chnode; chnode=chnode->next) {
+      const char *chnode_name=(const char*)chnode->name;
+      if(chnode->type == XML_ELEMENT_NODE) {
+        if(saw_clean && !strcmp(chnode_name, "raw")) {
+          t->raw=(char*)malloc(strlen((const char*)chnode->children->content)+1);
+          strcpy(t->raw, (const char*)chnode->children->content);
+        }
+      } else if(chnode->type == XML_TEXT_NODE) {
+        if(!saw_clean) {
+          t->cooked=(char*)malloc(strlen((const char*)chnode->content)+1);
+          strcpy(t->cooked, (const char*)chnode->content);
+        }
+      }
+    }
     
 #if FLICKCURL_DEBUG > 1
     fprintf(stderr, "tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
