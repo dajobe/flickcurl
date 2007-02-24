@@ -175,6 +175,7 @@ static const char* flickcurl_person_field_label[PERSON_FIELD_LAST+1]={
   "photos_firstdate",
   "photos_firstdatetaken",
   "photos_count",
+  "photos_views"
 };
 
 

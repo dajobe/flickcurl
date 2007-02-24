@@ -209,6 +209,12 @@ static struct {
     VALUE_TYPE_INTEGER
   }
   ,
+  {
+    (const xmlChar*)"/rsp/person/photos/views",
+    PERSON_FIELD_photos_views,
+    VALUE_TYPE_INTEGER
+  }
+  ,
   { 
     NULL,
     0,

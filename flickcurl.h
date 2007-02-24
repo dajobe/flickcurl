@@ -164,7 +164,8 @@ typedef enum {
   PERSON_FIELD_photos_firstdate, /* dateTime */
   PERSON_FIELD_photos_firstdatetaken, /* dateTime */
   PERSON_FIELD_photos_count, /* integer */
-  PERSON_FIELD_LAST = PERSON_FIELD_photos_count
+  PERSON_FIELD_photos_views, /* integer */
+  PERSON_FIELD_LAST = PERSON_FIELD_photos_views
 } flickcurl_person_field;
 
 
