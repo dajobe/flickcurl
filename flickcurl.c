@@ -251,7 +251,9 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
       fprintf(stderr,
               "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
               i, (tag->machine_tag ? "machine" : "regular"),
-              tag->id, tag->author, tag->authorname, tag->raw, tag->cooked);
+              tag->id, tag->author,
+              (tag->authorname ? tag->authorname : "(Unknown)"),
+              tag->raw, tag->cooked);
     }
     flickcurl_free_photo(photo);
   }
