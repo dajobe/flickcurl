@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * common.c - Flickcurl common functions
+ * context.c - Flickcurl context functions
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 
@@ -47,6 +47,33 @@ flickcurl_get_context_type_field_label(flickcurl_context_type type)
   if(type > FLICKCURL_CONTEXT_NONE && type <= FLICKCURL_CONTEXT_LAST)
     return flickcurl_context_type_element[(int)type];
   return NULL;
+}
+
+
+void
+flickcurl_free_context(flickcurl_context *context)
+{
+  if(context->id)
+    free(context->id);
+  if(context->secret)
+    free(context->secret);
+  if(context->title)
+    free(context->title);
+  if(context->url)
+    free(context->url);
+  if(context->thumb)
+    free(context->thumb);
+  free(context);
+}
+
+
+void
+flickcurl_free_contexts(flickcurl_context** contexts)
+{
+  int i;
+  for(i=0; contexts[i]; i++)
+    flickcurl_free_context(contexts[i]);
+  free(contexts);
 }
 
 

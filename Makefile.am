@@ -40,6 +40,7 @@ context.c \
 config.c \
 md5.c \
 person.c \
+tags.c \
 vsnprintf.c \
 api.c \
 auth-api.c \
