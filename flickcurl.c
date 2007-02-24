@@ -219,6 +219,25 @@ command_people_getInfo(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_tags(flickcurl_tag** tags, const char* label, const char* value)
+{
+  int i;
+  if(label)
+    fprintf(stderr, "%s: %s %s tags\n", program, label,
+            (value ? value : "(none)"));
+  for(i=0; tags[i]; i++) {
+    flickcurl_tag* tag=tags[i];
+    fprintf(stderr,
+            "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
+            i, (tag->machine_tag ? "machine" : "regular"),
+            tag->id, tag->author,
+            (tag->authorname ? tag->authorname : "(Unknown)"),
+            tag->raw, tag->cooked, tag->count);
+  }
+}
+
+
 static int
 command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 {
@@ -228,7 +247,6 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 
   if(photo) {
     flickcurl_photo_field field;
-    int i;
     
     fprintf(stderr, "%s: Found photo with URI %s ID %s and %d tags\n",
             program, photo->uri, photo->id, photo->tags_count);
@@ -245,16 +263,8 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
               photo->fields[field].string, photo->fields[field].integer);
     }
     
+    command_print_tags(photo->tags, NULL, NULL);
 
-    for(i=0; i < photo->tags_count; i++) {
-      flickcurl_tag* tag=photo->tags[i];
-      fprintf(stderr,
-              "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
-              i, (tag->machine_tag ? "machine" : "regular"),
-              tag->id, tag->author,
-              (tag->authorname ? tag->authorname : "(Unknown)"),
-              tag->raw, tag->cooked);
-    }
     flickcurl_free_photo(photo);
   }
   
@@ -452,27 +462,71 @@ command_auth_getFullToken(flickcurl* fc, int argc, char *argv[])
 
 
 static int
-command_tags_getListInfo(flickcurl* fc, int argc, char *argv[])
+command_tags_getListPhoto(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_tag** tags;
-  int i;
   char *photo_id=argv[1];
-  
-  tags=flickcurl_tags_getListInfo(fc, photo_id);
+
+  tags=flickcurl_tags_getListPhoto(fc, photo_id);
   if(!tags)
     return 1;
 
-  fprintf(stderr, "%s: Photo ID %s tags\n", program, photo_id);
-  for(i=0; tags[i]; i++) {
-    flickcurl_tag* tag=tags[i];
-    fprintf(stderr,
-            "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
-            i, (tag->machine_tag ? "machine" : "regular"),
-            tag->id, tag->author,
-            (tag->authorname ? tag->authorname : "(Unknown)"),
-            tag->raw, tag->cooked);
-  }
+  command_print_tags(tags, "Photo ID", photo_id);
+  free(tags);
+  return 0;
+}
 
+
+static int
+command_tags_getListUser(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag** tags;
+  char *user_id=argv[1];
+
+  tags=flickcurl_tags_getListUser(fc, user_id);
+  if(!tags)
+    return 1;
+
+  command_print_tags(tags, "User ID", user_id);
+  free(tags);
+  return 0;
+}
+
+
+static int
+command_tags_getListUserPopular(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag** tags;
+  char *user_id=NULL;
+  int pop_count= -1;
+  
+  if(argv[1]) {
+    user_id=argv[1];
+    if(argv[2])
+      pop_count=atoi(argv[2]);
+  }
+  
+  tags=flickcurl_tags_getListUserPopular(fc, user_id, pop_count);
+  if(!tags)
+    return 1;
+
+  command_print_tags(tags, "User ID", user_id);
+  free(tags);
+  return 0;
+}
+
+
+static int
+command_tags_getListUserRaw(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag** tags;
+  char *tag=argv[1];
+
+  tags=flickcurl_tags_getListUserRaw(fc, tag);
+  if(!tags)
+    return 1;
+
+  command_print_tags(tags, "Tag", tag);
   free(tags);
   return 0;
 }
@@ -528,7 +582,16 @@ static struct {
    command_photosets_getContext, 2, 2},
   {"tags.getListPhoto",
    "PHOTO-ID", "Get the tag list for a given photo.",
-   command_tags_getListInfo, 1, 1},
+   command_tags_getListPhoto, 1, 1},
+  {"tags.getListUser",
+   "[USER-ID]", "Get the tag list for a given user (or current user).",
+   command_tags_getListUser, 0, 1},
+  {"tags.getListUserPopular",
+   "[USER-ID [COUNT]]", "Get the popular tag list for a given user (or current user).",
+   command_tags_getListUserPopular, 0, 2},
+  {"tags.getListUserRaw",
+   "[TAG]", "Get the raw versions of a given tag (or all tags) for the current user.",
+   command_tags_getListUserRaw, 0, 1},
   {"test.echo",
    "KEY VALUE", "Test echo of KEY VALUE",
    command_test_echo,  2, 2},
