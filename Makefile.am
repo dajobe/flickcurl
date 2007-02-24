@@ -40,9 +40,9 @@ context.c \
 config.c \
 md5.c \
 person.c \
+photo.c \
 tags.c \
 vsnprintf.c \
-api.c \
 auth-api.c \
 groups-pools-api.c \
 people-api.c \

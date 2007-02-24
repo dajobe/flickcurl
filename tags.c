@@ -26,15 +26,6 @@
 #include <config.h>
 #endif
 
-/* for access() and R_OK */
-#ifdef HAVE_STDLIB_H
-#include <stdlib.h>
-#undef HAVE_STDLIB_H
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 

@@ -53,18 +53,18 @@ char* flickcurl_unixtime_to_isotime(time_t unix_time);
 /* Evaluate an XPath to get the string value */
 char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
-/* Build an array of tags */
-flickcurl_tag** flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* tag_count_p);
-
-
-/* md5.c - MD5 as hex string */
-extern char* MD5_string(char *string);
 
 /* context.c */
 flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
 
+/* md5.c - MD5 as hex string */
+extern char* MD5_string(char *string);
+
 /* person.c */
 flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
+
+/* tags.c  */
+flickcurl_tag** flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* tag_count_p);
 
 /* vsnprintf.c */
 extern char* my_vsnprintf(const char *message, va_list arguments);

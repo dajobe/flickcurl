@@ -754,28 +754,6 @@ flickcurl_invoke(flickcurl *fc)
 
 
 void
-flickcurl_free_photo(flickcurl_photo *photo)
-{
-  int i;
-  for(i=0; i <= PHOTO_FIELD_LAST; i++) {
-    if(photo->fields[i].string)
-      free(photo->fields[i].string);
-  }
-  
-  for(i=0; i < photo->tags_count; i++)
-    flickcurl_free_tag(photo->tags[i]);
-
-  if(photo->id)
-    free(photo->id);
-  
-  if(photo->uri)
-    free(photo->uri);
-  
-  free(photo);
-}
-
-
-void
 flickcurl_free_person(flickcurl_person *person)
 {
   int i;
@@ -851,50 +829,6 @@ flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
 }
 
 
-
-/*
- * Get a photo's image source URIs
- * @c can be s,m,t,b for sizes, o for original, otherwise default
- * http://www.flickr.com/services/api/misc.urls.html
- */
-char*
-flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
-{
-  char buf[1024];
-  char *result;
-  size_t len;
-  
-  if(c == 'o') {
-    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{o-secret}_o.(jpg|gif|png) */
-    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s_o.%s", 
-            photo->fields[PHOTO_FIELD_farm].string,
-            photo->fields[PHOTO_FIELD_server].string,
-            photo->id,
-            photo->fields[PHOTO_FIELD_originalsecret].string,
-            photo->fields[PHOTO_FIELD_originalformat].string);
-  } else if (c == 'm' || c == 's' || c == 't' || c == 'b') {
-    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}_[mstb].jpg */
-    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s_%c.jpg",
-            photo->fields[PHOTO_FIELD_farm].string,
-            photo->fields[PHOTO_FIELD_server].string,
-            photo->id,
-            photo->fields[PHOTO_FIELD_secret].string,
-            c);
-  } else {
-    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}.jpg */
-    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s.jpg",
-            photo->fields[PHOTO_FIELD_farm].string,
-            photo->fields[PHOTO_FIELD_server].string,
-            photo->id,
-            photo->fields[PHOTO_FIELD_secret].string);
-  }
-  len=strlen(buf);
-  result=(char*)malloc(len+1);
-  strcpy(result, buf);
-  return result;
-}
-
-
 void
 flickcurl_set_write(flickcurl *fc, int is_write)
 {
@@ -932,4 +866,27 @@ flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc)
   fc->data=mem;
   fc->data_length=(size_t)size;
   fc->data_is_xml=1;
+}
+
+
+static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1]={
+  "(none)",
+  "photo id",
+  "photo URI",
+  "unix time",
+  "boolean",
+  "dateTime",
+  "float",
+  "integer",
+  "string",
+  "uri"
+};
+
+
+const char*
+flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
+{
+  if(datatype <= VALUE_TYPE_LAST)
+    return flickcurl_field_value_type_label[(int)datatype];
+  return NULL;
 }
