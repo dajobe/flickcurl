@@ -107,9 +107,10 @@ read_ini_config(const char* filename, const char* application,
 
     /* Wait for a line '['application']' */
     if(!in_section) {
-      if(*line == '[' &&
-         !strncmp(line+1, application, strlen(application)) &&
-         line[len-1] == ']')
+      if(*line == '[' && line[len-1] == ']' &&
+         (len-2) == strlen(application) &&
+         !strncmp(line+1, application, len-2)
+         )
         in_section=1;
       continue;
     }
