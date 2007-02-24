@@ -69,15 +69,7 @@ flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.tags.getListPhoto", parameters, count))
     goto tidy;
@@ -136,15 +128,7 @@ flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
     parameters[count++][1]= user_id;
   }
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.tags.getListUser", parameters, count))
     goto tidy;
@@ -209,15 +193,7 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
     parameters[count++][1]= pop_count_str;
   }
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.tags.getListUserPopular", parameters, count))
     goto tidy;
@@ -274,15 +250,7 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
     parameters[count++][1]= tag;
   }
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.tags.getListUserRaw", parameters, count))
     goto tidy;
@@ -324,8 +292,57 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
 
 /**
  * flickcurl_tags_getRelated:
+ * @fc: flickcurl context
+ * @tag: tag to fetch related tags for
  *
- * flickr.tags.getRelated
- */
+ * Get a list of tags 'related' to the given tag, based on clustered usage analysis.
+ *
+ * Implements flickr.tags.getRelated (0.9)
+ * 
+ * Return value: array of #flickcurl_tag or NULL on failure
+ **/
+flickcurl_tag**
+flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
+{
+  const char* parameters[5][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_tag** tags=NULL;
 
+  if(!tag)
+    return NULL;
+  
+  parameters[count][0]  = "tag";
+  parameters[count++][1]= tag;
 
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.tags.getRelated", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  tags=flickcurl_build_tags(fc, NULL,
+                            xpathCtx, 
+                            (xmlChar*)"/rsp/tags/tag", 
+                            NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tags=NULL;
+
+  return tags;
+}
