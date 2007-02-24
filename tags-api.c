@@ -45,19 +45,20 @@
  * flickr.tags.getHotList
  */
 
+
 /**
  * flickcurl_tags_getListPhoto:
  * @fc: flickcurl context
- * @id: photo ID
+ * @photo_id: photo ID
  *
  * Get the tag list for a given photo.
  *
  * Implements flickr.tags.getListPhoto (0.9)
  * 
- * Return value: #flickcurl_photo or NULL on failure
+ * Return value: array of #flickcurl_tag or NULL on failure
  **/
 flickcurl_tag**
-flickcurl_tags_getListInfo(flickcurl* fc, const char* photo_id)
+flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[5][2];
   int count=0;
@@ -110,21 +111,216 @@ flickcurl_tags_getListInfo(flickcurl* fc, const char* photo_id)
 
 /**
  * flickcurl_tags_getListUser:
+ * @fc: flickcurl context
+ * @user_id: user NSID (or NULL)
  *
- * flickr.tags.getListUser
- */
+ * Get the tag list for a given user (or current user)
+ *
+ * Implements flickr.tags.getListUser (0.9)
+ * 
+ * FIXME: API docs says user_id is optional but it is not.
+ *
+ * Return value: array of #flickcurl_tag or NULL on failure
+ **/
+flickcurl_tag**
+flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
+{
+  const char* parameters[5][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_tag** tags=NULL;
+
+  if(user_id) {
+    parameters[count][0]  = "user_id";
+    parameters[count++][1]= user_id;
+  }
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.tags.getListUser", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  tags=flickcurl_build_tags(fc, NULL,
+                            xpathCtx, 
+                            (xmlChar*)"/rsp/who/tags/tag", 
+                            NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tags=NULL;
+
+  return tags;
+}
+
 
 /**
  * flickcurl_tags_getListUserPopular:
+ * @fc: flickcurl context
+ * @user_id: user NSID (or NULL)
+ * @count: number of popular tags to return (or <0 for default)
  *
- * flickr.tags.getListUserPopular
- */
+ * Get the popular tag list for a given user (or current user)
+ *
+ * Implements flickr.tags.getListUserPopular (0.9)
+ * 
+ * Return value: array of #flickcurl_tag or NULL on failure
+ **/
+flickcurl_tag**
+flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
+                                  int pop_count)
+{
+  const char* parameters[5][2];
+  char pop_count_str[10];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_tag** tags=NULL;
+
+  if(user_id) {
+    parameters[count][0]  = "user_id";
+    parameters[count++][1]= user_id;
+  }
+  if(pop_count >= 0) {
+    sprintf(pop_count_str, "%d", pop_count);
+    parameters[count][0]  = "count";
+    parameters[count++][1]= pop_count_str;
+  }
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.tags.getListUserPopular", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  tags=flickcurl_build_tags(fc, NULL,
+                            xpathCtx, 
+                            (xmlChar*)"/rsp/who/tags/tag", 
+                            NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tags=NULL;
+
+  return tags;
+}
+
 
 /**
  * flickcurl_tags_getListUserRaw:
+ * @fc: flickcurl context
+ * @tag: tag to get raw version of (or NULL for all)
  *
- * flickr.tags.getListUserRaw
- */
+ * Get the raw versions of a given tag (or all tags) for the currently logged-in user.
+ *
+ * Implements flickr.tags.getListUserRaw (0.9)
+ * 
+ * Return value: array of #flickcurl_tag or NULL on failure
+ **/
+flickcurl_tag**
+flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
+{
+  const char* parameters[5][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_tag** tags=NULL;
+
+  if(tag) {
+    parameters[count][0]  = "tag";
+    parameters[count++][1]= tag;
+  }
+
+  /* does not require authentication */
+  if(fc->auth_token) {
+    parameters[count][0]  = "token";
+    parameters[count++][1]= fc->auth_token;
+  }
+
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sig_key(fc, NULL);
+
+  if(flickcurl_prepare(fc, "flickr.tags.getListUserRaw", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  tags=flickcurl_build_tags(fc, NULL,
+                            xpathCtx, 
+                            (xmlChar*)"/rsp/who/tags/tag", 
+                            NULL);
+  if(tags) {
+    int i;
+    for(i=0; tags[i]; i++) {
+      flickcurl_tag* t=tags[i];
+      t->raw=t->cooked;
+      t->cooked=NULL;
+    }
+  }
+    
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tags=NULL;
+
+  return tags;
+}
+
 
 /**
  * flickcurl_tags_getRelated:
