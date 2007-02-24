@@ -56,8 +56,6 @@ flickcurl_get_nsid(flickcurl* fc, const char* key, const char* value,
 
   parameters[count][0]  = NULL;
 
-  flickcurl_set_sig_key(fc, NULL);
-
   if(flickcurl_prepare(fc, method, parameters, count))
     goto tidy;
 
@@ -253,15 +251,7 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
   parameters[count][0]  = "user_id";
   parameters[count++][1]= user_id;
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.people.getInfo", parameters, count))
     goto tidy;

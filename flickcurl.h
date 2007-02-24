@@ -215,7 +215,7 @@ void flickcurl_set_http_accept(flickcurl* fc, const char *value);
 void flickcurl_set_api_key(flickcurl* fc, const char *api_key);
 void flickcurl_set_shared_secret(flickcurl* fc, const char *secret);
 void flickcurl_set_auth_token(flickcurl *fc, const char* auth_token);
-void flickcurl_set_sig_key(flickcurl *fc, const char* sig_key);
+void flickcurl_set_sign(flickcurl *fc);
 void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
 void flickcurl_set_write(flickcurl *fc, int is_write);
 void flickcurl_set_data(flickcurl *fc, void* data, size_t data_length);
@@ -266,6 +266,7 @@ flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
 flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc, const char* user_id);
 flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id, int pop_count);
 flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag);
+flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
 
 /* flickr.test */
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);

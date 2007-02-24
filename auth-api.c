@@ -60,14 +60,17 @@ flickcurl_auth_checkToken(flickcurl* fc, const char* token)
   char *perms=NULL;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
+
+  if(!token)
+    return NULL;
   
   parameters[count][0]   = "auth_token";
   parameters[count++][1] = (char*)token;
 
   parameters[count][0]   = NULL;
 
-  flickcurl_set_sig_key(fc, "api_sig");
-
+  flickcurl_set_sign(fc);
+  
   if(flickcurl_prepare(fc, "flickr.auth.checkToken", parameters, count))
     goto tidy;
 
@@ -110,8 +113,8 @@ flickcurl_auth_getFrob(flickcurl* fc)
   
   parameters[count][0]   = NULL;
 
-  flickcurl_set_sig_key(fc, "api_sig");
-
+  flickcurl_set_sign(fc);
+  
   if(flickcurl_prepare(fc, "flickr.auth.getFrob", parameters, count))
     goto tidy;
 
@@ -157,7 +160,7 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 
   parameters[count][0]   = NULL;
 
-  flickcurl_set_sig_key(fc, "api_sig");
+  flickcurl_set_sign(fc);
 
   if(flickcurl_prepare(fc, "flickr.auth.getFullToken", parameters, count))
     goto tidy;
@@ -205,7 +208,7 @@ flickcurl_auth_getToken(flickcurl* fc, const char* frob)
 
   parameters[count][0]   = NULL;
 
-  flickcurl_set_sig_key(fc, "api_sig");
+  flickcurl_set_sign(fc);
 
   if(flickcurl_prepare(fc, "flickr.auth.getToken", parameters, count))
     goto tidy;

@@ -72,8 +72,6 @@ flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
 
   parameters[count][0]  = NULL;
 
-  flickcurl_set_sig_key(fc, NULL);
-
   if(flickcurl_prepare(fc, "flickr.test.echo", parameters, count)) {
     rc=1;
     goto tidy;
@@ -238,15 +236,7 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
   parameters[count][0]  = "group_id";
   parameters[count++][1]= group_id;
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.groups.pools.getContext", parameters, count))
     goto tidy;
@@ -293,16 +283,7 @@ flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
   parameters[count++][1]= photo_id;
   parameters[count][0]  = "photoset_id";
   parameters[count++][1]= photoset_id;
-
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.photosets.getContext", parameters, count))
     goto tidy;

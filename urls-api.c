@@ -94,8 +94,6 @@ flickcurl_urls_lookupUser(flickcurl* fc, const char* url)
 
   parameters[count][0]  = NULL;
 
-  flickcurl_set_sig_key(fc, NULL);
-
   if(flickcurl_prepare(fc, "flickr.urls.lookupUser", parameters, count))
     goto tidy;
 

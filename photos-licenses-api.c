@@ -66,10 +66,7 @@ flickcurl_read_licenses(flickcurl *fc)
   int i;
   int size;
   
-  /* does not require authentication */
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.photos.licenses.getInfo", parameters, count))
     goto tidy;

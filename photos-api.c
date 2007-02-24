@@ -75,15 +75,7 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.photos.getAllContexts", parameters, count))
     goto tidy;
@@ -137,15 +129,7 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.photos.getContext", parameters, count))
     goto tidy;
@@ -414,15 +398,7 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
 
-  /* does not require authentication */
-  if(fc->auth_token) {
-    parameters[count][0]  = "token";
-    parameters[count++][1]= fc->auth_token;
-  }
-
   parameters[count][0]  = NULL;
-
-  flickcurl_set_sig_key(fc, NULL);
 
   if(flickcurl_prepare(fc, "flickr.photos.getInfo", parameters, count))
     goto tidy;

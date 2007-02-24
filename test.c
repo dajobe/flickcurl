@@ -130,15 +130,7 @@ main(int argc, char *argv[])
     parameters[count][0]  = "photo_id";
     parameters[count++][1]= "testvalue";
     
-    /* does not require authentication */
-    if(fc->auth_token) {
-      parameters[count][0]  = "token";
-      parameters[count++][1]= fc->auth_token;
-    }
-    
     parameters[count][0]  = NULL;
-
-    flickcurl_set_sig_key(fc, NULL);
 
     if(flickcurl_prepare(fc, "flickr.test.echo", parameters, count))
       goto tidy;
