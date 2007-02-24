@@ -756,6 +756,8 @@ flickcurl_free_tag(flickcurl_tag *t)
     free(t->id);
   if(t->author)
     free(t->author);
+  if(t->authorname)
+    free(t->authorname);
   if(t->raw)
     free(t->raw);
   if(t->cooked)
@@ -1109,6 +1111,8 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
         t->id=attr_value;
       else if(!strcmp(attr_name, "author"))
         t->author=attr_value;
+      else if(!strcmp(attr_name, "authorname"))
+        t->authorname=attr_value;
       else if(!strcmp(attr_name, "raw"))
         t->raw=attr_value;
       else if(!strcmp(attr_name, "machine_tag")) {
@@ -1121,8 +1125,8 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
     strcpy(t->cooked, (const char*)node->children->content);
     
 #if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "tag: id %s author %s raw '%s' cooked '%s'\n",
-            t->id, t->author, t->raw, t->cooked);
+    fprintf(stderr, "tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
+            t->id, t->author, t->authorname, t->raw, t->cooked);
 #endif
     
     if(fc->tag_handler)
