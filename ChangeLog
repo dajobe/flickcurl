@@ -1,4 +1,104 @@
+2007-02-24  Dave Beckett  <dave@dajobe.org>
+
+	* flickcurl.c: warning when command failed
+
+	* config.c: (read_ini_config): Check for full length of app string
+	match, not just prefix.
+
+	* flickcurl_internal.h, photo.c,
+	photos-api.c: (flickcurl_build_photo): Created from
+	flickcurl_photos_getInfo() content which now uses it
+
+	* Makefile.am, api.c, common.c, flickcurl_internal.h,
+	photo.c (from common.c r185), tags.c: Copied photo routines from
+	common.c to new photo.c and moved remaining api junk from api.c to
+	common.c. Deleted api.c
+
+	* Makefile.am, common.c, context.c, tags.c (from common.c r184):
+	Pulled tags code out of api.c common.c into new tags.c including
+	tags destructor and flickcurl_build_tags()
+
+	* Makefile.am, api.c, common.c, context.c (from common.c r181),
+	flickcurl_internal.h: Pulled contexts code out of api.c common.c
+	into new context.c including flickcurl_build_contexts()
+
+	* flickcurl.c: Added command_tags_getRelated for
+	flickr.tags.getRelated
+
+	* tags-api.c: (flickcurl_tags_getListUserRaw): Let
+	flickcurl_build_tags tidy up the raw/cooked field detail.
+
+	* common.c: (flickcurl_build_tags): Handle 
+	<tag clean="cooked"><raw>raw</raw></tag> for
+	flickr.tags.getListUserRaw and put @clean into the tags->cooked
+	field and <raw> content into tags->raw field.
+
+	* configure.ac: AM_CONFIG_HEADER
+
+	* api.c, flickcurl.c, flickcurl.h, photos-api.c, triplr.c: Major
+	tidy of flickcurl.h with reordering and more comments.  Pulled out
+	photos and contexts fields into new structures named
+	flickcurl_THING_type, renaming enums to flickcurl_THING_field_type
+
+	* Makefile.am, flickcurl_internal.h, people-api.c, person.c (from
+	api.c r176): Added person.c from api.c and pulled out
+	flickcurl_build_person from people-api.c
+
+	* api.c, auth-api.c, groups-pools-api.c, people-api.c,
+	photos-api.c, photos-licenses-api.c, photosets-api.c, tags-api.c,
+	test-api.c, urls-api.c: Header comments
+
+	* photosets-api.c: add stubs
+
+	* Makefile.am, api.c, test-api.c (from api.c r173): Added
+	test-api.c from api.c
+
+	* Makefile.am, api.c, coverage.html, photosets-api.c (from api.c
+	r172): Added photosets-api.c from api.c
+
+	* Makefile.am, api.c, groups-pools-api.c (from api.c r171): Added
+	groups-pools-api.c from api.c
+
+	* api.c, flickcurl.h, people-api.c: Added
+	PERSON_FIELD_photos_views in photos
+
+	* api.c, auth-api.c, coverage.html, flickcurl.h, people-api.c,
+	photos-api.c, photos-licenses-api.c, test.c, urls-api.c: Remove
+	use of setting token field into flickcurl_prepare and remove uses
+	of flickcurl_set_sig_key
+
+	* common.c: (flickcurl_free): No sig_key field
+	(flickcurl_set_sig_key): Removed
+	(flickcurl_set_sign): Added.
+	(flickcurl_prepare): Set auth_token field here and sign either if
+	it present or otherwise told to sign, if fc->sign is set.
+	(flickcurl_invoke): Reset fc->sign.
+
+	* flickcurl_internal.h: flickcurl* replaced sig_key field with
+	sign flag.
+
+	* tags-api.c: (flickcurl_tags_getRelated): Added.
+
+	* flickcurl.c: (command_print_tags): Added Added commands for
+	flickcurl_tags_getListPhoto, flickcurl_tags_getListUser,
+	flickcurl_tags_getListUserPopular and
+	flickcurl_tags_getListUserRaw.
+
+	* tags-api.c: (flickcurl_tags_getListPhoto,
+	flickcurl_tags_getListUser, flickcurl_tags_getListUserPopular and
+	flickcurl_tags_getListUserRaw): Added.
+
+	* flickcurl.h: Added flickcurl_tags_getListPhoto,
+	flickcurl_tags_getListUser, flickcurl_tags_getListUserPopular and
+	flickcurl_tags_getListUserRaw
+
 2007-02-23  Dave Beckett  <dave@dajobe.org>
+
+	* example.c: add tag count
+
+	* common.c: (flickcurl_build_tags): Add count
+
+	* flickcurl.h: struct flickcurl_tag gains count
 
 	* flickcurl.h: Added flickcurl_tags_getListInfo
 
