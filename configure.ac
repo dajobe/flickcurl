@@ -4,7 +4,7 @@
 AC_PREREQ(2.59)
 AC_INIT(Flickcurl, 0.9, http://bugs.librdf.org/, flickcurl)
 AC_CONFIG_SRCDIR([flickcurl.c])
-AC_CONFIG_HEADER([config.h])
+AM_CONFIG_HEADER([config.h])
 AC_REVISION($Revision: $)dnl
 
 AM_MAINTAINER_MODE
