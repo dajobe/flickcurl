@@ -1118,6 +1118,9 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
       else if(!strcmp(attr_name, "machine_tag")) {
         t->machine_tag=atoi(attr_value);
         free(attr_value);
+      } else if(!strcmp(attr_name, "count")) {
+        t->count=atoi(attr_value);
+        free(attr_value);
       }
     }
     
@@ -1125,8 +1128,8 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
     strcpy(t->cooked, (const char*)node->children->content);
     
 #if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "tag: id %s author ID %s name %s raw '%s' cooked '%s'\n",
-            t->id, t->author, t->authorname, t->raw, t->cooked);
+    fprintf(stderr, "tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
+            t->id, t->author, t->authorname, t->raw, t->cooked, t->count);
 #endif
     
     if(fc->tag_handler)
