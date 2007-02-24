@@ -38,59 +38,6 @@
 #include <flickcurl_internal.h>
 
 
-/*
- **********************************************************************
- * Flickr API Calls
- **********************************************************************
- */
-
-
-/**
- * flickcurl_test_echo:
- * @fc: flickcurl context
- * @key: test key
- * @value: test value
- * 
- * A testing method which echo's all parameters back in the response.
- *
- * Actually prints the returned byte count to stderr.
- *
- * Implements flickr.test.echo (0.5)
- *
- * Return value: non-0 on failure
- **/
-int
-flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
-{
-  const char * parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int rc=0;
-  
-  parameters[count][0]  = key;
-  parameters[count++][1]= value;
-
-  parameters[count][0]  = NULL;
-
-  if(flickcurl_prepare(fc, "flickr.test.echo", parameters, count)) {
-    rc=1;
-    goto tidy;
-  }
-
-  doc=flickcurl_invoke(fc);
-  if(!doc) {
-    rc=1;
-    goto tidy;
-  }
-
-  fprintf(stderr, "Flickr echo returned %d bytes\n", fc->total_bytes);
-  
-  tidy:
-  
-  return rc;
-}
-
-
 static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
   "(none)",
   "dateuploaded",

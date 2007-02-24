@@ -43,6 +43,7 @@ photos-api.c \
 photos-licenses-api.c \
 photosets-api.c \
 tags-api.c \
+test-api.c \
 urls-api.c \
 flickcurl_internal.h
 
