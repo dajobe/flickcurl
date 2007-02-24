@@ -112,11 +112,9 @@ struct flickcurl_s {
   /* Flickr authentication token - flickcurl_set_auth_token() */
   char* auth_token;
 
-
-  /* signature parameter (shared) for authenticated calls ("api_sig"
-   * usually) or  NULL for where it is not needed - flickcurl_set_sig_key()
+  /* API call must be signed even if 'auth_token' is NULL - flickcurl_set_sign()
    */
-  char* sig_key;
+  int sign;
 
   /* Flickr API method to invoke - set by flickcurl_prepare */
   char* method;
