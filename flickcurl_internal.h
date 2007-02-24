@@ -63,6 +63,9 @@ extern char* MD5_string(char *string);
 /* person.c */
 flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
 
+/* photo.c */
+flickcurl_photo* flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx);
+
 /* tags.c  */
 flickcurl_tag** flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* tag_count_p);
 

@@ -141,3 +141,316 @@ flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
 }
 
 
+static struct {
+  const xmlChar* xpath;
+  flickcurl_photo_field_type field;
+  flickcurl_field_value_type type;
+} photo_fields_table[PHOTO_FIELD_LAST + 3]={
+  {
+    (const xmlChar*)"/rsp/photo/@id",
+    PHOTO_FIELD_none,
+    VALUE_TYPE_PHOTO_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/urls/url[@type=\"photopage\"]",
+    PHOTO_FIELD_none,
+    VALUE_TYPE_PHOTO_URI
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@dateuploaded",
+    PHOTO_FIELD_dateuploaded,
+    VALUE_TYPE_UNIXTIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@farm",
+    PHOTO_FIELD_farm,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@isfavorite",
+    PHOTO_FIELD_isfavorite,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@license",
+    PHOTO_FIELD_license,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@originalformat",
+    PHOTO_FIELD_originalformat,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@rotation",
+    PHOTO_FIELD_rotation,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@server",
+    PHOTO_FIELD_server,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/dates/@lastupdate",
+    PHOTO_FIELD_dates_lastupdate,
+    VALUE_TYPE_UNIXTIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/dates/@posted",
+    PHOTO_FIELD_dates_posted,
+    VALUE_TYPE_UNIXTIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/dates/@taken",
+    PHOTO_FIELD_dates_taken,
+    VALUE_TYPE_DATETIME
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/dates/@takengranularity",
+    PHOTO_FIELD_dates_takengranularity,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/description",
+    PHOTO_FIELD_description,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/editability/@canaddmeta",
+    PHOTO_FIELD_editability_canaddmeta,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/editability/@cancomment",
+    PHOTO_FIELD_editability_cancomment,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@iscontact",
+    PHOTO_FIELD_geoperms_iscontact,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@isfamily",
+    PHOTO_FIELD_geoperms_isfamily,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@isfriend",
+    PHOTO_FIELD_geoperms_isfriend,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/geoperms/@ispublic",
+    PHOTO_FIELD_geoperms_ispublic,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/@accuracy",
+    PHOTO_FIELD_location_accuracy,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/@latitude",
+    PHOTO_FIELD_location_latitude,
+    VALUE_TYPE_FLOAT
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/@longitude",
+    PHOTO_FIELD_location_longitude,
+    VALUE_TYPE_FLOAT
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@location",
+    PHOTO_FIELD_owner_location,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@nsid",
+    PHOTO_FIELD_owner_nsid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@realname",
+    PHOTO_FIELD_owner_realname,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/owner/@username",
+    PHOTO_FIELD_owner_username,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/title",
+    PHOTO_FIELD_title,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/visibility/@isfamily",
+    PHOTO_FIELD_visibility_isfamily,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/visibility/@isfriend",
+    PHOTO_FIELD_visibility_isfriend,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/visibility/@ispublic",
+    PHOTO_FIELD_visibility_ispublic,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@secret",
+    PHOTO_FIELD_secret,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/@originalsecret",
+    PHOTO_FIELD_originalsecret,
+    VALUE_TYPE_STRING
+  }
+  ,
+  { 
+    NULL,
+    0,
+    0
+  }
+};
+
+
+flickcurl_photo*
+flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx)
+{
+  int expri;
+  flickcurl_photo* photo=NULL;
+  
+  photo=(flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
+  
+  for(expri=0; photo_fields_table[expri].xpath; expri++) {
+    char *string_value=flickcurl_xpath_eval(fc, xpathCtx, 
+                                            photo_fields_table[expri].xpath);
+    flickcurl_field_value_type datatype=photo_fields_table[expri].type;
+    int int_value= -1;
+    flickcurl_photo_field_type field=photo_fields_table[expri].field;
+    time_t unix_time;
+    
+    if(!string_value) {
+      photo->fields[field].string = NULL;
+      photo->fields[field].integer= -1;
+      photo->fields[field].type   = VALUE_TYPE_NONE;
+      continue;
+    }
+
+    switch(datatype) {
+      case VALUE_TYPE_PHOTO_ID:
+        photo->id=string_value;
+        string_value=NULL;
+        datatype=VALUE_TYPE_NONE;
+        break;
+
+      case VALUE_TYPE_PHOTO_URI:
+        photo->uri=string_value;
+        string_value=NULL;
+        datatype=VALUE_TYPE_NONE;
+        break;
+
+      case VALUE_TYPE_UNIXTIME:
+      case VALUE_TYPE_DATETIME:
+      
+        if(datatype == VALUE_TYPE_UNIXTIME)
+          unix_time=atoi(string_value);
+        else
+          unix_time=curl_getdate((const char*)string_value, NULL);
+        
+        if(unix_time >= 0) {
+          char* new_value=flickcurl_unixtime_to_isotime(unix_time);
+#if FLICKCURL_DEBUG > 1
+          fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
+                  value, (long)unix_time, new_value);
+#endif
+          free(string_value);
+          string_value= new_value;
+          int_value= unix_time;
+          datatype=VALUE_TYPE_DATETIME;
+        } else
+          /* failed to convert, make it a string */
+          datatype=VALUE_TYPE_STRING;
+        break;
+        
+      case VALUE_TYPE_INTEGER:
+      case VALUE_TYPE_BOOLEAN:
+        int_value=atoi(string_value);
+        break;
+        
+      case VALUE_TYPE_NONE:
+      case VALUE_TYPE_STRING:
+      case VALUE_TYPE_FLOAT:
+      case VALUE_TYPE_URI:
+        break;
+
+      case VALUE_TYPE_PERSON_ID:
+        abort();
+    }
+
+    photo->fields[field].string = string_value;
+    photo->fields[field].integer= int_value;
+    photo->fields[field].type   = datatype;
+
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "field %d with %s value: '%s' / %d\n",
+            field, flickcurl_field_value_type_label[datatype], 
+            string_value, int_value);
+#endif
+      
+    if(fc->failed)
+      goto tidy;
+  }
+
+
+  photo->tags=flickcurl_build_tags(fc, photo,
+                                   xpathCtx, 
+                                   (xmlChar*)"/rsp/photo/tags/tag", 
+                                   &photo->tags_count);
+
+  tidy:
+  if(fc->failed)
+    photo=NULL;
+
+  return photo;
+}
+
+
