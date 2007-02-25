@@ -53,6 +53,8 @@ char* flickcurl_unixtime_to_isotime(time_t unix_time);
 /* Evaluate an XPath to get the string value */
 char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
+char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const char* value, const char* method, xmlChar* xpathExpr);
+
 
 /* context.c */
 flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
