@@ -55,7 +55,7 @@
 int
 flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
 {
-  const char * parameters[10][2];
+  const char * parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   int rc=0;

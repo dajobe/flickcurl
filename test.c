@@ -123,7 +123,7 @@ main(int argc, char *argv[])
 
 
   if(1) {
-    const char * parameters[5][2];
+    const char * parameters[6][2];
     int count=0;
     xmlDocPtr doc;
     

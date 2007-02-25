@@ -42,7 +42,7 @@ static char*
 flickcurl_get_nsid(flickcurl* fc, const char* key, const char* value,
                    const char* method)
 {
-  const char * parameters[5][2];
+  const char * parameters[6][2];
   int count=0;
   char *nsid=NULL;
   xmlDocPtr doc=NULL;
@@ -131,7 +131,7 @@ flickcurl_people_findByUsername(flickcurl* fc, const char* username)
 flickcurl_person*
 flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
 {
-  const char * parameters[10][2];
+  const char * parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 

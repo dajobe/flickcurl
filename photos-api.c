@@ -67,7 +67,7 @@
 flickcurl_context**
 flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
 {
-  const char * parameters[5][2];
+  const char * parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   flickcurl_context** contexts=NULL;
@@ -121,7 +121,7 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
 flickcurl_context**
 flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
 {
-  const char * parameters[5][2];
+  const char * parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   flickcurl_context** contexts=NULL;
@@ -177,7 +177,7 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
 flickcurl_photo*
 flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
 {
-  const char * parameters[10][2];
+  const char * parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 

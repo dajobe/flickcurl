@@ -89,7 +89,7 @@ flickcurl_context**
 flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
                                const char* photoset_id)
 {
-  const char * parameters[5][2];
+  const char * parameters[7][2];
   int count=0;
   xmlDocPtr doc=NULL;
   flickcurl_context** contexts=NULL;
@@ -99,8 +99,10 @@ flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
+
   parameters[count][0]  = "photoset_id";
   parameters[count++][1]= photoset_id;
+
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.photosets.getContext", parameters, count))

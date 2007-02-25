@@ -55,7 +55,7 @@
 char*
 flickcurl_auth_checkToken(flickcurl* fc, const char* token)
 {
-  const char * parameters[5][2];
+  const char * parameters[6][2];
   int count=0;
   char *perms=NULL;
   xmlDocPtr doc=NULL;
@@ -149,7 +149,7 @@ flickcurl_auth_getFrob(flickcurl* fc)
 char*
 flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 {
-  const char * parameters[10][2];
+  const char * parameters[6][2];
   int count=0;
   char *auth_token=NULL;
   xmlDocPtr doc=NULL;
@@ -197,7 +197,7 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 char*
 flickcurl_auth_getToken(flickcurl* fc, const char* frob)
 {
-  const char * parameters[10][2];
+  const char * parameters[6][2];
   int count=0;
   char *auth_token=NULL;
   xmlDocPtr doc=NULL;

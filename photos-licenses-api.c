@@ -56,7 +56,7 @@ compare_licenses(const void *a, const void *b)
 static void
 flickcurl_read_licenses(flickcurl *fc)
 {
-  const char * parameters[10][2];
+  const char * parameters[5][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 

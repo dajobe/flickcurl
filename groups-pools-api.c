@@ -61,7 +61,7 @@ flickcurl_context**
 flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
                                   const char* group_id)
 {
-  const char * parameters[5][2];
+  const char * parameters[7][2];
   int count=0;
   xmlDocPtr doc=NULL;
   flickcurl_context** contexts=NULL;
@@ -71,6 +71,7 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
+
   parameters[count][0]  = "group_id";
   parameters[count++][1]= group_id;
 

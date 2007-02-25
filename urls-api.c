@@ -80,7 +80,7 @@
 char*
 flickcurl_urls_lookupUser(flickcurl* fc, const char* url)
 {
-  const char * parameters[5][2];
+  const char * parameters[6][2];
   int count=0;
   char *nsid=NULL;
   xmlDocPtr doc=NULL;

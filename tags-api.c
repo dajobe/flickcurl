@@ -60,7 +60,7 @@
 flickcurl_tag**
 flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[5][2];
+  const char* parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -117,7 +117,7 @@ flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
 flickcurl_tag**
 flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
 {
-  const char* parameters[5][2];
+  const char* parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -176,7 +176,7 @@ flickcurl_tag**
 flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
                                   int pop_count)
 {
-  const char* parameters[5][2];
+  const char* parameters[7][2];
   char pop_count_str[10];
   int count=0;
   xmlDocPtr doc=NULL;
@@ -239,7 +239,7 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
 flickcurl_tag**
 flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
 {
-  const char* parameters[5][2];
+  const char* parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -296,7 +296,7 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
 flickcurl_tag**
 flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
 {
-  const char* parameters[5][2];
+  const char* parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
