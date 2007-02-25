@@ -896,7 +896,7 @@ char*
 flickcurl_call_get_one_string_field(flickcurl* fc, 
                                     const char* key, const char* value,
                                     const char* method,
-                                    xmlChar* xpathExpr)
+                                    const xmlChar* xpathExpr)
 {
   const char * parameters[6][2];
   int count=0;
