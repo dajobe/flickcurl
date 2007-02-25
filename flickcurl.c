@@ -785,7 +785,20 @@ main(int argc, char *argv[])
     goto usage;
   }
 
-
+  if((argc-1) < commands[cmd_index].min) {
+    fprintf(stderr, "%s: Need min %d arguments for command `%s'\n", program,
+            commands[cmd_index].min, command);
+    usage=1;
+    goto usage;
+  }
+  
+  if((argc-1) > commands[cmd_index].max) {
+    fprintf(stderr, "%s: Need max %d arguments for command `%s'\n", program,
+            commands[cmd_index].max, command);
+    usage=1;
+    goto usage;
+  }
+  
  usage:
   if(usage) {
     if(usage>1) {
