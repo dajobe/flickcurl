@@ -15,6 +15,21 @@ if test "$USE_MAINTAINER_MODE" = yes; then
   CPPFLAGS=`echo $CPPFLAGS | sed -e "s/-O[A-Za-z0-9]*//"`
 fi
 
+dnl need to change quotes to allow square brackets
+changequote(<<, >>)dnl
+VERSION="$PACKAGE_VERSION.0"
+version_major=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\1/'`
+version_minor=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\2/'`
+version_release=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\3/'`
+changequote([, ])dnl
+
+version_decimal=`expr $version_major \* 10000 + $version_minor \* 100 + $version_release`
+AC_DEFINE_UNQUOTED(FLICKCURL_VERSION_DECIMAL, $version_decimal, [Release version as a decimal])
+
+# for flickcurl-config.in
+FLICKCURL_VERSION_DECIMAL=$version_decimal
+AC_SUBST(FLICKCURL_VERSION_DECIMAL)
+
 
 AM_INIT_AUTOMAKE([1.7 check-news std-options -Wobsolete -Wportability -Wsyntax -Wunsupported])
 
