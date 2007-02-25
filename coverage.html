@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">19.4% (20/103)</span>
+<span class="coverage">23.3% (24/103)</span>
 </p>
 
 
@@ -264,17 +264,17 @@ or <span class="unsupported">unsupported</span>.
 <h3>urls</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.getGroup.html">flickr.urls.getGroup</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.getUserPhotos.html">flickr.urls.getUserPhotos</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.getUserProfile.html">flickr.urls.getUserProfile</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.urls.lookupGroup.html">flickr.urls.lookupGroup</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.getGroup.html">flickr.urls.getGroup</a> (0.9)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.getUserPhotos.html">flickr.urls.getUserPhotos</a> (0.9)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.getUserProfile.html">flickr.urls.getUserProfile</a> (0.9)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.lookupGroup.html">flickr.urls.lookupGroup</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.lookupUser.html">flickr.urls.lookupUser</a> (0.6)</li>
 </ul>
 
 
 <h2>Changes</h2>
 
-<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated (8 new)
+<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated, flickr.urls.getGroup, flickr.urls.getUserPhotos, flickr.urls.getUserProfile, flickr.urls.lookupGroup (12 new)
 <pre>
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
 char* flickcurl_auth_getFrob(flickcurl* fc);
@@ -284,6 +284,10 @@ flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc, const char* user_id);
 flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id, int pop_count);
 flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag);
 flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
+char* flickcurl_urls_getGroup(flickcurl* fc, const char* group_id);
+char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
+char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
+char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
 </pre>
 </p>
 
