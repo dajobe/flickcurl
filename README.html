@@ -11,17 +11,20 @@
 <h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
 
 
-<p>Flickcurl is a library for calling the 
+<p>Flickcurl is a C library for the
 <a href="http://www.flickr.com/services/api/">Flickr API</a>,
-handling the API signing and the token management plus providing
-wrappers for some of the APIs.  It uses
+handling creating the reqeuests, signing, token management,
+calling the API, marshalling requests parameters and decoding responses.
+It uses
 <a href="http://curl.haxx.se/libcurl/">libcurl</a> to call the 
 <a href="http://www.flickr.com/services/api/request.rest.html">REST web service</a>
 and <a href="http://xmlsoft.org/">libxml2</a>
 to manipulate the XML responses.
-The current version provides just a few
-wrappers for reading photo description, sufficient for me to
-get at the photo information and the machine tags.
+The current version supports part of the API
+(see <a href="coverage.html">Flickcurl API coverage</a>)
+primarily the functions for reading photo, people and tags
+description, sufficient for me to play with machine tags
+and RDF descriptions.
 </p>
 
 <p>License: LGPL 2.1 / GPL 2  /Apache 2.0</p>
@@ -29,9 +32,9 @@ get at the photo information and the machine tags.
 <p>Download: <a href="http://download.dajobe.org/flickcurl/">http://download.dajobe.org/flickcurl/</a>
 </p>
 
-<p>News: <a href="NEWS.html">Flickcurl News</a></p>
+<p>News: <a href="NEWS.html">Flickcurl News</a> including changes</p>
 
-<p>Requirements: Flickcurl requires the following libraries to build:</p>
+<p>Requirements: the following libraries are needed:</p>
 <ul>
   <li><a href="http://curl.haxx.se/libcurl/">libcurl</a></li>
   <li><a href="http://xmlsoft.org/">libxml2</a> 2.6.8 or newer</li>
