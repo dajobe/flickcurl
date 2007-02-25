@@ -321,6 +321,10 @@ flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 
 /* flickr.urls */
+char* flickcurl_urls_getGroup(flickcurl* fc, const char* group_id);
+char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
+char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
+char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
 
 #ifdef __cplusplus
