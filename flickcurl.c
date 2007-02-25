@@ -548,6 +548,70 @@ command_tags_getRelated(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_urls_getGroup(flickcurl* fc, int argc, char *argv[])
+{
+  char* nsid=NULL;
+  char* url=argv[1];
+  
+  nsid=flickcurl_urls_getGroup(fc, url);
+
+  if(nsid)
+    fprintf(stderr, "%s: NSID %s for group profile/photo URL %s\n", 
+            program, nsid, url);
+  
+  return (nsid != NULL);
+}
+
+
+static int
+command_urls_getUserPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char* url=NULL;
+  char* user=argv[1];
+  
+  url=flickcurl_urls_getUserPhotos(fc, user);
+
+  if(url)
+    fprintf(stderr, "%s: photo URL %s for user %s\n", 
+            program, url, user);
+  
+  return (url != NULL);
+}
+
+
+static int
+command_urls_getUserProfile(flickcurl* fc, int argc, char *argv[])
+{
+  char* url=NULL;
+  char* user=argv[1];
+  
+  url=flickcurl_urls_getUserProfile(fc, user);
+
+  if(url)
+    fprintf(stderr, "%s: photo URL %s for user %s\n", 
+            program, url, user);
+  
+  return (url != NULL);
+}
+
+
+static int
+command_urls_lookupGroup(flickcurl* fc, int argc, char *argv[])
+{
+  char* nsid=NULL;
+  char* url=argv[1];
+  
+  nsid=flickcurl_urls_lookupGroup(fc, url);
+
+  if(nsid)
+    fprintf(stderr, "%s: NSID %s for group profile/photo URL %s\n", 
+            program, nsid, url);
+  
+  return (url != NULL);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -614,6 +678,18 @@ static struct {
   {"test.echo",
    "KEY VALUE", "Test echo of KEY VALUE",
    command_test_echo,  2, 2},
+  {"urls.getGroup",
+   "GROUP-ID", "Get the url to a group's page.", 
+   command_urls_getGroup,  1, 1},
+  {"urls.getUserPhotos",
+   "USER-ID", "Get the url to a user's photos.", 
+   command_urls_getUserPhotos,  1, 1},
+  {"urls.getUserProfile",
+   "USER-ID", "Get the url to a user's profile.", 
+   command_urls_getUserProfile,  1, 1},
+  {"urls.lookupGroup",
+   "URL", "Get a group NSID given the url to a group's page or photo pool.", 
+   command_urls_lookupGroup,  1, 1},
   {"urls.lookupUser",
    "URL", "Get a user NSID given the url to a user's photo", 
    command_urls_lookupUser,  1, 1},
