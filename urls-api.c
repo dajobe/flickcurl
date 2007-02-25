@@ -45,7 +45,7 @@
  *
  * Get the url to a group's page.
  *
- * Implements flick.urls.getGroup (0.9)
+ * Implements flickr.urls.getGroup (0.9)
  * 
  * Return value: NSID or NULL on failure
  **/
