@@ -890,3 +890,42 @@ flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
     return flickcurl_field_value_type_label[(int)datatype];
   return NULL;
 }
+
+
+char*
+flickcurl_call_get_one_string_field(flickcurl* fc, 
+                                    const char* key, const char* value,
+                                    const char* method,
+                                    xmlChar* xpathExpr)
+{
+  const char * parameters[6][2];
+  int count=0;
+  char *result=NULL;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+
+  if(!value)
+    return NULL;
+  
+  parameters[count][0]  = key;
+  parameters[count++][1]= value;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, method, parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(xpathCtx)
+    result=flickcurl_xpath_eval(fc, xpathCtx, xpathExpr);
+  
+  xmlXPathFreeContext(xpathCtx);
+
+  tidy:
+
+  return result;
+}
