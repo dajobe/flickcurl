@@ -38,36 +38,88 @@
 #include <flickcurl_internal.h>
 
 
-/*
- * flickr.urls.getGroup:
+/**
+ * flickcurl_urls_getGroup:
+ * @fc: flickcurl context
+ * @group_id: group ID
  *
  * Get the url to a group's page.
- */
-
-
-/*
- * flickr.urls.getUserPhotos:
  *
- * Get the url to a user's photos.
- */
-
-
-/*
- * flickr.urls.getUserProfile:
- *
- * Get the url to a user's profile.
- */
-
-
-/*
- * flickr.urls.lookupGroup:
- *
- * Get a group NSID, given the url to a group's page or photo pool.
- */
+ * Implements flick.urls.getGroup (0.9)
+ * 
+ * Return value: NSID or NULL on failure
+ **/
+char*
+flickcurl_urls_getGroup(flickcurl* fc, const char* group_id)
+{
+  return flickcurl_call_get_one_string_field(fc, "group_id", group_id, 
+                                             "flickr.urls.getGroup",
+                                             (const xmlChar*)"/rsp/group/@url");
+}
 
 
 /**
- * flickcurl_urls_lookupUser - 
+ * flickcurl_urls_getUserPhotos:
+ * @fc: flickcurl context
+ * @user_id: user ID
+ *
+ * Get the url to a user's photos.
+ *
+ * Implements flickr.urls.getUserPhotos (0.9)
+ * 
+ * Return value: NSID or NULL on failure
+ **/
+char*
+flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id)
+{
+  return flickcurl_call_get_one_string_field(fc, "user_id", user_id, 
+                                             "flickr.urls.getUserPhotos",
+                                             (const xmlChar*)"/rsp/user/@url");
+}
+
+
+/**
+ * flickcurl_urls_getUserProfile:
+ * @fc: flickcurl context
+ * @user_id: user ID
+ *
+ * Get the url to a user's profile.
+ *
+ * Implements flickr.urls.getUserProfile (0.9)
+ * 
+ * Return value: NSID or NULL on failure
+ **/
+char*
+flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id)
+{
+  return flickcurl_call_get_one_string_field(fc, "user_id", user_id, 
+                                             "flickr.urls.getUserProfile",
+                                             (const xmlChar*)"/rsp/user/@url");
+}
+
+
+/**
+ * flickcurl_urls_lookupGroup:
+ * @fc: flickcurl context
+ * @url: URL of group's page or photo pool
+ *
+ * Get a group NSID, given the url to a group's page or photo pool.
+ *
+ * Implements flickr.urls.lookupGroup (0.9)
+ * 
+ * Return value: NSID or NULL on failure
+ **/
+char*
+flickcurl_urls_lookupGroup(flickcurl* fc, const char* url)
+{
+  return flickcurl_call_get_one_string_field(fc, "url", url, 
+                                             "flickr.urls.lookupGroup",
+                                             (const xmlChar*)"/rsp/group/@id");
+}
+
+
+/**
+ * flickcurl_urls_lookupUser:
  * @fc: flickcurl context
  * @url: URL of user's photo or user's profile
  * 
@@ -80,35 +132,7 @@
 char*
 flickcurl_urls_lookupUser(flickcurl* fc, const char* url)
 {
-  const char * parameters[6][2];
-  int count=0;
-  char *nsid=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-
-  if(!url)
-    return NULL;
-  
-  parameters[count][0]  = "url";
-  parameters[count++][1]= url;
-
-  parameters[count][0]  = NULL;
-
-  if(flickcurl_prepare(fc, "flickr.urls.lookupUser", parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(xpathCtx) {
-    nsid=flickcurl_xpath_eval(fc, xpathCtx,
-                              (const xmlChar*)"/rsp/user/@id");
-    xmlXPathFreeContext(xpathCtx);
-  }
-
-  tidy:
-
-  return nsid;
+  return flickcurl_call_get_one_string_field(fc, "url", url, 
+                                             "flickr.urls.lookupUser",
+                                             (const xmlChar*)"/rsp/user/@id");
 }
