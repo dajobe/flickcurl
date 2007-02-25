@@ -38,44 +38,6 @@
 #include <flickcurl_internal.h>
 
 
-static char*
-flickcurl_get_nsid(flickcurl* fc, const char* key, const char* value,
-                   const char* method)
-{
-  const char * parameters[6][2];
-  int count=0;
-  char *nsid=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-
-  if(!value)
-    return NULL;
-  
-  parameters[count][0]  = key;
-  parameters[count++][1]= value;
-
-  parameters[count][0]  = NULL;
-
-  if(flickcurl_prepare(fc, method, parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(xpathCtx) {
-    nsid=flickcurl_xpath_eval(fc, xpathCtx,
-                              (const xmlChar*)"/rsp/user/@nsid");
-    xmlXPathFreeContext(xpathCtx);
-  }
-
-  tidy:
-
-  return nsid;
-}
-
-
 /**
  * flickcurl_people_findByEmail:
  * @fc: flickcurl context
@@ -90,8 +52,9 @@ flickcurl_get_nsid(flickcurl* fc, const char* key, const char* value,
 char*
 flickcurl_people_findByEmail(flickcurl* fc, const char* email)
 {
-  return flickcurl_get_nsid(fc, "find_email", email, 
-                            "flickr.people.findByEmail");
+  return flickcurl_call_get_one_string_field(fc, "find_email", email, 
+                                             "flickr.people.findByEmail",
+                                             (const xmlChar*)"/rsp/user/@nsid");
 }
 
 
@@ -109,8 +72,9 @@ flickcurl_people_findByEmail(flickcurl* fc, const char* email)
 char*
 flickcurl_people_findByUsername(flickcurl* fc, const char* username)
 {
-  return flickcurl_get_nsid(fc, "username", username, 
-                            "flickr.people.findByUsername");
+  return flickcurl_call_get_one_string_field(fc, "username", username, 
+                                             "flickr.people.findByUsername",
+                                             (const xmlChar*)"/rsp/user/@nsid");
 }
 
 
