@@ -1,5 +1,39 @@
 2007-02-24  Dave Beckett  <dave@dajobe.org>
 
+	* flickcurl_internal.h: flickcurl_call_get_one_string_field const
+	xpathExpr
+
+	* common.c: (flickcurl_call_get_one_string_field): const xpathExpr
+
+	* flickcurl.c: Added commands for flickcurl_urls_getGroup,
+	flickcurl_urls_getUserPhotos, flickcurl_urls_getUserProfile,
+	flickcurl_urls_lookupGroup and flickcurl_urls_lookupUser
+
+	* urls-api.c: (flickcurl_urls_getGroup,
+	flickcurl_urls_getUserPhotos, flickcurl_urls_getUserProfile,
+	flickcurl_urls_lookupGroup and flickcurl_urls_lookupUser): Added.
+
+	* flickcurl.h: Added flickcurl_urls_getGroup,
+	flickcurl_urls_getUserPhotos, flickcurl_urls_getUserProfile,
+	flickcurl_urls_lookupGroup and flickcurl_urls_lookupUser
+
+	* flickcurl_internal.h: Add flickcurl_call_get_one_string_field
+
+	* people-api.c: Use flickcurl_call_get_one_string_field to replace
+	flickcurl_get_nsid
+
+	* common.c: (flickcurl_call_get_one_string_field): Added based on
+	flickcurl_get_nsid, removed from people-api.c
+
+	* auth-api.c, groups-pools-api.c, people-api.c, photos-api.c,
+	photos-licenses-api.c, photosets-api.c, tags-api.c, test-api.c,
+	test.c, urls-api.c: Adjust parameters arrays to allow for up to 5
+	added params
+
+	* flickcurl.c: (main): Check max and min args.
+
+	* configure.ac: Define FLICKCURL_VERSION_DECIMAL and substitute it
+
 	* flickcurl.c: warning when command failed
 
 	* config.c: (read_ini_config): Check for full length of app string
