@@ -13,68 +13,113 @@
 
 <h2 id="D2007-02-25">2007-02-25 Flickcurl 0.9</h2>
 
-<p>12 new Flickr API calls supported:</p>
+<p>17 new Flickr API calls supported (28.2% of API):</p>
 <ul>
 <li><strong>flickr.auth.checkToken</strong>:
+Get the credentials attached to an authentication TOKEN.
 <pre>
   char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
 </pre>
 </li>
 <li><strong>flickr.auth.getFrob</strong>:
+Get a frob to be used during authentication.
 <pre>
   char* flickcurl_auth_getFrob(flickcurl* fc);
 </pre>
 </li>
 <li><strong>flickr.auth.getToken</strong>:
+Get the auth token for the FROB, if one has been attached.
 <pre>
   char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 </pre>
 </li>
+<li><strong>flickr.photos.addTags</strong>:
+Add TAGS to a PHOTO-ID.
+<pre>
+  int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id,
+        const char* tags);
+</pre>
+</li>
+<li><strong>flickr.photos.delete</strong>:
+Delete a PHOTO-ID.
+<pre>
+  int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
+</pre>
+</li>
+<li><strong>flickr.photos.removeTag</strong>:
+Remove a tag TAG-ID from a photo.
+<pre>
+  int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
+</pre>
+</li>
+<li><strong>flick.photos.setTags</strong>:
+Set the tags for a PHOTO-ID to TAGS.
+<pre>
+  int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id,
+        const char* tags);
+</pre>
+</li>
+<li><strong>flickr.tags.getHotList</strong>:
+Get the list of hot tags for the given PERIOD (day, week).
+<pre>
+  flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period,
+        int tag_count);
+</pre>
+</li>
 <li><strong>flickr.tags.getListPhoto</strong>:
+Get the tag list for a PHOTO-ID.
 <pre>
   flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc,
         const char* photo_id);
 </pre>
 </li>
 <li><strong>flickr.tags.getListUser</strong>:
+Get the tag list for a USER-ID (or current user).
 <pre>
   flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc,
         const char* user_id);
 </pre>
 </li>
 <li><strong>flickr.tags.getListUserPopular</strong>:
+Get the popular tag list for a USER-ID (or current user).
 <pre>
   flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc,
         const char* user_id, int pop_count);
 </pre>
 </li>
 <li><strong>flickr.tags.getListUserRaw</strong>:
+Get the raw versions of a TAG (or all tags) for the current user.
 <pre>
   flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc,
         const char* tag);
 </pre>
 </li>
 <li><strong>flickr.tags.getRelated</strong>:
+Get a list of tags 'related' to TAG based on clustered usage analysis.
 <pre>
   flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
 </pre>
 </li>
 <li><strong>flickr.urls.getGroup</strong>:
+Get the url of the group page for GROUP-ID.
 <pre>
   char* flickcurl_urls_getGroup(flickcurl* fc, const char* group_id);
 </pre>
 </li>
 <li><strong>flickr.urls.getUserPhotos</strong>:
+Get the url of the photo page for USER-ID.
 <pre>
   char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
 </pre>
 </li>
 <li><strong>flickr.urls.getUserProfile</strong>:
+Get the url of the profile page for USER-ID.
 <pre>
   char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
 </pre>
 </li>
 <li><strong>flickr.urls.lookupGroup</strong>:
+Get a group NSID from the URL to a group's page or photo pool.
 <pre>
   char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
 </pre>
@@ -119,8 +164,6 @@ with <code>POST</code>.  Not presently used.</p>
   void flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc);
 </pre>
 
-<p>23.3% of API
-</p>
 
 
 <h2 id="D2007-02-20">2007-02-20 Flickcurl 0.8</h2>
@@ -135,12 +178,19 @@ and cleanup.</p>
 <code>triplr</code> and <code>flickcurl</code> to set delay between
 requests using new <code>flickcurl_set_request_delay()</code>.</p>
 
-<p>Added API calls <strong>flickr.people.findByEmail</strong> and
-<strong>flickr.people.findByUsername</strong>:</p>
+<p>Added 2 new Flickr API calls (12% of API):</p>
+<ul>
+<li><strong>flickr.people.findByEmail</strong>:
 <pre>
   char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
+</pre>
+</li>
+<li><strong>flickr.people.findByUsername</strong>:
+<pre>
   char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 </pre>
+</li>
+</ul>
 
 <p>Added <code>configure</code> development/debugging options:<br />
 <code>--enable-capture</code> to capture web service responses into XML files<br />
@@ -157,9 +207,6 @@ void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
 
 <p>Moved <code>flickcurl</code> utility code into flickcurl.c</p>
 
-<p>12% of API
-</p>
-
 
 <h2 id="D2007-02-18">2007-02-18 Flickcurl 0.7</h2>
 
@@ -167,29 +214,33 @@ void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
 <code>struct flickcurl_context*</code> array
 and of type <code>flickcurl_context_type</code></p>
 
-<p>Added API call <strong>flickr.groups.pool.getContext</strong>:</p>
+<p>Added 4 Flickr API calls (10% of API):</p>
+<ul>
+<li><strong>flickr.groups.pool.getContext</strong>:
 <pre>
   flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc,
         const char* photo_id, const char* group_id);
 </pre>
-
-<p>Added API call <strong>flickr.photos.getAllContexts</strong>:</p>
+</li>
+<li><strong>flickr.photos.getAllContexts</strong>:
 <pre>
   flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc,
         const char* photo_id);
 </pre>
-
-<p>Added API call <strong>flickr.photos.getContext</strong>:</p>
+</li>
+<li><strong>flickr.photos.getContext</strong>:
 <pre>
   flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, 
         const char* photo_id);
 </pre>
-
-<p>Added API call <strong>flickr.photosets.getContext</strong>:</p>
+</li>
+<li><strong>flickr.photosets.getContext</strong>:
 <pre>
   flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc,
         const char* photo_id, const char* photoset_id);
 </pre>
+</li>
+</ul>
 
 <p>Added <code>struct flickcurl_context</code> utility functions:</p>
 <pre>
@@ -201,9 +252,6 @@ and of type <code>flickcurl_context_type</code></p>
 <p>Added new <code>flickcurl</code> utility commands for the new APIs:
 groups.pools.getContext photos.getAllContexts photos.getContext,
 photosets.getContext </p>
-
-<p>10% of API
-</p>
 
 
 <h2 id="D2007-02-11">2007-02-11 Flickcurl 0.6</h2>
