@@ -116,6 +116,10 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
       } else if(!strcmp(attr_name, "count")) {
         t->count=atoi(attr_value);
         free(attr_value);
+      } else if(!strcmp(attr_name, "score")) {
+        /* from tags.getHotList <tag score="NN">TAG</tag> */
+        t->count=atoi(attr_value);
+        free(attr_value);
       }
     }
 
