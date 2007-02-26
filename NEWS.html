@@ -11,9 +11,115 @@
 <h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
 
 
-<h2 id="D2007-02-XX">2007-02-XX Flickcurl 0.9</h2>
+<h2 id="D2007-02-25">2007-02-25 Flickcurl 0.9</h2>
 
-<p>Not yet released.
+<p>12 new Flickr API calls supported:</p>
+<ul>
+<li><strong>flickr.auth.checkToken</strong>:
+<pre>
+  char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
+</pre>
+</li>
+<li><strong>flickr.auth.getFrob</strong>:
+<pre>
+  char* flickcurl_auth_getFrob(flickcurl* fc);
+</pre>
+</li>
+<li><strong>flickr.auth.getToken</strong>:
+<pre>
+  char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
+</pre>
+</li>
+<li><strong>flickr.tags.getListPhoto</strong>:
+<pre>
+  flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc,
+        const char* photo_id);
+</pre>
+</li>
+<li><strong>flickr.tags.getListUser</strong>:
+<pre>
+  flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc,
+        const char* user_id);
+</pre>
+</li>
+<li><strong>flickr.tags.getListUserPopular</strong>:
+<pre>
+  flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc,
+        const char* user_id, int pop_count);
+</pre>
+</li>
+<li><strong>flickr.tags.getListUserRaw</strong>:
+<pre>
+  flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc,
+        const char* tag);
+</pre>
+</li>
+<li><strong>flickr.tags.getRelated</strong>:
+<pre>
+  flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
+</pre>
+</li>
+<li><strong>flickr.urls.getGroup</strong>:
+<pre>
+  char* flickcurl_urls_getGroup(flickcurl* fc, const char* group_id);
+</pre>
+</li>
+<li><strong>flickr.urls.getUserPhotos</strong>:
+<pre>
+  char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
+</pre>
+</li>
+<li><strong>flickr.urls.getUserProfile</strong>:
+<pre>
+  char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
+</pre>
+</li>
+<li><strong>flickr.urls.lookupGroup</strong>:
+<pre>
+  char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
+</pre>
+</li>
+</ul>
+
+<p>Renamed enum <code>flickcurl_photo_field</code> to
+<code>flickcurl_photo_field_type</code> and
+added <code>flickcurl_photo_field</code> as the photo field
+structure.</p>
+
+<p>Added authorname and count fields to
+the <code>flickcurl_tag</code> structure to handle tag methods that
+return counts.</p>
+
+<p>Added enum <code>flickcurl_person_field_type</code> value
+<code>PERSON_FIELD_photos_views</code> with value integer, not in API
+docs.</p>
+
+<p><code>flickcurl_person_field</code> structure for fields of
+<code>flickcurl_person</code>.</p>
+
+<p>Added <code>flickcurl*</code> method to indicate that an API call
+must be signed, even if no authentication token has been given.  This
+is mostly for internals of authentication.</p>
+<pre>
+  void flickcurl_set_sign(flickcurl *fc)
+</pre>
+
+<p>Added <code>flickcurl*</code> method to do a write request
+with <code>POST</code>.  Not presently used.</p>
+<pre>
+  void flickcurl_set_write(flickcurl *fc, int is_write);
+</pre>
+
+<p>Added flickcurl methods to set data to send in a request:</p>
+<pre>
+  /* send binary data */
+  void flickcurl_set_data(flickcurl *fc, void* data, size_t data_length);
+
+  /* send XML serialized from the document DOM */
+  void flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc);
+</pre>
+
+<p>23.3% of API
 </p>
 
 
