@@ -123,20 +123,22 @@ main(int argc, char *argv[])
 
 
   if(1) {
-    const char * parameters[6][2];
+    const char * parameters[10][2];
     int count=0;
     xmlDocPtr doc;
     
     parameters[count][0]  = "photo_id";
-    parameters[count++][1]= "testvalue";
+    parameters[count++][1]= argv[1];
+    parameters[count][0]  = "tags";
+    parameters[count++][1]= argv[2];
     
     parameters[count][0]  = NULL;
 
-    if(flickcurl_prepare(fc, "flickr.test.echo", parameters, count))
+    if(flickcurl_prepare(fc, "flickr.photos.addTags", parameters, count))
       goto tidy;
     
     flickcurl_set_write(fc, 1);
-    flickcurl_set_data(fc, (void*)"FOOBAR", 6);
+    flickcurl_set_data(fc, (void*)"", 0);
     
     doc=flickcurl_invoke(fc);
   }
