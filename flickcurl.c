@@ -711,7 +711,7 @@ static struct {
    "PHOTO-ID TAGS", "Add TAGS to a PHOTO-ID.",
    command_photos_addTags, 2, 2},
   {"photos.delete",
-   "PHOTO-ID", "Deleta PHOTO-ID.",
+   "PHOTO-ID", "Delete a PHOTO-ID.",
    command_photos_delete, 1, 1},
   {"photos.getAllContexts",
    "PHOTO-ID", "Get all visible sets and pools the PHOTO-ID belongs to.",
