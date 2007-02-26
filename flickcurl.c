@@ -612,6 +612,68 @@ command_urls_lookupGroup(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_tags_getHotList(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag** tags;
+  char *period=NULL;
+  int count= -1;
+
+  if(argv[1]) {
+    period=argv[1];
+    if(argv[2])
+      count=atoi(argv[2]);
+  }
+
+  tags=flickcurl_tags_getHotList(fc, period, count);
+  if(!tags)
+    return 1;
+
+  command_print_tags(tags, "Hot tags for period", 
+                     (period ? period : "day"));
+  free(tags);
+  return 0;
+}
+
+
+static int
+command_photos_addTags(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  const char *tags=argv[2];
+
+  return flickcurl_photos_addTags(fc, photo_id, tags);
+}
+
+
+static int
+command_photos_delete(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+
+  return flickcurl_photos_delete(fc, photo_id);
+}
+
+
+static int
+command_photos_removeTag(flickcurl* fc, int argc, char *argv[])
+{
+  const char *tag_id=argv[1];
+
+  return flickcurl_photos_removeTag(fc, tag_id);
+}
+
+
+static int
+command_photos_setTags(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  const char *tags=argv[2];
+
+  return flickcurl_photos_setTags(fc, photo_id, tags);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -645,21 +707,36 @@ static struct {
   {"people.getInfo",
    "USER-ID", "Get information about one person with id USER-ID", 
    command_people_getInfo,  1, 1},
-  {"photos.getContext",
-   "PHOTO-ID", "Get next and previous photos for a PHOTO-ID in a photostream.",
-   command_photos_getContext, 1, 1},
+  {"photos.addTags",
+   "PHOTO-ID TAGS", "Add TAGS to a PHOTO-ID.",
+   command_photos_addTags, 2, 2},
+  {"photos.delete",
+   "PHOTO-ID", "Deleta PHOTO-ID.",
+   command_photos_delete, 1, 1},
   {"photos.getAllContexts",
    "PHOTO-ID", "Get all visible sets and pools the PHOTO-ID belongs to.",
    command_photos_getAllContexts, 1, 1},
+  {"photos.getContext",
+   "PHOTO-ID", "Get next and previous photos for a PHOTO-ID in a photostream.",
+   command_photos_getContext, 1, 1},
   {"photos.getInfo",
    "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
    command_photos_getInfo,  1, 1},
   {"photos.licenses.getInfo",
    "", "Get list of available photo licenses", 
    command_photos_licenses_getInfo,  0, 0},
+  {"photos.removeTag",
+   "TAG-ID", "Remove a tag TAG-ID from a photo.",
+   command_photos_removeTag, 1, 1},
+  {"photos.setTags",
+   "PHOTO-ID TAGS", "Set the tags for a PHOTO-ID to TAGS.",
+   command_photos_setTags, 2, 2},
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
+  {"tags.getHotList",
+   "[PERIOD [COUNT]]", "Get the list of hot tags for the given PERIOD (day, week)",
+   command_tags_getHotList, 0, 2},
   {"tags.getListPhoto",
    "PHOTO-ID", "Get the tag list for a PHOTO-ID.",
    command_tags_getListPhoto, 1, 1},
