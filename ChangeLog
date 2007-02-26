@@ -1,3 +1,23 @@
+2007-02-25  Dave Beckett  <dave@dajobe.org>
+
+	* tags.c: (flickcurl_build_tags): Handle @score from tags.getHotList
+
+	* tags-api.c: (flickcurl_tags_getHotList): Added.
+
+	* photos-api.c: (flickcurl_photos_addTags,
+	flickcurl_photos_delete, flickcurl_photos_removeTag,
+	flickcurl_photos_setTags): Added
+
+	* flickcurl.c: Added commands for flickcurl_photos_addTags,
+	flickcurl_photos_delete, flickcurl_photos_removeTag,
+	flickcurl_photos_setTags and flickcurl_tags_getHotList
+
+	* flickcurl.h: Added API calls flickcurl_photos_addTags,
+	flickcurl_photos_delete, flickcurl_photos_removeTag,
+	flickcurl_photos_setTags and flickcurl_tags_getHotList
+
+	* common.c: (flickcurl_invoke): Remove extra curl_set_easyopt
+
 2007-02-24  Dave Beckett  <dave@dajobe.org>
 
 	* flickcurl_internal.h: flickcurl_call_get_one_string_field const
