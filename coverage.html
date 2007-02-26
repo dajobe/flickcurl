@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">23.3% (24/103)</span>
+<span class="coverage">28.2% (29/103)</span>
 </p>
 
 
@@ -126,8 +126,8 @@ or <span class="unsupported">unsupported</span>.
 <h3>photos</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.addTags.html">flickr.photos.addTags</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.delete.html">flickr.photos.delete</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.addTags.html">flickr.photos.addTags</a> (0.9)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.delete.html">flickr.photos.delete</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getAllContexts.html">flickr.photos.getAllContexts</a> (0.7)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getContactsPhotos.html">flickr.photos.getContactsPhotos</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getContactsPublicPhotos.html">flickr.photos.getContactsPublicPhotos</a></li>
@@ -144,12 +144,12 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getWithGeoData.html">flickr.photos.getWithGeoData</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getWithoutGeoData.html">flickr.photos.getWithoutGeoData</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.recentlyUpdated.html">flickr.photos.recentlyUpdated</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.removeTag.html">flickr.photos.removeTag</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.removeTag.html">flickr.photos.removeTag</a> (0.9)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.search.html">flickr.photos.search</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setDates.html">flickr.photos.setDates</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setMeta.html">flickr.photos.setMeta</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setPerms.html">flickr.photos.setPerms</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.setTags.html">flickr.photos.setTags</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.setTags.html">flickr.photos.setTags</a> (0.9)</li>
 </ul>
 
 
@@ -243,7 +243,7 @@ or <span class="unsupported">unsupported</span>.
 <h3>tags</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.tags.getHotList.html">flickr.tags.getHotList</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getHotList.html">flickr.tags.getHotList</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getListPhoto.html">flickr.tags.getListPhoto</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getListUser.html">flickr.tags.getListUser</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getListUserPopular.html">flickr.tags.getListUserPopular</a> (0.9)</li>
@@ -274,11 +274,16 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated, flickr.urls.getGroup, flickr.urls.getUserPhotos, flickr.urls.getUserProfile, flickr.urls.lookupGroup (12 new)
+<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.photos.addTags, flickr.photos.delete, flickr.photos.removeTag, flickr.photos.setTags, flickr.tags.getHotList, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated, flickr.urls.getGroup, flickr.urls.getUserPhotos, flickr.urls.getUserProfile, flickr.urls.lookupGroup (17 new)
 <pre>
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
 char* flickcurl_auth_getFrob(flickcurl* fc);
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
+int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags);
+int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
+int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
+int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
+flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count);
 flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id);
 flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc, const char* user_id);
 flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id, int pop_count);
