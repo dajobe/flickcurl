@@ -304,7 +304,7 @@ int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
-int flickcurl_photos_removeTag(flickcurl* fc, char* tag_id);
+int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
 
 /* flickr.photos.licenses */
