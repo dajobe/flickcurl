@@ -67,6 +67,22 @@ flickcurl_get_person_field_label(flickcurl_person_field_type field)
 }
 
 
+void
+flickcurl_free_person(flickcurl_person *person)
+{
+  int i;
+  for(i=0; i <= PERSON_FIELD_LAST; i++) {
+    if(person->fields[i].string)
+      free(person->fields[i].string);
+  }
+  
+  if(person->nsid)
+    free(person->nsid);
+  
+  free(person);
+}
+
+
 /*
  * The XPaths here are relative, such as prefixed by /rsp/person
  */

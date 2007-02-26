@@ -752,22 +752,6 @@ flickcurl_invoke(flickcurl *fc)
 }
 
 
-void
-flickcurl_free_person(flickcurl_person *person)
-{
-  int i;
-  for(i=0; i <= PERSON_FIELD_LAST; i++) {
-    if(person->fields[i].string)
-      free(person->fields[i].string);
-  }
-  
-  if(person->nsid)
-    free(person->nsid);
-  
-  free(person);
-}
-
-
 char*
 flickcurl_unixtime_to_isotime(time_t unix_time)
 {
