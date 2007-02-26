@@ -41,9 +41,72 @@
 
 /**
  * flickcurl_tags_getHotList:
+ * @fc: flickcurl context
+ * @period: The period for which to fetch hot tags. Valid values are day and
+ *   week (defaults to day).
+ * @tag_count: The number of tags to return. Defaults to 20. Maximum allowed
+ *   value is 200 (or -1 to leave as default)
  *
- * flickr.tags.getHotList
- */
+ * Returns a list of hot tags for the given period.
+ *
+ * Implements flickr.tags.getHotList (0.9)
+ * 
+ * Return value: array of #flickcurl_tag or NULL on failure
+ **/
+flickcurl_tag**
+flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
+{
+  const char* parameters[7][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_tag** tags=NULL;
+  char tag_count_str[10];
+  
+  if(period) {
+    if(!strcmp(period, "day") || !strcmp(period, "week")) {
+      parameters[count][0]  = "period";
+      parameters[count++][1]= period;
+    } else
+      return NULL;
+  }
+
+  if(tag_count >= 0) {
+    sprintf(tag_count_str, "%d", tag_count);
+    parameters[count][0]  = "count";
+    parameters[count++][1]= tag_count_str;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.tags.getHotList", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  tags=flickcurl_build_tags(fc, NULL,
+                            xpathCtx, 
+                            (xmlChar*)"/rsp/hottags/tag", 
+                            NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tags=NULL;
+
+  return tags;
+}
 
 
 /**
