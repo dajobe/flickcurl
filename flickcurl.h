@@ -299,9 +299,13 @@ char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 
 /* flickr.photos */
+int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags);
+int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+int flickcurl_photos_removeTag(flickcurl* fc, char* tag_id);
+int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
 
 /* flickr.photos.licenses */
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
@@ -311,6 +315,7 @@ flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
 
 /* flickr.tag */
+flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count);
 flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id);
 flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc, const char* user_id);
 flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id, int pop_count);
