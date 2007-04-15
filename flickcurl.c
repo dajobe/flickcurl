@@ -1,4 +1,3 @@
-
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
  * flickcurl utility - Invoke the Flickrcurl library
@@ -708,6 +707,27 @@ command_reflection_getMethodInfo(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_reflection_getMethods(flickcurl* fc, int argc, char *argv[])
+{
+  char** methods;
+  
+  methods=flickcurl_reflection_getMethods(fc);
+  if(methods) {
+    int i;
+    fprintf(stderr, "%s: Found methods:\n", program);
+    for(i=0; methods[i]; i++)
+      printf("%d) %s\n", i, methods[i]);
+
+    for(i=0; methods[i]; i++)
+      free(methods[i]);
+    free(methods);
+  }
+  
+  return (methods == NULL);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -768,6 +788,9 @@ static struct {
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
+  {"reflection.getMethods",
+   "", "Get API methods",
+   command_reflection_getMethods, 0, 0},
   {"reflection.getMethodInfo",
    "NAME", "Get informaion about an API method ANME",
    command_reflection_getMethodInfo, 1, 1},
