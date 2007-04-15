@@ -104,13 +104,64 @@ struct flickcurl_photo_s;
 
 
 /**
+ * flickcurl_arg:
+ * @name: Argument name
+ * @optional: boolean flag (non-0 true) if argument is optional
+ * @description: description of argument (HTML)
+ *
+ * An API method argument.
+ */
+typedef struct flickcurl_arg_s {
+  char* name;
+  int optional;
+  char *description;
+} flickcurl_arg;
+
+
+/**
+ * flickcurl_method: 
+ * @name: Method name
+ * @needslogin: boolean flag (non-0 true) if method requires login
+ * @description: description of method
+ * @response: example response (HTML)
+ * @explanation: explanation of example response or NULL if missing
+ * @args: method arguments
+ * @arg_count: number of arguments, may be 0
+ *
+ * An API method
+ */
+typedef struct flickcurl_method_s {
+  char *name;
+  int   needslogin;
+  char *description;
+  char *response;
+  char *explanation;
+
+  /* argument list */
+  flickcurl_arg** args;
+  int args_count;
+  
+} flickcurl_method;
+
+
+
+/**
  * flickcurl_tag: 
+ * @photo: Associated photo object if any
+ * @id: tag identifier
+ * @author: author (may be NULL)
+ * @authornamae: author real name (may be NULL)
+ * @raw: raw tag as user typed it (may be NULL, but if so @cooked must be not NULL)
+ * @cooked: cooked tag (may be NULL, but if so @raw must not be NULL)
+ * @machine_tag: boolean (non-0 true) if tag is a Machine Tag
+ * @count: tag count in a histogram (or 0)
+ *
+ * A tag OR a posting of a tag about a photo by a user OR a tag in a histogram
  *
  * Most of these fields may be NULL, 0 for numbers
- * but not all.  Either 'raw' or 'cooked' MUST appear. 
+ * but not all.  Either @raw or @cooked MUST appear. 
  */
 typedef struct flickcurl_tag_s {
-  /* Associated photo object if any */
   struct flickcurl_photo_s* photo;
   char* id;
   char* author;
@@ -129,10 +180,19 @@ typedef struct {
 } flickcurl_photo_field;
 
 
+/**
+ * flickcurl_photo: 
+ * @id: photo ID
+ * @uri: photo page URI
+ * @tags: array of tags (may be NULL)
+ * @tags_count: size of tags array
+ * @fields: photo fields
+ *
+ * A photo.
+ *
+ */
 typedef struct flickcurl_photo_s {
-  /* photo id */
   char *id;
-  /* photo page uri */
   char *uri;
   
   flickcurl_tag** tags;
@@ -142,6 +202,15 @@ typedef struct flickcurl_photo_s {
 } flickcurl_photo;
 
 
+/**
+ * flickcurl_license: 
+ * @id: license ID
+ * @url: license URL
+ * @name: license short name
+ *
+ * A photo license.
+ *
+ */
 typedef struct {
   /* license id */
   int id;
@@ -208,8 +277,15 @@ typedef struct {
 } flickcurl_person_field;
   
 
+/**
+ * flickcurl_person: 
+ * @nsid: user NSID
+ * @fields: person fields
+ *
+ * A flickr user.
+ *
+ */
 typedef struct {
-  /* user nsid */
   char *nsid;
 
   flickcurl_person_field fields[PERSON_FIELD_LAST + 1];
@@ -317,6 +393,11 @@ flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id
 
 /* flickr.photosets */
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
+
+/* flickr.reflection */
+void flickcurl_free_method(flickcurl_method *method);
+char** flickcurl_reflection_getMethods(flickcurl* fc);
+flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name);
 
 /* flickr.tag */
 flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count);
