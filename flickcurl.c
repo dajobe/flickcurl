@@ -168,7 +168,7 @@ command_people_findByEmail(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: NSID %s for user email %s\n", 
             program, nsid, email);
   
-  return (nsid != NULL);
+  return (nsid == NULL);
 }
 
 
@@ -184,7 +184,7 @@ command_people_findByUsername(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: NSID %s for username %s\n", 
             program, nsid, user_name);
   
-  return (nsid != NULL);
+  return (nsid == NULL);
 }
 
 
@@ -215,7 +215,7 @@ command_people_getInfo(flickcurl* fc, int argc, char *argv[])
     flickcurl_free_person(person);
   }
   
-  return (person != NULL);
+  return (person == NULL);
 }
 
 
@@ -268,7 +268,7 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
     flickcurl_free_photo(photo);
   }
   
-  return (photo != NULL);
+  return (photo == NULL);
 }
 
 
@@ -292,7 +292,7 @@ command_photos_licenses_getInfo(flickcurl* fc, int argc, char *argv[])
     }
   }
   
-  return (licenses != NULL);
+  return (licenses == NULL);
 }
 
 
@@ -378,7 +378,6 @@ command_photos_getContext(flickcurl* fc, int argc, char *argv[])
   command_contexts_print(stderr, contexts);
   
   flickcurl_free_contexts(contexts);
-
   return 0;
 }
 
@@ -395,7 +394,6 @@ command_photosets_getContext(flickcurl* fc, int argc, char *argv[])
   command_contexts_print(stderr, contexts);
   
   flickcurl_free_contexts(contexts);
-
   return 0;
 }
 
@@ -560,7 +558,7 @@ command_urls_getGroup(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: NSID %s for group profile/photo URL %s\n", 
             program, nsid, url);
   
-  return (nsid != NULL);
+  return (nsid == NULL);
 }
 
 
@@ -576,7 +574,7 @@ command_urls_getUserPhotos(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: photo URL %s for user %s\n", 
             program, url, user);
   
-  return (url != NULL);
+  return (url == NULL);
 }
 
 
@@ -592,7 +590,7 @@ command_urls_getUserProfile(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: photo URL %s for user %s\n", 
             program, url, user);
   
-  return (url != NULL);
+  return (url == NULL);
 }
 
 
@@ -608,7 +606,7 @@ command_urls_lookupGroup(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: NSID %s for group profile/photo URL %s\n", 
             program, nsid, url);
   
-  return (url != NULL);
+  return (url == NULL);
 }
 
 
