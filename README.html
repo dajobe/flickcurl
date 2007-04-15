@@ -43,7 +43,7 @@ and RDF descriptions.
 
 <p>Then do the usual <code>./configure</code>, <code>make</code> and
 <code>make install</code> sequence to install the library and
-the flickcurl and triplr utilities.</p>
+the flickcurl and flickrdf utilities.</p>
 
 <p>Subversion <a href="http://svn.dajobe.org/view/">browse with viewVC</a>
 or checkout with:</p>
@@ -136,7 +136,7 @@ field originalsecret (31) with string value: 'b34cb0af68' / -1
 
 
 
-<h3><code>triplr</code> - generate RDF triples from a Flickr photo</h3>
+<h3><code>flickrdf</code> - generate RDF triples from a Flickr photo</h3>
 
 <p>This utility uses the photos.getInfo API to interpret the
 description fields and the tags for a photo URI into RDF triples.
@@ -156,7 +156,7 @@ are not yet interpreted.
 </p>
 
 <pre>
-$ triplr http://www.flickr.com/photos/dajobe/196308964/
+$ flickrdf http://www.flickr.com/photos/dajobe/196308964/
 &lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
 &lt;http://purl.org/dc/elements/1.1/creator&gt; _:person .
 _:person &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
@@ -193,7 +193,7 @@ _:person &lt;http://xmlns.com/foaf/0.1/#nick&gt; "dajobe" .
 <p>If you have raptor installed, you can get nicer RDF triples out
 and with <code>rapper</code> 1.4.14+, pretty-printed turtle:</p>
 <pre>
-$ triplr -o turtle http://www.flickr.com/photos/dajobe/196308964/ 
+$ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/ 
 @prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix blue: &lt;x-urn:blue:#&gt; .
 @prefix cell: &lt;http://www.machinetags.org/wiki/Cell#&gt; .
