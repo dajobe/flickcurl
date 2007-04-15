@@ -792,7 +792,7 @@ static struct {
    "", "Get API methods",
    command_reflection_getMethods, 0, 0},
   {"reflection.getMethodInfo",
-   "NAME", "Get informaion about an API method ANME",
+   "NAME", "Get informaion about an API method NAME",
    command_reflection_getMethodInfo, 1, 1},
   {"tags.getHotList",
    "[PERIOD [COUNT]]", "Get the list of hot tags for the given PERIOD (day, week)",
