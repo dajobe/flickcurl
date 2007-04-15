@@ -86,7 +86,11 @@ typedef enum {
   PHOTO_FIELD_visibility_ispublic,
   PHOTO_FIELD_secret,
   PHOTO_FIELD_originalsecret,
-  PHOTO_FIELD_LAST = PHOTO_FIELD_originalsecret
+  PHOTO_FIELD_location_neighborhood,
+  PHOTO_FIELD_location_locality,
+  PHOTO_FIELD_location_region,
+  PHOTO_FIELD_location_country,
+  PHOTO_FIELD_LAST = PHOTO_FIELD_location_country,
 } flickcurl_photo_field_type;
 
 
