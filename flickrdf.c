@@ -243,7 +243,7 @@ emit_triple(FILE* fh,
   s.subject_type=subject_type;
   if(s.subject_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     s.subject=(void*)raptor_new_uri((const unsigned char*)subject);
-  else
+  else /* blank node */
     s.subject=(void*)subject;
 
   predicate_ns_uri=raptor_new_uri((const unsigned char*)predicate_nspace);
@@ -255,7 +255,7 @@ emit_triple(FILE* fh,
   s.object_type=object_type;
   if(s.object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     s.object=(void*)raptor_new_uri((const unsigned char*)object);
-  else
+  else /* literal or blank node */
     s.object=(void*)object;
   if(datatype_uri)
     s.object_literal_datatype=raptor_new_uri((const unsigned char*)datatype_uri);
@@ -273,23 +273,23 @@ emit_triple(FILE* fh,
   if(datatype_uri)
     raptor_free_uri(s.object_literal_datatype);
 #else
-  if(subject_type == 1)
+  if(subject_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     fprintf(fh, "<%s>", subject);
-  else
+  else /* blank node */
     fprintf(fh, "_:%s", subject);
 
   fprintf(fh, " <%s%s> ", predicate_nspace, predicate_name);
 
-  if(object_type == 0) {
+  if(object_type == RAPTOR_IDENTIFIER_TYPE_LITERAL) {
     fprintf(fh, "\"%s\"", object);
     if(datatype_uri)  {
       fputs("^^<", fh);
       fputs(datatype_uri, fh);
       fputc('>', fh);
     }
-  } else if(object_type == 1)
+  } else if(object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     fprintf(fh, "<%s>", object);
-  else
+  else /* blank node */
     fprintf(fh, "_:%s", object);
   
   fputs(" . \n", fh);
