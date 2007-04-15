@@ -672,6 +672,42 @@ command_photos_setTags(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_reflection_getMethodInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_method* method;
+
+  method=flickcurl_reflection_getMethodInfo(fc, argv[1]);
+
+  if(method) {
+    fprintf(stderr, "%s: Found method %s\n", program, method->name);
+    fprintf(stderr, "  Needs Login? %s\n", (method->needslogin? "yes" : "no"));
+    fprintf(stderr, "  Description: %s\n", method->description);
+    fprintf(stderr, "  Response: '%s'\n", method->response);
+    fprintf(stderr, "  Explanation of Response: %s\n", 
+            method->explanation ? method->explanation : "(None)");
+
+    if(method->args_count) {
+      int i;
+      
+      fprintf(stderr, "%s: %d argument%s:\n", program, method->args_count,
+              ((method->args_count != 1) ? "s" : ""));
+    
+      for(i=0; method->args[i]; i++) {
+        flickcurl_arg* arg=method->args[i];
+        fprintf(stderr, "%d) argument '%s': optional?: %s description: '%s'\n",
+                i, arg->name, (arg->optional? "yes" : "no"), arg->description);
+      }
+    } else
+      fprintf(stderr, "%s: No arguments\n", program);
+
+
+    flickcurl_free_method(method);
+  }
+  return (method == NULL);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -732,6 +768,9 @@ static struct {
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
+  {"reflection.getMethodInfo",
+   "NAME", "Get informaion about an API method ANME",
+   command_reflection_getMethodInfo, 1, 1},
   {"tags.getHotList",
    "[PERIOD [COUNT]]", "Get the list of hot tags for the given PERIOD (day, week)",
    command_tags_getHotList, 0, 2},
