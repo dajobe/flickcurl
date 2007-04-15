@@ -43,6 +43,10 @@ int flickcurl_prepare(flickcurl *fc, const char* method, const char* parameters[
 /* Invoke Flickr API at URi prepared above and get back an XML document */
 xmlDocPtr flickcurl_invoke(flickcurl *fc);
 
+/* args.c */
+void flickcurl_free_arg(flickcurl_arg *arg);
+flickcurl_arg** flickcurl_build_args(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* arg_count_p);
+
 /* common.c */
 /* invoke an error */
 void flickcurl_error(flickcurl* fc, const char *message, ...);
@@ -61,6 +65,9 @@ flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
 
 /* md5.c - MD5 as hex string */
 extern char* MD5_string(char *string);
+
+/* method.c */
+flickcurl_method* flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 
 /* person.c */
 flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
