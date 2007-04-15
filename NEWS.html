@@ -15,6 +15,11 @@
 
 <p>Not yet released.</p>
 
+<p>Renamed Flickr to RDF app to <code>flickrdf</code>
+since I used <a href="http://triplr.org/">Triplr</a>
+for something else.
+</p>
+
 
 <h2 id="D2007-02-25">2007-02-25 Flickcurl 0.9</h2>
 
@@ -177,10 +182,10 @@ with <code>POST</code>.  Not presently used.</p>
 <code>flickcurl_finish()</code> to do once-per-process initializing
 and cleanup.</p>
 
-<p>Added more help info to <code>triplr</code>.</p>
+<p>Added more help info to <code>flickrdf</code>.</p>
 
 <p>Added a <code>-d</code>&nbsp;<em>DELAY</em> option to
-<code>triplr</code> and <code>flickcurl</code> to set delay between
+<code>flickrdf</code> and <code>flickcurl</code> to set delay between
 requests using new <code>flickcurl_set_request_delay()</code>.</p>
 
 <p>Added 2 new Flickr API calls (12% of API):</p>
@@ -273,7 +278,7 @@ photosets.getContext </p>
   flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
 </pre>
 
-<p>Triplr updated to use the above to emit URIs instead of integers
+<p>Flickrdf updated to use the above to emit URIs instead of integers
 for <code>dc:rights</code></p>
 
 <p>Added API call <strong>flickr.people.getInfo</strong>:
@@ -292,7 +297,7 @@ for <code>dc:rights</code></p>
 
 <p>Added optional support for using
 <a href="http://librdf.org/raptor">Raptor</a>
-for more accurate and prettier serializing triples in triplr</p>
+for more accurate and prettier serializing triples in flickrdf</p>
 
 <p><strong>Released to the world!</strong>
 </p>
@@ -303,7 +308,7 @@ for more accurate and prettier serializing triples in triplr</p>
 
 <h2 id="D2007-02-03">2007-02-03 Flickcurl 0.4</h2>
 
-<p>Added <code>triplr</code> utility.</p>
+<p>Added <code>flickrdf</code> utility.</p>
 
 <p>3% of API
 </p>
