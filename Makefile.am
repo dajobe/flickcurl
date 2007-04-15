@@ -35,10 +35,12 @@ test_SOURCES = test.c
 test_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = \
+args.c \
 common.c \
 context.c \
 config.c \
 md5.c \
+method.c \
 person.c \
 photo.c \
 tags.c \
@@ -49,6 +51,7 @@ people-api.c \
 photos-api.c \
 photos-licenses-api.c \
 photosets-api.c \
+reflection-api.c \
 tags-api.c \
 test-api.c \
 urls-api.c \
