@@ -63,7 +63,11 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
   "visibility_isfriend",
   "visibility_ispublic",
   "secret",
-  "originalsecret"
+  "originalsecret",
+  "location_neighborhood",
+  "location_locality",
+  "location_region",
+  "location_country"
 };
 
 
@@ -282,6 +286,30 @@ static struct {
     (const xmlChar*)"/rsp/photo/location/@longitude",
     PHOTO_FIELD_location_longitude,
     VALUE_TYPE_FLOAT
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/neighborhood",
+    PHOTO_FIELD_location_neighborhood,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/locality",
+    PHOTO_FIELD_location_locality,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/region",
+    PHOTO_FIELD_location_longitude,
+    VALUE_TYPE_FLOAT
+  }
+  ,
+  {
+    (const xmlChar*)"/rsp/photo/location/country",
+    PHOTO_FIELD_location_country,
+    VALUE_TYPE_STRING
   }
   ,
   {
