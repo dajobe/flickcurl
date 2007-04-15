@@ -15,7 +15,7 @@
 # complete terms and further detail along with the license texts for
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
-bin_PROGRAMS = flickcurl triplr
+bin_PROGRAMS = flickcurl flickrdf
 
 EXTRA_PROGRAMS = test
 
@@ -54,15 +54,15 @@ test-api.c \
 urls-api.c \
 flickcurl_internal.h
 
-triplr_SOURCES = triplr.c
+flickrdf_SOURCES = flickrdf.c
 if GETOPT
-triplr_SOURCES += getopt.c flickcurl_getopt.h
+flickrdf_SOURCES += getopt.c flickcurl_getopt.h
 endif
-triplr_CFLAGS=
-triplr_LDADD= libflickcurl.la
+flickrdf_CFLAGS=
+flickrdf_LDADD= libflickcurl.la
 if RAPTOR
-triplr_CFLAGS += @RAPTOR_CFLAGS@
-triplr_LDADD += @RAPTOR_LIBS@
+flickrdf_CFLAGS += @RAPTOR_CFLAGS@
+flickrdf_LDADD += @RAPTOR_LIBS@
 endif
 
 pkgconfigdir = $(libdir)/pkgconfig

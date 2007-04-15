@@ -1,5 +1,7 @@
 2007-02-25  Dave Beckett  <dave@dajobe.org>
 
+	* configure.ac: Bumped version to 0.10
+	
 	* Snapshotted flickcurl_0_9 for 0.9 release (SVN 221)
 
 	* tags.c: (flickcurl_build_tags): Handle @score from tags.getHotList

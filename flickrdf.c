@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * triplr - Triples from Flickrs
+ * flickrdf - Triples from Flickrs
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 
@@ -17,7 +17,7 @@
  * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
  * 
  *
- * USAGE: triplr [OPTIONS] FLICKR-PHOTO-URI
+ * USAGE: flickrdf [OPTIONS] FLICKR-PHOTO-URI
  *
  *
  */
@@ -191,7 +191,7 @@ static struct {
 
 
 static void
-triplr_init(void)
+flickrdf_init(void)
 {
   int i;
 
@@ -298,7 +298,7 @@ emit_triple(FILE* fh,
 
 
 static int
-triplr(FILE* fh, flickcurl* fc, const char* photo_id)
+flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
 {
   flickcurl_photo* photo;
   flickcurl_photo_field_type field;
@@ -551,7 +551,7 @@ triplr(FILE* fh, flickcurl* fc, const char* photo_id)
 }
 
 
-static const char *title_format_string="Triplr - triples from flickrs %s\n";
+static const char *title_format_string="Flickrdf - triples from flickrs %s\n";
 
 static const char* config_filename=".flickcurl.conf";
 static const char* config_section="flickr";
@@ -579,7 +579,7 @@ main(int argc, char *argv[])
 
   flickcurl_init();
 
-  triplr_init();
+  flickrdf_init();
 #ifdef HAVE_RAPTOR
   raptor_init();
 #endif
@@ -818,7 +818,7 @@ main(int argc, char *argv[])
     flickcurl_set_request_delay(fc, request_delay);
 
   /* Perform the API call */
-  rc=triplr(stdout, fc, photo_id);
+  rc=flickrdf(stdout, fc, photo_id);
 
  tidy:
   if(fc)
