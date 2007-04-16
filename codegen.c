@@ -504,7 +504,11 @@ main(int argc, char *argv[])
     method->name);
 
     if(is_write)
-      fprintf(stdout, "  flickcurl_set_write(fc, 1);\n\n");
+      fprintf(stdout, 
+"  flickcurl_set_write(fc, 1);\n"
+"  flickcurl_set_data(fc, (void*)\"\", 0);\n"
+"\n"
+);
 
     fprintf(stdout,
 "  doc=flickcurl_invoke(fc);\n"
