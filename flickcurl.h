@@ -420,6 +420,12 @@ flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id
 /* flickr.photosets */
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
 
+/* flickr.photosets.comments */
+char* flickcurl_photosets_comments_addComment(flickcurl* fc, const char* photoset_id, const char* comment_text);
+int flickcurl_photosets_comments_deleteComment(flickcurl* fc, const char* comment_id);
+int flickcurl_photosets_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
+flickcurl_comment** flickcurl_photosets_comments_getList(flickcurl* fc, const char* photoset_id);
+  
 /* flickr.reflection */
 void flickcurl_free_method(flickcurl_method *method);
 char** flickcurl_reflection_getMethods(flickcurl* fc);
