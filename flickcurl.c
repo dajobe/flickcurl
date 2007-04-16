@@ -800,6 +800,59 @@ command_photos_comments_getList(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photosets_comments_addComment(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photoset_id=argv[1];
+  const char *comment_text=argv[2];
+  char* id;
+  
+  id=flickcurl_photosets_comments_addComment(fc, photoset_id, comment_text);
+  if(id) {
+    fprintf(stderr,
+            "%s: Added comment '%s' to photoset %s giving comment ID %s\n", 
+            program, photoset_id, comment_text, id);
+  }
+  
+  return (id == NULL);
+}
+
+static int
+command_photosets_comments_deleteComment(flickcurl* fc, int argc, char *argv[])
+{
+  const char *comment_id=argv[1];
+
+  return flickcurl_photosets_comments_deleteComment(fc, comment_id);
+}
+
+
+static int
+command_photosets_comments_editComment(flickcurl* fc, int argc, char *argv[])
+{
+  const char *comment_id=argv[1];
+  const char *comment_text=argv[2];
+
+  return flickcurl_photosets_comments_editComment(fc, comment_id, comment_text);
+}
+
+
+static int
+command_photosets_comments_getList(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photoset_id=argv[1];
+  flickcurl_comment** comments;
+  
+  comments=flickcurl_photosets_comments_getList(fc, photoset_id);
+  if(!comments)
+    return 1;
+  
+  command_print_comments(comments, "Photoset ID", photoset_id);
+
+  flickcurl_free_comments(comments);
+  return 0;
+}
+
+
 
 static struct {
   const char*     name;
@@ -859,20 +912,32 @@ static struct {
    "PHOTO-ID TAGS", "Set the tags for a PHOTO-ID to TAGS.",
    command_photos_setTags, 2, 2},
   {"photos.comments.addComment",
-   "PHOTO-ID TEXT", "Add a comment TEXT to PHOTO-ID.",
+   "PHOTO-ID TEXT", "Add a photo comment TEXT to PHOTO-ID.",
    command_photos_comments_addComment, 2, 2},
   {"photos.comments.deleteComment",
-   "COMMENT-ID", "Delete a comment COMMENT-ID.",
+   "COMMENT-ID", "Delete a photo comment COMMENT-ID.",
    command_photos_comments_deleteComment, 1, 1},
   {"photos.comments.editComment",
-   "COMMENT-ID TEXT", "Edit a comment COMMENT-ID to have new TEXT.",
+   "COMMENT-ID TEXT", "Edit a photo comment COMMENT-ID to have new TEXT.",
    command_photos_comments_editComment, 2, 2},
   {"photos.comments.getList",
-   "PHOTO-ID", "Get the comments for a PHOTO-ID.",
+   "PHOTO-ID", "Get the comments for a photo PHOTO-ID.",
    command_photos_comments_getList, 1, 1},
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
+  {"photosets.comments.addComment",
+   "PHOTOSET-ID TEXT", "Add a comment TEXT to photoset PHOTOSET-ID.",
+   command_photosets_comments_addComment, 2, 2},
+  {"photosets.comments.deleteComment",
+   "COMMENT-ID", "Delete a photoset comment COMMENT-ID.",
+   command_photosets_comments_deleteComment, 1, 1},
+  {"photosets.comments.editComment",
+   "COMMENT-ID TEXT", "Edit a photoset comment COMMENT-ID to have new TEXT.",
+   command_photosets_comments_editComment, 2, 2},
+  {"photosets.comments.getList",
+   "PHOTOSET-ID", "Get the comments for a photoset PHOTOSET-ID.",
+   command_photosets_comments_getList, 1, 1},
   {"reflection.getMethods",
    "", "Get API methods",
    command_reflection_getMethods, 0, 0},
