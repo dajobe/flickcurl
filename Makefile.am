@@ -17,9 +17,7 @@
 
 bin_PROGRAMS = flickcurl flickrdf
 
-noinst_PROGRAMS = codegen
-
-EXTRA_PROGRAMS = test
+EXTRA_PROGRAMS = test codegen
 
 bin_SCRIPTS = flickcurl-config
 
