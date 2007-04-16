@@ -146,6 +146,24 @@ typedef struct flickcurl_method_s {
 
 
 /**
+ * flickcurl_comment:
+ * @name: Argument name
+ * @optional: boolean flag (non-0 true) if argument is optional
+ * @description: description of argument (HTML)
+ *
+ * An API method argument.
+ */
+typedef struct flickcurl_comment_s {
+  char* id;
+  char* author;
+  char* authorname;
+  int datecreate;
+  char* permalink;
+  char* text;
+} flickcurl_comment;
+
+
+/**
  * flickcurl_tag: 
  * @photo: Associated photo object if any
  * @id: tag identifier
@@ -386,6 +404,13 @@ flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
+
+/* flickr.photos.comments */
+void flickcurl_free_comment(flickcurl_comment *comment_object);
+char* flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id, const char* comment_text);
+int flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id);
+int flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
+flickcurl_comment** flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id);
 
 /* flickr.photos.licenses */
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
