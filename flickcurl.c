@@ -694,8 +694,9 @@ command_reflection_getMethodInfo(flickcurl* fc, int argc, char *argv[])
     
       for(i=0; method->args[i]; i++) {
         flickcurl_arg* arg=method->args[i];
-        fprintf(stderr, "%d) argument '%s': optional?: %s description: '%s'\n",
-                i, arg->name, (arg->optional? "yes" : "no"), arg->description);
+        fprintf(stderr, "%d) argument '%s' %s description: '%s'\n",
+                i, arg->name, (arg->optional? "" : "(required)"),
+                arg->description);
       }
     } else
       fprintf(stderr, "%s: No arguments\n", program);
