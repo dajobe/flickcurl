@@ -397,6 +397,7 @@ flickcurl_prepare(flickcurl *fc, const char* method,
 {
   int i;
   char *md5_string=NULL;
+  size_t* values_len=NULL;
   
   fc->failed=0;
   fc->error_code=0;
@@ -447,16 +448,22 @@ flickcurl_prepare(flickcurl *fc, const char* method,
 
   parameters[count][0]  = NULL;
 
+  /* +1 for api_sig */
+  values_len=(size_t*)calloc(count+1, sizeof(size_t));
+
+  if(fc->auth_token || fc->sign)
+    flickcurl_sort_args(fc, parameters, count);
+
+  for(i=0; parameters[i][0]; i++)
+    values_len[i]=strlen(parameters[i][1]);
+
   if(fc->auth_token || fc->sign) {
     size_t buf_len=0;
     char *buf;
     
-    flickcurl_sort_args(fc, parameters, count);
-
     buf_len=strlen(fc->secret);
-    for(i=0; parameters[i][0]; i++) {
-      buf_len += strlen(parameters[i][0]) + strlen(parameters[i][1]);
-    }
+    for(i=0; parameters[i][0]; i++)
+      buf_len += strlen(parameters[i][0]) + values_len[i];
 
     buf=(char*)malloc(buf_len+1);
     strcpy(buf, fc->secret);
@@ -471,8 +478,10 @@ flickcurl_prepare(flickcurl *fc, const char* method,
     md5_string=MD5_string(buf);
     
     parameters[count][0]  = "api_sig";
-    parameters[count++][1]= md5_string;
-
+    parameters[count][1]= md5_string;
+    values_len[count]=32; /* MD5 is always 32 */
+    count++;
+    
 #ifdef FLICKCURL_DEBUG
     fprintf(stderr, "Signature: '%s'\n", parameters[count-1][1]);
 #endif
@@ -485,12 +494,24 @@ flickcurl_prepare(flickcurl *fc, const char* method,
   strcpy(fc->uri, "http://www.flickr.com/services/rest/?");
 
   for(i=0; parameters[i][0]; i++) {
+    char *value=(char*)parameters[i][1];
+    char *escaped_value=NULL;
+    
     if(!parameters[i][1])
       continue;
     
     strcat(fc->uri, parameters[i][0]);
     strcat(fc->uri, "=");
-    strcat(fc->uri, parameters[i][1]);
+    if(!strcmp(parameters[i][0], "method")) {
+      /* do not touch method name */
+    } else
+      escaped_value=curl_escape(value, values_len[i]);
+    
+    if(escaped_value) {
+      strcat(fc->uri, escaped_value);
+      curl_free(escaped_value);
+    } else
+      strcat(fc->uri, value);
     strcat(fc->uri, "&");
   }
 
@@ -502,6 +523,9 @@ flickcurl_prepare(flickcurl *fc, const char* method,
 
   if(md5_string)
     free(md5_string);
+
+  if(values_len)
+    free(values_len);
 
   return 0;
 }
