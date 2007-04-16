@@ -421,7 +421,7 @@ flickcurl_prepare_common(flickcurl *fc,
   char *md5_string=NULL;
   size_t* values_len=NULL;
 
-  if(!url || !method || !parameters)
+  if(!url || !parameters)
     return 1;
   
   /* If one is given, both are required */
@@ -464,10 +464,6 @@ flickcurl_prepare_common(flickcurl *fc,
     fc->upload_value=NULL;
   }
   
-  if(!method) {
-    flickcurl_error(fc, "No method to prepare");
-    return 1;
-  }
   if(!fc->secret) {
     flickcurl_error(fc, "No shared secret");
     return 1;
@@ -480,10 +476,15 @@ flickcurl_prepare_common(flickcurl *fc,
   
   if(fc->method)
     free(fc->method);
-  fc->method=strdup(method);
-  
-  parameters[count][0]  = "method";
-  parameters[count++][1]= fc->method;
+  if(method)
+    fc->method=strdup(method);
+  else
+    fc->method=NULL;
+
+  if(fc->method) {
+    parameters[count][0]  = "method";
+    parameters[count++][1]= fc->method;
+  }
 
   parameters[count][0]  = "api_key";
   parameters[count++][1]= fc->api_key;
@@ -604,6 +605,11 @@ int
 flickcurl_prepare(flickcurl *fc, const char* method,
                   const char* parameters[][2], int count)
 {
+  if(!method) {
+    flickcurl_error(fc, "No method to prepare");
+    return 1;
+  }
+  
   return flickcurl_prepare_common(fc,
                                   "http://www.flickr.com/services/rest/?",
                                   method,
@@ -616,21 +622,15 @@ flickcurl_prepare(flickcurl *fc, const char* method,
 int
 flickcurl_prepare_upload(flickcurl *fc, 
                          const char* url,
-                         const char* method,
                          const char* upload_field, const char* upload_value,
                          const char* parameters[][2], int count)
 {
-  int rc;
-  
-  rc=flickcurl_prepare_common(fc,
-                              url,
-                              method,
-                              upload_field, upload_value,
-                              parameters, count,
-                              0);
-  if(!rc)
-    flickcurl_set_write(fc, 1);
-  return rc;
+  return flickcurl_prepare_common(fc,
+                                  url,
+                                  NULL,
+                                  upload_field, upload_value,
+                                  parameters, count,
+                                  0);
 }
 
 
