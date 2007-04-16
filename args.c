@@ -100,8 +100,8 @@ flickcurl_build_args(flickcurl* fc,
     }
     
 #if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "arg: name %s optional? %s description '%s' count %d\n",
-            arg->name, (arg->optional? "yes" : "no"), arg->description);
+    fprintf(stderr, "arg: name %s %s description '%s'\n",
+            arg->name, (arg->optional? "" : "(required)"), arg->description);
 #endif
     
     args[arg_count++]=arg;
