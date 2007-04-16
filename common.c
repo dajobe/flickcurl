@@ -217,6 +217,24 @@ flickcurl_free(flickcurl *fc)
       xmlFree(fc->data);
   }
 
+  if(fc->param_fields) {
+    int i;
+    
+    for(i=0; fc->param_fields[i]; i++) {
+      free(fc->param_fields[i]);
+      free(fc->param_values[i]);
+    }
+    free(fc->param_fields);
+    free(fc->param_values);
+    fc->param_fields=NULL;
+    fc->param_values=NULL;
+    fc->parameter_count=0;
+  }
+  if(fc->upload_field)
+    free(fc->upload_field);
+  if(fc->upload_value)
+    free(fc->upload_value);
+
   free(fc);
 }
 
@@ -391,13 +409,24 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 }
 
 
-int
-flickcurl_prepare(flickcurl *fc, const char* method,
-                  const char* parameters[][2], int count)
+static int
+flickcurl_prepare_common(flickcurl *fc, 
+                         const char* url,
+                         const char* method,
+                         const char* upload_field, const char* upload_value,
+                         const char* parameters[][2], int count,
+                         int parameters_in_url)
 {
   int i;
   char *md5_string=NULL;
   size_t* values_len=NULL;
+
+  if(!url || !method || !parameters)
+    return 1;
+  
+  /* If one is given, both are required */
+  if((upload_field || upload_value) && (!upload_field || !upload_value))
+    return 1;
   
   fc->failed=0;
   fc->error_code=0;
@@ -415,7 +444,25 @@ flickcurl_prepare(flickcurl *fc, const char* method,
     fc->data_length=0;
     fc->data_is_xml=0;
   }
-  
+  if(fc->param_fields) {
+    for(i=0; fc->param_fields[i]; i++) {
+      free(fc->param_fields[i]);
+      free(fc->param_values[i]);
+    }
+    free(fc->param_fields);
+    free(fc->param_values);
+    fc->param_fields=NULL;
+    fc->param_values=NULL;
+    fc->parameter_count=0;
+  }
+  if(fc->upload_field) {
+    free(fc->upload_field);
+    fc->upload_field=NULL;
+  }
+  if(fc->upload_value) {
+    free(fc->upload_value);
+    fc->upload_value=NULL;
+  }
   
   if(!method) {
     flickcurl_error(fc, "No method to prepare");
@@ -449,13 +496,32 @@ flickcurl_prepare(flickcurl *fc, const char* method,
   parameters[count][0]  = NULL;
 
   /* +1 for api_sig */
+  fc->param_fields=(char**)calloc(count+1, sizeof(char*));
+  fc->param_values=(char**)calloc(count+1, sizeof(char*));
   values_len=(size_t*)calloc(count+1, sizeof(size_t));
 
   if(fc->auth_token || fc->sign)
     flickcurl_sort_args(fc, parameters, count);
 
-  for(i=0; parameters[i][0]; i++)
+  /* Save away the parameters and calculate the value lengths */
+  for(i=0; parameters[i][0]; i++) {
+    size_t param_len=strlen(parameters[i][0]);
+
     values_len[i]=strlen(parameters[i][1]);
+
+    fc->param_fields[i]=(char*)malloc(param_len+1);
+    strcpy(fc->param_fields[i], parameters[i][0]);
+    fc->param_values[i]=(char*)malloc(values_len[i]+1);
+    strcpy(fc->param_values[i], parameters[i][1]);
+  }
+
+  if(upload_field) {
+    fc->upload_field=(char*)malloc(strlen(upload_field)+1);
+    strcpy(fc->upload_field, upload_field);
+
+    fc->upload_value=(char*)malloc(strlen(upload_value)+1);
+    strcpy(fc->upload_value, upload_value);
+  }
 
   if(fc->auth_token || fc->sign) {
     size_t buf_len=0;
@@ -491,32 +557,35 @@ flickcurl_prepare(flickcurl *fc, const char* method,
     parameters[count][0] = NULL;
   }
 
-  strcpy(fc->uri, "http://www.flickr.com/services/rest/?");
+  strcpy(fc->uri, url);
 
-  for(i=0; parameters[i][0]; i++) {
-    char *value=(char*)parameters[i][1];
-    char *escaped_value=NULL;
-    
-    if(!parameters[i][1])
-      continue;
-    
-    strcat(fc->uri, parameters[i][0]);
-    strcat(fc->uri, "=");
-    if(!strcmp(parameters[i][0], "method")) {
-      /* do not touch method name */
-    } else
-      escaped_value=curl_escape(value, values_len[i]);
-    
-    if(escaped_value) {
-      strcat(fc->uri, escaped_value);
-      curl_free(escaped_value);
-    } else
-      strcat(fc->uri, value);
-    strcat(fc->uri, "&");
+  if(parameters_in_url) {
+    for(i=0; parameters[i][0]; i++) {
+      char *value=(char*)parameters[i][1];
+      char *escaped_value=NULL;
+
+      if(!parameters[i][1])
+        continue;
+
+      strcat(fc->uri, parameters[i][0]);
+      strcat(fc->uri, "=");
+      if(!strcmp(parameters[i][0], "method")) {
+        /* do not touch method name */
+      } else
+        escaped_value=curl_escape(value, values_len[i]);
+
+      if(escaped_value) {
+        strcat(fc->uri, escaped_value);
+        curl_free(escaped_value);
+      } else
+        strcat(fc->uri, value);
+      strcat(fc->uri, "&");
+    }
+
+    /* zap last & */
+    fc->uri[strlen(fc->uri)-1]= '\0';
   }
 
-  /* zap last & */
-  fc->uri[strlen(fc->uri)-1]= '\0';
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "URI is '%s'\n", fc->uri);
 #endif
@@ -528,6 +597,40 @@ flickcurl_prepare(flickcurl *fc, const char* method,
     free(values_len);
 
   return 0;
+}
+
+
+int
+flickcurl_prepare(flickcurl *fc, const char* method,
+                  const char* parameters[][2], int count)
+{
+  return flickcurl_prepare_common(fc,
+                                  "http://www.flickr.com/services/rest/?",
+                                  method,
+                                  NULL, NULL,
+                                  parameters, count,
+                                  1);
+}
+
+
+int
+flickcurl_prepare_upload(flickcurl *fc, 
+                         const char* url,
+                         const char* method,
+                         const char* upload_field, const char* upload_value,
+                         const char* parameters[][2], int count)
+{
+  int rc;
+  
+  rc=flickcurl_prepare_common(fc,
+                              url,
+                              method,
+                              upload_field, upload_value,
+                              parameters, count,
+                              0);
+  if(!rc)
+    flickcurl_set_write(fc, 1);
+  return rc;
 }
 
 
@@ -677,6 +780,27 @@ flickcurl_invoke(flickcurl *fc)
 
   if(slist)
     curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
+
+  if(fc->upload_field) {
+    struct curl_httppost* post = NULL;
+    struct curl_httppost* last = NULL;
+    int i;
+    
+    /* Main parameters */
+    for(i=0; fc->param_fields[i]; i++) {
+      curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->param_fields[i],
+                   CURLFORM_PTRCONTENTS, fc->param_values[i],
+                   CURLFORM_END);
+    }
+    
+    /* Upload parameter */
+    curl_formadd(&post, &last, CURLFORM_COPYNAME, fc->upload_field,
+                 CURLFORM_FILE, fc->upload_value, CURLFORM_END);
+
+    /* Set the form info */
+    curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPPOST, post);
+  }
+  
 
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "Resolving URI '%s' with method %s\n", 
