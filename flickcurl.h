@@ -310,6 +310,24 @@ typedef struct {
 } flickcurl_person;
 
 
+/**
+ * flickcurl_upload_status:
+ * @photoid: photo ID that was uploaded/replaced (upload only)
+ * @secret: secret of photo uploaded (replace only)
+ * @originalsecret: secret of original photo (replace only)
+ * @ticketid: ticket ID for asynchronous upload (replace only)
+ *
+ * An upload response.
+ *
+ */
+typedef struct {
+  char *photoid;
+  char *secret;
+  char *originalsecret;
+  char *ticketid;
+} flickcurl_upload_status;
+
+
 /* callback handlers */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
 typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
@@ -448,6 +466,11 @@ char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
 char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
 char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
+
+/* Upload API */
+flickcurl_upload_status* flickcurl_photos_upload(flickcurl* fc, const char* photo_file, const char *title, const char *description, const char *tags, int is_public, int is_friend, int is_family);
+flickcurl_upload_status* flickcurl_photos_replace(flickcurl* fc, const char* photo_file, const char *photo_id, int async);
+void flickcurl_upload_status_free(flickcurl_upload_status* status);
 
 #ifdef __cplusplus
 }
