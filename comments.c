@@ -44,7 +44,7 @@ flickcurl_free_comment(flickcurl_comment *comment_object)
   if(comment_object->text)
     free(comment_object->text);
 
-  free(comment);
+  free(comment_object);
 }
 
 
