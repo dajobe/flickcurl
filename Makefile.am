@@ -59,6 +59,7 @@ photos-api.c \
 photos-comments-api.c \
 photos-licenses-api.c \
 photosets-api.c \
+photosets-comments-api.c \
 reflection-api.c \
 tags-api.c \
 test-api.c \
