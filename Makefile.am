@@ -63,6 +63,7 @@ photosets-comments-api.c \
 reflection-api.c \
 tags-api.c \
 test-api.c \
+upload-api.c \
 urls-api.c \
 flickcurl_internal.h
 
