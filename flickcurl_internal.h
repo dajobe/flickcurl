@@ -40,7 +40,7 @@
 /* Prepare Flickr API request - GET or POST with URI parameters */
 int flickcurl_prepare(flickcurl *fc, const char* method, const char* parameters[][2], int count);
 /* Prepare Flickr API request - POST with form-data parameters */
-int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count);
+int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_field, const char* upload_value, const char* parameters[][2], int count);
 
 /* Invoke Flickr API at URi prepared above and get back an XML document */
 xmlDocPtr flickcurl_invoke(flickcurl *fc);
