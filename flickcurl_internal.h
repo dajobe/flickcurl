@@ -59,6 +59,8 @@ char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xml
 
 char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const char* value, const char* method, const xmlChar* xpathExpr);
 
+/* comments.c */
+flickcurl_comment** flickcurl_build_comments(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* comment_count_p);
 
 /* context.c */
 flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
