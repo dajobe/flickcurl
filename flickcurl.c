@@ -728,6 +728,78 @@ command_reflection_getMethods(flickcurl* fc, int argc, char *argv[])
   return (methods == NULL);
 }
 
+static int
+command_photos_comments_addComment(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  const char *comment_text=argv[2];
+  char* id;
+  
+  id=flickcurl_photos_comments_addComment(fc, photo_id, comment_text);
+  if(id) {
+    fprintf(stderr,
+            "%s: Added comment '%s' to photo %s giving comment ID %s\n", 
+            program, photo_id, comment_text, id);
+  }
+  
+  return (id == NULL);
+}
+
+static int
+command_photos_comments_deleteComment(flickcurl* fc, int argc, char *argv[])
+{
+  const char *comment_id=argv[1];
+
+  return flickcurl_photos_comments_deleteComment(fc, comment_id);
+}
+
+
+static int
+command_photos_comments_editComment(flickcurl* fc, int argc, char *argv[])
+{
+  const char *comment_id=argv[1];
+  const char *comment_text=argv[2];
+
+  return flickcurl_photos_comments_editComment(fc, comment_id, comment_text);
+}
+
+
+static void
+command_print_comments(flickcurl_comment** comments, const char* label,
+                       const char* value)
+{
+  int i;
+  if(label)
+    fprintf(stderr, "%s: %s %s comments\n", program, label,
+            (value ? value : "(none)"));
+  for(i=0; comments[i]; i++) {
+    flickcurl_comment* comment_object=comments[i];
+    fprintf(stderr,
+            "%d) ID %s author %s authorname %s datecreate %d permalink %s text '%s'\n",
+            i, comment_object->id, comment_object->author,
+            comment_object->authorname, comment_object->datecreate,
+            comment_object->permalink, comment_object->text);
+  }
+}
+
+
+static int
+command_photos_comments_getList(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  flickcurl_comment** comments;
+  
+  comments=flickcurl_photos_comments_getList(fc, photo_id);
+  if(!comments)
+    return 1;
+  
+  command_print_comments(comments, "Photo ID", photo_id);
+
+  flickcurl_free_comments(comments);
+  return 0;
+}
+
+
 
 static struct {
   const char*     name;
@@ -786,6 +858,18 @@ static struct {
   {"photos.setTags",
    "PHOTO-ID TAGS", "Set the tags for a PHOTO-ID to TAGS.",
    command_photos_setTags, 2, 2},
+  {"photos.comments.addComment",
+   "PHOTO-ID TEXT", "Add a comment TEXT to PHOTO-ID.",
+   command_photos_comments_addComment, 2, 2},
+  {"photos.comments.deleteComment",
+   "COMMENT-ID", "Delete a comment COMMENT-ID.",
+   command_photos_comments_deleteComment, 1, 1},
+  {"photos.comments.editComment",
+   "COMMENT-ID TEXT", "Edit a comment COMMENT-ID to have new TEXT.",
+   command_photos_comments_editComment, 2, 2},
+  {"photos.comments.getList",
+   "PHOTO-ID", "Get the comments for a PHOTO-ID.",
+   command_photos_comments_getList, 1, 1},
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
