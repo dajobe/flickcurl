@@ -105,13 +105,12 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 #endif
 
 
-#define GETOPT_STRING "a:d:hv"
+#define GETOPT_STRING "d:hv"
 
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options[] =
 {
   /* name, has_arg, flag, val */
-  {"auth",    1, 0, 'a'},
   {"delay",   1, 0, 'd'},
   {"help",    0, 0, 'h'},
   {"version", 0, 0, 'v'},
@@ -120,7 +119,7 @@ static struct option long_options[] =
 #endif
 
 
-static const char *title_format_string="Code gen utility %s\n";
+static const char *title_format_string="Skeleton code generator utility %s\n";
 
 static const char* config_filename=".flickcurl.conf";
 static const char* config_section="flickr";
@@ -153,30 +152,9 @@ main(int argc, char *argv[])
     strcpy(config_path, config_filename);
   
 
-  /* Initialise the Flickcurl library */
-  fc=flickcurl_new();
-  if(!fc) {
-    rc=1;
-    goto tidy;
-  }
-
-  flickcurl_set_error_handler(fc, my_message_handler, NULL);
-
-  if(read_auth && !access((const char*)config_path, R_OK)) {
-    if(read_ini_config(config_path, config_section, fc,
-                       my_set_config_var_handler)) {
-      fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
-              program, config_path, strerror(errno));
-      rc=1;
-      goto tidy;
-    }
-  }
-
   while (!usage && !help)
   {
     int c;
-    char* auth_token=NULL;
-    
 #ifdef HAVE_GETOPT_LONG
     int option_index = 0;
 
@@ -191,37 +169,6 @@ main(int argc, char *argv[])
       case 0:
       case '?': /* getopt() - unknown option */
         usage=1;
-        break;
-
-      case 'a':
-        /* Exchange the mini-token for a full token */
-        auth_token=flickcurl_auth_getFullToken(fc, optarg);
-        if(!auth_token) {
-          fprintf(stderr, 
-                  "%s: Could not find auth_token in getFullToken response\n",
-                  program);
-        } else {
-          FILE* fh;
-
-          flickcurl_set_auth_token(fc, auth_token);
-          
-          fh=fopen(config_path, "w");
-          if(!fh) {
-            fprintf(stderr, "%s: Failed to write to config filename %s: %s\n",
-                    program, config_path, strerror(errno));
-          } else {
-            fputs("[flickr]\nauth_token=", fh);
-            fputs(flickcurl_get_auth_token(fc), fh);
-            fputs("\napi_key=", fh);
-            fputs(flickcurl_get_api_key(fc), fh);
-            fputs("\nsecret=", fh);
-            fputs(flickcurl_get_shared_secret(fc), fh);
-            fputs("\n", fh);
-            fclose(fh);
-            read_auth=0;
-          }
-        }
-        
         break;
 
       case 'd':
@@ -241,11 +188,11 @@ main(int argc, char *argv[])
     }
     
   }
-
-  if(!help && argc < 1)
-    usage=2; /* Title and usage */
-
-  if(!help && !argc) {
+  
+  if(help)
+    goto help;
+  
+  if(argc < 2) {
     fprintf(stderr, "%s: No API section given\n", program);
     usage=1;
   }
@@ -267,9 +214,10 @@ main(int argc, char *argv[])
     goto tidy;
   }
 
+  help:
   if(help) {
     printf(title_format_string, flickcurl_version_string);
-    puts("Make C code from Flickr API by reflection.");
+    puts("Generate C code from Flickr API by reflection.");
     printf("Usage: %s [OPTIONS] command args...\n\n", program);
 
     fputs(flickcurl_copyright_string, stdout);
@@ -280,7 +228,6 @@ main(int argc, char *argv[])
 
     fputs("\n", stdout);
 
-    puts(HELP_TEXT("a", "auth FROB       ", "Authenticate with a FROB and write auth config"));
     puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
@@ -289,6 +236,25 @@ main(int argc, char *argv[])
     goto tidy;
   }
 
+
+  /* Initialise the Flickcurl library */
+  fc=flickcurl_new();
+  if(!fc) {
+    rc=1;
+    goto tidy;
+  }
+
+  flickcurl_set_error_handler(fc, my_message_handler, NULL);
+
+  if(read_auth && !access((const char*)config_path, R_OK)) {
+    if(read_ini_config(config_path, config_section, fc,
+                       my_set_config_var_handler)) {
+      fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
+              program, config_path, strerror(errno));
+      rc=1;
+      goto tidy;
+    }
+  }
 
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
@@ -318,7 +284,7 @@ main(int argc, char *argv[])
   fprintf(stdout,
 "/* -*- Mode: c; c-basic-offset: 2 -*-\n"
 " *\n"
-" * %s.c - Flickr %s.* API calls\n"
+" * %s-api.c - Flickr %s.* API calls\n"
 " *\n",
           argv[1], section);
 
