@@ -75,6 +75,7 @@ flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
     goto tidy;
 
   flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
 
   doc=flickcurl_invoke(fc);
   if(!doc)
@@ -132,6 +133,7 @@ flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id)
     goto tidy;
 
   flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
 
   doc=flickcurl_invoke(fc);
   if(!doc)
@@ -183,6 +185,7 @@ flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
     goto tidy;
 
   flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
 
   doc=flickcurl_invoke(fc);
   if(!doc)
