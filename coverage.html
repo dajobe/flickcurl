@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">28.2% (29/103)</span>
+<span class="coverage">34.0% (35/103)</span>
 </p>
 
 
@@ -156,10 +156,10 @@ or <span class="unsupported">unsupported</span>.
 <h3>photos.comments</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.addComment.html">flickr.photos.comments.addComment</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.deleteComment.html">flickr.photos.comments.deleteComment</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.editComment.html">flickr.photos.comments.editComment</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.comments.getList.html">flickr.photos.comments.getList</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.addComment.html">flickr.photos.comments.addComment</a> (0.10)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.deleteComment.html">flickr.photos.comments.deleteComment</a> (0.10)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.editComment.html">flickr.photos.comments.editComment</a> (0.10)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.getList.html">flickr.photos.comments.getList</a> (0.10)</li>
 </ul>
 
 
@@ -235,8 +235,8 @@ or <span class="unsupported">unsupported</span>.
 <h3>reflection</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.reflection.getMethodInfo.html">flickr.reflection.getMethodInfo</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.reflection.getMethods.html">flickr.reflection.getMethods</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.reflection.getMethodInfo.html">flickr.reflection.getMethodInfo</a> (0.10)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.reflection.getMethods.html">flickr.reflection.getMethods</a> (0.10)</li>
 </ul>
 
 
@@ -273,6 +273,17 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>0.10</strong>: flickr.photos.comments.addComment, flickr.photos.comments.deleteComment, flickr.photos.comments.editComment, flickr.photos.comments.getList, flickr.reflection.getMethods, flickr.reflection.getMethodInfo (6 new)
+<pre>
+char* flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id, const char* comment_text);
+int flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id);
+int flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
+flickcurl_comment** flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id);
+char** flickcurl_reflection_getMethods(flickcurl* fc);
+flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name);
+</pre>
+</p>
 
 <p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.photos.addTags, flickr.photos.delete, flickr.photos.removeTag, flickr.photos.setTags, flickr.tags.getHotList, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated, flickr.urls.getGroup, flickr.urls.getUserPhotos, flickr.urls.getUserProfile, flickr.urls.lookupGroup (17 new)
 <pre>
