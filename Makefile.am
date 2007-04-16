@@ -17,6 +17,8 @@
 
 bin_PROGRAMS = flickcurl flickrdf
 
+noinst_PROGRAMS = codegen
+
 EXTRA_PROGRAMS = test
 
 bin_SCRIPTS = flickcurl-config
@@ -31,12 +33,19 @@ flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
 flickcurl_LDADD= libflickcurl.la
 
+codegen_SOURCES = codegen.c
+if GETOPT
+codegen_SOURCES += getopt.c flickcurl_getopt.h
+endif
+codegen_LDADD= libflickcurl.la
+
 test_SOURCES = test.c
 test_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = \
 args.c \
 common.c \
+comments.c \
 context.c \
 config.c \
 md5.c \
@@ -49,6 +58,7 @@ auth-api.c \
 groups-pools-api.c \
 people-api.c \
 photos-api.c \
+photos-comments-api.c \
 photos-licenses-api.c \
 photosets-api.c \
 reflection-api.c \
