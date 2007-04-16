@@ -407,6 +407,7 @@ int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* ta
 
 /* flickr.photos.comments */
 void flickcurl_free_comment(flickcurl_comment *comment_object);
+void flickcurl_free_comments(flickcurl_comment **comments_object);
 char* flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id, const char* comment_text);
 int flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id);
 int flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
