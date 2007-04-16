@@ -48,6 +48,18 @@ flickcurl_free_comment(flickcurl_comment *comment_object)
 }
 
 
+void
+flickcurl_free_comments(flickcurl_comment **comments_object)
+{
+  int i;
+  
+  for(i=0; comments_object[i]; i++)
+    flickcurl_free_comment(comments_object[i]);
+  
+  free(comments_object);
+}
+
+
 flickcurl_comment**
 flickcurl_build_comments(flickcurl* fc, 
                          xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr,
