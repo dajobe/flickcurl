@@ -91,6 +91,7 @@ flickcurl_free_photo(flickcurl_photo *photo)
   
   for(i=0; i < photo->tags_count; i++)
     flickcurl_free_tag(photo->tags[i]);
+  free(photo->tags);
 
   if(photo->id)
     free(photo->id);
