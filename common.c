@@ -496,10 +496,10 @@ flickcurl_prepare_common(flickcurl *fc,
 
   parameters[count][0]  = NULL;
 
-  /* +1 for api_sig */
-  fc->param_fields=(char**)calloc(count+1, sizeof(char*));
-  fc->param_values=(char**)calloc(count+1, sizeof(char*));
-  values_len=(size_t*)calloc(count+1, sizeof(size_t));
+  /* +1 for api_sig +1 for NULL terminating pointer */
+  fc->param_fields=(char**)calloc(count+2, sizeof(char*));
+  fc->param_values=(char**)calloc(count+2, sizeof(char*));
+  values_len=(size_t*)calloc(count+2, sizeof(size_t));
 
   if(fc->auth_token || fc->sign)
     flickcurl_sort_args(fc, parameters, count);
