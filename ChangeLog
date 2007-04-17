@@ -1,3 +1,139 @@
+2007-04-16  Dave Beckett  <dave@dajobe.org>
+
+	* flickcurl.c: (command_upload): Change command parsing.  Works.
+
+	* flickcurl.c: (print_upload_status): Added.
+	(command_upload): Added for uploading a photo file with option
+	handling that does not seem to work.
+	(command_replace): Added for uploading a replacement photo file.
+
+	* common.c: (flickcurl_prepare_common): Properly add api_sig as a
+	new parameter.  Fix debugging output with no method parameter to
+	go to upload.xml
+
+	* upload-api.c: (flickcurl_photos_upload): Return if file is not
+	readable.  Handle optional parameters.
+	(flickcurl_photos_replace): Return if file is not readable.
+
+	* Makefile.am: Added upload-api.c
+
+	* upload-api.c: Flickr photo upload API calls
+
+	* flickcurl.h: Added flickcurl_upload_status struct Added
+	flickcurl_photos_upload, flickcurl_photos_replace and
+	flickcurl_upload_status_free
+
+	* common.c: (flickcurl_prepare_common): Handle optional method.
+	(flickcurl_prepare): Check for required method here.
+	(flickcurl_prepare_upload): No need for flickcurl_set_write
+
+	* flickcurl_internal.h: flickcurl_prepare_upload has no method.
+
+	* common.c: Save away fields: param_fields, param_values,
+	parameter_count, upload_field, upload_value saved from prepare to
+	invoke.
+	(flickcurl_free): Free new fields
+	(flickcurl_prepare_common): Handle params in body not urls by
+	saving them away and not appending them here.  Take in destination
+	URL base as a parameter.  Add upload params, saved away for
+	invoke.
+	(flickcurl_prepare): Now a wrapper around flickcurl_prepare_common
+	with no upload params.
+	(flickcurl_prepare_upload): Added, calling
+	flickcurl_prepare_common with most params set.
+	(flickcurl_invoke): Look for upload field and if present, put
+	params in form-data body using curl_formadd and curl_easy_setopt
+	CURLOPT_HTTPPOST.
+
+	* flickcurl_internal.h: Added flickcurl_prepare_upload struct
+	flickcurl_s gains fields: param_fields, param_values,
+	parameter_count, upload_field, upload_value saved from prepare.
+
+	* flickcurl.h: Added flickcurl_photosets_comments_addComment,
+	flickcurl_photosets_comments_deleteComment,
+	flickcurl_photosets_comments_editComment and
+	flickcurl_photosets_comments_getList
+
+	* flickcurl.c: Added photosets.comments calls
+
+	* Makefile.am: photosets-comments-api.c
+
+	* photosets-comments-api.c: Flickr flickr.photosets.comments.* API
+	calls
+
+	* codegen.c: better codegen. no -a/auth. delay init. usage
+
+	* Makefile.am: codegen is extra
+
+	* common.c: (flickcurl_prepare): Fix URI escaping with curl_escape
+	to allow sending values with spaces.
+
+	* photos-comments-api.c: Use flickcurl_set_data for POST with no
+	content
+
+	* codegen.c: write sets default data to empty
+
+2007-04-15  Dave Beckett  <dave@dajobe.org>
+
+	* comments.c: now with less core dumps
+
+	* comments.c: (flickcurl_free_comments): Added.
+
+	* flickcurl.h: Added flickcurl_free_comments
+
+	* flickcurl.c: Added photos.comments calls
+
+	* comments.c: Flickr comments
+
+	* photos-comments-api.c: Flickr flickr.photos.comments.* API calls
+
+	* Makefile.am: Added codegen, photos comments API in comments.c
+	and photos-comments-api.c
+
+	* flickcurl_internal.h: Added flickcurl_build_comments
+
+	* flickcurl.h: Added flickcurl_comment structure.  Added
+	flickcurl_free_comment, flickcurl_photos_comments_addComment,
+	flickcurl_photos_comments_deleteComment,
+	flickcurl_photos_comments_editComment,
+	flickcurl_photos_comments_getList functions.
+
+	* codegen.c: code generator
+
+	* flickcurl.c: (command_reflection_getMethodInfo): prints
+
+	* flickcurl.c: (command_reflection_getMethods): Added for
+	flickr.reflection.getMethods
+
+	* reflection-api.c: Flickr flickr.reflection.* API calls
+
+	* flickcurl.c: (command_reflection_getMethodInfo): Added for
+	flickr.reflection.getMethodInfo
+
+	* Makefile.am: Added args.c method. reflection-api.c
+
+	* flickcurl.h: Added flickcurl_arg, flickcurl_method structures
+	Other docs Added: flickcurl_free_method(flickcurl_method *method)
+	Added API calls: flickcurl_reflection_getMethods
+	flickcurl_reflection_getMethodInfo
+
+	* method.c: Flickcurl method functions
+
+	* flickcurl_internal.h: Add args.c method.c prototypes for
+	reflection API support: flickcurl_free_arg, flickcurl_build_args,
+	flickcurl_build_method.
+
+	* flickcurl.c: fix error returns
+
+	* photo.c: Added location fields neighborhood, locality, region
+	and country to photo_fields_table.
+
+	* flickcurl.h: Added PHOTO_FIELD_location_neighborhood,
+	PHOTO_FIELD_location_locality, PHOTO_FIELD_location_region,
+	PHOTO_FIELD_location_country after announcement
+	http://geobloggers.com/archives/2007/04/12/flickr-two-new-subtle-geo-updates/
+	which doesn't seem to actually be live right now.
+
 2007-04-14  Dave Beckett  <dave@dajobe.org>
 
 	* Makefile.am, flickrdf.c: triplr becomes flickrdf
