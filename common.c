@@ -546,7 +546,14 @@ flickcurl_prepare_common(flickcurl *fc,
     
     parameters[count][0]  = "api_sig";
     parameters[count][1]= md5_string;
+
+    /* Add a new parameter pair */
     values_len[count]=32; /* MD5 is always 32 */
+    fc->param_fields[count]=(char*)malloc(7+1); /* 7=strlen(api_sig) */
+    strcpy(fc->param_fields[count], parameters[count][0]);
+    fc->param_values[count]=(char*)malloc(32+1); /* 32=MD5 */
+    strcpy(fc->param_values[count], parameters[count][1]);
+
     count++;
     
 #ifdef FLICKCURL_DEBUG
@@ -645,8 +652,12 @@ flickcurl_invoke(flickcurl *fc)
 #endif
 
 #if defined(OFFLINE) || defined(CAPTURE)
-  if(1)
-    sprintf(filename, "%s.xml", fc->method+7); /* skip "flickr." */
+  if(1) {
+    if(fc->method)
+      sprintf(filename, "%s.xml", fc->method+7); /* skip "flickr." */
+    else
+      sprintf(filename, "upload.xml");
+  }
 #endif
 
 #ifdef OFFLINE
@@ -794,7 +805,7 @@ flickcurl_invoke(flickcurl *fc)
     }
     
     /* Upload parameter */
-    curl_formadd(&post, &last, CURLFORM_COPYNAME, fc->upload_field,
+    curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->upload_field,
                  CURLFORM_FILE, fc->upload_value, CURLFORM_END);
 
     /* Set the form info */
@@ -804,7 +815,7 @@ flickcurl_invoke(flickcurl *fc)
 
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "Resolving URI '%s' with method %s\n", 
-          fc->uri, (fc->is_write ? "POST" : "GET"));
+          fc->uri, ((fc->is_write || fc->upload_field) ? "POST" : "GET"));
 #endif
   
   if(curl_easy_perform(fc->curl_handle)) {
@@ -876,8 +887,12 @@ flickcurl_invoke(flickcurl *fc)
         else if(!strcmp(attr_name, "msg"))
           fc->error_msg=strdup(attr_value);
       }
-      flickcurl_error(fc, "Method %s failed with error %d - %s", 
-                      fc->method, fc->error_code, fc->error_msg);
+      if(fc->method)
+        flickcurl_error(fc, "Method %s failed with error %d - %s", 
+                        fc->method, fc->error_code, fc->error_msg);
+      else
+        flickcurl_error(fc, "Call failed with error %d - %s", 
+                        fc->error_code, fc->error_msg);
       fc->failed=1;
     }
   }
