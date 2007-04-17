@@ -1,5 +1,17 @@
 2007-04-16  Dave Beckett  <dave@dajobe.org>
 
+	* photo.c: region is not a float
+
+	* photo.c: field twice
+
+	* photo.c: debug msg
+
+	* photo.c: free photo tags
+
+	* common.c: +1
+
+	* upload-api.c: errno
+
 	* flickcurl.c: (command_upload): Change command parsing.  Works.
 
 	* flickcurl.c: (print_upload_status): Added.
