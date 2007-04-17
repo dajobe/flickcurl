@@ -853,6 +853,185 @@ command_photosets_comments_getList(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+print_upload_status(flickcurl_upload_status* status, const char* label)
+{
+  if(label)
+    fprintf(stderr, "%s: %s status\n", program, label);
+  if(status->photoid)
+    fprintf(stderr, "  Photo ID: %s\n", status->photoid);
+  if(status->secret)
+    fprintf(stderr, "  Secret: %s\n", status->secret);
+  if(status->originalsecret)
+    fprintf(stderr, "  Original Secret: %s\n", status->originalsecret);
+  if(status->ticketid)
+    fprintf(stderr, "  Ticket ID: %s\n", status->ticketid);
+}
+
+
+#define UPLOAD_GETOPT_STRING "d:fpt:y"
+#ifdef HAVE_GETOPT_LONG
+static struct option upload_long_options[] =
+{
+  /* name, has_arg, flag, val */
+  {"description", 1, 0, 'd'},
+  {"friend",      0, 0, 'f'},
+  {"public",      0, 0, 'p'},
+  {"title",       1, 0, 't'},
+  {"family",      0, 0, 'y'},
+  {NULL,      0, 0, 0}
+};
+#endif
+
+static int
+command_upload(flickcurl* fc, int argc, char *argv[])
+{
+  const char *file=argv[1];
+  const char *title=NULL;
+  const char *description=NULL;
+  char *tags_string=NULL;
+  flickcurl_upload_status* status=NULL;
+  int is_public=0;
+  int is_friend=0;
+  int is_family=0;
+  int usage=0;
+
+  while(!usage) {
+    int c;
+  
+#ifdef HAVE_GETOPT_LONG
+    int option_index = 0;
+
+    c = getopt_long (argc, argv, UPLOAD_GETOPT_STRING, upload_long_options, 
+                   &option_index);
+#else
+    c = getopt (argc, argv, UPLOAD_GETOPT_STRING);
+#endif
+    if(c == -1)
+      break;
+  
+    switch(c) {
+      case 0:
+      case '?': /* getopt() - unknown option */
+        usage=1;
+        break;
+        
+      case 'd':
+        if(optarg)
+          description=optarg;
+        break;
+        
+      case 'f':
+        is_family=1;
+        break;
+        
+      case 'p':
+        is_public=1;
+        break;
+        
+      case 't':
+        if(optarg)
+          title=optarg;
+        break;
+        
+      case 'y':
+        is_family=1;
+        break;
+        
+      default:
+        break;
+    }
+
+  }
+
+  if(usage) {
+    status=NULL;
+    goto tidy;
+  }
+  
+  argv+=optind;
+  argc-=optind;
+
+  file=argv[0];
+
+  if(access((const char*)file, R_OK)) {
+    fprintf(stderr, "%s: Failed to read image filename '%s': %s\n",
+            program, file, strerror(errno));
+    status=NULL;
+    goto tidy;
+  }
+  
+
+  fprintf(stderr, "%s: Uploading file %s\n", program, file);
+  
+  if(argc > 1) {
+    size_t tags_len=0;
+    int i;
+    char *p;
+    
+    for(i=1; i<argc; i++)
+      tags_len+=strlen(argv[i])+1;
+    tags_string=(char*)malloc(tags_len);
+
+    p=tags_string;
+    for(i=1; i<argc; i++) {
+      size_t tag_len=strlen(argv[i]);
+      strncpy(p, argv[i], tag_len); p+= tag_len;
+      *p++=' ';
+    }
+    *(--p)='\0';
+
+    fprintf(stderr, "%s: Setting tags: '%s'\n", program, tags_string);
+  }
+
+  
+  status=flickcurl_photos_upload(fc, file, title, description, tags_string,
+                                 is_public, is_friend, is_family);
+  if(status) {
+    print_upload_status(status, "Photo upload");
+
+    flickcurl_upload_status_free(status);
+  }
+
+  tidy:
+  if(tags_string)
+    free(tags_string);
+  
+  return (status == NULL);
+}
+
+
+static int
+command_replace(flickcurl* fc, int argc, char *argv[])
+{
+  const char *file=argv[1];
+  const char *photo_id=argv[2];
+  int async=0;
+  flickcurl_upload_status* status=NULL;
+  
+  if(access((const char*)file, R_OK)) {
+    fprintf(stderr, "%s: Failed to read image filename '%s': %s\n",
+            program, file, strerror(errno));
+    status=NULL;
+    goto tidy;
+  }
+  
+  if(argc > 3 && !strcmp(argv[3], "async"))
+    async=1;
+
+  status=flickcurl_photos_replace(fc, file, photo_id, async);
+  if(status) {
+    print_upload_status(status, "Photo replace");
+
+    flickcurl_upload_status_free(status);
+  }
+  
+  tidy:
+  
+  return (status == NULL);
+}
+
+
 
 static struct {
   const char*     name;
@@ -980,6 +1159,14 @@ static struct {
   {"urls.lookupUser",
    "URL", "Get a user NSID from the URL to a user's photo", 
    command_urls_lookupUser,  1, 1},
+
+  {"upload",
+   "[OPTIONS] FILE [TAGS...]", "Upload a photo FILE with optional TAGs.\n      Options: -t TITLE -d DESCRIPTION -f (friend) -p (public) -y (family)", 
+   command_upload,  1, 0},
+
+  {"replace",
+   "FILE PHOTO-ID [async]", "Replace a photo PHOTO-ID with a new FILE (async)", 
+   command_replace,  2, 3},
 
   {NULL, NULL, NULL, 0, 0}
 };  
@@ -1155,7 +1342,8 @@ main(int argc, char *argv[])
     goto usage;
   }
   
-  if((argc-1) > commands[cmd_index].max) {
+  if(commands[cmd_index].max > 0 && 
+     (argc-1) > commands[cmd_index].max) {
     fprintf(stderr, "%s: Need max %d arguments for command `%s'\n", program,
             commands[cmd_index].max, command);
     usage=1;
