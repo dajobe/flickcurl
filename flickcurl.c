@@ -869,20 +869,6 @@ print_upload_status(flickcurl_upload_status* status, const char* label)
 }
 
 
-#define UPLOAD_GETOPT_STRING "d:fpt:y"
-#ifdef HAVE_GETOPT_LONG
-static struct option upload_long_options[] =
-{
-  /* name, has_arg, flag, val */
-  {"description", 1, 0, 'd'},
-  {"friend",      0, 0, 'f'},
-  {"public",      0, 0, 'p'},
-  {"title",       1, 0, 't'},
-  {"family",      0, 0, 'y'},
-  {NULL,      0, 0, 0}
-};
-#endif
-
 static int
 command_upload(flickcurl* fc, int argc, char *argv[])
 {
@@ -896,62 +882,7 @@ command_upload(flickcurl* fc, int argc, char *argv[])
   int is_family=0;
   int usage=0;
 
-  while(!usage) {
-    int c;
-  
-#ifdef HAVE_GETOPT_LONG
-    int option_index = 0;
-
-    c = getopt_long (argc, argv, UPLOAD_GETOPT_STRING, upload_long_options, 
-                   &option_index);
-#else
-    c = getopt (argc, argv, UPLOAD_GETOPT_STRING);
-#endif
-    if(c == -1)
-      break;
-  
-    switch(c) {
-      case 0:
-      case '?': /* getopt() - unknown option */
-        usage=1;
-        break;
-        
-      case 'd':
-        if(optarg)
-          description=optarg;
-        break;
-        
-      case 'f':
-        is_family=1;
-        break;
-        
-      case 'p':
-        is_public=1;
-        break;
-        
-      case 't':
-        if(optarg)
-          title=optarg;
-        break;
-        
-      case 'y':
-        is_family=1;
-        break;
-        
-      default:
-        break;
-    }
-
-  }
-
-  if(usage) {
-    status=NULL;
-    goto tidy;
-  }
-  
-  argv+=optind;
-  argc-=optind;
-
+  argv++; argc--;
   file=argv[0];
 
   if(access((const char*)file, R_OK)) {
@@ -961,29 +892,52 @@ command_upload(flickcurl* fc, int argc, char *argv[])
     goto tidy;
   }
   
+  while(!usage && argc) {
+    argv++; argc--;
+    if(!strcmp(argv[0], "description")) {
+      argv++; argc--;
+      description=argv[0];
+    } else if(!strcmp(argv[0], "title")) {
+      argv++; argc--;
+      title=argv[0];
+    } else if(!strcmp(argv[0], "friend")) {
+      is_friend=1;
+    } else if(!strcmp(argv[0], "family")) {
+      is_family=1;
+    } else if(!strcmp(argv[0], "public")) {
+      is_public=1;
+    } else if(!strcmp(argv[0], "tags")) {
+      size_t tags_len=0;
+      int i;
+      char *p;
 
-  fprintf(stderr, "%s: Uploading file %s\n", program, file);
-  
-  if(argc > 1) {
-    size_t tags_len=0;
-    int i;
-    char *p;
-    
-    for(i=1; i<argc; i++)
-      tags_len+=strlen(argv[i])+1;
-    tags_string=(char*)malloc(tags_len);
-
-    p=tags_string;
-    for(i=1; i<argc; i++) {
-      size_t tag_len=strlen(argv[i]);
-      strncpy(p, argv[i], tag_len); p+= tag_len;
-      *p++=' ';
+      /* tags absorb all remaining parameters */
+      for(i=1; i<argc; i++)
+        tags_len+=strlen(argv[i])+1;
+      tags_string=(char*)malloc(tags_len);
+      
+      p=tags_string;
+      for(i=1; i<argc; i++) {
+        size_t tag_len=strlen(argv[i]);
+        strncpy(p, argv[i], tag_len); p+= tag_len;
+        *p++=' ';
+      }
+      *(--p)='\0';
+      
+      fprintf(stderr, "%s: Setting tags: '%s'\n", program, tags_string);
+      break;
+    } else {
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      usage=1;
     }
-    *(--p)='\0';
-
-    fprintf(stderr, "%s: Setting tags: '%s'\n", program, tags_string);
   }
 
+  if(usage) {
+    status=NULL;
+    goto tidy;
+  }
+  
+  fprintf(stderr, "%s: Uploading file %s\n", program, file);
   
   status=flickcurl_photos_upload(fc, file, title, description, tags_string,
                                  is_public, is_friend, is_family);
@@ -1161,7 +1115,7 @@ static struct {
    command_urls_lookupUser,  1, 1},
 
   {"upload",
-   "[OPTIONS] FILE [TAGS...]", "Upload a photo FILE with optional TAGs.\n      Options: -t TITLE -d DESCRIPTION -f (friend) -p (public) -y (family)", 
+   "FILE [PARAMS...]", "Upload a photo FILE with optional parameters PARAM or PARAM VALUE\n      title TITLE | description DESC | tags TAGS... | friend | public | family", 
    command_upload,  1, 0},
 
   {"replace",
