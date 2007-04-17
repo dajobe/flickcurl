@@ -303,7 +303,7 @@ static struct {
   ,
   {
     (const xmlChar*)"/rsp/photo/location/region",
-    PHOTO_FIELD_location_longitude,
+    PHOTO_FIELD_location_region,
     VALUE_TYPE_FLOAT
   }
   ,
