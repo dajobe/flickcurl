@@ -15,9 +15,109 @@
 
 <p>Not yet released.</p>
 
-<p>Renamed Flickr to RDF app to <code>flickrdf</code>
+<p>13 new Flickr API calls supported (40.8% of API):</p>
+<li><strong>flickcurl_photos_comments_addComment</strong>:
+Add comment to a photo as the currently authenticated user.
+<pre>
+  char* flickcurl_photos_comments_addComment(flickcurl* fc,
+        const char* photo_id, const char* comment_text);
+</pre>
+</li>
+<li><strong>flickcurl_photos_comments_deleteComment</strong>:
+Delete a comment as the currently authenticated user.
+<pre>
+  int flickcurl_photos_comments_deleteComment(flickcurl* fc,
+        const char* comment_id);
+</pre>
+</li>
+<li><strong>flickcurl_photos_comments_editComment</strong>:
+Edit the text of a comment as the currently authenticated user.
+<pre>
+  int flickcurl_photos_comments_editComment(flickcurl* fc,
+        const char* comment_id, const char* comment_text);
+</pre>
+</li>
+<li><strong>flickcurl_photos_comments_getList</strong>:
+Returns the comments for a photo.
+<pre>
+  flickcurl_comment** flickcurl_photos_comments_getList(flickcurl* fc,
+        const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_comments_addComment</strong>:
+Add a comment to a photoset.
+<pre>
+  char* flickcurl_photosets_comments_addComment(flickcurl* fc,
+        const char* photoset_id, const char* comment_text);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_comments_deleteComment</strong>:
+Delete a photoset comment as the currently authenticated user.
+<pre>
+  int flickcurl_photosets_comments_deleteComment(flickcurl* fc,
+        const char* comment_id);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_comments_editComment</strong>:
+Edit the text of a comment as the currently authenticated user.
+<pre>
+  int flickcurl_photosets_comments_editComment(flickcurl* fc,
+        const char* comment_id, const char* comment_text);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_comments_getList</strong>:
+Returns the comments for a photoset.
+<pre>
+  flickcurl_comment** flickcurl_photosets_comments_getList(flickcurl* fc,
+        const char* photoset_id);
+</pre>
+</li>
+<li><strong>flickcurl_reflection_getMethods</strong>:
+Get the list of available API method names.
+<pre>
+  char** flickcurl_reflection_getMethods(flickcurl* fc);
+</pre>
+</li>
+<li><strong>flickcurl_reflection_getMethodInfo</strong>:
+Get information about an API method.
+<pre>
+  flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc,
+        const char* name);
+</pre>
+</li>
+</ul>
+
+<p><code>flickcurl</code> utility updated to add all new functions.
+</p>
+
+<p>Added all uploading and replacing of photos APIs.
+and <code>flickcurl_upload_status</code> structure for upload
+results.
+</p>
+
+<p>Added all photo comments APIs and <code>flickcurl_comment</code>
+structure for comments.
+</p>
+
+<p>Added support for uploading with <code>POST</code> and form-data.
+Yay libcurl.
+</p>
+
+<p>Added <code>codegen</code> utility to aid writing skeleton API
+code.
+</p>
+
+<p>Added all reflection APIs and <code>flickcurl_method</code> and 
+<code>flickcurl_arg</code> structures for method descriptions.
+</p>
+
+<p>Added photo location fields: neighborhood, locality, region and
+country.  They may not be returned in the API just yet, they were
+announced and then removed.</p>
+
+<p>Renamed the "Flickr to RDF app" to be called <code>flickrdf</code>
 since I used <a href="http://triplr.org/">Triplr</a>
-for something else.
+for something else as it was such a good name.
 </p>
 
 
