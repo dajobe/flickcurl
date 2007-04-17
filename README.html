@@ -201,6 +201,7 @@ $ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
 @prefix filtr: &lt;x-urn:filtr:&gt; .
 @prefix foaf: &lt;http://xmlns.com/foaf/0.1/#&gt; .
 @prefix geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 
 &lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
     dc:creator [
@@ -208,13 +209,11 @@ $ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
         foaf:name "Dave Beckett";
         foaf:nick "dajobe"
     ];
-    dc:date "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;;
+    dc:date "2006-07-23T18:16:13Z"^^xsd:dateTime;
     dc:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt;;
-    dc:date "2006-07-23T18:16:14Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;,
-            "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;,
-            "2006-07-23T05:28:50Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt;;
+    dc:date "2007-02-25T07:45:46Z"^^xsd:dateTime, "2006-07-23T18:16:13Z"^^xsd:dateTime, "2006-07-23T05:28:50Z"^^xsd:dateTime;
     geo:lat 3.6620487E1;
-    geo:long -1.21904468E2;
+    geo:long "California"^^xsd:double;
     dc:title "Jellyfish at Monterey Aquarium";
     dc:subject "jellyfish" .
 
@@ -228,252 +227,10 @@ $ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
 summary for the full list of all supported Flickr API calls.
 </p>
 
-<p><a href="http://www.flickr.com/services/api/flickr.auth.checkToken.html"><strong>flickr.auth.checkToken</strong></a>:
-Get the credentials attached to an authentication TOKEN.
-</p>
+<p>There are also several utility functions to support the API
+such as:</p>
 <pre>
-  char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
-  free(perms);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.auth.getFrob.html"><strong>flickr.auth.getFrob</strong></a>:
-Get a frob to be used during authentication.
-</p>
-<pre>
-  char* flickcurl_auth_getFrob(flickcurl* fc);
-  free(frob);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.auth.getFullToken.html"><strong>flickr.auth.getFullToken</strong></a> - turn a
-<a href="http://www.flickr.com/services/api/auth.howto.mobile.html">mobile authentication method</a>
-frob of the format <em>NNN-NNN-NNN</em> into full authentication tokens.
-</p>
-<pre>
-char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
-free(token);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.auth.getToken.html"><strong>flickr.auth.getToken</strong></a>:
-Get the auth token for the FROB, if one has been attached.
-</p>
-<pre>
-  char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
-  free(token);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.groups.pools.getContext.html"><strong>flickr.groups.pools.getContext</strong></a>:
-Get all visible sets and pools the photo belongs to.
-</p>
-<pre>
-flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc,
-        const char* photo_id, const char* group_id);
-void flickcurl_free_contexts(flickcurl_context** contexts);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.people.findByEmail.html"><strong>flickr.people.findByEmail</strong></a>:
-Find a person by their email address.
-</p>
-<pre>
-  char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
-  free(nsid);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.people.findByUsername.html"><strong>flickr.people.findByUsername</strong></a>:
-Find a person by their username.
-</p>
-<pre>
-  char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
-  free(nsid);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.people.getInfo.html"><strong>flickr.people.getInfo</strong></a>:
-Get information about a user.
-</p>
-<pre>
-  flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
-  const char* flickcurl_get_person_field_label(flickcurl_person_field field);
-  void flickcurl_free_person(flickcurl_person *person);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photos.addTags.html"><strong>flickr.photos.addTags</strong></a>:
-Add TAGS to a PHOTO-ID.
-</p>
-<pre>
-  int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id,
-        const char* tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photos.delete.html"><strong>flickr.photos.delete</strong></a>:
-Delete a PHOTO-ID.
-</p>
-<pre>
-  int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photos.getAllContexts.html"><strong>flickr.photos.getAllContexts</strong></a>:
-Get all visible sets and pools the photo belongs to.
-</p>
-<pre>
-flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc,
-        const char* photo_id);
-void flickcurl_free_contexts(flickcurl_context** contexts);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photos.getContext.html"><strong>flickr.photos.getContext</strong></a>:
-Get next and previous photos for a photo in a photostream.
-</p>
-<pre>
-  flickcurl_context** flickcurl_photos_getContext(flickcurl* fc,
-        const char* photo_id);
-  void flickcurl_free_contexts(flickcurl_context** contexts);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photos.getInfo.html"><strong>flickr.photos.getInfo</strong></a>:
-Get information about a photo.
-</p>
-<pre>
-  flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
-  const char* flickcurl_get_photo_field_label(flickcurl_photo_field field);
-  void flickcurl_free_photo(flickcurl_photo *photo);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photos.removeTag.html"><strong>flickr.photos.removeTag</strong></a>:
-Remove a tag TAG-ID from a photo.
-</p>
-<pre>
-  int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flick.photos.setTags.html"><strong>flick.photos.setTags</strong></a>:
-Set the tags for a PHOTO-ID to TAGS.
-</p>
-<pre>
-  int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id,
-        const char* tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html"><strong>flickr.photos.licenses.getInfo</strong></a>:
-fetch a list of available photo licenses. (0.6)
-</p>
-<pre>
-  flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
-  flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
-</pre>
-<p>Both return pointers to <em>shared</em>, static copies of the license info,
-cached from the server once only.</p>
-
-<p><a href="http://www.flickr.com/services/api/flickr.photosets.getContext.html"><strong>flickr.photosets.getContext</strong></a>:
-Get next and previous photos for a photo in a set.
-</p>
-<pre>
-  flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc,
-        const char* photo_id, const char* photoset_id);
-  void flickcurl_free_contexts(flickcurl_context** contexts);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.tags.getHotList.html"><strong>flickr.tags.getHotList</strong></a>:
-Get the list of hot tags for the given PERIOD (day, week).
-</p>
-<pre>
-  flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period,
-        int tag_count);
-  void flickcurl_free_tags(flickcurl_tag** tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.tags.getListPhoto.html"><strong>flickr.tags.getListPhoto</strong></a>:
-Get the tag list for a PHOTO-ID.
-</p>
-<pre>
-  flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc,
-        const char* photo_id);
-  void flickcurl_free_tags(flickcurl_tag** tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.tags.getListUser.html"><strong>flickr.tags.getListUser</strong></a>:
-Get the tag list for a USER-ID (or current user).
-</p>
-<pre>
-  flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc,
-        const char* user_id);
-  void flickcurl_free_tags(flickcurl_tag** tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.tags.getListUserPopular.html"><strong>flickr.tags.getListUserPopular</strong></a>:
-Get the popular tag list for a USER-ID (or current user).
-</p>
-<pre>
-  flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc,
-        const char* user_id, int pop_count);
-  void flickcurl_free_tags(flickcurl_tag** tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.tags.getListUserRaw.html"><strong>flickr.tags.getListUserRaw</strong></a>:
-Get the raw versions of a TAG (or all tags) for the current user.
-</p>
-<pre>
-  flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc,
-        const char* tag);
-  void flickcurl_free_tags(flickcurl_tag** tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.tags.getRelated.html"><strong>flickr.tags.getRelated</strong></a>:
-Get a list of tags 'related' to TAG based on clustered usage analysis.
-</p>
-<pre>
-  flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
-  void flickcurl_free_tags(flickcurl_tag** tags);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.test.echo.html"><strong>flickr.test.echo</strong></a>:
-Echo what is sent.
-</p>
-<pre>
-  int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.urls.getGroup.html"><strong>flickr.urls.getGroup</strong></a>:
-Get the url of the group page for GROUP-ID.
-</p>
-<pre>
-  char* flickcurl_urls_getGroup(flickcurl* fc, const char* group_id);
-  free(group_id);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.urls.getUserPhotos.html"><strong>flickr.urls.getUserPhotos</strong></a>:
-Get the url of the photo page for USER-ID.
-</p>
-<pre>
-  char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
-  free(url);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.urls.getUserProfile.html"><strong>flickr.urls.getUserProfile</strong></a>:
-Get the url of the profile page for USER-ID.
-</p>
-<pre>
-  char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
-  free(url);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.urls.lookupGroup.html"><strong>flickr.urls.lookupGroup</strong></a>:
-Get a group NSID from the URL to a group's page or photo pool.
-</p>
-<pre>
-  char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
-  free(url);
-</pre>
-
-<p><a href="http://www.flickr.com/services/api/flickr.urls.lookupUser.html"><strong>flickr.urls.lookupUser</strong></a>:
-Get a user NSID given an url to a user's profile/photo page.
-</p>
-<pre>
-  char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
-  void free(url);
-</pre>
-
-<p>Utilities:</p>
-<pre>
-  /* URI for a photo's image */
+  /* Get the URI for a photo's image */
   char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
   free(url);
 
@@ -533,6 +290,12 @@ int main() {
   flickcurl_finish(); /* optional static free of resources */
 }
 </pre>
+
+<p>For more extensive example code, see the source of the
+<code>flickcurl</code> utility in <code>flickcurl.c</code>
+which uses all the API.
+</p>
+
 
 <hr />
 
