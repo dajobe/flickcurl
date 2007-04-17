@@ -461,7 +461,7 @@ flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx)
 
 #if FLICKCURL_DEBUG > 1
     fprintf(stderr, "field %d with %s value: '%s' / %d\n",
-            field, flickcurl_field_value_type_label[datatype], 
+            field, flickcurl_get_field_value_type_label(datatype), 
             string_value, int_value);
 #endif
       
