@@ -74,19 +74,31 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
   if(!photo_file)
     return NULL;
 
+  if(access((const char*)photo_file, R_OK)) {
+    flickcurl_error(fc, "Photo file %s cannot be read: %s",
+                    photo_file, strerror(errno));
+    return NULL;
+  }
+
   is_public_s[0]=is_public ? '1' : '0';
   is_public_s[1]='\0';
   is_friend_s[0]=is_friend ? '1' : '0';
   is_friend_s[1]='\0';
   is_family_s[0]=is_family ? '1' : '0';
   is_family_s[1]='\0';
-  
-  parameters[count][0]  = "title";
-  parameters[count++][1]= title;
-  parameters[count][0]  = "description";
-  parameters[count++][1]= description;
-  parameters[count][0]  = "tags";
-  parameters[count++][1]= tags;
+
+  if(title) {
+    parameters[count][0]  = "title";
+    parameters[count++][1]= title;
+  }
+  if(description) {
+    parameters[count][0]  = "description";
+    parameters[count++][1]= description;
+  }
+  if(tags) {
+    parameters[count][0]  = "tags";
+    parameters[count++][1]= tags;
+  }
   parameters[count][0]  = "is_public";
   parameters[count++][1]= is_public_s;
   parameters[count][0]  = "is_friend";
@@ -95,6 +107,7 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
   parameters[count++][1]= is_family_s;
 
   parameters[count][0]  = NULL;
+
 
   if(flickcurl_prepare_upload(fc,
                             "http://api.flickr.com/services/upload/",
@@ -155,8 +168,14 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
   flickcurl_upload_status* status=NULL;
   char async_s[2];
   
-  if(!photo_file)
+  if(!photo_file || !photo_id)
     return NULL;
+
+  if(access((const char*)photo_file, R_OK)) {
+    flickcurl_error(fc, "Photo file %s cannot be read: %s",
+                    photo_file, strerror(errno));
+    return NULL;
+  }
 
   async_s[0]=async ? '1' : '0';
   async_s[1]='\0';
