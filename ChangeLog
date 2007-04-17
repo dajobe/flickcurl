@@ -1,5 +1,7 @@
 2007-04-16  Dave Beckett  <dave@dajobe.org>
 
+	* Snapshotted flickcurl_0_10 for 0.10 release (SVN 295)
+	
 	* photo.c: region is not a float
 
 	* photo.c: field twice
