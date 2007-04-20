@@ -169,6 +169,7 @@ static struct {
 };
 
 #define FIELD_FLAGS_PERSON 1
+#define FIELD_FLAGS_STRING 2
 
 static struct {
   flickcurl_photo_field_type field;
@@ -182,8 +183,8 @@ static struct {
   { PHOTO_FIELD_dates_posted,       DC_NS   , "date" },
   { PHOTO_FIELD_dates_taken,        DC_NS   , "date" },
   { PHOTO_FIELD_description,        DC_NS   , "description" },
-  { PHOTO_FIELD_location_latitude,  GEO_NS  , "lat" },
-  { PHOTO_FIELD_location_longitude, GEO_NS  , "long" },
+  { PHOTO_FIELD_location_latitude,  GEO_NS  , "lat", FIELD_FLAGS_STRING },
+  { PHOTO_FIELD_location_longitude, GEO_NS  , "long", FIELD_FLAGS_STRING },
   { PHOTO_FIELD_owner_realname,     FOAF_NS , "name", FIELD_FLAGS_PERSON },
   { PHOTO_FIELD_owner_username,     FOAF_NS , "nick", FIELD_FLAGS_PERSON },
   { PHOTO_FIELD_title,              DC_NS   , "title" },
@@ -425,6 +426,9 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
                 field_table[f].nspace_uri, field_table[f].name);
 
       object=photo->fields[field].string;
+
+      if(field_table[f].flags & FIELD_FLAGS_STRING)
+        datatype=VALUE_TYPE_STRING;
 
       if(field == PHOTO_FIELD_license) {
         flickcurl_license* license;
