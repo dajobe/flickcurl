@@ -542,11 +542,14 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
                                                         photo->fields[field].integer);
         if(!license)
           continue;
-        
-        datatype=VALUE_TYPE_URI;
-        object=license->url;
-        if(!object)
-          continue;
+
+        if(license->url) {
+          datatype=VALUE_TYPE_URI;
+          object=license->url;
+        } else {
+          datatype=VALUE_TYPE_STRING;
+          object=license->name;
+        }
       }
       
       switch(datatype) {
