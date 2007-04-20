@@ -140,31 +140,36 @@ static struct option long_options[] =
 #define XSD_NS "http://www.w3.org/2001/XMLSchema#"
 #define RDF_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
 
-static struct {
-  const char* prefix;
-  const char* nspace_uri;
-  int active;
-  int prefix_len;
-  int nspace_uri_len;
-} namespace_table[]={
-  { "a",        "http://www.w3.org/2000/10/annotation-ns" },
-  { "acl",      "http://www.w3.org/2001/02/acls#" },
-  { "blue",     "x-urn:blue:#", 1 }, /* active */
-  { "cell",     "http://www.machinetags.org/wiki/Cell#", 1 }, /* active */
-  { "dc",       DC_NS },
-  { "dcterms",  "http://purl.org/dc/terms/" },
-  { "exif",     "http://nwalsh.com/rdf/exif#" },
-  { "exifi",    "http://nwalsh.com/rdf/exif-intrinsic#" },
-  { "flickr",   "x-urn:flickr:" },
-  { "filtr",    "x-urn:filtr:", 1 }, /* active */
-  { "foaf",     FOAF_NS },
-  { "geo",      GEO_NS, 1 }, /* active */
-  { "i",        "http://www.w3.org/2004/02/image-regions#" },
-  { "rdf",      RDF_NS },
-  { "rdfs",     "http://www.w3.org/2000/01/rdf-schema#" },
-  { "skos",     "http://www.w3.org/2004/02/skos/core" },
-  { "upcoming", "http://www.machinetags.org/wiki/Upcoming#" },
-  { "xsd",      XSD_NS, 1 }, /* active */
+struct flickrdf_nspace_s
+{
+  char* prefix;
+  char* uri;
+  size_t prefix_len;
+  size_t uri_len;
+  int seen;
+  struct flickrdf_nspace_s* next;
+};
+typedef struct flickrdf_nspace_s flickrdf_nspace;
+
+flickrdf_nspace namespace_table[]={
+  { (char*)"a",        (char*)"http://www.w3.org/2000/10/annotation-ns" },
+  { (char*)"acl",      (char*)"http://www.w3.org/2001/02/acls#" },
+  { (char*)"blue",     (char*)"http://www.machinetags.org/wiki/Blue#", },
+  { (char*)"cell",     (char*)"http://www.machinetags.org/wiki/Cell#", },
+  { (char*)"dc",       (char*)DC_NS },
+  { (char*)"exif",     (char*)"http://nwalsh.com/rdf/exif#" },
+  { (char*)"exifi",    (char*)"http://nwalsh.com/rdf/exif-intrinsic#" },
+  { (char*)"flickr",   (char*)"http://www.machinetags.org/wiki/Flickr#" },
+  { (char*)"filtr",    (char*)"http://www.machinetags.org/wiki/Filtr#", },
+  { (char*)"foaf",     (char*)FOAF_NS },
+  { (char*)"geo",      (char*)GEO_NS, },
+  { (char*)"i",        (char*)"http://www.w3.org/2004/02/image-regions#" },
+  { (char*)"ph"      , (char*)"http://www.machinetags.org/wiki/Ph#" },
+  { (char*)"rdf",      (char*)RDF_NS },
+  { (char*)"rdfs",     (char*)"http://www.w3.org/2000/01/rdf-schema#" },
+  { (char*)"skos",     (char*)"http://www.w3.org/2004/02/skos/core" },
+  { (char*)"upcoming", (char*)"http://www.machinetags.org/wiki/Upcoming#" },
+  { (char*)"xsd",      (char*)XSD_NS, },
   { NULL, NULL }
 };
 
@@ -177,17 +182,22 @@ static struct {
   const char* name;
   int flags;
 } field_table[]={
-  { PHOTO_FIELD_dateuploaded,       DC_NS   , "date" },
-  { PHOTO_FIELD_license,            DC_NS   , "rights" },
-  { PHOTO_FIELD_dates_lastupdate,   DC_NS   , "date" },
-  { PHOTO_FIELD_dates_posted,       DC_NS   , "date" },
-  { PHOTO_FIELD_dates_taken,        DC_NS   , "date" },
-  { PHOTO_FIELD_description,        DC_NS   , "description" },
-  { PHOTO_FIELD_location_latitude,  GEO_NS  , "lat", FIELD_FLAGS_STRING },
-  { PHOTO_FIELD_location_longitude, GEO_NS  , "long", FIELD_FLAGS_STRING },
-  { PHOTO_FIELD_owner_realname,     FOAF_NS , "name", FIELD_FLAGS_PERSON },
-  { PHOTO_FIELD_owner_username,     FOAF_NS , "nick", FIELD_FLAGS_PERSON },
-  { PHOTO_FIELD_title,              DC_NS   , "title" },
+  /* dc:available -- date that the resource will become/did become available.*/
+  /* dc:dateSubmitted - Date of submission of resource (e.g. thesis, articles)*/
+  { PHOTO_FIELD_dateuploaded,       DC_NS,   "dateSubmitted" },
+  { PHOTO_FIELD_license,            DC_NS,   "rights" },
+  /* dc:modified - date on which the resource was changed. */
+  { PHOTO_FIELD_dates_lastupdate,   DC_NS,   "modified" },
+  /* dc:issued - date of formal issuance (e.g. publication of the resource */
+  { PHOTO_FIELD_dates_posted,       DC_NS,   "issued" },
+  /* dc:created - date of creation of the resource */
+  { PHOTO_FIELD_dates_taken,        DC_NS,   "created" },
+  { PHOTO_FIELD_description,        DC_NS,   "description" },
+  { PHOTO_FIELD_location_latitude,  GEO_NS,  "lat", FIELD_FLAGS_STRING },
+  { PHOTO_FIELD_location_longitude, GEO_NS,  "long", FIELD_FLAGS_STRING },
+  { PHOTO_FIELD_owner_realname,     FOAF_NS, "name", FIELD_FLAGS_PERSON },
+  { PHOTO_FIELD_owner_username,     FOAF_NS, "nick", FIELD_FLAGS_PERSON },
+  { PHOTO_FIELD_title,              DC_NS,   "title" },
   { PHOTO_FIELD_none, NULL, NULL }
 };
 
@@ -198,26 +208,25 @@ flickrdf_init(void)
   int i;
 
   for(i=0; namespace_table[i].prefix != NULL; i++) {
-    namespace_table[i].nspace_uri_len=strlen(namespace_table[i].nspace_uri);
+    namespace_table[i].uri_len=strlen(namespace_table[i].uri);
     namespace_table[i].prefix_len=strlen(namespace_table[i].prefix);
   }
 }
 
 
 static void
-emit_namespace(FILE* fh,
-               const char* prefix, const char* uri)
+emit_namespace(FILE* fh, flickrdf_nspace* ns)
 {
 #ifdef HAVE_RAPTOR
   raptor_uri *ns_uri=NULL;
 
-  ns_uri=raptor_new_uri((const unsigned char*)uri);
+  ns_uri=raptor_new_uri((const unsigned char*)ns->uri);
   raptor_serialize_set_namespace(serializer, ns_uri, 
-                                 (const unsigned char*)prefix);
+                                 (const unsigned char*)ns->prefix);
   raptor_free_uri(ns_uri);
 #else
   if(output_turtle)
-    fprintf(fh, "@prefix %s: <%s> .\n", prefix, uri);
+    fprintf(fh, "@prefix %s: <%s> .\n", ns->prefix, ns->uri);
 #endif
 }
 
@@ -299,6 +308,104 @@ emit_triple(FILE* fh,
 }
 
 
+static flickrdf_nspace*
+nspace_add_if_not_declared(flickrdf_nspace* list, const char *nspace_uri)
+{
+  int n;
+  flickrdf_nspace* ns;
+  flickrdf_nspace* ns2;
+  size_t uri_len=strlen(nspace_uri);
+  
+  for(ns=list; ns; ns=ns->next) {
+    fprintf(stderr, "%s: Saw namespace URI %s\n", program, ns->uri);
+    if(ns->uri_len == uri_len && !strcmp(ns->uri, nspace_uri))
+      break;
+  }
+  if(ns) {
+    fprintf(stderr, "%s: Namespace with URI %s was declared already\n", 
+            program, nspace_uri);
+    return list;
+  }
+
+  ns=NULL;
+  for(n=0; namespace_table[n].uri; n++) {
+    if(namespace_table[n].uri_len == uri_len && 
+       !strcmp(namespace_table[n].uri, nspace_uri)) {
+      ns=&namespace_table[n];
+      break;
+    }
+  }
+  if(!ns) {
+    fprintf(stderr, "%s: Namespace with URI %s not found\n", 
+            program, nspace_uri);
+    return list;
+  }
+  
+  fprintf(stderr, "%s: Adding namespace with prefix %s URI %s\n", 
+          program, ns->prefix, ns->uri);
+
+  /* ns was not found, copy it and add it to the list */
+  ns2=(flickrdf_nspace*)calloc(1, sizeof(flickrdf_nspace));
+  ns2->prefix=(char*)malloc(ns->prefix_len+1);
+  strcpy(ns2->prefix, ns->prefix);
+  ns2->uri=(char*)malloc(ns->uri_len+1);
+  strcpy(ns2->uri, ns->uri);
+  ns2->prefix_len=ns->prefix_len;
+  ns2->uri_len=ns->uri_len;
+
+  ns2->next=list;
+  return ns2;
+}
+
+
+static flickrdf_nspace*
+nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri)
+{
+  flickrdf_nspace* ns;
+
+  ns=(flickrdf_nspace*)calloc(1, sizeof(flickrdf_nspace));
+  ns->prefix_len=strlen(prefix);
+  ns->uri_len=strlen(uri);
+  ns->prefix=(char*)malloc(ns->prefix_len+1);
+  strcpy(ns->prefix, prefix);
+  ns->uri=(char*)malloc(ns->uri_len+1);
+  strcpy(ns->uri, ns->uri);
+
+  ns->next=list;
+  return ns;
+}
+
+
+static void
+print_nspaces(flickrdf_nspace* list)
+{
+  flickrdf_nspace* ns;
+
+  for(ns=list; ns; ns=ns->next) {
+    fprintf(stderr, "%s: Namespace prefix %s URI %s\n",
+            program, (ns->prefix ? ns->prefix : ":"),
+            (ns->uri ? ns->uri : "\"\""));
+
+  }
+}
+    
+
+static void
+free_nspaces(flickrdf_nspace* list)
+{
+  flickrdf_nspace* next;
+
+  for(; list; list=next) {
+    next=list->next;
+    if(list->prefix)
+      free(list->prefix);
+    free(list->uri);
+    free(list);
+  }
+}
+    
+
+
 static int
 flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
 {
@@ -306,7 +413,9 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
   flickcurl_photo_field_type field;
   int i;
   int need_person=0;
-  
+  flickrdf_nspace* nspaces=NULL;
+  flickrdf_nspace* ns;
+
   photo=flickcurl_photos_getInfo(fc, photo_id);
 
   if(!photo)
@@ -315,6 +424,9 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
   if(debug)
     fprintf(stderr, "%s: Photo with URI %s ID %s has %d tags\n",
             program, photo->uri, photo->id, photo->tags_count);
+
+  /* Always add XSD */
+  nspaces=nspace_add_if_not_declared(nspaces, XSD_NS);
 
   /* mark namespaces used in fields */
   for(field=0; field <= PHOTO_FIELD_LAST; field++) {
@@ -325,30 +437,21 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
       continue;
 
     for(f=0; field_table[f].field != PHOTO_FIELD_none; f++) {
-      int n;
-      
       if(field_table[f].field != field) 
         continue;
 
       if(field_table[f].flags & FIELD_FLAGS_PERSON)
         need_person=1;
 
-      for(n=0; namespace_table[n].prefix != NULL; n++) {
-        if(strcmp(namespace_table[n].nspace_uri, field_table[f].nspace_uri))
-          continue;
-        namespace_table[n].active=1;
-        break;
-      }
-
+      nspaces=nspace_add_if_not_declared(nspaces, field_table[f].nspace_uri);
       break;
     }
 
   }
   
 
-  /* in tags, look for xmlns:PREFIX="URI" and mark namespaces used */
+  /* in machine tags, look for xmlns:PREFIX="URI" and mark namespaces active */
   for(i=0; i < photo->tags_count; i++) {
-    int n;
     char* prefix;
     char *p;
     flickcurl_tag* tag=photo->tags[i];
@@ -368,25 +471,24 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
     /* "xmlns:PREFIX=" seen */
     *p='\0';
 
-    for(n=0; namespace_table[n].prefix != NULL; n++) {
-      if(strcmp(namespace_table[n].prefix, prefix))
-        continue;
-      *p='=';
-      if(debug)
-        fprintf(stderr,
-                "%s: Found declaration of namespace with prefix %s in tag '%s'\n",
-              program, namespace_table[n].prefix, tag->raw);
-      namespace_table[n].active=1;
-      break;
-    }
+    nspaces=nspace_add_new(nspaces, prefix, p+1);
+
+    if(debug)
+      fprintf(stderr,
+              "%s: Found declaration of namespace prefix %s uri %s in tag '%s'\n",
+              program, prefix, p+1, tag->raw);
+    *p='=';
   }
 
 
+  print_nspaces(nspaces);
+
   /* generate seen namespace declarations */
-  for(i=0; namespace_table[i].prefix != NULL; i++)
-    if(namespace_table[i].active)
-      emit_namespace(fh, namespace_table[i].prefix, 
-                     namespace_table[i].nspace_uri);
+  for(ns=nspaces; ns; ns=ns->next)
+    emit_namespace(fh, ns);
+  
+  if(nspaces)
+    free_nspaces(nspaces);
   
   if(need_person) {
     emit_triple(fh, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
@@ -396,6 +498,10 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
     emit_triple(fh, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
                 RDF_NS, "type",
                 FOAF_NS "Person", RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+                NULL);
+    emit_triple(fh, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
+                FOAF_NS, "maker",
+                photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
                 NULL);
   }
   
@@ -490,7 +596,6 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
 
   /* generate triples from tags */
   for(i=0; i < photo->tags_count; i++) {
-    int n;
     flickcurl_tag* tag=photo->tags[i];
     size_t tag_len;
 
@@ -499,17 +604,14 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
 
 
     tag_len=strlen(tag->raw);
-    for(n=0; namespace_table[n].prefix != NULL; n++) {
+    for(ns=nspaces; ns; ns=ns->next) {
       char *p;
       char *f;
       char *v;
       int value_len;
       size_t len;
       
-      if(!namespace_table[n].active)
-        continue;
-
-      len=namespace_table[n].prefix_len;
+      len=ns->prefix_len;
       p=tag->raw;
       if(tag_len < len+1 || p[len] != ':')
         continue;
@@ -517,7 +619,7 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
       f=p+len;
       *f++='\0';
       
-      if(strcmp(namespace_table[n].prefix, p))
+      if(strcmp(ns->prefix, p))
         continue;
 
       for(v=f; *v && *v != '='; v++)
@@ -538,11 +640,11 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
         fprintf(stderr,
                 "%s: prefix '%s' field '%s' value '%s' namespace uri %s\n",
                 program, p, f, v, 
-                namespace_table[n].nspace_uri);
+                ns->uri);
 
       emit_triple(fh, 
                   photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-                  namespace_table[n].nspace_uri, f,
+                  ns->uri, f,
                   v, RAPTOR_IDENTIFIER_TYPE_LITERAL, 
                   NULL);
       
