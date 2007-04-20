@@ -540,10 +540,13 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
         flickcurl_license* license;
         license=flickcurl_photos_licenses_getInfo_by_id(fc, 
                                                         photo->fields[field].integer);
-        if(license) {
-          datatype=VALUE_TYPE_URI;
-          object=license->url;
-        }
+        if(!license)
+          continue;
+        
+        datatype=VALUE_TYPE_URI;
+        object=license->url;
+        if(!object)
+          continue;
       }
       
       switch(datatype) {
