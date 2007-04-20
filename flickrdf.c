@@ -329,14 +329,18 @@ nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri)
 
 
 static flickrdf_nspace*
-nspace_add_if_not_declared(flickrdf_nspace* list, const char *nspace_uri)
+nspace_add_if_not_declared(flickrdf_nspace* list, 
+                           const char* prefix, const char* nspace_uri)
 {
   int n;
   flickrdf_nspace* ns;
-  size_t uri_len=strlen(nspace_uri);
+  size_t prefix_len=prefix ? strlen(prefix) : 0;
+  size_t uri_len=nspace_uri ? strlen(nspace_uri) : 0;
   
   for(ns=list; ns; ns=ns->next) {
-    if(ns->uri_len == uri_len && !strcmp(ns->uri, nspace_uri))
+    if(nspace_uri && ns->uri_len == uri_len && !strcmp(ns->uri, nspace_uri))
+      break;
+    if(prefix && ns->prefix_len == prefix_len && !strcmp(ns->prefix, prefix))
       break;
   }
   if(ns)
@@ -344,7 +348,12 @@ nspace_add_if_not_declared(flickrdf_nspace* list, const char *nspace_uri)
 
   ns=NULL;
   for(n=0; namespace_table[n].uri; n++) {
-    if(namespace_table[n].uri_len == uri_len && 
+    if(prefix && namespace_table[n].prefix_len == prefix_len && 
+       !strcmp(namespace_table[n].prefix, prefix)) {
+      ns=&namespace_table[n];
+      break;
+    }
+    if(nspace_uri && namespace_table[n].uri_len == uri_len && 
        !strcmp(namespace_table[n].uri, nspace_uri)) {
       ns=&namespace_table[n];
       break;
@@ -355,6 +364,20 @@ nspace_add_if_not_declared(flickrdf_nspace* list, const char *nspace_uri)
 
   /* ns was not found, copy it and add it to the list */
   return nspace_add_new(list, ns->prefix, ns->uri);
+}
+
+
+static flickrdf_nspace*
+nspace_get_by_prefix(flickrdf_nspace* list, const char *prefix)
+{
+  flickrdf_nspace* ns;
+  size_t prefix_len=strlen(prefix);
+  
+  for(ns=list; ns; ns=ns->next) {
+    if(ns->prefix_len == prefix_len && !strcmp(ns->prefix, prefix))
+      break;
+  }
+  return ns;
 }
 
 
@@ -408,7 +431,7 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
             program, photo->uri, photo->id, photo->tags_count);
 
   /* Always add XSD */
-  nspaces=nspace_add_if_not_declared(nspaces, XSD_NS);
+  nspaces=nspace_add_if_not_declared(nspaces, NULL, XSD_NS);
 
   /* mark namespaces used in fields */
   for(field=0; field <= PHOTO_FIELD_LAST; field++) {
@@ -425,41 +448,46 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
       if(field_table[f].flags & FIELD_FLAGS_PERSON)
         need_person=1;
 
-      nspaces=nspace_add_if_not_declared(nspaces, field_table[f].nspace_uri);
+      nspaces=nspace_add_if_not_declared(nspaces, NULL, field_table[f].nspace_uri);
       break;
     }
 
   }
   
 
-  /* in machine tags, look for xmlns:PREFIX="URI" and mark namespaces active */
+  /* in tags look for xmlns:PREFIX="URI" otherwise look for PREFIX: */
   for(i=0; i < photo->tags_count; i++) {
     char* prefix;
     char *p;
     flickcurl_tag* tag=photo->tags[i];
 
-    if(!tag->machine_tag)
-      continue;
-    
-    if(strncmp(tag->raw, "xmlns:", 6))
-      continue;
+    if(!strncmp(tag->raw, "xmlns:", 6)) {
+      prefix=&tag->raw[6];
+      for(p=prefix; *p && *p != '='; p++)
+        ;
+      if(!*p) /* "xmlns:PREFIX" seen */
+        continue;
 
-    prefix=&tag->raw[6];
-    for(p=prefix; *p && *p != '='; p++)
+      /* "xmlns:PREFIX=" seen */
+      *p='\0';
+      nspaces=nspace_add_new(nspaces, prefix, p+1);
+      if(debug)
+        fprintf(stderr,
+                "%s: Found declaration of namespace prefix %s uri %s in tag '%s'\n",
+                program, prefix, p+1, tag->raw);
+      *p='=';
+      continue;
+    }
+
+    prefix=tag->raw;
+    for(p=prefix; *p && *p != ':'; p++)
       ;
-    if(!*p) /* "xmlns:PREFIX" seen */
+    if(!*p) /* "PREFIX:" seen */
       continue;
-    
-    /* "xmlns:PREFIX=" seen */
+
     *p='\0';
-
-    nspaces=nspace_add_new(nspaces, prefix, p+1);
-
-    if(debug)
-      fprintf(stderr,
-              "%s: Found declaration of namespace prefix %s uri %s in tag '%s'\n",
-              program, prefix, p+1, tag->raw);
-    *p='=';
+    nspaces=nspace_add_if_not_declared(nspaces, prefix, NULL);
+    *p=':';
   }
 
 
@@ -583,59 +611,52 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
   /* generate triples from tags */
   for(i=0; i < photo->tags_count; i++) {
     flickcurl_tag* tag=photo->tags[i];
-    size_t tag_len;
+    char* prefix;
+    char *p;
+    char *f;
+    char *v;
+    size_t value_len;
+    
+    prefix=&tag->raw[0];
+    for(p=prefix; *p && *p != ':'; p++)
+      ;
+    /* ":" seen */
+    *p='\0';
 
-    if(!tag->machine_tag)
+    if(!strcmp(p, "xmlns")) {
+      *p=':';
       continue;
-
-
-    tag_len=strlen(tag->raw);
-    for(ns=nspaces; ns; ns=ns->next) {
-      char *p;
-      char *f;
-      char *v;
-      int value_len;
-      size_t len;
-      
-      len=ns->prefix_len;
-      p=tag->raw;
-      if(tag_len < len+1 || p[len] != ':')
-        continue;
-
-      f=p+len;
-      *f++='\0';
-      
-      if(strcmp(ns->prefix, p))
-        continue;
-
-      for(v=f; *v && *v != '='; v++)
-        ;
-      if(!*v) /* "prefix:name" seen with no value */
-        continue;
-      /* zap = */
-      *v++='\0';
-
-      value_len=strlen(v);
-      if(*v == '"') {
-        v++;
-        if(v[value_len-1]=='"')
-          v[--value_len]='\0';
-      }
-        
-      if(debug)
-        fprintf(stderr,
-                "%s: prefix '%s' field '%s' value '%s' namespace uri %s\n",
-                program, p, f, v, 
-                ns->uri);
-
-      emit_triple(fh, 
-                  photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-                  ns->uri, f,
-                  v, RAPTOR_IDENTIFIER_TYPE_LITERAL, 
-                  NULL);
-      
-      break;
     }
+    
+    f=p+1;
+    
+    for(v=f; *v && *v != '='; v++)
+      ;
+    if(!*v) /* "prefix:name" seen with no value */
+      continue;
+    /* zap = */
+    *v++='\0';
+
+    value_len=strlen(v);
+    if(*v == '"') {
+      v++;
+      if(v[value_len-1]=='"')
+        v[--value_len]='\0';
+    }
+        
+    ns=nspace_get_by_prefix(nspaces, prefix);
+
+    if(debug)
+      fprintf(stderr,
+              "%s: prefix '%s' field '%s' value '%s' namespace uri %s\n",
+              program, p, f, v, 
+              ns->uri);
+    
+    emit_triple(fh, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+                ns->uri, f,
+                v, RAPTOR_IDENTIFIER_TYPE_LITERAL, 
+                NULL);
+    
   }
   
   if(nspaces)
