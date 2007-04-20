@@ -309,23 +309,38 @@ emit_triple(FILE* fh,
 
 
 static flickrdf_nspace*
+nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri)
+{
+  flickrdf_nspace* ns;
+
+  ns=(flickrdf_nspace*)malloc(sizeof(flickrdf_nspace));
+  ns->prefix_len=strlen(prefix);
+  ns->uri_len=strlen(uri);
+
+  ns->prefix=(char*)malloc(ns->prefix_len+1);
+  strcpy(ns->prefix, prefix);
+
+  ns->uri=(char*)malloc(ns->uri_len+1);
+  strcpy(ns->uri, uri);
+
+  ns->next=list;
+  return ns;
+}
+
+
+static flickrdf_nspace*
 nspace_add_if_not_declared(flickrdf_nspace* list, const char *nspace_uri)
 {
   int n;
   flickrdf_nspace* ns;
-  flickrdf_nspace* ns2;
   size_t uri_len=strlen(nspace_uri);
   
   for(ns=list; ns; ns=ns->next) {
-    fprintf(stderr, "%s: Saw namespace URI %s\n", program, ns->uri);
     if(ns->uri_len == uri_len && !strcmp(ns->uri, nspace_uri))
       break;
   }
-  if(ns) {
-    fprintf(stderr, "%s: Namespace with URI %s was declared already\n", 
-            program, nspace_uri);
+  if(ns)
     return list;
-  }
 
   ns=NULL;
   for(n=0; namespace_table[n].uri; n++) {
@@ -335,44 +350,11 @@ nspace_add_if_not_declared(flickrdf_nspace* list, const char *nspace_uri)
       break;
     }
   }
-  if(!ns) {
-    fprintf(stderr, "%s: Namespace with URI %s not found\n", 
-            program, nspace_uri);
+  if(!ns)
     return list;
-  }
-  
-  fprintf(stderr, "%s: Adding namespace with prefix %s URI %s\n", 
-          program, ns->prefix, ns->uri);
 
   /* ns was not found, copy it and add it to the list */
-  ns2=(flickrdf_nspace*)calloc(1, sizeof(flickrdf_nspace));
-  ns2->prefix=(char*)malloc(ns->prefix_len+1);
-  strcpy(ns2->prefix, ns->prefix);
-  ns2->uri=(char*)malloc(ns->uri_len+1);
-  strcpy(ns2->uri, ns->uri);
-  ns2->prefix_len=ns->prefix_len;
-  ns2->uri_len=ns->uri_len;
-
-  ns2->next=list;
-  return ns2;
-}
-
-
-static flickrdf_nspace*
-nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri)
-{
-  flickrdf_nspace* ns;
-
-  ns=(flickrdf_nspace*)calloc(1, sizeof(flickrdf_nspace));
-  ns->prefix_len=strlen(prefix);
-  ns->uri_len=strlen(uri);
-  ns->prefix=(char*)malloc(ns->prefix_len+1);
-  strcpy(ns->prefix, prefix);
-  ns->uri=(char*)malloc(ns->uri_len+1);
-  strcpy(ns->uri, ns->uri);
-
-  ns->next=list;
-  return ns;
+  return nspace_add_new(list, ns->prefix, ns->uri);
 }
 
 
@@ -382,7 +364,7 @@ print_nspaces(flickrdf_nspace* list)
   flickrdf_nspace* ns;
 
   for(ns=list; ns; ns=ns->next) {
-    fprintf(stderr, "%s: Namespace prefix %s URI %s\n",
+    fprintf(stderr, "%s: Declaring namespace prefix %s URI %s\n",
             program, (ns->prefix ? ns->prefix : ":"),
             (ns->uri ? ns->uri : "\"\""));
 
@@ -481,14 +463,12 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
   }
 
 
-  print_nspaces(nspaces);
+  if(debug)
+    print_nspaces(nspaces);
 
   /* generate seen namespace declarations */
   for(ns=nspaces; ns; ns=ns->next)
     emit_namespace(fh, ns);
-  
-  if(nspaces)
-    free_nspaces(nspaces);
   
   if(need_person) {
     emit_triple(fh, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
@@ -657,6 +637,9 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
       break;
     }
   }
+  
+  if(nspaces)
+    free_nspaces(nspaces);
   
   flickcurl_free_photo(photo);
 
