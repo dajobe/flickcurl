@@ -1251,12 +1251,8 @@ main(int argc, char *argv[])
   argv+=optind;
   argc-=optind;
   
-  if(!help && argc < 1)
-    usage=2; /* Title and usage */
-
   if(!help && !argc) {
-    fprintf(stderr, "%s: No command given\n", program);
-    usage=1;
+    usage=2; /* Title and usage */
     goto usage;
   }
 
