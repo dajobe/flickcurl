@@ -873,21 +873,22 @@ static int
 command_upload(flickcurl* fc, int argc, char *argv[])
 {
   const char *file=argv[1];
-  const char *title=NULL;
-  const char *description=NULL;
   char *tags_string=NULL;
   flickcurl_upload_status* status=NULL;
-  int is_public=0;
-  int is_friend=0;
-  int is_family=0;
   int usage=0;
-
+  flickcurl_upload_params params;
+  
+  memset(&params, '\0', sizeof(flickcurl_upload_params));
+  params.safety_level=1;
+  params.content_type=1;
+  
+  
   argv++; argc--;
-  file=argv[0];
+  params.photo_file=argv[0];
 
-  if(access((const char*)file, R_OK)) {
+  if(access((const char*)params.photo_file, R_OK)) {
     fprintf(stderr, "%s: Failed to read image filename '%s': %s\n",
-            program, file, strerror(errno));
+            program, params.photo_file, strerror(errno));
     status=NULL;
     goto tidy;
   }
@@ -896,16 +897,22 @@ command_upload(flickcurl* fc, int argc, char *argv[])
     argv++; argc--;
     if(!strcmp(argv[0], "description")) {
       argv++; argc--;
-      description=argv[0];
+      params.description=argv[0];
     } else if(!strcmp(argv[0], "title")) {
       argv++; argc--;
-      title=argv[0];
+      params.title=argv[0];
+    } else if(!strcmp(argv[0], "safety_level")) {
+      argv++; argc--;
+      params.safety_level=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "content_type")) {
+      argv++; argc--;
+      params.content_type=atoi(argv[0]);
     } else if(!strcmp(argv[0], "friend")) {
-      is_friend=1;
+      params.is_friend=1;
     } else if(!strcmp(argv[0], "family")) {
-      is_family=1;
+      params.is_family=1;
     } else if(!strcmp(argv[0], "public")) {
-      is_public=1;
+      params.is_public=1;
     } else if(!strcmp(argv[0], "tags")) {
       size_t tags_len=0;
       int i;
@@ -925,6 +932,7 @@ command_upload(flickcurl* fc, int argc, char *argv[])
       *(--p)='\0';
       
       fprintf(stderr, "%s: Setting tags: '%s'\n", program, tags_string);
+      params.tags=tags_string;
       break;
     } else {
       fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
@@ -939,17 +947,16 @@ command_upload(flickcurl* fc, int argc, char *argv[])
   
   fprintf(stderr, "%s: Uploading file %s\n", program, file);
   
-  status=flickcurl_photos_upload(fc, file, title, description, tags_string,
-                                 is_public, is_friend, is_family);
+  status=flickcurl_photos_upload_params(fc, &params);
   if(status) {
     print_upload_status(status, "Photo upload");
 
-    flickcurl_upload_status_free(status);
+    flickcurl_free_upload_status(status);
   }
 
   tidy:
-  if(tags_string)
-    free(tags_string);
+  if(params.tags)
+    free((char*)params.tags);
   
   return (status == NULL);
 }
@@ -977,12 +984,94 @@ command_replace(flickcurl* fc, int argc, char *argv[])
   if(status) {
     print_upload_status(status, "Photo replace");
 
-    flickcurl_upload_status_free(status);
+    flickcurl_free_upload_status(status);
   }
   
   tidy:
   
   return (status == NULL);
+}
+
+
+static int
+command_photos_setContentType(flickcurl* fc, int argc, char *argv[])
+{
+  const char* photo_id=argv[1];
+  const char* content_type_str=argv[2];
+  int content_type;
+
+  if(!strcmp(content_type_str, "photo"))
+    content_type=1;
+  else if(!strcmp(content_type_str, "screenshot"))
+    content_type=2;
+  else {
+    content_type_str="other";
+    content_type=3;
+  }
+
+  fprintf(stderr, "%s: Setting photo %s to content type %d (%s)\n",
+          program, photo_id, content_type, content_type_str);
+  
+  return flickcurl_photos_setContentType(fc, photo_id, content_type);
+}
+
+
+static int
+command_photos_setDates(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  int date_posted= -1;
+  int date_taken= -1;
+  int date_taken_granularity= -1;
+
+  /* FIXME - use parsedate() */
+  date_posted=atoi(argv[2]);
+  date_taken=atoi(argv[3]);
+  date_taken_granularity=atoi(argv[4]);
+  
+  return flickcurl_photos_setDates(fc, photo_id, date_posted, date_taken, date_taken_granularity);
+}
+
+
+static int
+command_photos_setMeta(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  const char* title=argv[2];
+  const char* description=argv[3];
+  
+  return flickcurl_photos_setMeta(fc, photo_id, title, description);
+}
+
+
+static int
+command_photos_setPerms(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  int is_public=atoi(argv[2]);
+  int is_friend=atoi(argv[3]);
+  int is_family=atoi(argv[4]);
+  int perm_comment=atoi(argv[5]);
+  int perm_addmeta=atoi(argv[6]);
+
+  /* FIXME */
+
+  return flickcurl_photos_setPerms(fc, photo_id, is_public, is_friend, 
+                                   is_family, perm_comment, perm_addmeta);
+}
+
+
+static int
+command_photos_setSafetyLevel(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  int safety_level=atoi(argv[2]);
+  int hidden=atoi(argv[3]);
+
+  if(safety_level < 1 || safety_level >3)
+    safety_level= -1;
+
+  return flickcurl_photos_setSafetyLevel(fc, photo_id, safety_level, hidden);
 }
 
 
@@ -1039,8 +1128,23 @@ static struct {
    "", "Get list of available photo licenses", 
    command_photos_licenses_getInfo,  0, 0},
   {"photos.removeTag",
-   "TAG-ID", "Remove a tag TAG-ID from a photo.",
-   command_photos_removeTag, 1, 1},
+   "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
+   command_photos_removeTag, 2, 2},
+  {"photos.setContentType",
+   "PHOTO-ID TYPE", "Set photo TYPE to one of 'photo', 'screenshot' or 'other'",
+   command_photos_setContentType, 2, 2},
+  {"photos.setDates",
+   "PHOTO-ID POSTED TAKEN GRANULARITY", "Set a photo POSTED date, TAKEN date with GRANULARITY",
+   command_photos_setDates, 4, 4},
+  {"photos.setMeta",
+   "PHOTO-ID TITLE DESCRIPTION", "Set a photo TITLE and DESCRIPTION",
+   command_photos_setMeta, 3, 3},
+  {"photos.setPerms",
+   "PHOTO-ID IS-PUBLIC IS-FRIEND IS-FAMILY PERM-COMMENT PERM-ADDMETA", "Set a photo viewing and commenting permissions",
+   command_photos_setPerms, 6, 6},
+  {"photos.setSafetyLevel",
+   "PHOTO-ID SAFETY-LEVEL HIDDEN", "Set a photo's SAFETY-LEVEL and HIDDEN flag",
+   command_photos_setSafetyLevel, 3, 3},
   {"photos.setTags",
    "PHOTO-ID TAGS", "Set the tags for a PHOTO-ID to TAGS.",
    command_photos_setTags, 2, 2},
