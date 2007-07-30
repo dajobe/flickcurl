@@ -152,223 +152,223 @@ static struct {
   flickcurl_field_value_type type;
 } photo_fields_table[PHOTO_FIELD_LAST + 3]={
   {
-    (const xmlChar*)"/rsp/photo/@id",
+    (const xmlChar*)"./@id",
     PHOTO_FIELD_none,
     VALUE_TYPE_PHOTO_ID,
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/urls/url[@type=\"photopage\"]",
+    (const xmlChar*)"./urls/url[@type=\"photopage\"]",
     PHOTO_FIELD_none,
     VALUE_TYPE_PHOTO_URI
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@dateuploaded",
+    (const xmlChar*)"./@dateuploaded",
     PHOTO_FIELD_dateuploaded,
     VALUE_TYPE_UNIXTIME
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@farm",
+    (const xmlChar*)"./@farm",
     PHOTO_FIELD_farm,
     VALUE_TYPE_INTEGER
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@isfavorite",
+    (const xmlChar*)"./@isfavorite",
     PHOTO_FIELD_isfavorite,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@license",
+    (const xmlChar*)"./@license",
     PHOTO_FIELD_license,
     VALUE_TYPE_INTEGER
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@originalformat",
+    (const xmlChar*)"./@originalformat",
     PHOTO_FIELD_originalformat,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@rotation",
+    (const xmlChar*)"./@rotation",
     PHOTO_FIELD_rotation,
     VALUE_TYPE_INTEGER
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@server",
+    (const xmlChar*)"./@server",
     PHOTO_FIELD_server,
     VALUE_TYPE_INTEGER
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/dates/@lastupdate",
+    (const xmlChar*)"./dates/@lastupdate",
     PHOTO_FIELD_dates_lastupdate,
     VALUE_TYPE_UNIXTIME
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/dates/@posted",
+    (const xmlChar*)"./dates/@posted",
     PHOTO_FIELD_dates_posted,
     VALUE_TYPE_UNIXTIME
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/dates/@taken",
+    (const xmlChar*)"./dates/@taken",
     PHOTO_FIELD_dates_taken,
     VALUE_TYPE_DATETIME
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/dates/@takengranularity",
+    (const xmlChar*)"./dates/@takengranularity",
     PHOTO_FIELD_dates_takengranularity,
     VALUE_TYPE_INTEGER
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/description",
+    (const xmlChar*)"./description",
     PHOTO_FIELD_description,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/editability/@canaddmeta",
+    (const xmlChar*)"./editability/@canaddmeta",
     PHOTO_FIELD_editability_canaddmeta,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/editability/@cancomment",
+    (const xmlChar*)"./editability/@cancomment",
     PHOTO_FIELD_editability_cancomment,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/geoperms/@iscontact",
+    (const xmlChar*)"./geoperms/@iscontact",
     PHOTO_FIELD_geoperms_iscontact,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/geoperms/@isfamily",
+    (const xmlChar*)"./geoperms/@isfamily",
     PHOTO_FIELD_geoperms_isfamily,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/geoperms/@isfriend",
+    (const xmlChar*)"./geoperms/@isfriend",
     PHOTO_FIELD_geoperms_isfriend,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/geoperms/@ispublic",
+    (const xmlChar*)"./geoperms/@ispublic",
     PHOTO_FIELD_geoperms_ispublic,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/location/@accuracy",
+    (const xmlChar*)"./location/@accuracy",
     PHOTO_FIELD_location_accuracy,
     VALUE_TYPE_INTEGER
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/location/@latitude",
+    (const xmlChar*)"./location/@latitude",
     PHOTO_FIELD_location_latitude,
     VALUE_TYPE_FLOAT
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/location/@longitude",
+    (const xmlChar*)"./location/@longitude",
     PHOTO_FIELD_location_longitude,
     VALUE_TYPE_FLOAT
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/location/neighborhood",
+    (const xmlChar*)"./location/neighborhood",
     PHOTO_FIELD_location_neighborhood,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/location/locality",
+    (const xmlChar*)"./location/locality",
     PHOTO_FIELD_location_locality,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/location/region",
+    (const xmlChar*)"./location/region",
     PHOTO_FIELD_location_region,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/location/country",
+    (const xmlChar*)"./location/country",
     PHOTO_FIELD_location_country,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/owner/@location",
+    (const xmlChar*)"./owner/@location",
     PHOTO_FIELD_owner_location,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/owner/@nsid",
+    (const xmlChar*)"./owner/@nsid",
     PHOTO_FIELD_owner_nsid,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/owner/@realname",
+    (const xmlChar*)"./owner/@realname",
     PHOTO_FIELD_owner_realname,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/owner/@username",
+    (const xmlChar*)"./owner/@username",
     PHOTO_FIELD_owner_username,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/title",
+    (const xmlChar*)"./title",
     PHOTO_FIELD_title,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/visibility/@isfamily",
+    (const xmlChar*)"./visibility/@isfamily",
     PHOTO_FIELD_visibility_isfamily,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/visibility/@isfriend",
+    (const xmlChar*)"./visibility/@isfriend",
     PHOTO_FIELD_visibility_isfriend,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/visibility/@ispublic",
+    (const xmlChar*)"./visibility/@ispublic",
     PHOTO_FIELD_visibility_ispublic,
     VALUE_TYPE_BOOLEAN
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@secret",
+    (const xmlChar*)"./@secret",
     PHOTO_FIELD_secret,
     VALUE_TYPE_STRING
   }
   ,
   {
-    (const xmlChar*)"/rsp/photo/@originalsecret",
+    (const xmlChar*)"./@originalsecret",
     PHOTO_FIELD_originalsecret,
     VALUE_TYPE_STRING
   }
@@ -381,105 +381,170 @@ static struct {
 };
 
 
-flickcurl_photo*
-flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx)
+flickcurl_photo**
+flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                       const xmlChar* xpathExpr, int* photo_count_p)
 {
-  int expri;
-  flickcurl_photo* photo=NULL;
+  flickcurl_photo** photos=NULL;
+  int nodes_count;
+  int photo_count;
+  xmlXPathObjectPtr xpathObj=NULL;
+  xmlNodeSetPtr nodes;
+  xmlChar full_xpath[512];
+  size_t xpathExpr_len;
+  int i;
   
-  photo=(flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
+  xpathExpr_len=strlen((const char*)xpathExpr);
+  strncpy((char*)full_xpath, (const char*)xpathExpr, xpathExpr_len+1);
   
-  for(expri=0; photo_fields_table[expri].xpath; expri++) {
-    char *string_value=flickcurl_xpath_eval(fc, xpathCtx, 
-                                            photo_fields_table[expri].xpath);
-    flickcurl_field_value_type datatype=photo_fields_table[expri].type;
-    int int_value= -1;
-    flickcurl_photo_field_type field=photo_fields_table[expri].field;
-    time_t unix_time;
-    
-    if(!string_value) {
-      photo->fields[field].string = NULL;
-      photo->fields[field].integer= -1;
-      photo->fields[field].type   = VALUE_TYPE_NONE;
-      continue;
-    }
-
-    switch(datatype) {
-      case VALUE_TYPE_PHOTO_ID:
-        photo->id=string_value;
-        string_value=NULL;
-        datatype=VALUE_TYPE_NONE;
-        break;
-
-      case VALUE_TYPE_PHOTO_URI:
-        photo->uri=string_value;
-        string_value=NULL;
-        datatype=VALUE_TYPE_NONE;
-        break;
-
-      case VALUE_TYPE_UNIXTIME:
-      case VALUE_TYPE_DATETIME:
-      
-        if(datatype == VALUE_TYPE_UNIXTIME)
-          unix_time=atoi(string_value);
-        else
-          unix_time=curl_getdate((const char*)string_value, NULL);
-        
-        if(unix_time >= 0) {
-          char* new_value=flickcurl_unixtime_to_isotime(unix_time);
-#if FLICKCURL_DEBUG > 1
-          fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
-                  value, (long)unix_time, new_value);
-#endif
-          free(string_value);
-          string_value= new_value;
-          int_value= unix_time;
-          datatype=VALUE_TYPE_DATETIME;
-        } else
-          /* failed to convert, make it a string */
-          datatype=VALUE_TYPE_STRING;
-        break;
-        
-      case VALUE_TYPE_INTEGER:
-      case VALUE_TYPE_BOOLEAN:
-        int_value=atoi(string_value);
-        break;
-        
-      case VALUE_TYPE_NONE:
-      case VALUE_TYPE_STRING:
-      case VALUE_TYPE_FLOAT:
-      case VALUE_TYPE_URI:
-        break;
-
-      case VALUE_TYPE_PERSON_ID:
-        abort();
-    }
-
-    photo->fields[field].string = string_value;
-    photo->fields[field].integer= int_value;
-    photo->fields[field].type   = datatype;
-
-#if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "field %d with %s value: '%s' / %d\n",
-            field, flickcurl_get_field_value_type_label(datatype), 
-            string_value, int_value);
-#endif
-      
-    if(fc->failed)
-      goto tidy;
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed=1;
+    goto tidy;
   }
+  
+  nodes=xpathObj->nodesetval;
+  /* This is a max size - it can include nodes that are CDATA */
+  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  photos=(flickcurl_photo**)calloc(sizeof(flickcurl_photo*), nodes_count+1);
 
+  for(i=0, photo_count=0; i < nodes_count; i++) {
+    xmlNodePtr node=nodes->nodeTab[i];
+    flickcurl_photo* photo;
+    int expri;
+    xmlXPathContextPtr xpathNodeCtx=NULL;
+    
+    if(node->type != XML_ELEMENT_NODE) {
+      flickcurl_error(fc, "Got unexpected node type %d", node->type);
+      fc->failed=1;
+      break;
+    }
+    
+    photo=(flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
 
-  photo->tags=flickcurl_build_tags(fc, photo,
-                                   xpathCtx, 
-                                   (xmlChar*)"/rsp/photo/tags/tag", 
-                                   &photo->tags_count);
+    /* set up a new XPath context relative to the current node */
+    xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
+    xpathNodeCtx->node = node;
+    
+    for(expri=0; photo_fields_table[expri].xpath; expri++) {
+      char *string_value;
+      flickcurl_field_value_type datatype=photo_fields_table[expri].type;
+      int int_value= -1;
+      flickcurl_photo_field_type field=photo_fields_table[expri].field;
+      time_t unix_time;
+
+      string_value=flickcurl_xpath_eval(fc, xpathNodeCtx,
+                                        photo_fields_table[expri].xpath);
+
+      if(!string_value) {
+        photo->fields[field].string = NULL;
+        photo->fields[field].integer= -1;
+        photo->fields[field].type   = VALUE_TYPE_NONE;
+        continue;
+      }
+
+      switch(datatype) {
+        case VALUE_TYPE_PHOTO_ID:
+          photo->id=string_value;
+          string_value=NULL;
+          datatype=VALUE_TYPE_NONE;
+          break;
+
+        case VALUE_TYPE_PHOTO_URI:
+          photo->uri=string_value;
+          string_value=NULL;
+          datatype=VALUE_TYPE_NONE;
+          break;
+
+        case VALUE_TYPE_UNIXTIME:
+        case VALUE_TYPE_DATETIME:
+
+          if(datatype == VALUE_TYPE_UNIXTIME)
+            unix_time=atoi(string_value);
+          else
+            unix_time=curl_getdate((const char*)string_value, NULL);
+
+          if(unix_time >= 0) {
+            char* new_value=flickcurl_unixtime_to_isotime(unix_time);
+  #if FLICKCURL_DEBUG > 1
+            fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
+                    value, (long)unix_time, new_value);
+  #endif
+            free(string_value);
+            string_value= new_value;
+            int_value= unix_time;
+            datatype=VALUE_TYPE_DATETIME;
+          } else
+            /* failed to convert, make it a string */
+            datatype=VALUE_TYPE_STRING;
+          break;
+
+        case VALUE_TYPE_INTEGER:
+        case VALUE_TYPE_BOOLEAN:
+          int_value=atoi(string_value);
+          break;
+
+        case VALUE_TYPE_NONE:
+        case VALUE_TYPE_STRING:
+        case VALUE_TYPE_FLOAT:
+        case VALUE_TYPE_URI:
+          break;
+
+        case VALUE_TYPE_PERSON_ID:
+          abort();
+      }
+
+      photo->fields[field].string = string_value;
+      photo->fields[field].integer= int_value;
+      photo->fields[field].type   = datatype;
+
+  #if FLICKCURL_DEBUG > 1
+      fprintf(stderr, "field %d with %s value: '%s' / %d\n",
+              field, flickcurl_get_field_value_type_label(datatype), 
+              string_value, int_value);
+  #endif
+
+      if(fc->failed)
+        goto tidy;
+    } /* end for */
+
+    photo->tags=flickcurl_build_tags(fc, photo, xpathNodeCtx, 
+                                     (const xmlChar*)"./tags/tag",
+                                     &photo->tags_count);
+
+    if(xpathNodeCtx)
+      xmlXPathFreeContext(xpathNodeCtx);
+
+    photos[photo_count++]=photo;
+  } /* for photos */
+  
+  if(photo_count_p)
+    *photo_count_p=photo_count;
 
   tidy:
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
   if(fc->failed)
-    photo=NULL;
+    photos=NULL;
 
-  return photo;
+  return photos;
 }
 
 
+flickcurl_photo*
+flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx)
+{
+  flickcurl_photo** photos;
+  flickcurl_photo* result=NULL;
+
+  photos=flickcurl_build_photos(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/photo", NULL);
+  if(photos) {
+    result=photos[0];
+    free(photos);
+  }
+  
+  return result;
+}
