@@ -31,6 +31,20 @@ extern "C" {
 #include <libxml/tree.h>
 
 
+/* Use gcc 3.1+ feature to allow marking of deprecated API calls.
+ * This gives a warning during compiling.
+ */
+#if ( __GNUC__ == 3 && __GNUC_MINOR__ > 0 ) || __GNUC__ > 3
+#ifdef __APPLE_CC__
+/* OSX gcc cpp-precomp is broken */
+#define FLICKCURL_DEPRECATED
+#else
+#define FLICKCURL_DEPRECATED __attribute__((deprecated))
+#endif
+#else
+#define FLICKCURL_DEPRECATED
+#endif
+
 /*
  * Field data types
  */
@@ -311,6 +325,33 @@ typedef struct {
 
 
 /**
+ * flickcurl_upload_params:
+ * @photo_file: photo filename
+ * @title: title or NULL
+ * @description: description of photo (HTML) (or NULL)
+ * @tags: space-separated list of tags (or NULL)
+ * @is_public: is public photo boolean (non-0 true)
+ * @is_friend: is friend photo boolean (non-0 true)
+ * @is_family: is family photo boolean (non-0 true)
+ * @safety_level: 1=safe, 2=moderate, 3=restricted
+ * @content_type: 1=photo, 2=screenshot, 3=other/artwork
+ *
+ * Photo upload parameters
+ */
+typedef struct {
+  const char* photo_file;
+  const char *title;
+  const char *description;
+  const char *tags;  
+  int is_public;
+  int is_friend;
+  int is_family;  
+  int safety_level;
+  int content_type;
+} flickcurl_upload_params;
+
+
+/**
  * flickcurl_upload_status:
  * @photoid: photo ID that was uploaded/replaced (upload only)
  * @secret: secret of photo uploaded (replace only)
@@ -327,6 +368,57 @@ typedef struct {
   char *ticketid;
 } flickcurl_upload_status;
 
+
+/**
+ * flickcurl_search_params:
+ * @user_id: The NSID of the user who's photo to search (or "me" or NULL).
+ * @tags: A comma-delimited list of tags (or NULL)
+ * @tag_mode: Either 'any' for an OR combination of tags, or 'all' for an AND combination. Defaults to 'any' if not specified (or NULL)
+ * @text: Free text search (or NULL)
+ * @min_upload_date: Minimum upload date as a unix timestamp (or NULL)
+ * @max_upload_date: Maximum upload date as a unix timestamp (or NULL)
+ * @min_taken_date: Minimum taken date in the form of a mysql datetime (or NULL)
+ * @max_taken_date: Maximum taken date in the form of a mysql datetime (or NULL)
+ * @license: Comma-separated list of photo licenses (or NULL)
+ * @sort: The order in which to sort returned photos. Defaults to date-posted-desc. The possible values are: date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, interestingness-asc, and relevance (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level.
+ * @bbox: A comma-delimited list of 4 values defining the Bounding Box of the area that will be searched.
+ * @accuracy: Recorded accuracy level of the location information.  Current range is 1-16 
+ * @safe_search: Safe search setting: 1 safe, 2 moderate, 3 restricted.
+ * @content_type: Content Type setting: 1 for photos only, 2 for screenshots only, 3 for 'other' only, 4 for all types. (or NULL)
+ * @machine_tags: Machine tag search syntax 
+ * @machine_tag_mode: Either 'any' for an OR combination of tags, or 'all' for an AND combination. Defaults to 'any' if not specified.
+ * @group_id: The id of a group who's pool to search.  If specified, only matching photos posted to the group's pool will be returned. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ *
+ * Search parameters for &flickcurl_photos_search()
+ */
+typedef struct {
+  const char* user_id;
+  const char* tags;
+  const char* tag_mode;
+  const char* text;
+  const char* min_upload_date;
+  const char* max_upload_date;
+  const char* min_taken_date;
+  const char* max_taken_date;
+  const char* license;
+  const char* sort;
+  const char* privacy_filter;
+  const char* bbox;
+  const char* accuracy;
+  const char* safe_search;
+  const char* content_type;
+  const char* machine_tags;
+  const char* machine_tag_mode;
+  const char* group_id;
+  const char* extras;
+  const char* per_page;
+  const char* page;
+} flickcurl_search_params;
+  
 
 /* callback handlers */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
@@ -421,6 +513,12 @@ flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* p
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
+flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
+int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);
+int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id, int date_posted, int date_taken, int date_taken_granularity);
+int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* title, const char* description);
+int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, int is_public, int is_friend, int is_family, int perm_comment, int perm_addmeta);
+int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
 
 /* flickr.photos.comments */
@@ -468,9 +566,11 @@ char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
 
 /* Upload API */
-flickcurl_upload_status* flickcurl_photos_upload(flickcurl* fc, const char* photo_file, const char *title, const char *description, const char *tags, int is_public, int is_friend, int is_family);
+FLICKCURL_DEPRECATED flickcurl_upload_status* flickcurl_photos_upload(flickcurl* fc, const char* photo_file, const char *title, const char *description, const char *tags, int is_public, int is_friend, int is_family);
+flickcurl_upload_status* flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params);
 flickcurl_upload_status* flickcurl_photos_replace(flickcurl* fc, const char* photo_file, const char *photo_id, int async);
-void flickcurl_upload_status_free(flickcurl_upload_status* status);
+void flickcurl_free_upload_status(flickcurl_upload_status* status);
+FLICKCURL_DEPRECATED void flickcurl_upload_status_free(flickcurl_upload_status* status);
 
 #ifdef __cplusplus
 }
