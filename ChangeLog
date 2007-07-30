@@ -1,4 +1,60 @@
+2007-07-29  Dave Beckett  <dave@dajobe.org>
+
+	* upload-api.c: (flickcurl_photos_upload_params): Added as
+	prefered upload API call, deprecating flickcurl_photos_upload
+	(flickcurl_free_upload_status): Added, replacing deprecated
+	flickcurl_upload_status_free.
+
+	* flickcurl.c: (command_upload): switch to new API
+	flickcurl_photos_upload_params
+	(command_photos_setContentType, command_photos_setDates,
+	command_photos_setMeta, command_photos_setPerms,
+	command_photos_setSafetyLevel): Added along with commands for the
+	photos API calls.
+
+	* photos-api.c: (flickcurl_photos_search,
+	flickcurl_photos_setContentType, flickcurl_photos_setDates,
+	flickcurl_photos_setMeta, flickcurl_photos_setPerms,
+	flickcurl_photos_setSafetyLevel): Added.
+
+	* flickcurl_internal.h: Added flickcurl_unixtime_to_sqltimestamp
+	and flickcurl_build_photos prototypes
+
+	* flickcurl.h: Added FLICKCURL_DEPRECATED macro. Added
+	flickcurl_upload_params structure for uploading and
+	flickcurl_search_params for searching. Deprecated
+	flickcurl_photos_upload for flickcurl_photos_upload_params and
+	flickcurl_upload_status_free for flickcurl_free_upload_status
+
+	* photo.c: photo_fields_table: XPaths are now relative
+	(flickcurl_build_photos): Added return a list of photos
+	(flickcurl_build_photo): Altered to wrap flickcurl_build_photos
+	and return 1 photo.
+
+	* common.c: (flickcurl_unixtime_to_sqltimestamp): Added.
+
+2007-05-06  Dave Beckett  <dave@dajobe.org>
+
+	* flickcurl.c: Title and usage with no args
+
+2007-04-22  Dave Beckett  <dave@dajobe.org>
+
+	* autogen.sh: Update autogen.sh
+
 2007-04-19  Dave Beckett  <dave@dajobe.org>
+
+	* flickrdf.c: Declare namespaces from tags if seen too.
+
+	* flickrdf.c: debug messages are gone one place to add namespaces
+
+	* flickrdf.c: license name if no url
+
+	* flickrdf.c: handle license with no url
+
+	* flickrdf.c: namespace fun
+
+	* flickrdf.c: Add type override for geo:lat, geo:long - keep the
+	values as string in RDF.
 
 	* configure.ac: Bumped version to 0.11
 	
