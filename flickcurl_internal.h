@@ -67,6 +67,9 @@ char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const 
 /* comments.c */
 flickcurl_comment** flickcurl_build_comments(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* comment_count_p);
 
+/* contacts.c */
+flickcurl_contact** flickcurl_build_contacts(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* contact_count_p);
+
 /* context.c */
 flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
 

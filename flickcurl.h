@@ -253,6 +253,29 @@ typedef struct {
 } flickcurl_license;
 
 
+/**
+ * flickcurl_contact:
+ * @nsid: NSID
+ * @username: user name
+ * @iconserver:
+ * @realname:
+ * @is_friend:
+ * @is_family:
+ * @ignored:
+ *
+ * A contact.
+ */
+typedef struct flickcurl_contact_s {
+  char *nsid;
+  char *username;
+  int iconserver;
+  char *realname;
+  int is_friend;
+  int is_family;
+  int ignored;
+} flickcurl_contact;
+
+
 /*
  * Types of photo context: relationship between photo and another item
  */
@@ -520,6 +543,12 @@ int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* ti
 int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, int is_public, int is_friend, int is_family, int perm_comment, int perm_addmeta);
 int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
+
+/* flickr.contacts */
+void flickcurl_free_contact(flickcurl_contact *contact_object);
+void flickcurl_free_contacts(flickcurl_contact **contacts_object);
+flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc, const char* filter, int page, int per_page);
+flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
 
 /* flickr.photos.comments */
 void flickcurl_free_comment(flickcurl_comment *comment_object);

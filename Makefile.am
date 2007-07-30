@@ -44,6 +44,7 @@ libflickcurl_la_SOURCES = \
 args.c \
 common.c \
 comments.c \
+contacts.c \
 context.c \
 config.c \
 md5.c \
@@ -53,6 +54,7 @@ photo.c \
 tags.c \
 vsnprintf.c \
 auth-api.c \
+contacts-api.c \
 groups-pools-api.c \
 people-api.c \
 photos-api.c \
