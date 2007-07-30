@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">46.2% (48/104)</span>
+<span class="coverage">48.1% (50/104)</span>
 </p>
 
 
@@ -69,8 +69,8 @@ or <span class="unsupported">unsupported</span>.
 <h3>contacts</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.contacts.getList.html">flickr.contacts.getList</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.contacts.getPublicList.html">flickr.contacts.getPublicList</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.contacts.getList.html">flickr.contacts.getList</a> (0.11)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.contacts.getPublicList.html">flickr.contacts.getPublicList</a> (0.11)</li>
 </ul>
 
 
@@ -275,8 +275,10 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.11</strong>: flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (6 new)
+<p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (8 new)
 <pre>
+flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc, const char* filter, int page, int per_page);
+flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
 flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
 int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);
 int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id, int date_posted, int date_taken, int date_taken_granularity);
