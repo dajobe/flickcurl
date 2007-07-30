@@ -936,6 +936,26 @@ flickcurl_unixtime_to_isotime(time_t unix_time)
 
 
 char*
+flickcurl_unixtime_to_sqltimestamp(time_t unix_time)
+{
+  struct tm* structured_time;
+#define SQL_DATETIME_FORMAT "%Y %m %d %H:%M:%S"
+#define SQL_DATETIME_LEN 19
+  static char date_buffer[SQL_DATETIME_LEN + 1];
+  size_t len;
+  char *value=NULL;
+  
+  structured_time=gmtime(&unix_time);
+  len=ISO_DATE_LEN;
+  strftime(date_buffer, len+1, SQL_DATETIME_FORMAT, structured_time);
+  
+  value=(char*)malloc(len + 1);
+  strncpy((char*)value, date_buffer, len+1);
+  return value;
+}
+
+
+char*
 flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
                      const xmlChar* xpathExpr) 
 {
