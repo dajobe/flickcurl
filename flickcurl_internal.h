@@ -56,6 +56,9 @@ void flickcurl_error(flickcurl* fc, const char *message, ...);
 /* Convert a unix timestamp into an ISO string */
 char* flickcurl_unixtime_to_isotime(time_t unix_time);
 
+/* Convert a unix timestamp into an SQL timestamp string */
+char* flickcurl_unixtime_to_sqltimestamp(time_t unix_time);
+
 /* Evaluate an XPath to get the string value */
 char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
@@ -77,6 +80,7 @@ flickcurl_method* flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpath
 flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
 
 /* photo.c */
+flickcurl_photo** flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* photo_count_p);
 flickcurl_photo* flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 
 /* tags.c  */
