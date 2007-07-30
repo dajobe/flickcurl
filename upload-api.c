@@ -42,30 +42,19 @@
 
 
 /**
- * flickcurl_photos_upload:
+ * flickcurl_photos_upload_params:
  * @fc: flickcurl context
- * @photo_file: photo filename
- * @title: title or NULL
- * @description: description of photo (HTML) (or NULL)
- * @tags: space-separated list of tags (or NULL)
- * @is_public: is public photo boolean (non-0 true)
- * @is_friend: is friend photo boolean (non-0 true)
- * @is_family: is family photo boolean (non-0 true)
  * 
- * Checks the status of one or more asynchronous photo upload tickets.
+ * Uploads a photo with safety level and content type
  *
- * Implements Uploading Photos (0.10)
+ * Implements Uploading Photos (0.11)
  * 
  * Return value: #flickcurl_upload_status or NULL on failure
  **/
 flickcurl_upload_status*
-flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
-                        const char *title,
-                        const char *description,
-                        const char *tags,
-                        int is_public, int is_friend, int is_family)
+flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
 {
-  const char* parameters[10][2];
+  const char* parameters[12][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -73,34 +62,56 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
   char is_public_s[2];
   char is_friend_s[2];
   char is_family_s[2];
+  char safety_level_s[2];
+  char content_type_s[2];
   
-  if(!photo_file)
+  if(!params->photo_file)
     return NULL;
 
-  if(access((const char*)photo_file, R_OK)) {
+  if(access((const char*)params->photo_file, R_OK)) {
     flickcurl_error(fc, "Photo file %s cannot be read: %s",
-                    photo_file, strerror(errno));
+                    params->photo_file, strerror(errno));
     return NULL;
   }
 
-  is_public_s[0]=is_public ? '1' : '0';
+  is_public_s[0]=params->is_public ? '1' : '0';
   is_public_s[1]='\0';
-  is_friend_s[0]=is_friend ? '1' : '0';
+  is_friend_s[0]=params->is_friend ? '1' : '0';
   is_friend_s[1]='\0';
-  is_family_s[0]=is_family ? '1' : '0';
+  is_family_s[0]=params->is_family ? '1' : '0';
   is_family_s[1]='\0';
 
-  if(title) {
+  if(params->safety_level >= 1 && params->safety_level <= 3) {
+    safety_level_s[0]='0' + params->safety_level;
+    safety_level_s[1]='\0';
+  } else
+    params->safety_level= -1;
+  
+  if(params->content_type >= 1 && params->content_type <= 3) {
+    content_type_s[0]='0' + params->content_type;
+    content_type_s[1]='\0';
+  } else
+    params->content_type= -1;
+  
+  if(params->title) {
     parameters[count][0]  = "title";
-    parameters[count++][1]= title;
+    parameters[count++][1]= params->title;
   }
-  if(description) {
+  if(params->description) {
     parameters[count][0]  = "description";
-    parameters[count++][1]= description;
+    parameters[count++][1]= params->description;
   }
-  if(tags) {
+  if(params->tags) {
     parameters[count][0]  = "tags";
-    parameters[count++][1]= tags;
+    parameters[count++][1]= params->tags;
+  }
+  if(params->safety_level >= 0) {
+    parameters[count][0]  = "safety_level";
+    parameters[count++][1]= safety_level_s;
+  }
+  if(params->content_type >= 0) {
+    parameters[count][0]  = "content_type";
+    parameters[count++][1]= content_type_s;
   }
   parameters[count][0]  = "is_public";
   parameters[count++][1]= is_public_s;
@@ -114,7 +125,7 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
 
   if(flickcurl_prepare_upload(fc,
                             "http://api.flickr.com/services/upload/",
-                            "photo", photo_file,
+                            "photo", params->photo_file,
                             parameters, count))
     goto tidy;
 
@@ -145,6 +156,50 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
   return status;
 }
 
+
+/**
+ * flickcurl_photos_upload:
+ * @fc: flickcurl context
+ * @photo_file: photo filename
+ * @title: title or NULL
+ * @description: description of photo (HTML) (or NULL)
+ * @tags: space-separated list of tags (or NULL)
+ * @is_public: is public photo boolean (non-0 true)
+ * @is_friend: is friend photo boolean (non-0 true)
+ * @is_family: is family photo boolean (non-0 true)
+ * 
+ * Uploads a photo
+ *
+ * Implements Uploading Photos (0.10)
+ * 
+ * See flickcurl_photos_upload() to set additional upload
+ * parameters such as safety level and content type.
+ *
+ * Return value: #flickcurl_upload_status or NULL on failure
+ **/
+flickcurl_upload_status*
+flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
+                        const char *title,
+                        const char *description,
+                        const char *tags,
+                        int is_public, int is_friend, int is_family)
+{
+  flickcurl_upload_params params;
+
+  memset(&params, '\0', sizeof(flickcurl_upload_params));
+
+  params.photo_file=photo_file;
+  params.title=title;
+  params.description=description;
+  params.tags=tags;  
+  params.is_public=is_public;
+  params.is_friend=is_friend;
+  params.is_family=is_family;  
+  params.safety_level= -1;
+  params.content_type= -1;
+  
+  return flickcurl_photos_upload_params(fc, &params);
+}
 
 
 /**
@@ -224,8 +279,14 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
 }
 
 
+/**
+ * flickcurl_free_upload_status:
+ * @status: status object
+ * 
+ * Destructor - free a #flickcurl_upload_status
+ **/
 void
-flickcurl_upload_status_free(flickcurl_upload_status* status)
+flickcurl_free_upload_status(flickcurl_upload_status* status)
 {
   if(status->photoid)
     free(status->photoid);
@@ -235,4 +296,10 @@ flickcurl_upload_status_free(flickcurl_upload_status* status)
     free(status->originalsecret);
   if(status->ticketid)
     free(status->ticketid);
+}
+
+void
+flickcurl_upload_status_free(flickcurl_upload_status* status)
+{
+  flickcurl_free_upload_status(status);
 }
