@@ -553,6 +553,8 @@ flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx)
 void
 flickcurl_free_photos(flickcurl_photo** photos)
 {
+  int i;
+  
   for(i=0; photos[i]; i++)
     flickcurl_free_photo(photos[i]);
   free(photos);
