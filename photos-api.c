@@ -293,9 +293,60 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
  */
 
 
-/*
- * flickr.photos.getPerms
- */
+/**
+ * flickcurl_photos_getPerms:
+ * @fc: flickcurl context
+ * @photo_id: The id of the photo to get permissions for.
+ * 
+ * Get permissions for a photo.
+ *
+ * Implements flickr.photos.getPerms (0.11)
+ * 
+ * Return value: permissions or NULL on failure
+ **/
+flickcurl_perms*
+flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
+{
+  const char* parameters[8][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_perms* perms=NULL;
+  
+  if(!photo_id)
+    return NULL;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getPerms", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  perms=flickcurl_build_perms(fc, xpathCtx, (const xmlChar*)"/rsp/perms");
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    perms=NULL;
+
+  return perms;
+}
 
 
 /*
@@ -741,11 +792,7 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
  * flickcurl_photos_setPerms:
  * @fc: flickcurl context
  * @photo_id: The id of the photo to set permissions for.
- * @is_public: non-0 to set the photo to public else private
- * @is_friend: non-0 to make the photo visible to friends when private
- * @is_family: non-0 to make the photo visible to family when private
- * @perm_comment: who can add comments to the photo and it's notes. one of: 0 nobody,  1 friends & family, 2 contacts, 3 everybody
- * @perm_addmeta: who can add notes and tags to the photo. one of: 0 nobody / just the owner, 1 friends & family, 2 contacts, 3 everybody
+ * @params: The #flickcurl_perms photo permissions
  * 
  * Set permissions for a photo.
  *
@@ -755,9 +802,7 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
  **/
 int
 flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, 
-                          int is_public, int is_friend,
-                          int is_family, int perm_comment,
-                          int perm_addmeta)
+                          flickcurl_perms* perms)
 {
   const char* parameters[13][2];
   int count=0;
@@ -770,32 +815,33 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
   char perm_comment_str[2];
   char perm_addmeta_str[2];
   
-  if(!photo_id || !is_public || !is_friend || !is_family || !perm_comment ||
-     !perm_addmeta)
+  if(!photo_id || !perms ||
+     !perms->is_public || !perms->is_friend || !perms->is_family ||
+     !perms->perm_comment || !perms->perm_addmeta)
     return 1;
 
-  if(perm_comment <0 || perm_comment >3)
+  if(perms->perm_comment <0 || perms->perm_comment >3)
     return 1;
 
-  if(perm_addmeta <0 || perm_addmeta >3)
+  if(perms->perm_addmeta <0 || perms->perm_addmeta >3)
     return 1;
 
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
   parameters[count][0]  = "is_public";
-  sprintf(is_public_str, "%d", (is_public ? 1 : 0));
+  sprintf(is_public_str, "%d", (perms->is_public ? 1 : 0));
   parameters[count++][1]= is_public_str;
   parameters[count][0]  = "is_friend";
-  sprintf(is_friend_str, "%d", (is_friend ? 1 : 0));
+  sprintf(is_friend_str, "%d", (perms->is_friend ? 1 : 0));
   parameters[count++][1]= is_friend_str;
   parameters[count][0]  = "is_family";
-  sprintf(is_family_str, "%d", (is_family ? 1 : 0));
+  sprintf(is_family_str, "%d", (perms->is_family ? 1 : 0));
   parameters[count++][1]= is_family_str;
   parameters[count][0]  = "perm_comment";
-  sprintf(perm_comment_str, "%d", perm_comment);
+  sprintf(perm_comment_str, "%d", perms->perm_comment);
   parameters[count++][1]= perm_comment_str;
   parameters[count][0]  = "perm_addmeta";
-  sprintf(perm_addmeta_str, "%d", perm_addmeta);
+  sprintf(perm_addmeta_str, "%d", perms->perm_addmeta);
   parameters[count++][1]= perm_addmeta_str;
 
   parameters[count][0]  = NULL;
