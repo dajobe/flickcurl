@@ -440,27 +440,27 @@ typedef struct {
  * Search parameters for &flickcurl_photos_search()
  */
 typedef struct {
-  const char* user_id;
-  const char* tags;
-  const char* tag_mode;
-  const char* text;
-  const char* min_upload_date;
-  const char* max_upload_date;
-  const char* min_taken_date;
-  const char* max_taken_date;
-  const char* license;
-  const char* sort;
-  const char* privacy_filter;
-  const char* bbox;
-  const char* accuracy;
-  const char* safe_search;
-  const char* content_type;
-  const char* machine_tags;
-  const char* machine_tag_mode;
-  const char* group_id;
-  const char* extras;
-  const char* per_page;
-  const char* page;
+  char* user_id;
+  char* tags;
+  char* tag_mode;
+  char* text;
+  int min_upload_date;
+  int max_upload_date;
+  char* min_taken_date;
+  char* max_taken_date;
+  char* license;
+  char* sort;
+  char* privacy_filter;
+  char* bbox;
+  int accuracy;
+  int safe_search;
+  int content_type;
+  char* machine_tags;
+  char* machine_tag_mode;
+  char* group_id;
+  char* extras;
+  int per_page;
+  int page;
 } flickcurl_search_params;
   
 
