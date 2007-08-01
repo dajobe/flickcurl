@@ -1053,11 +1053,16 @@ command_photos_setPerms(flickcurl* fc, int argc, char *argv[])
   int is_family=atoi(argv[4]);
   int perm_comment=atoi(argv[5]);
   int perm_addmeta=atoi(argv[6]);
+  flickcurl_perms perms;
 
-  /* FIXME */
+  memset(&perms, '\0', sizeof(flickcurl_perms));
+  perms.is_public=is_public;
+  perms.is_friend=is_friend;
+  perms.is_family=is_family;
+  perms.perm_comment=perm_comment;
+  perms.perm_addmeta=perm_addmeta;
 
-  return flickcurl_photos_setPerms(fc, photo_id, is_public, is_friend, 
-                                   is_family, perm_comment, perm_addmeta);
+  return flickcurl_photos_setPerms(fc, photo_id, &perms);
 }
 
 
@@ -1073,6 +1078,40 @@ command_photos_setSafetyLevel(flickcurl* fc, int argc, char *argv[])
 
   return flickcurl_photos_setSafetyLevel(fc, photo_id, safety_level, hidden);
 }
+
+
+static void
+command_print_perms(flickcurl_perms* perms, const char* label,
+                    const char* value)
+{
+  if(label)
+    fprintf(stderr, "%s: %s %s perms\n", program, label,
+            (value ? value : "(none)"));
+#define YESNO(x) ((x) ? "yes" : "no")
+  fprintf(stderr,
+          "public: %s friend: %s family: %s perm comment: %d perm add metadata: %d\n",
+          YESNO(perms->is_public), YESNO(perms->is_friend),
+          YESNO(perms->is_family), 
+          perms->perm_comment, perms->perm_addmeta);
+}
+
+
+static int
+command_photos_getPerms(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  flickcurl_perms* perms;
+
+  perms=flickcurl_photos_getPerms(fc, photo_id);
+  if(!perms)
+    return 1;
+
+  command_print_perms(perms, "Photo ID", photo_id);
+
+  flickcurl_free_perms(perms);
+  return 0;
+}
+
 
 
 
@@ -1127,6 +1166,9 @@ static struct {
   {"photos.licenses.getInfo",
    "", "Get list of available photo licenses", 
    command_photos_licenses_getInfo,  0, 0},
+  {"photos.getPerms",
+   "PHOTO-ID", "Get a photo viewing and commenting permissions",
+   command_photos_getPerms, 1, 1},
   {"photos.removeTag",
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
