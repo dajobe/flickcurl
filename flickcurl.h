@@ -512,10 +512,12 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 /* other flickcurl class destructors */
 void flickcurl_free_tag(flickcurl_tag *t);
 void flickcurl_free_photo(flickcurl_photo *photo);
+void flickcurl_free_photos(flickcurl_photo** photos);
 /* void flickcurl_free_license(flickcurl_person *license); */
 void flickcurl_free_person(flickcurl_person *person);
 void flickcurl_free_context(flickcurl_context *context);
 void flickcurl_free_contexts(flickcurl_context** contexts);
+void flickcurl_free_perms(flickcurl_perms *perms);
 
 
 /* utility methods */
@@ -554,6 +556,7 @@ flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags);
 int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
+flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
@@ -565,7 +568,6 @@ int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* ti
 int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
 int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
-void flickcurl_free_perms(flickcurl_perms *perms);
 
 /* flickr.contacts */
 void flickcurl_free_contact(flickcurl_contact *contact_object);
