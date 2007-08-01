@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">48.1% (50/104)</span>
+<span class="coverage">49.0% (51/104)</span>
 </p>
 
 
@@ -137,7 +137,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getFavorites.html">flickr.photos.getFavorites</a></li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getInfo.html">flickr.photos.getInfo</a> (0.5)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getNotInSet.html">flickr.photos.getNotInSet</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getPerms.html">flickr.photos.getPerms</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getPerms.html">flickr.photos.getPerms</a> (0.11)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getRecent.html">flickr.photos.getRecent</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getSizes.html">flickr.photos.getSizes</a></li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getUntagged.html">flickr.photos.getUntagged</a></li>
@@ -275,15 +275,16 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (8 new)
+<p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.getPerms, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (9 new)
 <pre>
 flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc, const char* filter, int page, int per_page);
 flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
+flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
 flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
 int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);
 int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id, int date_posted, int date_taken, int date_taken_granularity);
 int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* title, const char* description);
-int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, int is_public, int is_friend, int is_family, int perm_comment, int perm_addmeta);
+int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
 int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
 </pre>
 </p>
