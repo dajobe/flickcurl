@@ -57,6 +57,7 @@ auth-api.c \
 contacts-api.c \
 groups-pools-api.c \
 people-api.c \
+perms.c \
 photos-api.c \
 photos-comments-api.c \
 photos-licenses-api.c \
