@@ -1081,18 +1081,17 @@ command_photos_setSafetyLevel(flickcurl* fc, int argc, char *argv[])
 
 
 static void
-command_print_perms(flickcurl_perms* perms, const char* label,
-                    const char* value)
+command_print_perms(flickcurl_perms* perms)
 {
-  if(label)
-    fprintf(stderr, "%s: %s %s perms\n", program, label,
-            (value ? value : "(none)"));
+  static const char* perms_labels[4]={"nobody", "friends and family", "contacts", "everybody" };
+
 #define YESNO(x) ((x) ? "yes" : "no")
+#define PERM_LABEL(x) (((x) >=0 && (x) <= 3) ? perms_labels[(x)] : "?")
   fprintf(stderr,
-          "public: %s friend: %s family: %s perm comment: %d perm add metadata: %d\n",
+          "view perms: public: %s  friend: %s  family: %s\nadd comment: %s\nadd metadata: %s\n",
           YESNO(perms->is_public), YESNO(perms->is_friend),
           YESNO(perms->is_family), 
-          perms->perm_comment, perms->perm_addmeta);
+          PERM_LABEL(perms->perm_comment), PERM_LABEL(perms->perm_addmeta));
 }
 
 
@@ -1106,7 +1105,8 @@ command_photos_getPerms(flickcurl* fc, int argc, char *argv[])
   if(!perms)
     return 1;
 
-  command_print_perms(perms, "Photo ID", photo_id);
+  fprintf(stderr, "%s: Photo ID %s permissions\n", program, photo_id);
+  command_print_perms(perms);
 
   flickcurl_free_perms(perms);
   return 0;
