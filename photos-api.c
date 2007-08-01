@@ -169,14 +169,14 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
 /**
  * flickcurl_photos_getContactsPhotos:
  * @fc: flickcurl context
- * @count: Number of photos to return. Defaults to 10, maximum 50. Only used if @single_photo is not passed. (or <0 for no max)
+ * @count: Number of photos to return. Defaults to 10, maximum 50. Only used if @single_photo is not passed. (or <= 0 for no count)
  * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts).
  * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
  * @include_self: Set to non-0 to include photos from the calling user.
  * @extras: A comma-delimited list of extra information to fetch for
  * each returned record. Currently supported fields are: license,
  * date_upload, date_taken, owner_name, icon_server, original_format,
- * last_update. (or NULL)
+ * last_update (or NULL for no extras)
  * 
  * Fetch a list of recent photos from the calling users' contacts.
  *
@@ -195,12 +195,14 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photo** photos=NULL;
-  char count_s[20];
   char true_s[2]="1";
 
-  sprintf(count_s, "%d", contact_count);
-  parameters[count][0]  = "count";
-  parameters[count++][1]= count_s;
+  if(contact_count > 1) {
+    char count_s[20];
+    sprintf(count_s, "%d", contact_count);
+    parameters[count][0]  = "count";
+    parameters[count++][1]= count_s;
+  }
   if(just_friends) {
     parameters[count][0]  = "just_friends";
     parameters[count++][1]= true_s;
@@ -524,6 +526,13 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photo** photos=NULL;
+  char min_upload_date_s[15];
+  char max_upload_date_s[15];
+  char accuracy_s[3];
+  char safe_search_s[2];
+  char content_type_s[2];
+  char per_page_s[4];
+  char page_s[4];
   
   if(params->user_id) {
     parameters[count][0]  = "user_id";
@@ -542,12 +551,14 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
     parameters[count++][1]= params->text;
   }
   if(params->min_upload_date) {
+    sprintf(min_upload_date_s, "%d", params->min_upload_date);
     parameters[count][0]  = "min_upload_date";
-    parameters[count++][1]= params->min_upload_date;
+    parameters[count++][1]= min_upload_date_s;
   }
   if(params->max_upload_date) {
+    sprintf(max_upload_date_s, "%d", params->max_upload_date);
     parameters[count][0]  = "max_upload_date";
-    parameters[count++][1]= params->max_upload_date;
+    parameters[count++][1]= max_upload_date_s;
   }
   if(params->min_taken_date) {
     parameters[count][0]  = "min_taken_date";
@@ -574,16 +585,25 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
     parameters[count++][1]= params->bbox;
   }
   if(params->accuracy) {
-    parameters[count][0]  = "accuracy";
-    parameters[count++][1]= params->accuracy;
+    if(params->accuracy >=0 && params->accuracy <=16) {
+      sprintf(accuracy_s, "%d", params->accuracy);
+      parameters[count][0]  = "accuracy";
+      parameters[count++][1]= accuracy_s;
+    }
   }
   if(params->safe_search) {
-    parameters[count][0]  = "safe_search";
-    parameters[count++][1]= params->safe_search;
+    if(params->safe_search >=0 && params->safe_search <=3) {
+      sprintf(safe_search_s, "%d", params->safe_search);
+      parameters[count][0]  = "safe_search";
+      parameters[count++][1]= safe_search_s;
+    }
   }
   if(params->content_type) {
-    parameters[count][0]  = "content_type";
-    parameters[count++][1]= params->content_type;
+    if(params->content_type >=0 && params->content_type <=4) {
+      sprintf(content_type_s, "%d", params->content_type);
+      parameters[count][0]  = "content_type";
+      parameters[count++][1]= content_type_s;
+    }
   }
   if(params->machine_tags) {
     parameters[count][0]  = "machine_tags";
@@ -602,12 +622,18 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
     parameters[count++][1]= params->extras;
   }
   if(params->per_page) {
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= params->per_page;
+    if(params->per_page >=0 && params->per_page <=999) {
+      sprintf(per_page_s, "%d", params->per_page);
+      parameters[count][0]  = "per_page";
+      parameters[count++][1]= per_page_s;
+    }
   }
   if(params->page) {
-    parameters[count][0]  = "page";
-    parameters[count++][1]= params->page;
+    if(params->page >=0 && params->page <=999) {
+      sprintf(page_s, "%d", params->page);
+      parameters[count][0]  = "page";
+      parameters[count++][1]= page_s;
+    }
   }
   parameters[count][0]  = NULL;
 
@@ -627,7 +653,7 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
   }
 
   photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos", NULL);
+                                (const xmlChar*)"/rsp/photos/photo", NULL);
 
   tidy:
   if(xpathCtx)
