@@ -178,6 +178,27 @@ typedef struct flickcurl_comment_s {
 
 
 /**
+ * flickcurl_perms:
+ * @is_public: non-0 to set the photo to public else private
+ * @is_friend: non-0 to make the photo visible to friends when private
+ * @is_family: non-0 to make the photo visible to family when private
+ * @perm_comment: who can add comments to the photo and it's notes. one of: 0 nobody,  1 friends & family, 2 contacts, 3 everybody
+ * @perm_addmeta: who can add notes and tags to the photo. one of: 0 nobody / just the owner, 1 friends & family, 2 contacts, 3 everybody
+ *
+ * Permissions as used by flickcurl_photos_getPerms() and 
+ * flickcurl_photos_setPerms().
+ */
+typedef struct 
+{
+  int is_public;
+  int is_friend;
+  int is_family;
+  int perm_comment;
+  int perm_addmeta;
+} flickcurl_perms;
+  
+
+/**
  * flickcurl_tag: 
  * @photo: Associated photo object if any
  * @id: tag identifier
@@ -535,14 +556,16 @@ int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
 int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
 flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
 int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);
 int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id, int date_posted, int date_taken, int date_taken_granularity);
 int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* title, const char* description);
-int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, int is_public, int is_friend, int is_family, int perm_comment, int perm_addmeta);
+int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
 int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
+void flickcurl_free_perms(flickcurl_perms *perms);
 
 /* flickr.contacts */
 void flickcurl_free_contact(flickcurl_contact *contact_object);
