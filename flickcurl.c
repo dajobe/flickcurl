@@ -237,6 +237,30 @@ command_print_tags(flickcurl_tag** tags, const char* label, const char* value)
 }
 
 
+static void
+command_print_photo(flickcurl_photo* photo)
+{
+  flickcurl_photo_field_type field;
+  
+  fprintf(stderr, "%s: Found photo with URI %s ID %s and %d tags\n",
+          program, photo->uri, photo->id, photo->tags_count);
+  
+  for(field=0; field <= PHOTO_FIELD_LAST; field++) {
+    flickcurl_field_value_type datatype=photo->fields[field].type;
+    
+    if(datatype == VALUE_TYPE_NONE)
+      continue;
+    
+    fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
+            flickcurl_get_photo_field_label(field), field,
+            flickcurl_get_field_value_type_label(datatype),
+            photo->fields[field].string, photo->fields[field].integer);
+  }
+  
+  command_print_tags(photo->tags, NULL, NULL);
+}
+
+
 static int
 command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 {
@@ -245,25 +269,7 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
   photo=flickcurl_photos_getInfo(fc, argv[1]);
 
   if(photo) {
-    flickcurl_photo_field_type field;
-    
-    fprintf(stderr, "%s: Found photo with URI %s ID %s and %d tags\n",
-            program, photo->uri, photo->id, photo->tags_count);
-
-    for(field=0; field <= PHOTO_FIELD_LAST; field++) {
-      flickcurl_field_value_type datatype=photo->fields[field].type;
-
-      if(datatype == VALUE_TYPE_NONE)
-        continue;
-      
-      fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
-              flickcurl_get_photo_field_label(field), field,
-              flickcurl_get_field_value_type_label(datatype),
-              photo->fields[field].string, photo->fields[field].integer);
-    }
-    
-    command_print_tags(photo->tags, NULL, NULL);
-
+    command_print_photo(photo);
     flickcurl_free_photo(photo);
   }
   
@@ -1112,6 +1118,174 @@ command_photos_getPerms(flickcurl* fc, int argc, char *argv[])
   return 0;
 }
 
+static int
+command_photos_getContactsPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  int contact_count=10;
+  int just_friends=0;
+  int single_photo=1;
+  int include_self=0;
+  const char* extras=NULL;
+  flickcurl_photo** photos=NULL;
+  int i;
+  
+  photos=flickcurl_photos_getContactsPhotos(fc,  contact_count, just_friends,
+                                            single_photo, include_self, extras);
+  if(!photos)
+    return 1;
+
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Contact photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
+static int
+command_photos_search(flickcurl* fc, int argc, char *argv[])
+{
+  char *tags_string=NULL;
+  int usage=0;
+  flickcurl_search_params params;
+  flickcurl_photo** photos=NULL;
+  int i;
+  
+  memset(&params, '\0', sizeof(flickcurl_search_params));
+  
+  argv++; argc--;
+  
+  for(; !usage && argc; argv++, argc--) {
+    if(!strcmp(argv[0], "user")) {
+      argv++; argc--;
+      params.user_id=argv[0];
+    } else if(!strcmp(argv[0], "tag-mode")) {
+      argv++; argc--;
+      /* "any" or "all" */
+      params.tag_mode=argv[0];
+    } else if(!strcmp(argv[0], "text")) {
+      argv++; argc--;
+      params.text=argv[0];
+    } else if(!strcmp(argv[0], "min-upload-date")) {
+      /* timestamp */
+      argv++; argc--;
+      params.min_upload_date=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "max-upload-date")) {
+      /* timestamp */
+      argv++; argc--;
+      params.max_upload_date=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "min-taken-date")) {
+      /* MYSQL datetime */
+      argv++; argc--;
+      params.min_taken_date=argv[0];
+    } else if(!strcmp(argv[0], "max-taken-date")) {
+      /* MYSQL datetime */
+      argv++; argc--;
+      params.max_taken_date=argv[0];
+    } else if(!strcmp(argv[0], "license")) {
+      argv++; argc--;
+      params.license=argv[0];
+    } else if(!strcmp(argv[0], "sort")) {
+      /* date-posted-asc, date-posted-desc (default), date-taken-asc,
+       * date-taken-desc, interestingness-desc, interestingness-asc,
+       * and relevance
+       */
+      argv++; argc--;
+      params.sort=argv[0];
+    } else if(!strcmp(argv[0], "privacy")) {
+      argv++; argc--;
+      params.privacy_filter=argv[0];
+    } else if(!strcmp(argv[0], "bbox")) {
+      /* "a,b,c,d" */
+      argv++; argc--;
+      params.bbox=argv[0];
+    } else if(!strcmp(argv[0], "accuracy")) {
+      /* int 1-16 */
+      argv++; argc--;
+      params.accuracy=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "safe-search")) {
+      /* int Safe search setting: 1 safe, 2 moderate, 3 restricted. */
+      argv++; argc--;
+      params.safe_search=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "type")) {
+      /* int Content Type setting: 1 for photos only, 2 for screenshots
+       * only, 3 for 'other' only, 4 for all types. */
+      argv++; argc--;
+      params.content_type=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "machine-tags")) {
+      argv++; argc--;
+      params.machine_tags=argv[0];
+    } else if(!strcmp(argv[0], "machine-tag-mode")) {
+      /* any (default) or all */
+      argv++; argc--;
+      params.machine_tag_mode=argv[0];
+    } else if(!strcmp(argv[0], "group-id")) {
+      argv++; argc--;
+      params.group_id=argv[0];
+    } else if(!strcmp(argv[0], "extras")) {
+      argv++; argc--;
+      params.extras=argv[0];
+    } else if(!strcmp(argv[0], "per-page")) {
+      /* int: default 100, max 500 */
+      argv++; argc--;
+      params.per_page=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "page")) {
+      /* int: default 1 */
+      argv++; argc--;
+      params.page=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "tags")) {
+      size_t tags_len=0;
+      int j;
+      char *p;
+
+      /* tags absorb all remaining parameters */
+      for(j=1; j<argc; j++)
+        tags_len+=strlen(argv[j])+1;
+      tags_string=(char*)malloc(tags_len);
+      
+      p=tags_string;
+      for(j=1; j<argc; j++) {
+        size_t tag_len=strlen(argv[j]);
+        strncpy(p, argv[j], tag_len); p+= tag_len;
+        *p++=',';
+      }
+      *(--p)='\0';
+      
+      params.tags=tags_string;
+      break;
+    } else {
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      usage=1;
+    }
+  }
+
+  if(usage) {
+    photos=NULL;
+    goto tidy;
+  }
+  
+  photos=flickcurl_photos_search(fc, &params);
+  if(!photos) {
+    fprintf(stderr, "%s: Searching failed\n", program);
+    goto tidy;
+  }
+
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Search result photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  tidy:
+  if(params.tags)
+    free((char*)params.tags);
+  
+  return (photos == NULL);
+}
 
 
 
@@ -1169,9 +1343,15 @@ static struct {
   {"photos.getPerms",
    "PHOTO-ID", "Get a photo viewing and commenting permissions",
    command_photos_getPerms, 1, 1},
+  {"photos.getContactsPhotos",
+   "PHOTO-ID", "Get a list of recent photos from the calling users' contacts",
+   command_photos_getContactsPhotos, 0, 0},
   {"photos.removeTag",
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
+  {"photos.search",
+   "[PARAMS] tags TAGS...", "Search for photos with many optional parameters\n        user USER  tag-mode any|all  text TEXT\n        (min|max)-(upload|taken)-date DATE\n        license LICENSE  privacy PRIVACY  bbox a,b,c,d\n        sort date-(posted|taken)-(asc|desc)|interestingness-(desc|asc)|relevance\n        accuracy 1-16  safe-search 1-3  type 1-4\n        machine-tags TAGS  machine-tag-mode any|all\n        group-id ID  extras EXTRAS\n        per-page PER-PAGE  page PAGE",
+   command_photos_search, 1, 0},
   {"photos.setContentType",
    "PHOTO-ID TYPE", "Set photo TYPE to one of 'photo', 'screenshot' or 'other'",
    command_photos_setContentType, 2, 2},
