@@ -150,7 +150,7 @@ static struct {
   const xmlChar* xpath;
   flickcurl_photo_field_type field;
   flickcurl_field_value_type type;
-} photo_fields_table[PHOTO_FIELD_LAST + 3]={
+} photo_fields_table[]={
   {
     (const xmlChar*)"./@id",
     PHOTO_FIELD_none,
@@ -343,6 +343,13 @@ static struct {
     VALUE_TYPE_STRING
   }
   ,
+  /* title can also appear as an attribute in a photo summary */
+  {
+    (const xmlChar*)"./@title",
+    PHOTO_FIELD_title,
+    VALUE_TYPE_STRING
+  }
+  ,
   {
     (const xmlChar*)"./visibility/@isfamily",
     PHOTO_FIELD_visibility_isfamily,
@@ -357,6 +364,25 @@ static struct {
   ,
   {
     (const xmlChar*)"./visibility/@ispublic",
+    PHOTO_FIELD_visibility_ispublic,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  /* these can also appear in an attribute in a photo summary */
+  {
+    (const xmlChar*)"./@isfamily",
+    PHOTO_FIELD_visibility_isfamily,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"./@isfriend",
+    PHOTO_FIELD_visibility_isfriend,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"./@ispublic",
     PHOTO_FIELD_visibility_ispublic,
     VALUE_TYPE_BOOLEAN
   }
