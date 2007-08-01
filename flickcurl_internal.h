@@ -79,6 +79,9 @@ extern char* MD5_string(char *string);
 /* method.c */
 flickcurl_method* flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 
+/* perms.c */
+flickcurl_perms* flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
+
 /* person.c */
 flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
 
