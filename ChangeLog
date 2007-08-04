@@ -1,5 +1,7 @@
 2007-08-02  Dave Beckett  <dave@dajobe.org>
 
+	* configure.ac: Bumped version to 0.12
+	
 	* Snapshotted flickcurl_0_11 for 0.11 release (SVN 337)
 	
 	* coverage.html: 50%!!!
