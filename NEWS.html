@@ -11,10 +11,102 @@
 <h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
 
 
-<h2 id="D2007-XX-XX">2007-XX-XX Flickcurl 0.11</h2>
+<h2 id="D2007-08-03">2007-08-03 Flickcurl 0.11</h2>
 
-<p>Not yet released.
+<p>10 new FLickr API calls supported (50% of API):</p>
+
+<ul>
+<li><strong>flickr.contacts.getList</strong>:
+<pre>
+  flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc,
+        const char* filter, int page, int per_page);
+</pre>
+<li><strong>flickr.contacts.getPublicList</strong>:
+<pre>
+  flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc,
+        const char* user_id, int page, int per_page);
+</pre>
+<li><strong>flickr.photos.getContactsPhotos</strong>:
+<pre>
+  flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc,
+        int contact_count, int just_friends, int single_photo,
+        int include_self, const char* extras);
+</pre>
+<li><strong>flickr.photos.getPerms</strong>:
+<pre>
+  flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc,
+        const char* photo_id);
+</pre>
+<li><strong>flickr.photos.search</strong>:
+<pre>
+  flickcurl_photo** flickcurl_photos_search(flickcurl* fc,
+        flickcurl_search_params* params);
+</pre>
+<li><strong>flickr.photos.setContentType</strong>:
+<pre>
+  int flickcurl_photos_setContentType(flickcurl* fc,
+        const char* photo_id, int content_type);
+</pre>
+<li><strong>flickr.photos.setDates</strong>:
+<pre>
+  int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
+        int date_posted, int date_taken, int date_taken_granularity);
+</pre>
+<li><strong>flickr.photos.setMeta</strong>:
+<pre>
+  int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
+        const char* title, const char* description);
+</pre>
+<li><strong>flickr.photos.setPerms</strong>:
+<pre>
+  int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
+        flickcurl_perms* perms);
+</pre>
+<li><strong>flickr.photos.setSafetyLevel</strong>:
+<pre>
+  int flickcurl_photos_setSafetyLevel(flickcurl* fc,
+        const char* photo_id, int safety_level, int hidden);
+</pre>
+</ul>
+
+<p><code>flickcurl</code> utility updated to add all new functions.
 </p>
+
+<p>Added <code>flickcurl_search_params</code> structure
+for <code>flickcurl_photos_search()</code>.
+</p>
+
+<p>Added <code>flickcurl_perms</code> for the 
+<code>flickcurl_photos_getPerms()</code> and 
+<code>flickcurl_photos_setPerms()</code> functions.
+</p>
+
+<p>Added <code>flickcurl_contact</code> structure for
+<code>flickcurl_contacts_getList()</code> and
+<code>flickcurl_contacts_getPublicList()</code> functions.
+</p>
+
+<p>Added <code>flickcurl_upload_params</code> structure and added new
+upload function <code>flickcurl_photos_upload_params()</code> to use
+it, deprecating <code>flickcurl_photos_upload()</code> with the long
+list of parameters.
+</p>
+
+<p>Added destructor functions to free a photos list, perms
+contacts and upload status.</p>
+<pre>
+  void flickcurl_free_photos(flickcurl_photo** photos);
+  void flickcurl_free_perms(flickcurl_perms *perms);
+  void flickcurl_free_contact(flickcurl_contact *contact_object);
+  void flickcurl_free_contacts(flickcurl_contact **contacts_object);
+  void flickcurl_free_upload_status(flickcurl_upload_status* status);
+</pre>
+
+<p>Deprecated wrongly named function
+<code>flickcurl_free_upload_status()</code>, replaced by 
+<pre>
+  void flickcurl_upload_status_free(flickcurl_upload_status* status);
+</pre>
 
 
 <h2 id="D2007-04-16">2007-04-16 Flickcurl 0.10</h2>
