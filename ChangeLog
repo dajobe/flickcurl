@@ -1,4 +1,60 @@
+2007-08-02  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_0_11 for 0.11 release (SVN 337)
+	
+	* coverage.html: 50%!!!
+
+2007-08-01  Dave Beckett  <dave@dajobe.org>
+
+	* flickcurl.c: (command_print_photo): Added.
+	(command_photos_getInfo): Use above.
+	(command_photos_getContactsPhotos): Added.
+	(command_photos_search): Added with huge list of optional fields.
+
+	* photos-api.c: (flickcurl_photos_getContactsPhotos): Fix field
+	types
+	(flickcurl_photos_search): Fix parameter types and do int/string
+	conversions and checks.
+
+	* flickcurl.h: Fix types of flickcurl_search_params fields
+
+	* photo.c: Recognise photo fields as attributes when they appear
+	in a photos summary result.
+
+2007-07-31  Dave Beckett  <dave@dajobe.org>
+
+	* flickcurl.h: Added flickcurl_free_photos prototype.
+
+	* photos-api.c: (flickcurl_photos_getContactsPhotos): Added.
+
+	* photo.c: declare var
+
+	* photo.c: (flickcurl_free_photos): Added.
+
+	* flickcurl_internal.h: Added flickcurl_build_perms
+
+	* flickcurl.c: (command_photos_getPerms) tidied
+
+	* flickcurl.c: command_photos_getPerms for flickr.photos.getPerms
+	added.
+
+	* Makefile.am: Added perms.c
+
+	* flickcurl.h: flickcurl_perms structure added Added
+	flickcurl_photos_getPerms and altered flickcurl_photos_setPerms to
+	use flickcurl_perms
+	Added flickcurl_free_perms
+
+	* photos-api.c: (flickcurl_photos_getPerms): Added, returning
+	flickcurl_perms
+	(flickcurl_photos_setPerms): Changed to use flickcurl_perms
+
+	* perms.c: flickcurl_perms functions
+
 2007-07-29  Dave Beckett  <dave@dajobe.org>
+
+	* Makefile.am, contacts-api.c, contacts.c, flickcurl.h,
+	flickcurl_internal.h: Added contacts APIs
 
 	* upload-api.c: (flickcurl_photos_upload_params): Added as
 	prefered upload API call, deprecating flickcurl_photos_upload
