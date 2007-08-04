@@ -618,16 +618,15 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
     size_t value_len;
     
     prefix=&tag->raw[0];
+
+    if(!strncmp(prefix, "xmlns:", 6))
+      continue;
+    
     for(p=prefix; *p && *p != ':'; p++)
       ;
     /* ":" seen */
     *p='\0';
 
-    if(!strcmp(p, "xmlns")) {
-      *p=':';
-      continue;
-    }
-    
     f=p+1;
     
     for(v=f; *v && *v != '='; v++)
