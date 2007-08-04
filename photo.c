@@ -454,6 +454,14 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
     xpathNodeCtx->node = node;
     
+    for(expri=0; expri <= PHOTO_FIELD_LAST; expri++) {
+      if(photo->fields[expri].string)
+        free(photo->fields[expri].string);
+      photo->fields[expri].string = NULL;
+      photo->fields[expri].integer= -1;
+      photo->fields[expri].type   = VALUE_TYPE_NONE;
+    }
+
     for(expri=0; photo_fields_table[expri].xpath; expri++) {
       char *string_value;
       flickcurl_field_value_type datatype=photo_fields_table[expri].type;
@@ -463,13 +471,8 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
       string_value=flickcurl_xpath_eval(fc, xpathNodeCtx,
                                         photo_fields_table[expri].xpath);
-
-      if(!string_value) {
-        photo->fields[field].string = NULL;
-        photo->fields[field].integer= -1;
-        photo->fields[field].type   = VALUE_TYPE_NONE;
+      if(!string_value)
         continue;
-      }
 
       switch(datatype) {
         case VALUE_TYPE_PHOTO_ID:
