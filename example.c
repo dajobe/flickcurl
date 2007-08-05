@@ -1,5 +1,10 @@
 /*
- * gcc -o example example.c `flickcurl-config --cflags` `flickcurl-config --libs`
+ * Flickcurl example code
+ *
+ * This file is in the Public Domain
+ *
+ * Compile like this:
+ *   gcc -o example example.c `flickcurl-config --cflags` `flickcurl-config --libs`
  */
 
 #include <stdio.h>
