@@ -22,10 +22,6 @@
 
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
-#include <libxslt/xslt.h>
-#include <libxslt/transform.h>
-#include <libxslt/xsltutils.h>
-
 
 #include <curl/curl.h>
 #include <curl/types.h>
