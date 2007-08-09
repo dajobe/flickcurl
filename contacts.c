@@ -3,6 +3,9 @@
  * contacts.c - Flickcurl method contact functions
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007 Vanilla I. Shu 
+ *   (flickcurl_free_contact, flickcurl_free_contacts,
+ *    flickcurl_build_contacts)
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version

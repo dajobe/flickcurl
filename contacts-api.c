@@ -3,6 +3,8 @@
  * contacts-api.c - Flickr flickr.contacts.* API calls
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007 Vanilla I. Shu <vanilla -at- fatpipi.cirx.org>
+ *   (flickcurl_contacts_getList, flickcurl_contacts_getPublicList)
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
