@@ -174,7 +174,7 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
 /**
  * flickcurl_photos_getContactsPhotos:
  * @fc: flickcurl context
- * @count: Number of photos to return. Defaults to 10, maximum 50. Only used if @single_photo is not passed. (or <= 0 for no count)
+ * @count: Number of photos to return (Default 10, maximum 50)
  * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts).
  * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
  * @include_self: Set to non-0 to include photos from the calling user.
@@ -257,9 +257,94 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
 }
 
 
-/*
- * flickr.photos.getContactsPublicPhotos
- */
+/**
+ * flickcurl_photos_getContactsPublicPhotos:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user to fetch photos for.
+ * @photo_count: Number of photos to return (Default 10, maximum 50)
+ * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts)
+ * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
+ * @include_self: Set to non-0 to include photos from the user specified by user_id.
+ * @extras: A comma-delimited list of extra information to fetch for
+ * each returned record. Currently supported fields are: license,
+ * date_upload, date_taken, owner_name, icon_server, original_format,
+ * last_update. (or NULL)
+ * 
+ * Fetch a list of recent public photos from a users' contacts.
+ *
+ * Implements flickr.photos.getContactsPublicPhotos (0.12)
+ * 
+ * Return value: a list of photos or NULL on failure
+ **/
+flickcurl_photo** 
+flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
+                                         int photo_count, int just_friends, 
+                                         int single_photo, int include_self,
+                                         const char* extras)
+{
+  const char* parameters[13][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_photo** photos=NULL;
+  char true_s[2]="1";
+  char photo_count_s[10];
+  
+  if(!user_id)
+    return NULL;
+
+  parameters[count][0]  = "user_id";
+  parameters[count++][1]= user_id;
+  parameters[count][0]  = "count";
+  sprintf(photo_count_s, "%d", photo_count);
+  parameters[count++][1]= photo_count_s;
+  if(just_friends) {
+    parameters[count][0]  = "just_friends";
+    parameters[count++][1]= true_s;
+  }
+  if(single_photo) {
+    parameters[count][0]  = "single_photo";
+    parameters[count++][1]= true_s;
+  }
+  if(include_self) {
+    parameters[count][0]  = "include_self";
+    parameters[count++][1]= true_s;
+  }
+  if(extras) {
+    parameters[count][0]  = "extras";
+    parameters[count++][1]= extras;
+  }
+  
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getContactsPublicPhotos", parameters,
+                       count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  photos=flickcurl_build_photos(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/photos/photo", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    photos=NULL;
+
+  return photos;
+}
 
 
 /**

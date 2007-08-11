@@ -606,6 +606,7 @@ int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* ta
 int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
 flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
+flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int count, int just_friends,  int single_photo, int include_self, const char* extras);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);

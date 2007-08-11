@@ -1552,6 +1552,36 @@ command_groups_pools_remove(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_getContactsPublicPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char* user_id=argv[1];
+  int contact_count=10;
+  int just_friends=0;
+  int single_photo=1;
+  int include_self=0;
+  const char* extras=NULL;
+  flickcurl_photo** photos=NULL;
+  int i;
+  
+  photos=flickcurl_photos_getContactsPublicPhotos(fc,  user_id,
+                                                  contact_count, just_friends,
+                                                  single_photo, include_self,
+                                                  extras);
+  if(!photos)
+    return 1;
+
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Contact public photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1622,8 +1652,11 @@ static struct {
    "PHOTO-ID", "Get a photo viewing and commenting permissions",
    command_photos_getPerms, 1, 1},
   {"photos.getContactsPhotos",
-   "PHOTO-ID", "Get a list of recent photos from the calling users' contacts",
+   "", "Get a list of recent photos from the calling users' contacts",
    command_photos_getContactsPhotos, 0, 0},
+  {"photos.getContactsPublicPhotos",
+   "USER-ID", "Get a list of recent public photos from USER-ID's contacts",
+   command_photos_getContactsPublicPhotos, 1, 1},
   {"photos.removeTag",
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
