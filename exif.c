@@ -132,10 +132,10 @@ flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       }
     }
     
-//#if FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
     fprintf(stderr, "exif: tagspace %s tagspace ID %d tag %d label '%s' raw '%s' clean '%s'\n",
             e->tagspace, e->tagspaceid, e->tag, e->label, e->raw, e->clean);
-//#endif
+#endif
     
     exifs[exif_count++]=e;
   } /* for nodes */
