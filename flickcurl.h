@@ -572,6 +572,7 @@ flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char*
 char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
 char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
+flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
 
 /* flickr.photos */
 int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags);
