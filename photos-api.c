@@ -396,9 +396,70 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
  */
 
 
-/*
- * flickr.photos.getExif
- */
+/**
+ * flickcurl_photos_getExif:
+ * @fc: flickcurl context
+ * @photo_id: The id of the photo to fetch information for.
+ * @secret: The secret for the photo (or NULL)
+ *   If the correct secret is passed then permissions checking is
+ *   skipped. This enables the 'sharing' of individual photos by
+ *   passing around the id and secret.
+ *
+ * Retrieves a list of EXIF/TIFF/GPS tags for a given photo.
+ *
+ * Implements flickr.photos.getExif (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_exif**
+flickcurl_photos_getExif(flickcurl* fc, const char* photo_id,
+                         const char* secret)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_exif** exifs=NULL;
+  
+  if(!photo_id)
+    return NULL;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  if(secret) {
+    parameters[count][0]  = "secret";
+    parameters[count++][1]= secret;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getExif", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  exifs=flickcurl_build_exifs(fc, xpathCtx,
+                              (const xmlChar*)"/rsp/photo/exif", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    exifs=NULL;
+
+  return exifs;
+}
 
 
 /*

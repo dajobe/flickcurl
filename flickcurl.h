@@ -343,6 +343,27 @@ typedef struct {
 
 
 /**
+ * flickcurl_exif:
+ * @tagspace: Tagspace name
+ * @tagspaceid: ID of tagspace
+ * @tag: tag ID
+ * @label: tag label
+ * @raw: raw tag name
+ * @clean: pretty-formatted tag name
+ *
+ * An EXIF tag.
+ */
+typedef struct {
+  char* tagspace;
+  int tagspaceid;
+  int tag;
+  char* label;
+  char* raw;
+  char* clean;
+} flickcurl_exif;
+
+
+/**
  * flickcurl_group:
  * @nsid: NSID
  * @name: Group Name
@@ -560,7 +581,8 @@ void flickcurl_free_context(flickcurl_context *context);
 void flickcurl_free_contexts(flickcurl_context** contexts);
 void flickcurl_free_perms(flickcurl_perms *perms);
 void flickcurl_free_location(flickcurl_location *location);
-
+void flickcurl_free_exif(flickcurl_exif *exif);
+void flickcurl_free_exifs(flickcurl_exif **exifs_object);
 
 /* utility methods */
 /* get an image URL for a photo in some size */
@@ -608,6 +630,7 @@ flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* p
 flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
 flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int count, int just_friends,  int single_photo, int include_self, const char* extras);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
+flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
 int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);

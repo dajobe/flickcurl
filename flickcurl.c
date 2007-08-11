@@ -1582,6 +1582,35 @@ command_photos_getContactsPublicPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_exif(flickcurl_exif* e)
+{
+  fprintf(stderr, "tagspace %s (%d) tag %d label '%s' raw '%s' clean '%s'\n",
+          e->tagspace, e->tagspaceid, e->tag, e->label, e->raw, e->clean);
+}
+
+
+static int
+command_photos_getExif(flickcurl* fc, int argc, char *argv[])
+{
+  const char* photo_id=argv[1];
+  const char* secret=NULL;
+  flickcurl_exif** exifs;
+  int i;
+  
+  exifs=flickcurl_photos_getExif(fc, photo_id, secret);
+  if(!exifs)
+    return 1;
+
+  for(i=0; exifs[i]; i++)
+    command_print_exif(exifs[i]);
+  
+  flickcurl_free_exifs(exifs);
+  return 0;
+}
+
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1645,6 +1674,9 @@ static struct {
   {"photos.getContext",
    "PHOTO-ID", "Get next and previous photos for a PHOTO-ID in a photostream.",
    command_photos_getContext, 1, 1},
+  {"photos.getExif",
+   "PHOTO-ID", "Get EXIF information about one photo with id PHOTO-ID", 
+   command_photos_getExif,  1, 1},
   {"photos.getInfo",
    "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
    command_photos_getInfo,  1, 1},

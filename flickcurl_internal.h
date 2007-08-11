@@ -69,6 +69,9 @@ flickcurl_contact** flickcurl_build_contacts(flickcurl* fc, xmlXPathContextPtr x
 /* context.c */
 flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
 
+/* exif.c */
+flickcurl_exif** flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* exif_count_p);
+
 /* group.c */
 flickcurl_group** flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* group_count_p);
 
