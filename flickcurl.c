@@ -819,6 +819,7 @@ command_photosets_comments_addComment(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr,
             "%s: Added comment '%s' to photoset %s giving comment ID %s\n", 
             program, photoset_id, comment_text, id);
+    free(id);
   }
   
   return (id == NULL);
@@ -1380,6 +1381,53 @@ command_photos_geo_setPerms(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_notes_add(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  int note_x=atoi(argv[2]);
+  int note_y=atoi(argv[3]);
+  int note_w=atoi(argv[4]);
+  int note_h=atoi(argv[5]);
+  char* note_text=argv[6];
+  char *id;
+  
+  id=flickcurl_photos_notes_add(fc, photo_id,
+                                note_x, note_y, note_w, note_h, note_text);
+  if(id) {
+    fprintf(stderr,
+            "%s: Added note '%s' (x:%d y:%d w:%d h:%d) to photo ID %s giving note ID %s\n",
+            program, note_text, note_x, note_y, note_w, note_h, photo_id, id);
+    free(id);
+  }
+  
+  return (id == NULL);
+}
+
+static int
+command_photos_notes_delete(flickcurl* fc, int argc, char *argv[])
+{
+  const char *note_id=argv[1];
+
+  return flickcurl_photos_notes_delete(fc, note_id);
+}
+
+static int
+command_photos_notes_edit(flickcurl* fc, int argc, char *argv[])
+{
+  const char *note_id=argv[1];
+  int note_x=atoi(argv[2]);
+  int note_y=atoi(argv[3]);
+  int note_w=atoi(argv[4]);
+  int note_h=atoi(argv[5]);
+  char* note_text=argv[6];
+
+  return flickcurl_photos_notes_edit(fc, note_id,
+                                     note_x, note_y, note_w, note_h,
+                                     note_text);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1401,9 +1449,11 @@ static struct {
   {"auth.getToken",
    "TOKEN", "Get the auth token for the FROB, if one has been attached.",
    command_auth_getToken, 0, 0},
+
   {"groups.pools.getContext",
    "PHOTO-ID GROUP-ID", "Get next and previous photos for PHOTO-ID in GROUP-ID pool.",
    command_groups_pools_getContext, 2, 2},
+
   {"people.findByEmail",
    "EMAIL", "get a user's NSID from their EMAIL address", 
    command_people_findByEmail,  1, 1},
@@ -1413,6 +1463,7 @@ static struct {
   {"people.getInfo",
    "USER-ID", "Get information about one person with id USER-ID", 
    command_people_getInfo,  1, 1},
+
   {"photos.addTags",
    "PHOTO-ID TAGS", "Add TAGS to a PHOTO-ID.",
    command_photos_addTags, 2, 2},
@@ -1428,9 +1479,6 @@ static struct {
   {"photos.getInfo",
    "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
    command_photos_getInfo,  1, 1},
-  {"photos.licenses.getInfo",
-   "", "Get list of available photo licenses", 
-   command_photos_licenses_getInfo,  0, 0},
   {"photos.getPerms",
    "PHOTO-ID", "Get a photo viewing and commenting permissions",
    command_photos_getPerms, 1, 1},
@@ -1461,6 +1509,8 @@ static struct {
   {"photos.setTags",
    "PHOTO-ID TAGS", "Set the tags for a PHOTO-ID to TAGS.",
    command_photos_setTags, 2, 2},
+
+
   {"photos.comments.addComment",
    "PHOTO-ID TEXT", "Add a photo comment TEXT to PHOTO-ID.",
    command_photos_comments_addComment, 2, 2},
@@ -1489,6 +1539,20 @@ static struct {
   {"photos.geo.setPerms",
    "PHOTO-ID IS-PUBLIC IS-CONTACT IS-FRIEND IS-FAMILY", "Set the geo perms for a photo PHOTO-ID.",
    command_photos_geo_setPerms, 5, 5},
+
+  {"photos.licenses.getInfo",
+   "", "Get list of available photo licenses", 
+   command_photos_licenses_getInfo,  0, 0},
+
+  {"photos.notes.add",
+   "PHOTO-ID X Y W H TEXT", "Add a note (X, Y, W, H, TEXT) to a photo with id PHOTO-ID", 
+   command_photos_notes_add,  6, 6},
+  {"photos.notes.delete",
+   "NOTE-ID", "Delete a note with id NOTE-ID", 
+   command_photos_notes_delete,  1, 1},
+  {"photos.notes.edit",
+   "NOTE-ID X Y W H TEXT", "Edit note NOTE-ID to (X, Y, W, H, TEXT)", 
+   command_photos_notes_edit,  6, 6},
 
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
@@ -1531,9 +1595,11 @@ static struct {
   {"tags.getRelated",
    "TAG", "Get a list of tags 'related' to TAG based on clustered usage analysis.",
    command_tags_getRelated, 1, 1},
+
   {"test.echo",
    "KEY VALUE", "Test echo of KEY VALUE",
    command_test_echo,  2, 2},
+
   {"urls.getGroup",
    "GROUP-ID", "Get the url of the group page for GROUP-ID.", 
    command_urls_getGroup,  1, 1},

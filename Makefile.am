@@ -63,6 +63,7 @@ photos-api.c \
 photos-comments-api.c \
 photos-geo-api.c \
 photos-licenses-api.c \
+photos-notes-api.c \
 photosets-api.c \
 photosets-comments-api.c \
 reflection-api.c \

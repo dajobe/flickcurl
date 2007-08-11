@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">50.0% (52/104)</span>
+<span class="coverage">57.7% (60/104)</span>
 </p>
 
 
@@ -167,11 +167,11 @@ or <span class="unsupported">unsupported</span>.
 <h3>photos.geo</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.getLocation.html">flickr.photos.geo.getLocation</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.getPerms.html">flickr.photos.geo.getPerms</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.removeLocation.html">flickr.photos.geo.removeLocation</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.setLocation.html">flickr.photos.geo.setLocation</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.geo.setPerms.html">flickr.photos.geo.setPerms</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.getLocation.html">flickr.photos.geo.getLocation</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.getPerms.html">flickr.photos.geo.getPerms</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.removeLocation.html">flickr.photos.geo.removeLocation</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.setLocation.html">flickr.photos.geo.setLocation</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.setPerms.html">flickr.photos.geo.setPerms</a> (0.12)</li>
 </ul>
 
 
@@ -186,9 +186,9 @@ or <span class="unsupported">unsupported</span>.
 <h3>photos.notes</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.notes.add.html">flickr.photos.notes.add</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.notes.delete.html">flickr.photos.notes.delete</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.notes.edit.html">flickr.photos.notes.edit</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.notes.add.html">flickr.photos.notes.add</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.notes.delete.html">flickr.photos.notes.delete</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.notes.edit.html">flickr.photos.notes.edit</a> (0.12)</li>
 </ul>
 
 
@@ -274,6 +274,19 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>0.12</strong>: flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (8 new)
+<pre>
+flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
+flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
+int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);
+int flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id, flickcurl_location* location);
+int flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
+char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
+int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
+int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
+</pre>
+</p>
 
 <p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.getContactsPhotos, flickr.photos.getPerms, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (10 new)
 <pre>
