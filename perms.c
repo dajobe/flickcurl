@@ -83,6 +83,8 @@ flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         ; /* perms->id=attr_value; */
       else if(!strcmp(attr_name, "ispublic"))
         perms->is_public=atoi(attr_value);
+      else if(!strcmp(attr_name, "iscontact"))
+        perms->is_contact=atoi(attr_value);
       else if(!strcmp(attr_name, "isfriend"))
         perms->is_friend=atoi(attr_value);
       else if(!strcmp(attr_name, "isfamily"))
@@ -95,8 +97,9 @@ flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
     
 #if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "perms: ispublic %d isfriend %d isfamily %d permcomment %d permaddmeta %d\n",
-            perms->is_public, perms->is_friend, perms->is_family,
+    fprintf(stderr, "perms: ispublic %d iscontact %d isfriend %d isfamily %d permcomment %d permaddmeta %d\n",
+            perms->is_public, perms->is_contact,
+            perms->is_friend, perms->is_family,
             perms->perm_comment, perms->perm_addmeta);
 #endif
 
