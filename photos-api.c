@@ -462,9 +462,72 @@ flickcurl_photos_getExif(flickcurl* fc, const char* photo_id,
 }
 
 
-/*
- * flickr.photos.getFavorites
- */
+/**
+ * flickcurl_photos_getFavorites:
+ * @fc: flickcurl context
+ * @photo_id: The ID of the photo to fetch the favoriters list for.
+ * @page: The page of results to return (default 1)
+ * @per_page: Number of users to return per page (default 10, max 50)
+ * 
+ * Returns the list of people who have favorited a given photo.
+ *
+ * Implements flickr.photos.getFavorites (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_person**
+flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
+                              int page, int per_page)
+{
+  const char* parameters[10][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_person** persons=NULL;
+  char per_page_s[4];
+  char page_s[4];
+  
+  if(!photo_id)
+    return NULL;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  parameters[count][0]  = "page";
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
+  parameters[count][0]  = "per_page";
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getFavorites", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  persons=flickcurl_build_persons(fc, xpathCtx,
+                                  (const xmlChar*)"/rsp/photo/person", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    persons=NULL;
+
+  return persons;
+}
 
 
 /**

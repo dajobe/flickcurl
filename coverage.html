@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">65.4% (68/104)</span>
+<span class="coverage">66.3% (69/104)</span>
 </p>
 
 
@@ -134,7 +134,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getContext.html">flickr.photos.getContext</a> (0.7)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getCounts.html">flickr.photos.getCounts</a></li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getExif.html">flickr.photos.getExif</a> (0.12)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getFavorites.html">flickr.photos.getFavorites</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getFavorites.html">flickr.photos.getFavorites</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getInfo.html">flickr.photos.getInfo</a> (0.5)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getNotInSet.html">flickr.photos.getNotInSet</a></li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getPerms.html">flickr.photos.getPerms</a> (0.11)</li>
@@ -275,7 +275,7 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.12</strong>: flickr.groups.pools.add, flickr.groups.pools.getGroups, flickr.groups.pools.getPhotos, flickr.groups.pools.remove, flickr.people.getPublicPhotos, flickr.photos.getContactsPublicPhotos, flickr.photos.getExif, flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (16 new)
+<p><strong>0.12</strong>: flickr.groups.pools.add, flickr.groups.pools.getGroups, flickr.groups.pools.getPhotos, flickr.groups.pools.remove, flickr.people.getPublicPhotos, flickr.photos.getContactsPublicPhotos, flickr.photos.getExif, flickr.photos.getFavorites, flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit, flickr.photos.getFavorites (18 new)
 <pre>
 int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page);
@@ -284,6 +284,7 @@ int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const cha
 flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
 flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int count, int just_friends,  int single_photo, int include_self, const char* extras);
 flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
+flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
 flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
 flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
 int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);
@@ -293,6 +294,7 @@ int flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id, in
 char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
 int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
 int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
+flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
 </pre>
 </p>
 

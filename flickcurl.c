@@ -188,6 +188,28 @@ command_people_findByUsername(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_person(flickcurl_person* person) 
+{
+  flickcurl_person_field_type field;
+  
+  fprintf(stderr, "Found person with ID %s\n", person->nsid);
+  
+  for(field=0; field <= PERSON_FIELD_LAST; field++) {
+    flickcurl_field_value_type datatype=person->fields[field].type;
+    
+    if(datatype == VALUE_TYPE_NONE)
+      continue;
+    
+    fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
+            flickcurl_get_person_field_label(field), field,
+            flickcurl_get_field_value_type_label(datatype),
+            person->fields[field].string, person->fields[field].integer);
+  }
+}
+
+
+
 static int
 command_people_getInfo(flickcurl* fc, int argc, char *argv[])
 {
@@ -195,27 +217,14 @@ command_people_getInfo(flickcurl* fc, int argc, char *argv[])
 
   person=flickcurl_people_getInfo(fc, argv[1]);
 
-  if(person) {
-    flickcurl_person_field_type field;
-    
-    fprintf(stderr, "Found person with ID %s\n", person->nsid);
-
-    for(field=0; field <= PERSON_FIELD_LAST; field++) {
-      flickcurl_field_value_type datatype=person->fields[field].type;
-
-      if(datatype == VALUE_TYPE_NONE)
-        continue;
-      
-      fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
-              flickcurl_get_person_field_label(field), field,
-              flickcurl_get_field_value_type_label(datatype),
-              person->fields[field].string, person->fields[field].integer);
-    }
-    
-    flickcurl_free_person(person);
-  }
+  if(!person)
+    return 1;
   
-  return (person == NULL);
+  command_print_person(person);
+
+  flickcurl_free_person(person);
+  
+  return 0;
 }
 
 
@@ -1610,6 +1619,32 @@ command_photos_getExif(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_getFavorites(flickcurl* fc, int argc, char *argv[])
+{
+  const char* photo_id=argv[1];
+  int i;
+  int per_page=10;
+  int page=0;
+  flickcurl_person** persons;
+  
+  if(argc >2) {
+    per_page=atoi(argv[2]);
+    if(argc >3)
+      page=atoi(argv[3]);
+  }
+  
+  persons=flickcurl_photos_getFavorites(fc, photo_id, page, per_page);
+  if(!persons)
+    return 1;
+
+  for(i=0; persons[i]; i++)
+    command_print_person(persons[i]);
+  
+  flickcurl_free_persons(persons);
+  return 0;
+}
+
 
 static struct {
   const char*     name;
@@ -1677,6 +1712,9 @@ static struct {
   {"photos.getExif",
    "PHOTO-ID", "Get EXIF information about one photo with id PHOTO-ID", 
    command_photos_getExif,  1, 1},
+  {"photos.getFavorites",
+   "PHOTO-ID [PER-PAGE [PAGE]]", "Get favourites information about one photo with id PHOTO-ID", 
+   command_photos_getFavorites,  1, 3},
   {"photos.getInfo",
    "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
    command_photos_getInfo,  1, 1},

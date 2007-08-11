@@ -256,6 +256,14 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
     xpathNodeCtx->node = node;
 
+    for(expri=0; expri <= PERSON_FIELD_LAST; expri++) {
+      if(person->fields[expri].string)
+        free(person->fields[expri].string);
+      person->fields[expri].string = NULL;
+      person->fields[expri].integer= -1;
+      person->fields[expri].type   = VALUE_TYPE_NONE;
+    }
+
     for(expri=0; person_fields_table[expri].xpath; expri++) {
       flickcurl_person_field_type field=person_fields_table[expri].field;
       flickcurl_field_value_type datatype=person_fields_table[expri].type;
