@@ -97,6 +97,7 @@ flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
   const char * parameters[6][2];
   int count=0;
   xmlDocPtr doc=NULL;
+  int result=1;
   
   if(!photo_id)
     return 1;
@@ -116,9 +117,13 @@ flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
   if(!doc)
     goto tidy;
 
- tidy:
+  result=0;
 
-  return fc->failed;
+ tidy:
+  if(fc->failed)
+    result=1;
+
+  return result;
 }
 
 
