@@ -48,6 +48,7 @@ contacts.c \
 context.c \
 config.c \
 md5.c \
+location.c \
 method.c \
 person.c \
 photo.c \
@@ -60,6 +61,7 @@ people-api.c \
 perms.c \
 photos-api.c \
 photos-comments-api.c \
+photos-geo-api.c \
 photos-licenses-api.c \
 photosets-api.c \
 photosets-comments-api.c \
