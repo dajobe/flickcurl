@@ -1438,6 +1438,39 @@ command_photos_licenses_setLicense(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_people_getPublicPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char *user_id=argv[1];
+  int per_page=10;
+  int page=0;
+  const char* extras=NULL;
+  flickcurl_photo** photos=NULL;
+  int i;
+
+  if(argc >2) {
+    per_page=atoi(argv[2]);
+    if(argc >3)
+      page=atoi(argv[3]);
+  }
+  
+  photos=flickcurl_people_getPublicPhotos(fc, user_id, extras, per_page, page);
+  if(!photos)
+    return 1;
+
+  fprintf(stderr, "%s: User %s photos (per_page %d  page %d):\n",
+          program, user_id, per_page, page);
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1473,6 +1506,9 @@ static struct {
   {"people.getInfo",
    "USER-ID", "Get information about one person with id USER-ID", 
    command_people_getInfo,  1, 1},
+  {"people.getPublicPhotos",
+   "USER-ID [PER-PAGE [PAGE]]", "Get PAGE pages of PER-PAGE public photos for a user USER-ID", 
+   command_people_getPublicPhotos,  1, 3},
 
   {"photos.addTags",
    "PHOTO-ID TAGS", "Add TAGS to a PHOTO-ID.",

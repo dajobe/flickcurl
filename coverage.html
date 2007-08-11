@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">57.7% (60/104)</span>
+<span class="coverage">58.7% (61/104)</span>
 </p>
 
 
@@ -179,7 +179,7 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.licenses.getInfo.html">flickr.photos.licenses.getInfo</a> (0.6)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.licenses.setLicense.html">flickr.photos.licenses.setLicense</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.licenses.setLicense.html">flickr.photos.licenses.setLicense</a> (0.12)</li>
 </ul>
 
 
@@ -275,13 +275,14 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.12</strong>: flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (8 new)
+<p><strong>0.12</strong>: flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (9 new)
 <pre>
 flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
 flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
 int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);
 int flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id, flickcurl_location* location);
 int flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
+int flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id, int license_id);
 char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
 int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
 int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);

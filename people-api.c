@@ -139,11 +139,83 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
  */
 
 
-/*
- * flickr.people.getPublicPhotos:
- *
+/**
+ * flickcurl_people_getPublicPhotos:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user who's photos to return.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record.
+ * @per_page: Number of photos to return per page (default 100, max 500)
+ * @page: The page of results to return (default 1)
+ * 
  * Get a list of public photos for the given user.
- */
+ *
+ *  Currently supported extras fields are: license, date_upload,
+ *  date_taken, owner_name, icon_server, original_format,
+ *  last_update, geo, tags, machine_tags.
+
+ * Implements flickr.people.getPublicPhotos (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id, 
+                                 const char* extras, 
+                                 int per_page, int page)
+{
+  const char* parameters[11][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_photo** photos=NULL;
+  char per_page_s[10];
+  char page_s[10];
+  
+  if(!user_id)
+    return NULL;
+
+  parameters[count][0]  = "user_id";
+  parameters[count++][1]= user_id;
+  if(extras) {
+    parameters[count][0]  = "extras";
+    parameters[count++][1]= extras;
+  }
+  parameters[count][0]  = "per_page";
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
+  parameters[count][0]  = "page";
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.people.getPublicPhotos", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  photos=flickcurl_build_photos(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/photos/photo", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    photos=NULL;
+
+  return photos;
+}
+
 
 
 /*
