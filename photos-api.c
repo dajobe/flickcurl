@@ -685,7 +685,6 @@ flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id,
   const char* parameters[9][2];
   int count=0;
   xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
   int result=1;
   char content_type_str[2];
 
@@ -713,20 +712,9 @@ flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id,
   if(!doc)
     goto tidy;
 
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
   result=0;
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed)
     result=1;
 
