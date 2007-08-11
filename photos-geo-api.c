@@ -231,10 +231,8 @@ flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
     location->longitude= -180.0;
   if(location->longitude > 180.0)
     location->longitude= 180.0;
-  if(location->accuracy < 1)
-    location->accuracy = 1;
-  if(location->accuracy > 16)
-    location->accuracy = 16;
+  if(location->accuracy < 1 || location->accuracy > 16)
+    location->accuracy = 0;
   
 
   parameters[count][0]  = "photo_id";
@@ -245,9 +243,11 @@ flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
   parameters[count][0]  = "lon";
   sprintf(longitude_s, "%f", location->latitude);
   parameters[count++][1]= longitude_s;
-  parameters[count][0]  = "accuracy";
-  sprintf(accuracy_s, "%d", location->accuracy);
-  parameters[count++][1]= accuracy_s;
+  if(location->accuracy >= 1) {
+    parameters[count][0]  = "accuracy";
+    sprintf(accuracy_s, "%d", location->accuracy);
+    parameters[count++][1]= accuracy_s;
+  }
 
   parameters[count][0]  = NULL;
 
