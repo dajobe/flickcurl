@@ -404,7 +404,8 @@ typedef enum {
   PERSON_FIELD_photos_firstdatetaken, /* dateTime */
   PERSON_FIELD_photos_count,          /* integer */
   PERSON_FIELD_photos_views,          /* integer - not in API docs */
-  PERSON_FIELD_LAST = PERSON_FIELD_photos_views
+  PERSON_FIELD_favedate,              /* dateTime - flickr.photos.getFavorites() */
+  PERSON_FIELD_LAST = PERSON_FIELD_favedate
 } flickcurl_person_field_type;
 
 
@@ -577,6 +578,7 @@ void flickcurl_free_photo(flickcurl_photo *photo);
 void flickcurl_free_photos(flickcurl_photo** photos);
 /* void flickcurl_free_license(flickcurl_person *license); */
 void flickcurl_free_person(flickcurl_person *person);
+void flickcurl_free_persons(flickcurl_person** persons);
 void flickcurl_free_context(flickcurl_context *context);
 void flickcurl_free_contexts(flickcurl_context** contexts);
 void flickcurl_free_perms(flickcurl_perms *perms);

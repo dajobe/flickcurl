@@ -88,6 +88,7 @@ flickcurl_method* flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpath
 flickcurl_perms* flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
 /* person.c */
+flickcurl_person** flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* person_count_p);
 flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
 
 /* photo.c */
