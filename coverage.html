@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">58.7% (61/104)</span>
+<span class="coverage">63.5% (66/104)</span>
 </p>
 
 
@@ -96,11 +96,11 @@ or <span class="unsupported">unsupported</span>.
 <h3>groups.pools</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.add.html">flickr.groups.pools.add</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.pools.add.html">flickr.groups.pools.add</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.pools.getContext.html">flickr.groups.pools.getContext</a> (0.7)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.getGroups.html">flickr.groups.pools.getGroups</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.getPhotos.html">flickr.groups.pools.getPhotos</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.pools.remove.html">flickr.groups.pools.remove</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.pools.getGroups.html">flickr.groups.pools.getGroups</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.pools.getPhotos.html">flickr.groups.pools.getPhotos</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.pools.remove.html">flickr.groups.pools.remove</a> (0.12)</li>
 </ul>
 
 
@@ -118,7 +118,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.findByUsername.html">flickr.people.findByUsername</a> (0.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getInfo.html">flickr.people.getInfo</a> (0.6)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.getPublicGroups.html">flickr.people.getPublicGroups</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.getPublicPhotos.html">flickr.people.getPublicPhotos</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getPublicPhotos.html">flickr.people.getPublicPhotos</a> (0.12)</li>
   <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.getUploadStatus.html">flickr.people.getUploadStatus</a></li>
 </ul>
 
@@ -275,8 +275,13 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.12</strong>: flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (9 new)
+<p><strong>0.12</strong>: flickr.groups.pools.add, flickr.groups.pools.getGroups, flickr.groups.pools.getPhotos, flickr.groups.pools.remove, flickr.people.getPublicPhotos, flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (14 new)
 <pre>
+int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
+flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page);
+flickcurl_photo** flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, const char* extras, int per_page, int page);
+int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const char* group_id);
+flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
 flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
 flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
 int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);

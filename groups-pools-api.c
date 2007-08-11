@@ -40,9 +40,53 @@
 
 /**
  * flickcurl_groups_pools_add:
+ * @fc: flickcurl context
+ * @photo_id: The id of the photo to add to the group pool.
+ * @group_id: The NSID of the group who's pool the photo is to be added to.
+ * 
+ * Add a photo to a group's pool.
  *
- * flickr.groups.pools.add
- */
+ * Implements flickr.groups.pools.add (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id,
+                           const char* group_id)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  int result=1;
+  
+  if(!photo_id || !group_id)
+    return 1;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  parameters[count][0]  = "group_id";
+  parameters[count++][1]= group_id;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.groups.pools.add", parameters, count))
+    goto tidy;
+
+  flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result=0;
+
+  tidy:
+  if(fc->failed)
+    result=1;
+
+  return result;
+}
 
 
 /**
@@ -96,20 +140,199 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
 
 /**
  * flickcurl_groups_pools_getGroups:
+ * @fc: flickcurl context
+ * @per_page: Number of groups to return per page (default 400, max 400)
+ * @page: The page of results to return (default 1)
+ * 
+ * Returns a list of groups to which you can add photos.
  *
- * flickr.groups.pools.getGroups
- */
+ * Implements flickr.groups.pools.getGroups (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_group**
+flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_group** groups=NULL;
+  char per_page_s[10];
+  char page_s[10];
+  
+  parameters[count][0]  = "page";
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
+  parameters[count][0]  = "per_page";
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.groups.pools.getGroups", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  groups=flickcurl_build_groups(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/groups/group", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    groups=NULL;
+
+  return groups;
+}
 
 
 /**
  * flickcurl_groups_pools_getPhotos:
+ * @fc: flickcurl context
+ * @group_id: The id of the group who's pool you which to get the photo list for.
+ * @tags: A tag to filter the pool with. At the moment only one tag at a time is supported. (or NULL)
+ * @user_id: The nsid of a user (or NULL).  If given, retrieves only photos that the user has contributed to the group pool.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ * @per_page: Number of photos to return per page (default 100, max 500)
+ * @page: The page of results to return (default 1)
+ * 
+ * Returns a list of pool photos for a given group.
  *
- * flickr.groups.pools.getPhotos
- */
+ *  Currently supported extra fields are: license, date_upload,
+ *  date_taken, owner_name, icon_server, original_format,
+ *  last_update, geo, tags, machine_tags.
+ *
+ * Implements flickr.groups.pools.getPhotos (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id,
+                                 const char* tags, const char* user_id,
+                                 const char* extras, int per_page, int page)
+{
+  const char* parameters[13][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_photo** photos=NULL;
+  char per_page_s[10];
+  char page_s[10];
+  
+  if(!group_id)
+    return NULL;
+
+  parameters[count][0]  = "group_id";
+  parameters[count++][1]= group_id;
+  if(tags) {
+    parameters[count][0]  = "tags";
+    parameters[count++][1]= tags;
+  }
+  if(user_id) {
+    parameters[count][0]  = "user_id";
+    parameters[count++][1]= user_id;
+  }
+  if(extras) {
+    parameters[count][0]  = "extras";
+    parameters[count++][1]= extras;
+  }
+  parameters[count][0]  = "per_page";
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
+  parameters[count][0]  = "page";
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.groups.pools.getPhotos", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  photos=flickcurl_build_photos(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/photos/photo", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    photos=NULL;
+
+  return photos;
+}
 
 
 /**
  * flickcurl_groups_pools_remove:
+ * @fc: flickcurl context
+ * @photo_id: The id of the photo to remove from the group pool.
+ * @group_id: The NSID of the group who's pool the photo is to removed from.
+ * 
+ * Remove a photo from a group pool.
  *
- * flickr.groups.pools.remove
- */
+ * Implements flickr.groups.pools.remove (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id,
+                              const char* group_id)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  int result=1;
+  
+  if(!photo_id || !group_id)
+    return 1;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  parameters[count][0]  = "group_id";
+  parameters[count++][1]= group_id;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.groups.pools.remove", parameters, count))
+    goto tidy;
+
+  flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result=0;
+
+  tidy:
+  if(fc->failed)
+    result=1;
+
+  return result;
+}

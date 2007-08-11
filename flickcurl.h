@@ -342,6 +342,27 @@ typedef struct {
 } flickcurl_context;
 
 
+/**
+ * flickcurl_group:
+ * @nsid: NSID
+ * @name: Group Name
+ * @is_admin: is admin flag
+ * @privacy: privacy level
+ * @photos: photos in group count
+ * @iconserver: icon server ID
+ *
+ * A group.
+ */
+typedef struct {
+  char* nsid;
+  char* name;
+  int is_admin;
+  int privacy;
+  int photos;
+  int iconserver;
+} flickcurl_group;
+
+
 /*
  * Fields of a flickcurl_person*
  */
@@ -566,7 +587,13 @@ char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 
 /* flickr.groups */
+int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
+flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page);
+flickcurl_photo** flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, const char* extras, int per_page, int page);
+int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const char* group_id);
+void flickcurl_free_group(flickcurl_group *group);
+void flickcurl_free_groups(flickcurl_group **groups_object);
 
 /* flickr.people */
 char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);

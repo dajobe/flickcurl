@@ -1471,6 +1471,87 @@ command_people_getPublicPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_groups_pools_add(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id=argv[1];
+  char *group_id=argv[2];
+
+  return flickcurl_groups_pools_add(fc,  photo_id, group_id);
+}
+
+
+static void
+command_print_group(flickcurl_group* g)
+{
+  fprintf(stderr, "group: nsid %s name '%s' admin %d  privacy %d  photos %d  iconserver %d\n",
+          g->nsid, g->name, g->is_admin, g->privacy, g->photos, g->iconserver);
+}
+
+
+static int
+command_groups_pools_getGroups(flickcurl* fc, int argc, char *argv[])
+{
+  int per_page=10;
+  int page=0;
+  flickcurl_group** groups=NULL;
+
+  if(argc >1) {
+    per_page=atoi(argv[1]);
+    if(argc >2)
+      page=atoi(argv[2]);
+  }
+
+  groups=flickcurl_groups_pools_getGroups(fc, page, per_page);
+  if(groups) {
+    int i;
+    
+    fprintf(stderr, "%s: Groups (page %d, per page %d)\n", program,
+            page, per_page);
+    for(i=0; groups[i]; i++)
+      command_print_group(groups[i]);
+    flickcurl_free_groups(groups);
+  }
+  return (groups==NULL);
+}
+
+
+static int
+command_groups_pools_getPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char *group_id=argv[1];
+  char *tags=NULL;
+  char *user_id=NULL;
+  char *extras=NULL;
+  int per_page=10;
+  int page=0;
+  flickcurl_photo** photos;
+
+  if(argc >2) {
+    per_page=atoi(argv[2]);
+    if(argc >3)
+      page=atoi(argv[3]);
+  }
+  
+  photos=flickcurl_groups_pools_getPhotos(fc, group_id, tags, user_id,
+                                          extras, per_page, page);
+  if(photos) {
+
+    flickcurl_free_photos(photos);
+  }
+  return (photos==NULL);
+}
+
+static int
+command_groups_pools_remove(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id=argv[1];
+  char *group_id=argv[2];
+
+  return flickcurl_groups_pools_remove(fc, photo_id, group_id);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1493,9 +1574,21 @@ static struct {
    "TOKEN", "Get the auth token for the FROB, if one has been attached.",
    command_auth_getToken, 0, 0},
 
+  {"groups.pools.add",
+   "PHOTO-ID GROUP-ID", "Add PHOTO-ID in GROUP-ID pool.",
+   command_groups_pools_add, 2, 2},
   {"groups.pools.getContext",
    "PHOTO-ID GROUP-ID", "Get next and previous photos for PHOTO-ID in GROUP-ID pool.",
    command_groups_pools_getContext, 2, 2},
+  {"groups.pools.getGroups",
+   "[PAGE [PER-PAGE]]", "Get list of groups a user can add to.",
+   command_groups_pools_getGroups, 0, 2},
+  {"groups.pools.getPhotos",
+   "GROUP-ID [PAGE [PER-PAGE]]", "Get list of photos in GROUP-ID.",
+   command_groups_pools_getPhotos, 1, 3},
+  {"groups.pools.remove",
+   "PHOTO-ID GROUP-ID", "Remove PHOTO-ID from group GROUP-ID.",
+   command_groups_pools_remove, 2, 2},
 
   {"people.findByEmail",
    "EMAIL", "get a user's NSID from their EMAIL address", 

@@ -47,6 +47,7 @@ comments.c \
 contacts.c \
 context.c \
 config.c \
+group.c \
 md5.c \
 location.c \
 method.c \
