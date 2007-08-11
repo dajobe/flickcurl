@@ -1428,6 +1428,16 @@ command_photos_notes_edit(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_licenses_setLicense(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  int license_id=atoi(argv[2]);
+
+  return flickcurl_photos_licenses_setLicense(fc, photo_id, license_id);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1543,6 +1553,9 @@ static struct {
   {"photos.licenses.getInfo",
    "", "Get list of available photo licenses", 
    command_photos_licenses_getInfo,  0, 0},
+  {"photos.licenses.setLicense",
+   "PHOTO-ID LICENSE-ID", "Get photo PHOTO-ID license to LICENSE-ID", 
+   command_photos_licenses_setLicense,  2, 2},
 
   {"photos.notes.add",
    "PHOTO-ID X Y W H TEXT", "Add a note (X, Y, W, H, TEXT) to a photo with id PHOTO-ID", 

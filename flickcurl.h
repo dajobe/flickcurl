@@ -615,6 +615,7 @@ const char* flickcurl_get_location_accuracy_label(int accuracy);
 /* flickr.photos.licenses */
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
 flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
+int flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id, int license_id);
 
 /* flickr.photos.notes */
 char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);

@@ -199,8 +199,55 @@ flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id)
 }
 
 
-/*
- * flickr.photos.licenses.setLicense:
- *
+/**
+ * flickcurl_photos_licenses_setLicense:
+ * @fc: flickcurl context
+ * @photo_id: The photo to update the license for.
+ * @license_id: The license to apply, or 0 (zero) to remove the current license.
+ * 
  * Sets the license for a photo.
- */
+ *
+ * Implements flickr.photos.licenses.setLicense (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id,
+                                     int license_id)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  int result=1;
+  char license_id_s[5];
+  
+  if(!photo_id)
+    return 1;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  parameters[count][0]  = "license_id";
+  sprintf(license_id_s, "%d", license_id);
+  parameters[count++][1]= license_id_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.licenses.setLicense", parameters,
+                       count))
+    goto tidy;
+
+  flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result=0;
+
+  tidy:
+  if(fc->failed)
+    result=1;
+
+  return result;
+}
