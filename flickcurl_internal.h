@@ -69,6 +69,9 @@ flickcurl_contact** flickcurl_build_contacts(flickcurl* fc, xmlXPathContextPtr x
 /* context.c */
 flickcurl_context** flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc);
 
+/* location.c */
+flickcurl_location* flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
+
 /* md5.c - MD5 as hex string */
 extern char* MD5_string(char *string);
 
