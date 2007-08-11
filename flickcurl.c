@@ -73,6 +73,7 @@
 
 #include <flickcurl.h>
 
+#include <curl/curl.h>
 
 
 #ifdef NEED_OPTIND_DECLARATION
@@ -1030,12 +1031,12 @@ command_photos_setDates(flickcurl* fc, int argc, char *argv[])
   int date_taken= -1;
   int date_taken_granularity= -1;
 
-  /* FIXME - use parsedate() */
-  date_posted=atoi(argv[2]);
-  date_taken=atoi(argv[3]);
+  date_posted=curl_getdate(argv[2], NULL);
+  date_taken=curl_getdate(argv[3], NULL);
   date_taken_granularity=atoi(argv[4]);
   
-  return flickcurl_photos_setDates(fc, photo_id, date_posted, date_taken, date_taken_granularity);
+  return flickcurl_photos_setDates(fc, photo_id, date_posted, date_taken,
+                                   date_taken_granularity);
 }
 
 
@@ -1087,17 +1088,21 @@ command_photos_setSafetyLevel(flickcurl* fc, int argc, char *argv[])
 
 
 static void
-command_print_perms(flickcurl_perms* perms)
+command_print_perms(flickcurl_perms* perms, int show_comment_metadata)
 {
   static const char* perms_labels[4]={"nobody", "friends and family", "contacts", "everybody" };
 
 #define YESNO(x) ((x) ? "yes" : "no")
-#define PERM_LABEL(x) (((x) >=0 && (x) <= 3) ? perms_labels[(x)] : "?")
   fprintf(stderr,
-          "view perms: public: %s  friend: %s  family: %s\nadd comment: %s\nadd metadata: %s\n",
-          YESNO(perms->is_public), YESNO(perms->is_friend),
-          YESNO(perms->is_family), 
-          PERM_LABEL(perms->perm_comment), PERM_LABEL(perms->perm_addmeta));
+          "view perms: public: %s  contact: %s  friend: %s  family: %s\n",
+          YESNO(perms->is_public), YESNO(perms->is_contact),
+          YESNO(perms->is_friend), YESNO(perms->is_family));
+
+#define PERM_LABEL(x) (((x) >=0 && (x) <= 3) ? perms_labels[(x)] : "?")
+  if(show_comment_metadata)
+    fprintf(stderr,
+            "add comment: %s\nadd metadata: %s\n",
+            PERM_LABEL(perms->perm_comment), PERM_LABEL(perms->perm_addmeta));
 }
 
 
@@ -1112,7 +1117,7 @@ command_photos_getPerms(flickcurl* fc, int argc, char *argv[])
     return 1;
 
   fprintf(stderr, "%s: Photo ID %s permissions\n", program, photo_id);
-  command_print_perms(perms);
+  command_print_perms(perms, 1);
 
   flickcurl_free_perms(perms);
   return 0;
@@ -1172,11 +1177,11 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
     } else if(!strcmp(argv[0], "min-upload-date")) {
       /* timestamp */
       argv++; argc--;
-      params.min_upload_date=atoi(argv[0]);
+      params.min_upload_date=curl_getdate(argv[0], NULL);
     } else if(!strcmp(argv[0], "max-upload-date")) {
       /* timestamp */
       argv++; argc--;
-      params.max_upload_date=atoi(argv[0]);
+      params.max_upload_date=curl_getdate(argv[0], NULL);
     } else if(!strcmp(argv[0], "min-taken-date")) {
       /* MYSQL datetime */
       argv++; argc--;
@@ -1288,6 +1293,92 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_geo_getLocation(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  flickcurl_location* location;
+
+  location=flickcurl_photos_geo_getLocation(fc, photo_id);
+  if(!location)
+    return 1;
+
+  fprintf(stderr,
+          "%s: Photo ID %s location:\n  latitude %f  longitude %f  accuracy %s(%d)\n",
+          program, photo_id,
+          location->latitude, location->longitude, 
+          flickcurl_get_location_accuracy_label(location->accuracy),
+          location->accuracy);
+
+  flickcurl_free_location(location);
+  return 0;
+}
+
+
+static int
+command_photos_geo_getPerms(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  flickcurl_perms* perms;
+
+  perms=flickcurl_photos_geo_getPerms(fc, photo_id);
+  if(!perms)
+    return 1;
+
+  fprintf(stderr, "%s: Photo ID %s geo permissions:\n", program, photo_id);
+  command_print_perms(perms, 0);
+
+  flickcurl_free_perms(perms);
+  return 0;
+}
+
+
+static int
+command_photos_geo_removeLocation(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  
+  return flickcurl_photos_geo_removeLocation(fc, photo_id);
+}
+
+
+static int
+command_photos_geo_setLocation(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  double latitude=atof(argv[2]);
+  double longitude=atof(argv[3]);
+  int accuracy=atoi(argv[4]);
+  flickcurl_location location;
+
+  memset(&location, '\0', sizeof(flickcurl_location));
+  location.latitude=latitude;
+  location.longitude=longitude;
+  location.accuracy=accuracy;
+
+  return flickcurl_photos_geo_setLocation(fc, photo_id, &location);
+}
+
+
+static int
+command_photos_geo_setPerms(flickcurl* fc, int argc, char *argv[])
+{
+  const char *photo_id=argv[1];
+  int is_public=atoi(argv[2]);
+  int is_contact=atoi(argv[3]);
+  int is_friend=atoi(argv[4]);
+  int is_family=atoi(argv[5]);
+  flickcurl_perms perms;
+
+  memset(&perms, '\0', sizeof(flickcurl_perms));
+  perms.is_public=is_public;
+  perms.is_contact=is_contact;
+  perms.is_friend=is_friend;
+  perms.is_family=is_family;
+
+  return flickcurl_photos_geo_setPerms(fc, photo_id, &perms);
+}
+
 
 static struct {
   const char*     name;
@@ -1382,6 +1473,23 @@ static struct {
   {"photos.comments.getList",
    "PHOTO-ID", "Get the comments for a photo PHOTO-ID.",
    command_photos_comments_getList, 1, 1},
+
+  {"photos.geo.getLocation",
+   "PHOTO-ID", "Get the geo location for a photo PHOTO-ID.",
+   command_photos_geo_getLocation, 1, 1},
+  {"photos.geo.getPerms",
+   "PHOTO-ID", "Get the geo perms for a photo PHOTO-ID.",
+   command_photos_geo_getPerms, 1, 1},
+  {"photos.geo.removeLocation",
+   "PHOTO-ID", "Remove the location for a photo PHOTO-ID.",
+   command_photos_geo_removeLocation, 1, 1},
+  {"photos.geo.removeLocation",
+   "PHOTO-ID LAT LONG ACCURACY", "Set the location for a photo PHOTO-ID.",
+   command_photos_geo_setLocation, 4, 4},
+  {"photos.geo.setPerms",
+   "PHOTO-ID IS-PUBLIC IS-CONTACT IS-FRIEND IS-FAMILY", "Set the geo perms for a photo PHOTO-ID.",
+   command_photos_geo_setPerms, 5, 5},
+
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
@@ -1397,12 +1505,14 @@ static struct {
   {"photosets.comments.getList",
    "PHOTOSET-ID", "Get the comments for a photoset PHOTOSET-ID.",
    command_photosets_comments_getList, 1, 1},
+
   {"reflection.getMethods",
    "", "Get API methods",
    command_reflection_getMethods, 0, 0},
   {"reflection.getMethodInfo",
    "NAME", "Get information about an API method NAME",
    command_reflection_getMethodInfo, 1, 1},
+
   {"tags.getHotList",
    "[PERIOD [COUNT]]", "Get the list of hot tags for the given PERIOD (day, week)",
    command_tags_getHotList, 0, 2},

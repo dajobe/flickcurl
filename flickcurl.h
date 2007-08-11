@@ -180,22 +180,42 @@ typedef struct flickcurl_comment_s {
 /**
  * flickcurl_perms:
  * @is_public: non-0 to set the photo to public else private
+ * @is_contact: 
  * @is_friend: non-0 to make the photo visible to friends when private
  * @is_family: non-0 to make the photo visible to family when private
  * @perm_comment: who can add comments to the photo and it's notes. one of: 0 nobody,  1 friends & family, 2 contacts, 3 everybody
  * @perm_addmeta: who can add notes and tags to the photo. one of: 0 nobody / just the owner, 1 friends & family, 2 contacts, 3 everybody
  *
  * Permissions as used by flickcurl_photos_getPerms() and 
- * flickcurl_photos_setPerms().
+ * flickcurl_photos_setPerms() which use public, friend, family,
+ * perm_comment and perm-addmeta.  flickr.photos.geo.setPerms() uses
+ * public, contact, friend and family.
  */
 typedef struct 
 {
   int is_public;
+  int is_contact;
   int is_friend;
   int is_family;
   int perm_comment;
   int perm_addmeta;
 } flickcurl_perms;
+
+
+/**
+ * flickcurl_location:
+ * @latitude: The latitude from -90 to 90
+ * @longitude: The longitude from -180 to 180
+ * @accuracy: Recorded accuracy level of the location.
+ *   World level is 1, Country is ~3, Region ~6, City ~11, Street
+ *   ~16. Current range is 1-16. Defaults to 16 if not specified. (<0 for none)
+ */
+typedef struct 
+{
+  double latitude;
+  double longitude;
+  int accuracy;
+} flickcurl_location;
   
 
 /**
@@ -518,6 +538,7 @@ void flickcurl_free_person(flickcurl_person *person);
 void flickcurl_free_context(flickcurl_context *context);
 void flickcurl_free_contexts(flickcurl_context** contexts);
 void flickcurl_free_perms(flickcurl_perms *perms);
+void flickcurl_free_location(flickcurl_location *location);
 
 
 /* utility methods */
@@ -582,6 +603,14 @@ char* flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id, 
 int flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id);
 int flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
 flickcurl_comment** flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id);
+
+/* flickr.photos.geo */
+flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
+flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
+int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);
+int flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id, flickcurl_location* location);
+int flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
+const char* flickcurl_get_location_accuracy_label(int accuracy);
 
 /* flickr.photos.licenses */
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
