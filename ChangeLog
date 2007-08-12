@@ -1,3 +1,87 @@
+2007-08-11  Dave Beckett  <dave@dajobe.org>
+
+	* coverage.html, flickcurl.c, flickcurl.h, photos-api.c: Added
+	flickr.photos.getNotInSet, flickr.photos.getRecent,
+	flickr.photos.getUntagged, flickr.photos.getWithGeoData,
+	flickr.photos.getWithoutGeoData, flickr.photos.recentlyUpdated
+
+	* coverage.html, flickcurl.c, flickcurl.h, person.c, photos-api.c:
+	Added flickr.photos.getFavorites
+
+	* coverage.html, flickcurl.h, flickcurl_internal.h, person.c:
+	Added flickcurl_build_persons
+
+	* exif.c: -debug
+
+	* Makefile.am, exif.c, flickcurl.c, flickcurl.h,
+	flickcurl_internal.h, photos-api.c: Added flickcurl_photos_getExif
+
+	* coverage.html, flickcurl.c, flickcurl.h, photos-api.c: Added
+	flickcurl_photos_getContactsPublicPhotos
+
+2007-08-10  Dave Beckett  <dave@dajobe.org>
+
+	* Makefile.am, coverage.html, flickcurl.c, flickcurl.h,
+	flickcurl_internal.h, group.c, groups-pools-api.c: Added
+	groups.pools APIs
+
+	* coverage.html, flickcurl.c, people-api.c: Added
+	flickcurl_people_getPublicPhotos
+
+	* flickcurl.h: Added flickcurl_people_getPublicPhotos
+
+	* flickcurl.c, flickcurl.h, photos-licenses-api.c: Added
+	photos.licenses.setLicense API
+
+	* Makefile.am, coverage.html, flickcurl.c, flickcurl.h,
+	photos-notes-api.c: Added photos.notes API
+
+	* photos-geo-api.c: (flickcurl_photos_geo_setLocation): Handle
+	optional accuracy
+
+	* flickcurl.c, flickcurl.h, location.c, photos-geo-api.c: Added
+	photos.geo API
+
+	* photos-api.c: (flickcurl_photos_delete): Tidy result returning.
+
+	* Makefile.am: Add location.c photos-geo-api.c
+
+	* flickcurl_internal.h: Add flickcurl_build_location
+
+	* perms.c: (flickcurl_build_perms): Add iscontact.
+
+	* photos-api.c: (flickcurl_photos_setContentType): No need for
+	xpathCtx
+
+2007-08-08  Dave Beckett  <dave@dajobe.org>
+
+	* AUTHORS, contacts-api.c, contacts.c: Added Vanila I. Shu
+	copyright to AUTHORS and contacts code
+
+2007-08-06  Dave Beckett  <dave@dajobe.org>
+
+	* flickcurl_internal.h: Remove libxslt headers - patch from
+	FreeBSD packaging
+
+2007-08-05  Dave Beckett  <dave@dajobe.org>
+
+	* example.c: title, license header
+
+2007-08-04  Dave Beckett  <dave@dajobe.org>
+
+	* flickrdf.c: change machinetags.org namespaces
+
+2007-08-03  Dave Beckett  <dave@dajobe.org>
+
+	* photo.c: (flickcurl_build_photos): Do not overwrite a field if
+	it's found in the earlier of two XPaths
+
+	* flickrdf.c: Properly ignore xmlns in (machine) tags
+
+	* NEWS.html: 0.12
+
+	* configure.ac: Bumped version to 0.12
+
 2007-08-02  Dave Beckett  <dave@dajobe.org>
 
 	* configure.ac: Bumped version to 0.12
