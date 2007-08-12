@@ -391,9 +391,69 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
 }
 
 
+#if 0
 /*
- * flickr.photos.getCounts
+ * flickcurl_photos_getCounts:
+ * @fc: flickcurl context
+ * @dates: A comma delimited list of unix timestamps, denoting the periods to return counts for. They should be specified <b>smallest first</b>. (or NULL)
+ * @taken_dates: A comma delimited list of mysql datetimes, denoting the periods to return counts for. They should be specified <b>smallest first</b>. (or NULL)
+ * 
+ * Gets a list of photo counts for the given date ranges for the calling user.
+ *
+ * Implements flickr.photos.getCounts
+ * 
+ * Return value: non-0 on failure
  */
+int
+flickcurl_photos_getCounts(flickcurl* fc, const char* dates, const char* taken_dates)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  void* result=NULL;
+
+  if(!dates || !taken_dates)
+    return 1;
+  
+  if(dates) {
+    parameters[count][0]  = "dates";
+    parameters[count++][1]= dates;
+  }
+  if(taken_dates) {
+    parameters[count][0]  = "taken_dates";
+    parameters[count++][1]= taken_dates;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getCounts", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  result=NULL; /* your code here */
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    result=NULL;
+
+  return (result == NULL);
+}
+#endif
 
 
 /**
@@ -583,9 +643,127 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
 }
 
 
-/*
- * flickr.photos.getNotInSet
- */
+static flickcurl_photo**
+flickcurl_get_photoslist(flickcurl* fc, 
+                         const char* method,
+                         int min_upload_date, int max_upload_date,
+                         const char* min_taken_date,
+                         const char* max_taken_date,
+                         int privacy_filter, const char* extras,
+                         int per_page, int page)
+{
+  const char* parameters[15][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_photo** photos=NULL;
+  char min_upload_date_s[20];
+  char max_upload_date_s[20];
+  char privacy_filter_s[20];
+  char per_page_s[4];
+  char page_s[4];
+
+  if(min_upload_date > 0) {
+    parameters[count][0]  = "min_upload_date";
+    sprintf(min_upload_date_s, "%d", min_upload_date);
+    parameters[count++][1]= min_upload_date_s;
+  }
+  if(max_upload_date > 0) {
+    parameters[count][0]  = "max_upload_date";
+    sprintf(max_upload_date_s, "%d", max_upload_date);
+    parameters[count++][1]= max_upload_date_s;
+  }
+  if(min_taken_date) {
+    parameters[count][0]  = "min_taken_date";
+    parameters[count++][1]= min_taken_date;
+  }
+  if(max_taken_date) {
+    parameters[count][0]  = "max_taken_date";
+    parameters[count++][1]= max_taken_date;
+  }
+  if(privacy_filter >=1 && privacy_filter <= 5) {
+    parameters[count][0]  = "privacy_filter";
+    sprintf(privacy_filter_s, "%d", privacy_filter);
+    parameters[count++][1]= privacy_filter_s;
+  }
+  if(extras) {
+    parameters[count][0]  = "extras";
+    parameters[count++][1]= extras;
+  }
+  parameters[count][0]  = "per_page";
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
+  parameters[count][0]  = "page";
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, method, parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  photos=flickcurl_build_photos(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/photos/photo", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    photos=NULL;
+
+  return photos;
+}
+
+
+/**
+ * flickcurl_photos_getNotInSet:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date.
+ * @max_upload_date: Maximum upload date.
+ * @min_taken_date: Minimum taken date (or NULL).
+ * @max_taken_date: Maximum taken date (or NULL).
+ * @privacy_filter: Return photos only matching a certain privacy level.
+ * Valid privacy values are: 1 public, 2 friends, 3 family, 4 friends and
+ * family, 5 private
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ *  Currently supported fields are: license, date_upload, date_taken,
+ *  owner_name, icon_server, original_format, last_update, geo, tags,
+ *  machine_tags.
+ * @per_page: Number of photos to return per page (default 100, max 500).
+ * @page: The page of results to return (default 1).
+ * 
+ * Returns a list of your photos that are not part of any sets.
+ *
+ * Implements flickr.photos.getNotInSet (0.12)
+ * 
+ * Return value: a list of photos or NULL on failure
+ **/
+flickcurl_photo**
+flickcurl_photos_getNotInSet(flickcurl* fc, 
+                             int min_upload_date, int max_upload_date,
+                             const char* min_taken_date,
+                             const char* max_taken_date,
+                             int privacy_filter, const char* extras,
+                             int per_page, int page)
+{
+  return flickcurl_get_photoslist(fc, "flickr.photos.getNotInSet",
+                                  min_upload_date, max_upload_date,
+                                  min_taken_date, max_taken_date,
+                                  privacy_filter, extras, per_page,page);
+}
 
 
 /**
@@ -644,34 +822,340 @@ flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
 }
 
 
+/**
+ * flickcurl_photos_getRecent:
+ * @fc: flickcurl context
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ * Currently supported fields are: license, date_upload, date_taken,
+ * owner_name, icon_server, original_format, last_update, geo, tags,
+ * machine_tags.
+ * @per_page: Number of photos to return per page (default 100, max 500)
+ * @page: The page of results to return (default 1)
+ * 
+ * Returns a list of the latest public photos uploaded to flickr.
+ *
+ * Implements flickr.photos.getRecent (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_photos_getRecent(flickcurl* fc, const char* extras,
+                           int per_page, int page)
+{
+  const char* parameters[10][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_photo** photos=NULL;
+  char per_page_s[4];
+  char page_s[4];
+
+  if(extras) {
+    parameters[count][0]  = "extras";
+    parameters[count++][1]= extras;
+  }
+  parameters[count][0]  = "per_page";
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
+  parameters[count][0]  = "page";
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getRecent", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  photos=flickcurl_build_photos(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/photos/photo", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    photos=NULL;
+
+  return photos;
+}
+
+
+#if 0
 /*
- * flickr.photos.getRecent
+ * flickcurl_photos_getSizes:
+ * @fc: flickcurl context
+ * @photo_id: The id of the photo to fetch size information for.
+ * 
+ * Returns the available sizes for a photo.  The calling user must have permission to view the photo.
+ *
+ * Implements flickr.photos.getSizes
+ * 
+ * Return value: non-0 on failure
  */
+int
+flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
+{
+  const char* parameters[8][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  void* result=NULL;
+  
+  if(!photo_id)
+    return 1;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getSizes", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
 
 
-/*
- * flickr.photos.getSizes
- */
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  result=NULL; /* your code here */
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    result=NULL;
+
+  return (result == NULL);
+}
+#endif
 
 
-/*
- * flickr.photos.getUntagged
- */
+/**
+ * flickcurl_photos_getUntagged:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date.
+ * @max_upload_date: Maximum upload date.
+ * @min_taken_date: Minimum taken date (or NULL)
+ * @max_taken_date: Maximum taken date (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level.
+ * Valid privacy values are: 1 public, 2 friends, 3 family, 4 friends and
+ * family, 5 private
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ *  Currently supported fields are: license, date_upload, date_taken,
+ *  owner_name, icon_server, original_format, last_update, geo, tags,
+ *  machine_tags.
+ * @per_page: Number of photos to return per page (default 100, max 500).
+ * @page: The page of results to return (default 1).
+ * 
+ * Returns a list of your photos with no tags.
+ *
+ * Implements flickr.photos.getUntagged (0.12)
+ * 
+ * Return value: a list of photos or NULL on failure
+ **/
+flickcurl_photo**
+flickcurl_photos_getUntagged(flickcurl* fc,
+                             int min_upload_date, int max_upload_date,
+                             const char* min_taken_date,
+                             const char* max_taken_date,
+                             int privacy_filter, const char* extras,
+                             int per_page, int page)
+{
+  return flickcurl_get_photoslist(fc, "flickr.photos.getUntagged",
+                                  min_upload_date, max_upload_date,
+                                  min_taken_date, max_taken_date,
+                                  privacy_filter, extras, per_page,page);
+}
 
 
-/*
- * flickr.photos.getWithGeoData
- */
+/**
+ * flickcurl_photos_getWithGeoData:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level. Valid values are:
+<ul>
+<li>1 public photos</li>
+<li>2 private photos visible to friends</li>
+<li>3 private photos visible to family</li>
+<li>4 private photos visible to friends & family</li>
+<li>5 completely private photos</li>
+</ul>
+ (or NULL)
+ * @sort: The order in which to sort returned photos. Deafults to date-posted-desc. The possible values are: date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, and interestingness-asc. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * 
+ * Returns a list of your geo-tagged photos.
+ *
+ * Implements flickr.photos.getWithGeoData (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_photos_getWithGeoData(flickcurl* fc,
+                                int min_upload_date, int max_upload_date,
+                                const char* min_taken_date,
+                                const char* max_taken_date,
+                                int privacy_filter, const char* extras,
+                                int per_page, int page)
+{
+  return flickcurl_get_photoslist(fc, "flickr.photos.getWithGeoData",
+                                  min_upload_date, max_upload_date,
+                                  min_taken_date, max_taken_date,
+                                  privacy_filter, extras, per_page,page);
+}
 
 
-/*
- * flickr.photos.getWithoutGeoData
- */
+/**
+ * flickcurl_photos_getWithoutGeoData:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level. Valid values are:
+<ul>
+<li>1 public photos</li>
+<li>2 private photos visible to friends</li>
+<li>3 private photos visible to family</li>
+<li>4 private photos visible to friends & family</li>
+<li>5 completely private photos</li>
+</ul>
+ (or NULL)
+ * @sort: The order in which to sort returned photos. Deafults to date-posted-desc. The possible values are: date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, and interestingness-asc. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * 
+ * Returns a list of your photos which haven't been geo-tagged.
+ *
+ * Implements flickr.photos.getWithoutGeoData (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_photos_getWithoutGeoData(flickcurl* fc,
+                                   int min_upload_date, int max_upload_date,
+                                   const char* min_taken_date,
+                                   const char* max_taken_date,
+                                   int privacy_filter, const char* extras,
+                                   int per_page, int page)
+{
+  return flickcurl_get_photoslist(fc, "flickr.photos.getWithoutGeoData",
+                                  min_upload_date, max_upload_date,
+                                  min_taken_date, max_taken_date,
+                                  privacy_filter, extras, per_page,page);
+}
 
 
-/*
- * flickr.photos.recentlyUpdated
- */
+/**
+ * flickcurl_photos_recentlyUpdated:
+ * @fc: flickcurl context
+ * @min_date: A Unix timestamp indicating the date from which modifications should be compared.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ * Currently supported fields are: license, date_upload, date_taken,
+ * owner_name, icon_server, original_format, last_update, geo, tags,
+ * machine_tags.
+ * @per_page: Number of photos to return per page (default 100, max 500)
+ * @page: The page of results to return (default 1)
+ * 
+ * Return a list of your photos that have been recently created or which have been recently modified
+ * 
+ * Recently modified may mean that the photo's metadata (title,
+ * description, tags) may have been changed or a comment has been
+ * added (or just modified somehow :-)
+ *
+ * Implements flickr.photos.recentlyUpdated (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date,
+                                 const char* extras,
+                                 int per_page, int page)
+{
+  const char* parameters[11][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_photo** photos=NULL;
+  char min_date_s[20];
+  char per_page_s[4];
+  char page_s[4];
+  
+  if(min_date <=0)
+    return NULL;
+
+  if(min_date >0) {
+    parameters[count][0]  = "min_date";
+    sprintf(min_date_s, "%d", min_date);
+    parameters[count++][1]= min_date_s;
+  }
+  
+  if(extras) {
+    parameters[count][0]  = "extras";
+    parameters[count++][1]= extras;
+  }
+  parameters[count][0]  = "per_page";
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
+  parameters[count][0]  = "page";
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.recentlyUpdated", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  photos=flickcurl_build_photos(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/photos/photo", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    photos=NULL;
+
+  return photos;
+}
 
 
 /**

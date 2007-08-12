@@ -635,7 +635,13 @@ flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo
 flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
 flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
+flickcurl_photo** flickcurl_photos_getRecent(flickcurl* fc, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_photos_getUntagged(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_photos_getWithGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_photos_getWithoutGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date, const char* extras, int per_page, int page);
 int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
 flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
 int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);

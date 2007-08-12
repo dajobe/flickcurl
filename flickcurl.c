@@ -1646,6 +1646,137 @@ command_photos_getFavorites(flickcurl* fc, int argc, char *argv[])
 }
 
 
+typedef flickcurl_photo** (*photoslist_fn)(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+
+
+static int
+command_photoslist(flickcurl* fc, int argc, char *argv[],
+                   photoslist_fn api_fn, const char* label)
+{
+  int min_upload_date= -1;
+  int max_upload_date= -1;
+  char* min_taken_date= NULL;
+  char* max_taken_date= NULL;
+  int privacy_filter= -1;
+  const char* extras=NULL;
+  int per_page=10;
+  int page=0;
+  flickcurl_photo** photos=NULL;
+  int i;
+  
+  if(argc >1) {
+    per_page=atoi(argv[1]);
+    if(argc >3)
+      page=atoi(argv[2]);
+  }
+
+  photos=api_fn(fc, min_upload_date, max_upload_date, min_taken_date, max_taken_date, privacy_filter, extras, per_page, page);
+  if(!photos)
+    return 1;
+
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Photo not in set %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+static int
+command_photos_getNotInSet(flickcurl* fc, int argc, char *argv[])
+{
+  return command_photoslist(fc, argc, argv,
+                            flickcurl_photos_getNotInSet,
+                            "Photo not in set");
+}
+
+
+static int
+command_photos_getRecent(flickcurl* fc, int argc, char *argv[])
+{
+  const char* extras=NULL;
+  int per_page=10;
+  int page=0;
+  flickcurl_photo** photos=NULL;
+  int i;
+  
+  if(argc >1) {
+    per_page=atoi(argv[1]);
+    if(argc >3)
+      page=atoi(argv[2]);
+  }
+
+  photos=flickcurl_photos_getRecent(fc, extras, per_page, page);
+  if(!photos)
+    return 1;
+
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Recent photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+static int
+command_photos_getUntagged(flickcurl* fc, int argc, char *argv[])
+{
+  return command_photoslist(fc, argc, argv,
+                            flickcurl_photos_getUntagged,
+                            "Untagged photo");
+}
+
+static int
+command_photos_getWithGeoData(flickcurl* fc, int argc, char *argv[])
+{
+  return command_photoslist(fc, argc, argv,
+                            flickcurl_photos_getWithGeoData,
+                            "Photo with geo data");
+}
+
+static int
+command_photos_getWithoutGeoData(flickcurl* fc, int argc, char *argv[])
+{
+  return command_photoslist(fc, argc, argv,
+                            flickcurl_photos_getWithoutGeoData,
+                            "Photo without geo data");
+}
+
+static int
+command_photos_recentlyUpdated(flickcurl* fc, int argc, char *argv[])
+{
+  int min_date= -1;
+  const char* extras=NULL;
+  int per_page=10;
+  int page=0;
+  flickcurl_photo** photos=NULL;
+  int i;
+  
+  if(argc >1) {
+    per_page=atoi(argv[1]);
+    if(argc >3)
+      page=atoi(argv[2]);
+  }
+
+  photos=flickcurl_photos_recentlyUpdated(fc, min_date, extras, per_page, page);
+  if(!photos)
+    return 1;
+
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Recent photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1654,7 +1785,9 @@ static struct {
   int             min;
   int             max;
 } commands[] = {
-  /* name, min, handler */
+  /* {fn name, 
+   *  args desc, fn description, handler, min args, max args },
+   */
   {"auth.checkToken",
    "TOKEN", "Get the credentials attached to an authentication TOKEN.",
    command_auth_checkToken, 1, 1},
@@ -1693,9 +1826,11 @@ static struct {
   {"people.getInfo",
    "USER-ID", "Get information about one person with id USER-ID", 
    command_people_getInfo,  1, 1},
+  /* missing: people.getPublicGroups */
   {"people.getPublicPhotos",
    "USER-ID [PER-PAGE [PAGE]]", "Get PAGE pages of PER-PAGE public photos for a user USER-ID", 
    command_people_getPublicPhotos,  1, 3},
+  /* missing: people.getUploadStatus */
 
   {"photos.addTags",
    "PHOTO-ID TAGS", "Add TAGS to a PHOTO-ID.",
@@ -1706,9 +1841,16 @@ static struct {
   {"photos.getAllContexts",
    "PHOTO-ID", "Get all visible sets and pools the PHOTO-ID belongs to.",
    command_photos_getAllContexts, 1, 1},
+  {"photos.getContactsPhotos",
+   "", "Get a list of recent photos from the calling users' contacts",
+   command_photos_getContactsPhotos, 0, 0},
+  {"photos.getContactsPublicPhotos",
+   "USER-ID", "Get a list of recent public photos from USER-ID's contacts",
+   command_photos_getContactsPublicPhotos, 1, 1},
   {"photos.getContext",
    "PHOTO-ID", "Get next and previous photos for a PHOTO-ID in a photostream.",
    command_photos_getContext, 1, 1},
+  /* missing: photos.getCounts */
   {"photos.getExif",
    "PHOTO-ID", "Get EXIF information about one photo with id PHOTO-ID", 
    command_photos_getExif,  1, 1},
@@ -1718,15 +1860,28 @@ static struct {
   {"photos.getInfo",
    "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
    command_photos_getInfo,  1, 1},
+  {"photos.getNotInSet",
+   "[PER-PAGE [PAGE]]", "Get list of photos that are not in any set", 
+   command_photos_getNotInSet, 0, 2},
   {"photos.getPerms",
    "PHOTO-ID", "Get a photo viewing and commenting permissions",
    command_photos_getPerms, 1, 1},
-  {"photos.getContactsPhotos",
-   "", "Get a list of recent photos from the calling users' contacts",
-   command_photos_getContactsPhotos, 0, 0},
-  {"photos.getContactsPublicPhotos",
-   "USER-ID", "Get a list of recent public photos from USER-ID's contacts",
-   command_photos_getContactsPublicPhotos, 1, 1},
+  {"photos.getRecent",
+   "[PER-PAGE [PAGE]]", "Get list of recent photos", 
+   command_photos_getRecent, 0, 2},
+  /* missing: photos.getSizes */
+  {"photos.getUntagged",
+   "[PER-PAGE [PAGE]]", "Get list of photos that are not tagged", 
+   command_photos_getUntagged, 0, 2},
+  {"photos.getWithGeoData",
+   "[PER-PAGE [PAGE]]", "Get list of photos that have geo data", 
+   command_photos_getWithGeoData, 0, 2},
+  {"photos.getWithoutGeoData",
+   "[PER-PAGE [PAGE]]", "Get list of photos that do not have geo data", 
+   command_photos_getWithoutGeoData, 0, 2},
+  {"photos.recentlyUpdated",
+   "[PER-PAGE [PAGE]]", "Get list of photos that were recently updated", 
+   command_photos_recentlyUpdated, 0, 2},
   {"photos.removeTag",
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
@@ -1751,7 +1906,6 @@ static struct {
   {"photos.setTags",
    "PHOTO-ID TAGS", "Set the tags for a PHOTO-ID to TAGS.",
    command_photos_setTags, 2, 2},
-
 
   {"photos.comments.addComment",
    "PHOTO-ID TEXT", "Add a photo comment TEXT to PHOTO-ID.",
