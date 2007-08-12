@@ -11,10 +11,190 @@
 <h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
 
 
-<h2 id="D2007-XX-YY">2007-XX-YY Flickcurl 0.12</h2>
+<h2 id="D2007-08-11">2007-08-11 Flickcurl 0.12</h2>
 
-<p>Not yet released.
+<p>23 new Flickr API calls supported (72.1% of API):</p>
+
+<ul>
+<li><strong>flickcurl_groups_pools_add</strong>
+<pre>
+  int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id,
+        const char* group_id);
+</pre>
+</li>
+<li><strong>flickcurl_groups_pools_getGroups</strong>
+<pre>
+  flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc,
+        int page, int per_page);
+</pre>
+</li>
+<li><strong>flickcurl_groups_pools_getPhotos</strong>
+<pre>
+  flickcurl_photo** flickcurl_groups_pools_getPhotos(flickcurl* fc,
+        const char* group_id, const char* tags, const char* user_id,
+        const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_groups_pools_remove</strong>
+<pre>
+  int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id,
+        const char* group_id);
+</pre>
+</li>
+<li><strong>flickcurl_people_getPublicPhotos</strong>
+<pre>
+  flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc,
+        const char* user_id,  const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getContactsPublicPhotos</strong>
+<pre>
+  flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc,
+        const char* user_id, int count, int just_friends,
+        int single_photo, int include_self, const char* extras);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getExif</strong>
+<pre>
+  flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc,
+        const char* photo_id, const char* secret);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getFavorites</strong>
+<pre>
+  flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc,
+        const char* photo_id, int page, int per_page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getNotInSet</strong>
+<pre>
+  flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc,
+        int min_upload_date, int max_upload_date,
+        const char* min_taken_date, const char* max_taken_date,
+        int privacy_filter, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getRecent</strong>
+<pre>
+  flickcurl_photo** flickcurl_photos_getRecent(flickcurl* fc,
+        const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getUntagged</strong>
+<pre>
+  flickcurl_photo** flickcurl_photos_getUntagged(flickcurl* fc,
+        int min_upload_date, int max_upload_date,
+        const char* min_taken_date, const char* max_taken_date,
+        int privacy_filter, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getWithGeoData</strong>
+<pre>
+  flickcurl_photo** flickcurl_photos_getWithGeoData(flickcurl* fc,
+        int min_upload_date, int max_upload_date,
+        const char* min_taken_date, const char* max_taken_date,
+        int privacy_filter, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getWithoutGeoData</strong>
+<pre>
+  flickcurl_photo** flickcurl_photos_getWithoutGeoData(flickcurl* fc,
+        int min_upload_date, int max_upload_date,
+        const char* min_taken_date, const char* max_taken_date,
+        int privacy_filter, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_recentlyUpdated</strong>
+<pre>
+  flickcurl_photo** flickcurl_photos_recentlyUpdated(flickcurl* fc,
+        int min_date, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photos_geo_getLocation</strong>
+<pre>
+  flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc,
+        const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_photos_geo_getPerms</strong>
+<pre>
+  flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc,
+        const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_photos_geo_removeLocation</strong>
+<pre>
+  int flickcurl_photos_geo_removeLocation(flickcurl* fc,
+        const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_photos_geo_setLocation</strong>
+<pre>
+  int flickcurl_photos_geo_setLocation(flickcurl* fc,
+        const char* photo_id, flickcurl_location* location);
+</pre>
+</li>
+<li><strong>flickcurl_photos_geo_setPerms</strong>
+<pre>
+  int flickcurl_photos_geo_setPerms(flickcurl* fc,
+        const char* photo_id, flickcurl_perms* perms);
+</pre>
+</li>
+<li><strong>flickcurl_photos_licenses_setLicense</strong>
+<pre>
+  int flickcurl_photos_licenses_setLicense(flickcurl* fc,
+        const char* photo_id, int license_id);
+</pre>
+</li>
+<li><strong>flickcurl_photos_notes_add</strong>
+<pre>
+  char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
+        int note_x, int note_y, int note_w, int note_h,
+        const char* note_text);
+</pre>
+</li>
+<li><strong>flickcurl_photos_notes_delete</strong>
+<pre>
+  int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
+</pre>
+</li>
+<li><strong>flickcurl_photos_notes_edit</strong>
+<pre>
+  int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id,
+        int note_x, int note_y, int note_w, int note_h,
+        const char* note_text);
+</pre>
+</li>
+</ul>
+
+<p><code>flickcurl</code> utility updated to add all new functions.
 </p>
+
+<p>Added <code>flickcurl_exif</code> for <code>flickcurl_photos_getExif</code>
+</p>
+
+<p>Added <code>flickcurl_group</code> for the groups functions
+<code>flickcurl_groups_pools_add</code>,
+<code>flickcurl_groups_pools_getGroups</code>,
+<code>flickcurl_groups_pools_getPhotos</code> and
+<code>flickcurl_groups_pools_remove</code>
+</p>
+
+<p>
+Added photos field <code>PERSON_FIELD_favedate</code> as returned by
+<code>flickcurl_photos_getFavorites</code>
+</p>
+
+<p>Added destructor functions to free perons lists, exif, exifs list,
+group and groups list.</p>
+<pre>
+  void flickcurl_free_persons(flickcurl_person** persons);
+  void flickcurl_free_exif(flickcurl_exif *exif);
+  void flickcurl_free_exifs(flickcurl_exif **exifs_object);
+  void flickcurl_free_group(flickcurl_group *group);
+  void flickcurl_free_groups(flickcurl_group **groups_object);
+</pre>
+
 
 
 <h2 id="D2007-08-03">2007-08-03 Flickcurl 0.11</h2>
@@ -27,52 +207,62 @@
   flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc,
         const char* filter, int page, int per_page);
 </pre>
+</li>
 <li><strong>flickr.contacts.getPublicList</strong>:
 <pre>
   flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc,
         const char* user_id, int page, int per_page);
 </pre>
+</li>
 <li><strong>flickr.photos.getContactsPhotos</strong>:
 <pre>
   flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc,
         int contact_count, int just_friends, int single_photo,
         int include_self, const char* extras);
 </pre>
+</li>
 <li><strong>flickr.photos.getPerms</strong>:
 <pre>
   flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc,
         const char* photo_id);
 </pre>
+</li>
 <li><strong>flickr.photos.search</strong>:
 <pre>
   flickcurl_photo** flickcurl_photos_search(flickcurl* fc,
         flickcurl_search_params* params);
 </pre>
+</li>
 <li><strong>flickr.photos.setContentType</strong>:
 <pre>
   int flickcurl_photos_setContentType(flickcurl* fc,
         const char* photo_id, int content_type);
 </pre>
+</li>
 <li><strong>flickr.photos.setDates</strong>:
 <pre>
   int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
         int date_posted, int date_taken, int date_taken_granularity);
 </pre>
+</li>
 <li><strong>flickr.photos.setMeta</strong>:
 <pre>
   int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
         const char* title, const char* description);
 </pre>
+</li>
 <li><strong>flickr.photos.setPerms</strong>:
 <pre>
   int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
         flickcurl_perms* perms);
 </pre>
+</li>
 <li><strong>flickr.photos.setSafetyLevel</strong>:
 <pre>
   int flickcurl_photos_setSafetyLevel(flickcurl* fc,
         const char* photo_id, int safety_level, int hidden);
 </pre>
+</li>
 </ul>
 
 <p><code>flickcurl</code> utility updated to add all new functions.
@@ -109,7 +299,8 @@ contacts and upload status.</p>
 </pre>
 
 <p>Deprecated wrongly named function
-<code>flickcurl_free_upload_status()</code>, replaced by 
+<code>flickcurl_free_upload_status()</code>, replaced by
+</p>
 <pre>
   void flickcurl_upload_status_free(flickcurl_upload_status* status);
 </pre>
