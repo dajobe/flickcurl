@@ -1,5 +1,7 @@
 2007-08-11  Dave Beckett  <dave@dajobe.org>
 
+	* Snapshotted flickcurl_0_12 for 0.12 release (SVN 368)
+
 	* coverage.html, flickcurl.c, flickcurl.h, photos-api.c: Added
 	flickr.photos.getNotInSet, flickr.photos.getRecent,
 	flickr.photos.getUntagged, flickr.photos.getWithGeoData,
