@@ -1535,7 +1535,8 @@ command_groups_pools_getPhotos(flickcurl* fc, int argc, char *argv[])
   int per_page=10;
   int page=0;
   flickcurl_photo** photos;
-
+  int i;
+  
   if(argc >2) {
     per_page=atoi(argv[2]);
     if(argc >3)
@@ -1544,11 +1545,19 @@ command_groups_pools_getPhotos(flickcurl* fc, int argc, char *argv[])
   
   photos=flickcurl_groups_pools_getPhotos(fc, group_id, tags, user_id,
                                           extras, per_page, page);
-  if(photos) {
+  if(!photos)
+    return 1;
 
-    flickcurl_free_photos(photos);
+  fprintf(stderr, "%s: Group %s photos (per_page %d  page %d):\n",
+          program, group_id, per_page, page);
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Photo %d\n", program, i);
+    command_print_photo(photos[i]);
   }
-  return (photos==NULL);
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
 }
 
 static int
@@ -1777,6 +1786,101 @@ command_photos_recentlyUpdated(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static
+void command_print_photoset(flickcurl_photoset* photoset)
+{
+  fprintf(stderr, 
+          "%s: Found photoset with ID %s primary photo: '%s' secret: %s server: %d farm: %d photos count: %d title: '%s' description: '%s'\n",
+          program,
+          photoset->id, photoset->primary, photoset->secret,
+          photoset->server, photoset->farm,
+          photoset->photos_count,
+          photoset->title, 
+          (photoset->description ? photoset->description : "(No description)"));
+}
+
+
+static int
+command_photosets_getInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_photoset* photoset=NULL;
+  const char* photoset_id=argv[1];
+  
+  photoset=flickcurl_photosets_getInfo(fc, photoset_id);
+  if(photoset) {
+    command_print_photoset(photoset);
+    flickcurl_free_photoset(photoset);
+  }
+  
+  return (photoset == NULL);
+}
+
+
+static int
+command_photosets_getList(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_photoset** photoset_list=NULL;
+  const char* user_id=argv[1];
+  int i;
+  
+  photoset_list=flickcurl_photosets_getList(fc, user_id);
+  if(!photoset_list)
+    return 1;
+  
+  for(i=0; photoset_list[i]; i++) {
+    fprintf(stderr, "%s: Photoset %d\n", program, i);
+    command_print_photoset(photoset_list[i]);
+  }
+
+  flickcurl_free_photosets(photoset_list);
+  
+  return 0;
+}
+
+
+static int
+command_photosets_getPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_photo** photos=NULL;
+  const char* photoset_id=argv[1];
+  const char* extras=NULL;
+  int privacy_filter= -1;
+  int per_page= -1;
+  int page= -1;
+  int i;
+  
+  if(argc > 2) {
+    extras=argv[2];
+    if(argc > 3) {
+      privacy_filter=atoi(argv[3]);
+      if(argc >4) {
+        per_page=atoi(argv[4]);
+        if(argc >5)
+          page=atoi(argv[5]);
+      }
+    }
+  }
+  
+  photos=flickcurl_photosets_getPhotos(fc, photoset_id,
+                                       extras, privacy_filter,
+                                       per_page, page);
+  if(!photos)
+    return 1;
+
+  fprintf(stderr, "%s: Photoset %s photos (per_page %d  page %d):\n",
+          program, photoset_id, per_page, page);
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -1956,6 +2060,15 @@ static struct {
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
+  {"photosets.getInfo",
+   "PHOTOSET-ID", "Get information about PHOTOSET-ID.",
+   command_photosets_getInfo, 1, 1},
+  {"photosets.getList",
+   "[USER-ID]", "Get the list of photosets for the USER-ID.",
+   command_photosets_getList, 0, 1},
+  {"photosets.getPhotos",
+   "PHOTOSET-ID [EXTRAS [PRIVACY [PER-PAGE [PAGE]]]]", "Get the list of photos in PHOTOSET-ID with options.",
+   command_photosets_getPhotos, 1, 5},
   {"photosets.comments.addComment",
    "PHOTOSET-ID TEXT", "Add a comment TEXT to photoset PHOTOSET-ID.",
    command_photosets_comments_addComment, 2, 2},
