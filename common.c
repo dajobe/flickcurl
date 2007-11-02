@@ -1095,3 +1095,88 @@ flickcurl_call_get_one_string_field(flickcurl* fc,
 
   return result;
 }
+
+
+char*
+flickcurl_array_join(const char *array[], char delim)
+{
+  int i;
+  int array_size;
+  size_t len=0;
+  char* str;
+  char* p;
+  
+  for(i=0; array[i]; i++)
+    len += strlen(array[i])+1;
+  array_size=i;
+  
+  str=(char*)malloc(len+1);
+  if(!str)
+    return NULL;
+  
+  p=str;
+  for(i=0; array[i]; i++) {
+    size_t item_len=strlen(array[i]);
+    strncpy(p, array[i], item_len);
+    p+= item_len;
+    if(i < array_size)
+      *p++ = delim;
+  }
+  *p='\0';
+
+  return str;
+}
+
+
+char**
+flickcurl_array_split(const char *str, char delim)
+{
+  int i;
+  int array_size=1;
+  char** array;
+  
+  for(i=0; str[i]; i++) {
+    if(str[i] == delim)
+      array_size++;
+  }
+  
+  array=(char**)malloc(array_size+1);
+  if(!array)
+    return NULL;
+
+  for(i=0; *str; i++) {
+    size_t item_len;
+    const char* p;
+
+    for(p=str; *p && *p != delim; p++)
+      ;
+    item_len=p-str;
+    array[i]=(char*)malloc(item_len+1);
+    if(!array[i]) {
+      while(--i >= 0)
+        free(array[i]);
+      return NULL;
+    }
+    strncpy(array[i], str, item_len);
+    array[i][item_len]='\0';
+    str+= item_len;
+    if(*str == delim)
+      str++;
+  }
+  array[i]=NULL;
+  
+  return array;
+}
+
+
+void
+flickcurl_array_free(char* array[])
+{
+  int i;
+  
+  for(i=0; array[i]; i++)
+    free(array[i]);
+
+  free(array);
+}
+

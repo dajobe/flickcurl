@@ -391,7 +391,86 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
 }
 
 
-#if 0
+static int**
+flickcurl_build_photocounts(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                            const xmlChar* xpathExpr, int* photocount_count_p)
+{
+  int** photocounts=NULL;
+  int nodes_count;
+  int photocount_count;
+  int i;
+  xmlXPathObjectPtr xpathObj=NULL;
+  xmlNodeSetPtr nodes;
+  const int row_size=3;
+  
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed=1;
+    goto tidy;
+  }
+  
+  nodes=xpathObj->nodesetval;
+  /* This is a max size - it can include nodes that are CDATA */
+  nodes_count=xmlXPathNodeSetGetLength(nodes);
+
+  photocounts=(int**)calloc(sizeof(int*), nodes_count+1);
+  
+  for(i=0, photocount_count=0; i < nodes_count; i++) {
+    xmlNodePtr node=nodes->nodeTab[i];
+    xmlAttr* attr;
+    int* row;
+    int j;
+    
+    if(node->type != XML_ELEMENT_NODE) {
+      flickcurl_error(fc, "Got unexpected node type %d", node->type);
+      fc->failed=1;
+      break;
+    }
+    
+    row=(int*)calloc(sizeof(int), row_size);
+    for(j=0; j < row_size; j++)
+      row[j]= -1;
+    
+    for(attr=node->properties; attr; attr=attr->next) {
+      const char *attr_name=(const char*)attr->name;
+      char *attr_value;
+
+      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      strcpy(attr_value, (const char*)attr->children->content);
+      
+      if(!strcmp(attr_name, "count")) {
+        row[0]=atoi(attr_value);
+        free(attr_value);
+      } else if(!strcmp(attr_name, "fromdate")) {
+        row[1]=atoi(attr_value);
+        free(attr_value);
+      } else if(!strcmp(attr_name, "todate")) {
+        row[2]=atoi(attr_value);
+        free(attr_value);
+      }
+    }
+
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "photocount: count %d  fromdate %d  todate %d\n",
+            row[0], row[1], row[2]);
+#endif
+    
+    photocounts[photocount_count++]=row;
+  } /* for nodes */
+
+  if(photocount_count_p)
+    *photocount_count_p=photocount_count;
+  
+ tidy:
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
+
+  return photocounts;
+}
+
+
 /*
  * flickcurl_photos_getCounts:
  * @fc: flickcurl context
@@ -400,29 +479,41 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
  * 
  * Gets a list of photo counts for the given date ranges for the calling user.
  *
- * Implements flickr.photos.getCounts
+ * Implements flickr.photos.getCounts (0.13)
  * 
- * Return value: non-0 on failure
+ * The return array fields are:
+ *   [0] count
+ *   [1] fromdate as unixtime
+ *   [2] todate as unixtime
+ *
+ * Return value: array of int[3] or NULL on failure
  */
-int
-flickcurl_photos_getCounts(flickcurl* fc, const char* dates, const char* taken_dates)
+int**
+flickcurl_photos_getCounts(flickcurl* fc,
+                           const char** dates_array,
+                           const char** taken_dates_array)
 {
   const char* parameters[9][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
-
-  if(!dates || !taken_dates)
-    return 1;
+  int** counts=NULL;
+  char* dates=NULL;
+  char* taken_dates=NULL;
   
-  if(dates) {
-    parameters[count][0]  = "dates";
-    parameters[count++][1]= dates;
+  /* one must be not empty */
+  if(!dates_array && !taken_dates_array)
+    return NULL;
+  
+  if(dates_array) {
+    dates=flickcurl_array_join(dates_array, ',');
+    parameters[count][0] = "dates";
+    parameters[count++][1] = dates;
   }
-  if(taken_dates) {
-    parameters[count][0]  = "taken_dates";
-    parameters[count++][1]= taken_dates;
+  if(taken_dates_array) {
+    taken_dates=flickcurl_array_join(taken_dates_array, ',');
+    parameters[count][0] = "taken_dates";
+    parameters[count++][1] = taken_dates;
   }
 
   parameters[count][0]  = NULL;
@@ -442,18 +533,25 @@ flickcurl_photos_getCounts(flickcurl* fc, const char* dates, const char* taken_d
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  counts=flickcurl_build_photocounts(fc, xpathCtx,
+                                     (const xmlChar*)"/rsp/photocounts/photocount",
+                                     NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    counts=NULL;
 
-  return (result == NULL);
+  if(dates)
+    free(dates);
+  
+  if(taken_dates)
+    free(taken_dates);
+  
+  return counts;
 }
-#endif
 
 
 /**

@@ -660,6 +660,7 @@ flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* p
 flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
 flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int count, int just_friends,  int single_photo, int include_self, const char* extras);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
+int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);
 flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
 flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
@@ -759,6 +760,10 @@ flickcurl_upload_status* flickcurl_photos_upload_params(flickcurl* fc, flickcurl
 flickcurl_upload_status* flickcurl_photos_replace(flickcurl* fc, const char* photo_file, const char *photo_id, int async);
 void flickcurl_free_upload_status(flickcurl_upload_status* status);
 FLICKCURL_DEPRECATED void flickcurl_upload_status_free(flickcurl_upload_status* status);
+
+char* flickcurl_array_join(const char *array[], char delim);
+char** flickcurl_array_split(const char *str, char delim);
+void flickcurl_array_free(char *array[]);
 
 #ifdef __cplusplus
 }
