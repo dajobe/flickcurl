@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * flickcurl utility - Invoke the Flickrcurl library
+ * flickcurl utility - Invoke the Flickcurl library
  *
  * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
  * 
