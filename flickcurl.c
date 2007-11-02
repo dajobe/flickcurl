@@ -396,6 +396,40 @@ command_photos_getContext(flickcurl* fc, int argc, char *argv[])
   return 0;
 }
 
+
+static int
+command_photos_getCounts(flickcurl* fc, int argc, char *argv[])
+{
+  char** dates_array=NULL;
+  char** taken_dates_array=NULL;
+  int** counts;
+  
+  if(argv[1]) {
+    dates_array=flickcurl_array_split(argv[1], ',');
+    if(argv[2])
+      taken_dates_array=flickcurl_array_split(argv[2], ',');
+  }
+
+  counts=flickcurl_photos_getCounts(fc, (const char**)dates_array,
+                                    (const char**)taken_dates_array);
+  if(counts) {
+    int i;
+    
+    for(i=0; counts[i]; i++) {
+      fprintf(stderr, "%s: photocount %i: count %d  fromdate %d  todate %d\n",
+              program, i, counts[i][0], counts[i][1], counts[i][2]);
+    }
+    free(counts);
+  }
+  if(dates_array)
+    flickcurl_array_free(dates_array);
+  if(taken_dates_array)
+    flickcurl_array_free(taken_dates_array);
+
+  return (counts == NULL);
+}
+
+
 static int
 command_photosets_getContext(flickcurl* fc, int argc, char *argv[])
 {
@@ -1954,7 +1988,9 @@ static struct {
   {"photos.getContext",
    "PHOTO-ID", "Get next and previous photos for a PHOTO-ID in a photostream.",
    command_photos_getContext, 1, 1},
-  /* missing: photos.getCounts */
+  {"photos.getCounts",
+   "DATES TAKEN-DATES", "Get the counts for a set of DATES or TAKEN-DATES.",
+   command_photos_getCounts, 0, 2},
   {"photos.getExif",
    "PHOTO-ID", "Get EXIF information about one photo with id PHOTO-ID", 
    command_photos_getExif,  1, 1},
