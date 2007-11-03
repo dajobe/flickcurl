@@ -47,8 +47,6 @@
  * 
  * Uploads a photo with safety level and content type
  *
- * Implements Uploading Photos (0.11)
- * 
  * Return value: #flickcurl_upload_status or NULL on failure
  **/
 flickcurl_upload_status*
@@ -211,7 +209,8 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
  * 
  * Replace a photo with a new file.
  *
- * Implements Replaciing Photos (0.10)
+ * Implements Replacing Photos (0.10)
+ * Implements Asynchronous Uploading (0.10)
  * 
  * Return value: #flickcurl_upload_status or NULL on failure
  **/
