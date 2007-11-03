@@ -261,7 +261,7 @@ flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id,
  * @fc: flickcurl context
  * @photoset_id: The id of the photoset to modify. Must belong to the calling user.
  * @primary_photo_id: The id of the photo to use as the 'primary' photo for the set. This id must also be passed along in photo_ids list argument.
- * @photo_ids: A comma-delimited list of photo ids to include in the set. They will appear in the set in the order sent. This list <b>must</b> contain the primary photo id. All photos must belong to the owner of the set. This list of photos replaces the existing list. Call flickr.photosets.addPhoto to append a photo to a set.
+ * @photo_ids: Array of photo ids to include in the set. They will appear in the set in the order sent. This list <b>must</b> contain the primary photo id. All photos must belong to the owner of the set. This list of photos replaces the existing list. Call flickr.photosets.addPhoto to append a photo to a set.
  * 
  * Modify the photos in a photoset.
  *
@@ -274,20 +274,22 @@ flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id,
 int
 flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id,
                                const char* primary_photo_id,
-                               const char* photo_ids)
+                               const char** photo_ids_array)
 {
   const char* parameters[10][2];
   int count=0;
   xmlDocPtr doc=NULL;
   int result=1;
+  char* photo_ids=NULL;
   
-  if(!photoset_id || !primary_photo_id || !photo_ids)
+  if(!photoset_id || !primary_photo_id || !photo_ids_array)
     return 1;
 
   parameters[count][0]  = "photoset_id";
   parameters[count++][1]= photoset_id;
   parameters[count][0]  = "primary_photo_id";
   parameters[count++][1]= primary_photo_id;
+  photo_ids=flickcurl_array_join(photo_ids_array, ',');
   parameters[count][0]  = "photo_ids";
   parameters[count++][1]= photo_ids;
 
@@ -308,6 +310,8 @@ flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id,
   tidy:
   if(fc->failed)
     result=1;
+  if(photo_ids)
+    free(photo_ids);
 
   return result;
 }
@@ -565,7 +569,7 @@ flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id,
 /**
  * flickcurl_photosets_orderSets:
  * @fc: flickcurl context
- * @photoset_ids: A comma delimited list of photoset IDs, ordered with the set to show first, first in the list. Any set IDs not given in the list will be set to appear at the end of the list, ordered by their IDs.
+ * @photoset_ids: Array of photoset IDs, ordered with the set to show first, first in the list. Any set IDs not given in the list will be set to appear at the end of the list, ordered by their IDs.
  * 
  * Set the order of photosets for the calling user.
  *
@@ -574,16 +578,18 @@ flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id,
  * Return value: non-0 on failure
  **/
 int
-flickcurl_photosets_orderSets(flickcurl* fc, const char* photoset_ids)
+flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array)
 {
   const char* parameters[8][2];
   int count=0;
   xmlDocPtr doc=NULL;
   int result=1;
+  char* photoset_ids;
   
   if(!photoset_ids)
     return 1;
-
+  
+  photoset_ids=flickcurl_array_join(photoset_ids_array, ',');
   parameters[count][0]  = "photoset_ids";
   parameters[count++][1]= photoset_ids;
 
@@ -601,7 +607,9 @@ flickcurl_photosets_orderSets(flickcurl* fc, const char* photoset_ids)
   tidy:
   if(fc->failed)
     result=1;
-
+  if(photoset_ids)
+    free(photoset_ids);
+  
   return result;
 }
 
