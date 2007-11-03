@@ -56,6 +56,7 @@ person.c \
 photo.c \
 photoset.c \
 size.c \
+ticket.c \
 tags.c \
 vsnprintf.c \
 auth-api.c \
