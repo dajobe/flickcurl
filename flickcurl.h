@@ -717,12 +717,12 @@ int flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id, const c
 char* flickcurl_photosets_create(flickcurl* fc, const char* title, const char* description, const char* primary_photo_id, char** photoset_url_p);
 int flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id);
 int flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id, const char* title, const char* description);
-int flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id, const char* primary_photo_id, const char* photo_ids);
+int flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id, const char* primary_photo_id, const char** photo_ids_array);
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
 flickcurl_photoset* flickcurl_photosets_getInfo(flickcurl* fc, const char* photoset_id);
 flickcurl_photoset** flickcurl_photosets_getList(flickcurl* fc, const char* user_id);
 flickcurl_photo** flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id, const char* extras, int privacy_filter, int per_page, int page);
-int flickcurl_photosets_orderSets(flickcurl* fc, const char* photoset_ids);
+int flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array);
 int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
 
 /* flickr.photosets.comments */
