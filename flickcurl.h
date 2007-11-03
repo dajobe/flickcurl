@@ -553,6 +553,26 @@ typedef struct {
 } flickcurl_photoset;
 
 
+/**
+ * flickcurl_size:
+ * @label: label
+ * @width: width in pixels
+ * @height: height in pixels
+ * @source: raw image source URL
+ * @url: url of photo page
+ *
+ * A photo at a size.
+ *
+ */
+typedef struct {
+  char *label;
+  int width;
+  int height;
+  char *source;
+  char *url;
+} flickcurl_size;
+
+
 /* callback handlers */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
 typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
@@ -647,6 +667,10 @@ int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const cha
 void flickcurl_free_group(flickcurl_group *group);
 void flickcurl_free_groups(flickcurl_group **groups_object);
 
+/* flickr.photo.getSizes */
+void flickcurl_free_size(flickcurl_size *size);
+void flickcurl_free_sizes(flickcurl_size **sizes_object);
+
 /* flickr.people */
 char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
 char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
@@ -667,6 +691,7 @@ flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
 flickcurl_photo** flickcurl_photos_getRecent(flickcurl* fc, const char* extras, int per_page, int page);
+flickcurl_size** flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id);
 flickcurl_photo** flickcurl_photos_getUntagged(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
 flickcurl_photo** flickcurl_photos_getWithGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
 flickcurl_photo** flickcurl_photos_getWithoutGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
