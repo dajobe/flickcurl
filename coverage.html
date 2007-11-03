@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">80.8% (84/104)</span>
+<span class="coverage">81.7% (85/104)</span>
 </p>
 
 
@@ -139,7 +139,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getNotInSet.html">flickr.photos.getNotInSet</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getPerms.html">flickr.photos.getPerms</a> (0.11)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getRecent.html">flickr.photos.getRecent</a> (0.12)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getSizes.html">flickr.photos.getSizes</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getSizes.html">flickr.photos.getSizes</a> (0.13)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getUntagged.html">flickr.photos.getUntagged</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getWithGeoData.html">flickr.photos.getWithGeoData</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getWithoutGeoData.html">flickr.photos.getWithoutGeoData</a> (0.12)</li>
@@ -275,9 +275,10 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.13</strong>: flickr.photos.getCounts, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (11 new)
+<p><strong>0.13</strong>: flickr.photos.getCounts, flickr.photos.getSizes, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (12 new)
 <pre>
 int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);
+flickcurl_size** flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id);
 int flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
 char* flickcurl_photosets_create(flickcurl* fc, const char* title, const char* description, const char* primary_photo_id, char** photoset_url_p);
 int flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id);
