@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">72.1% (75/104)</span>
+<span class="coverage">80.8% (84/104)</span>
 </p>
 
 
@@ -35,8 +35,8 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/upload.api.html">Uploading Photos</a> (0.10): <code>POST</code> to http://api.flickr.com/services/upload/</li>
-  <li><a class="supported" href="http://www.flickr.com/services/api/replace.api.html">Replacing Photos</a> (0.10): <code>POST</code> to http://api.flickr.com/services/replace/</li>
-  <li><a class="supported" href="http://www.flickr.com/services/api/upload.async.html">Asynchronous Uploading</a> (0.10): synchronous <code>POST</code> upload with async=1 then use <code>flickr.photos.upload.checkTickets</code> to check it has completed</li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/replace.api.html">Replacing Photos</a>: <code>POST</code> to http://api.flickr.com/services/replace/</li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/upload.async.html">Asynchronous Uploading</a>: synchronous <code>POST</code> upload with async=1 then use <code>flickr.photos.upload.checkTickets</code> to check it has completed</li>
 </ul>
 
 
@@ -132,7 +132,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getContactsPhotos.html">flickr.photos.getContactsPhotos</a> (0.11)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getContactsPublicPhotos.html">flickr.photos.getContactsPublicPhotos</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getContext.html">flickr.photos.getContext</a> (0.7)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photos.getCounts.html">flickr.photos.getCounts</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getCounts.html">flickr.photos.getCounts</a> (0.13)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getExif.html">flickr.photos.getExif</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getFavorites.html">flickr.photos.getFavorites</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.getInfo.html">flickr.photos.getInfo</a> (0.5)</li>
@@ -209,17 +209,17 @@ or <span class="unsupported">unsupported</span>.
 <h3>photosets</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.addPhoto.html">flickr.photosets.addPhoto</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.create.html">flickr.photosets.create</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.delete.html">flickr.photosets.delete</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.editMeta.html">flickr.photosets.editMeta</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.editPhotos.html">flickr.photosets.editPhotos</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.addPhoto.html">flickr.photosets.addPhoto</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.create.html">flickr.photosets.create</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.delete.html">flickr.photosets.delete</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.editMeta.html">flickr.photosets.editMeta</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.editPhotos.html">flickr.photosets.editPhotos</a> (0.13)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.getContext.html">flickr.photosets.getContext</a> (0.7)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.getInfo.html">flickr.photosets.getInfo</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.getList.html">flickr.photosets.getList</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.getPhotos.html">flickr.photosets.getPhotos</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.orderSets.html">flickr.photosets.orderSets</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.photosets.removePhoto.html">flickr.photosets.removePhoto</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.getInfo.html">flickr.photosets.getInfo</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.getList.html">flickr.photosets.getList</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.getPhotos.html">flickr.photosets.getPhotos</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.orderSets.html">flickr.photosets.orderSets</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.removePhoto.html">flickr.photosets.removePhoto</a> (0.13)</li>
 </ul>
 
 
@@ -275,6 +275,22 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
+<p><strong>0.13</strong>: flickr.photos.getCounts, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (11 new)
+<pre>
+int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);
+int flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
+char* flickcurl_photosets_create(flickcurl* fc, const char* title, const char* description, const char* primary_photo_id, char** photoset_url_p);
+int flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id);
+int flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id, const char* title, const char* description);
+int flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id, const char* primary_photo_id, const char** photo_ids_array);
+flickcurl_photoset* flickcurl_photosets_getInfo(flickcurl* fc, const char* photoset_id);
+flickcurl_photoset** flickcurl_photosets_getList(flickcurl* fc, const char* user_id);
+flickcurl_photo** flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id, const char* extras, int privacy_filter, int per_page, int page);
+int flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array);
+int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
+</pre>
+</p>
+
 <p><strong>0.12</strong>: flickr.groups.pools.add, flickr.groups.pools.getGroups, flickr.groups.pools.getPhotos, flickr.groups.pools.remove, flickr.people.getPublicPhotos, flickr.photos.getContactsPublicPhotos, flickr.photos.getExif, flickr.photos.getFavorites, flickr.photos.getNotInSet, flickr.photos.getRecent, flickr.photos.getUntagged, flickr.photos.getWithGeoData, flickr.photos.getWithoutGeoData, flickr.photos.recentlyUpdated, flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (23 new)
 <pre>
 int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
@@ -303,7 +319,7 @@ int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, 
 </pre>
 </p>
 
-<p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.getContactsPhotos, flickr.photos.getPerms, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (10 new)
+<p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.getContactsPhotos, flickr.photos.getPerms, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel, Uploading Photos (11 new)
 <pre>
 flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc, const char* filter, int page, int per_page);
 flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
@@ -318,7 +334,7 @@ int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int saf
 </pre>
 </p>
 
-<p><strong>0.10</strong>: flickr.photos.comments.addComment, flickr.photos.comments.deleteComment, flickr.photos.comments.editComment, flickr.photos.comments.getList, flickr.photosets.comments.addComment, flickr.photosets.comments.deleteComment, flickr.photosets.comments.editComment, flickr.photosets.comments.getList, flickr.reflection.getMethods, flickr.reflection.getMethodInfo, Replacing Photos, Uploading Photos, Asynchronous Uploading (13 new)
+<p><strong>0.10</strong>: flickr.photos.comments.addComment, flickr.photos.comments.deleteComment, flickr.photos.comments.editComment, flickr.photos.comments.getList, flickr.photosets.comments.addComment, flickr.photosets.comments.deleteComment, flickr.photosets.comments.editComment, flickr.photosets.comments.getList, flickr.reflection.getMethods, flickr.reflection.getMethodInfo, Uploading Photos (11 new)
 <pre>
 char* flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id, const char* comment_text);
 int flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id);
