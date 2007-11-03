@@ -55,6 +55,7 @@ method.c \
 person.c \
 photo.c \
 photoset.c \
+size.c \
 tags.c \
 vsnprintf.c \
 auth-api.c \
