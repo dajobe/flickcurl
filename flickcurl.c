@@ -2013,6 +2013,32 @@ command_photosets_removePhoto(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_upload_checkTickets(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_ticket** tickets=NULL;
+  char** tickets_ids=flickcurl_array_split(argv[1], ',');
+
+  tickets=flickcurl_photos_upload_checkTickets(fc, (const char**)tickets_ids);
+
+  if(tickets) {
+    int i;
+    
+    for(i=0; tickets[i]; i++) {
+      fprintf(stderr,
+              "%s: %d) ticket ID %d  photoID %d  complete %d  invalid %d\n",
+              program, i, tickets[i]->id, tickets[i]->photoid,
+              tickets[i]->complete, tickets[i]->invalid);
+    }
+    flickcurl_free_tickets(tickets);
+  }
+
+  if(tickets_ids)
+    flickcurl_array_free(tickets_ids);
+  
+  return (tickets != NULL);
+}
+
 
 static struct {
   const char*     name;
@@ -2193,6 +2219,10 @@ static struct {
   {"photos.notes.edit",
    "NOTE-ID X Y W H TEXT", "Edit note NOTE-ID to (X, Y, W, H, TEXT)", 
    command_photos_notes_edit,  6, 6},
+
+  {"photos.upload.checkTickets",
+   "TICKET-IDS...", "Get the status of upload TICKET-IDS", 
+   command_photos_upload_checkTickets,  1, 1},
 
   {"photosets.addPhoto",
    "PHOTOSET-ID PHOTO-ID", "Add PHOTO-ID to a PHOTOSET-ID.",
