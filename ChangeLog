@@ -1,4 +1,44 @@
-2007-08-11  Dave Beckett  <dave@dajobe.org>
+2007-11-02  Dave Beckett <dave@dajobe.org>
+
+	* flickcurl.c: Added commands: flickr.photosets.addPhoto,
+	flickr.photosets.create, flickr.photosets.delete,
+	flickr.photosets.editMeta, flickr.photosets.editPhotos,
+	flickr.photosets.orderSets and flickr.photosets.removePhoto
+
+	* photosets-api.c: (flickcurl_photosets_editPhotos,
+	flickcurl_photosets_orderSets) Now take an array of photo
+	IDs/photoset IDs
+
+	* flickcurl.h: flickcurl_photosets_editPhotos,
+	flickcurl_photosets_orderSets now take an array of photo
+	IDs/photoset IDs
+
+	* flickcurl.c: command_photos_getCounts added
+
+	* common.c, flickcurl.h, photos-api.c: (flickcurl_array_join,
+	flickcurl_array_split, flickcurl_array_free):
+	Added.  (flickcurl_photos_getCounts): Added
+
+2007-10-31  Dave Beckett <dave@dajobe.org>
+
+	* flickcurl.c: Added command_print_photoset Added command
+	flickr.photosets.getInfo, flickr.photosets.getList and
+	flickr.photosets.getPhotos
+
+2007-10-30  Dave Beckett <dave@dajobe.org>
+
+	* flickcurl.h, flickcurl_internal.h: Added flickcurl_photoset
+
+	* photosets-api.c: Added rest of flickr.photosets APIs - writeable
+	ones untested.
+
+	* Makefile.am: Added photoset.c
+
+	* photoset.c: Flickcurl photoset functions
+
+2007-08-11  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 0.13
 
 	* Snapshotted flickcurl_0_12 for 0.12 release (SVN 368)
 
@@ -21,7 +61,7 @@
 	* coverage.html, flickcurl.c, flickcurl.h, photos-api.c: Added
 	flickcurl_photos_getContactsPublicPhotos
 
-2007-08-10  Dave Beckett  <dave@dajobe.org>
+2007-08-10  Dave Beckett <dave@dajobe.org>
 
 	* Makefile.am, coverage.html, flickcurl.c, flickcurl.h,
 	flickcurl_internal.h, group.c, groups-pools-api.c: Added
@@ -55,25 +95,25 @@
 	* photos-api.c: (flickcurl_photos_setContentType): No need for
 	xpathCtx
 
-2007-08-08  Dave Beckett  <dave@dajobe.org>
+2007-08-08  Dave Beckett <dave@dajobe.org>
 
 	* AUTHORS, contacts-api.c, contacts.c: Added Vanila I. Shu
 	copyright to AUTHORS and contacts code
 
-2007-08-06  Dave Beckett  <dave@dajobe.org>
+2007-08-06  Dave Beckett <dave@dajobe.org>
 
 	* flickcurl_internal.h: Remove libxslt headers - patch from
 	FreeBSD packaging
 
-2007-08-05  Dave Beckett  <dave@dajobe.org>
+2007-08-05  Dave Beckett <dave@dajobe.org>
 
 	* example.c: title, license header
 
-2007-08-04  Dave Beckett  <dave@dajobe.org>
+2007-08-04  Dave Beckett <dave@dajobe.org>
 
 	* flickrdf.c: change machinetags.org namespaces
 
-2007-08-03  Dave Beckett  <dave@dajobe.org>
+2007-08-03  Dave Beckett <dave@dajobe.org>
 
 	* photo.c: (flickcurl_build_photos): Do not overwrite a field if
 	it's found in the earlier of two XPaths
@@ -84,7 +124,7 @@
 
 	* configure.ac: Bumped version to 0.12
 
-2007-08-02  Dave Beckett  <dave@dajobe.org>
+2007-08-02  Dave Beckett <dave@dajobe.org>
 
 	* configure.ac: Bumped version to 0.12
 	
@@ -92,7 +132,7 @@
 	
 	* coverage.html: 50%!!!
 
-2007-08-01  Dave Beckett  <dave@dajobe.org>
+2007-08-01  Dave Beckett <dave@dajobe.org>
 
 	* flickcurl.c: (command_print_photo): Added.
 	(command_photos_getInfo): Use above.
@@ -109,7 +149,7 @@
 	* photo.c: Recognise photo fields as attributes when they appear
 	in a photos summary result.
 
-2007-07-31  Dave Beckett  <dave@dajobe.org>
+2007-07-31  Dave Beckett <dave@dajobe.org>
 
 	* flickcurl.h: Added flickcurl_free_photos prototype.
 
@@ -139,7 +179,7 @@
 
 	* perms.c: flickcurl_perms functions
 
-2007-07-29  Dave Beckett  <dave@dajobe.org>
+2007-07-29  Dave Beckett <dave@dajobe.org>
 
 	* Makefile.am, contacts-api.c, contacts.c, flickcurl.h,
 	flickcurl_internal.h: Added contacts APIs
@@ -177,15 +217,15 @@
 
 	* common.c: (flickcurl_unixtime_to_sqltimestamp): Added.
 
-2007-05-06  Dave Beckett  <dave@dajobe.org>
+2007-05-06  Dave Beckett <dave@dajobe.org>
 
 	* flickcurl.c: Title and usage with no args
 
-2007-04-22  Dave Beckett  <dave@dajobe.org>
+2007-04-22  Dave Beckett <dave@dajobe.org>
 
 	* autogen.sh: Update autogen.sh
 
-2007-04-19  Dave Beckett  <dave@dajobe.org>
+2007-04-19  Dave Beckett <dave@dajobe.org>
 
 	* flickrdf.c: Declare namespaces from tags if seen too.
 
@@ -202,7 +242,7 @@
 
 	* configure.ac: Bumped version to 0.11
 	
-2007-04-16  Dave Beckett  <dave@dajobe.org>
+2007-04-16  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_0_10 for 0.10 release (SVN 295)
 	
@@ -291,7 +331,7 @@
 
 	* codegen.c: write sets default data to empty
 
-2007-04-15  Dave Beckett  <dave@dajobe.org>
+2007-04-15  Dave Beckett <dave@dajobe.org>
 
 	* comments.c: now with less core dumps
 
@@ -352,11 +392,11 @@
 	http://geobloggers.com/archives/2007/04/12/flickr-two-new-subtle-geo-updates/
 	which doesn't seem to actually be live right now.
 
-2007-04-14  Dave Beckett  <dave@dajobe.org>
+2007-04-14  Dave Beckett <dave@dajobe.org>
 
 	* Makefile.am, flickrdf.c: triplr becomes flickrdf
 
-2007-02-25  Dave Beckett  <dave@dajobe.org>
+2007-02-25  Dave Beckett <dave@dajobe.org>
 
 	* common.c, person.c: Move flickcurl_free_person from common.c to
 	person.c
@@ -383,7 +423,7 @@
 
 	* common.c: (flickcurl_invoke): Remove extra curl_set_easyopt
 
-2007-02-24  Dave Beckett  <dave@dajobe.org>
+2007-02-24  Dave Beckett <dave@dajobe.org>
 
 	* flickcurl_internal.h: flickcurl_call_get_one_string_field const
 	xpathExpr
@@ -511,7 +551,7 @@
 	flickcurl_tags_getListUser, flickcurl_tags_getListUserPopular and
 	flickcurl_tags_getListUserRaw
 
-2007-02-23  Dave Beckett  <dave@dajobe.org>
+2007-02-23  Dave Beckett <dave@dajobe.org>
 
 	* example.c: add tag count
 
@@ -575,7 +615,7 @@
 	flickcurl_auth_getToken and flickcurl_auth_getFullToken Moved
 	initializing earlier so that '-a' can work again.
 
-2007-02-22  Dave Beckett  <dave@dajobe.org>
+2007-02-22  Dave Beckett <dave@dajobe.org>
 
 	* common.c: (flickcurl_free): Tidy data, data_length and
 	data_is_xml fields.
@@ -600,7 +640,7 @@
 
 	* coverage.html: 0.9
 
-2007-02-20  Dave Beckett  <dave@dajobe.org>
+2007-02-20  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_0_8 for 0.8 release (SVN 122)
 
@@ -612,7 +652,7 @@
 
 	* common.c: (flickcurl_new): 1000ms default delay
 
-2007-02-19  Dave Beckett  <dave@dajobe.org>
+2007-02-19  Dave Beckett <dave@dajobe.org>
 
 	* triplr.c: (emit_triple): Casts for raptor_free_uri
 
@@ -663,7 +703,7 @@
 	Allow old foo-bar commands to work
 	Allow flickr.COMMAND to work
 
-2007-02-18  Dave Beckett  <dave@dajobe.org>
+2007-02-18  Dave Beckett <dave@dajobe.org>
 
 	* triplr.c: Extend help when raptor is present
 
@@ -743,7 +783,7 @@
 
 	* Snapshotted flickcurl_0_7 for 0.7 release (SVN 48)
 
-2007-02-17  Dave Beckett  <dave@dajobe.org>
+2007-02-17  Dave Beckett <dave@dajobe.org>
 
 	* main.c: (command_contexts_print): Added helper
 	(command_groups_pools_getContext): Added, calling
@@ -774,7 +814,7 @@
 	* flickcurl_internal.h: Added flickcurl_context_type_element,
 	flickcurl_build_contexts
 
-2007-02-11  Dave Beckett  <dave@dajobe.org>
+2007-02-11  Dave Beckett <dave@dajobe.org>
 
 	* README.html: dc:rights example
 
@@ -786,7 +826,7 @@
 
 	* configure.ac: AC_INIT tweak
 
-2007-02-11  Dave Beckett  <dave@dajobe.org>
+2007-02-11  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_0_6 for 0.6 release (SVN 31)
 
@@ -794,7 +834,7 @@
 
 	* configure.ac: AC_INIT tweak
 
-2007-02-05  Dave Beckett  <dave@dajobe.org>
+2007-02-05  Dave Beckett <dave@dajobe.org>
 
 	* README.html: Added flickcurl_urls_lookupUser
 
@@ -804,7 +844,7 @@
 
 	* api.c: (flickcurl_urls_lookupUser): Added
 
-2007-02-04  Dave Beckett  <dave@dajobe.org>
+2007-02-04  Dave Beckett <dave@dajobe.org>
 	* api.c: online
 
 	* triplr.c: When a photo license field is found, look up the license
