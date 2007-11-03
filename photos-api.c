@@ -997,7 +997,7 @@ flickcurl_photos_getRecent(flickcurl* fc, const char* extras,
  * 
  * Returns the available sizes for a photo.  The calling user must have permission to view the photo.
  *
- * Implements flickr.photos.getSizes
+ * Implements flickr.photos.getSizes (0.13)
  * 
  * Return value: non-0 on failure
  */
