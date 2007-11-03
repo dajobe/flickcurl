@@ -1914,6 +1914,81 @@ command_photosets_getPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photosets_addPhoto(flickcurl* fc, int argc, char *argv[])
+{
+  return flickcurl_photosets_addPhoto(fc, argv[1], argv[2]);
+}
+
+
+static int
+command_photosets_create(flickcurl* fc, int argc, char *argv[])
+{
+  const char* title=argv[1];
+  const char* description=argv[2];
+  const char* primary_photo_id=argv[3];
+  char* url=NULL;
+  char* id;
+  
+  id=flickcurl_photosets_create(fc, title, description, primary_photo_id,
+                                &url);
+  if(!id)
+    return 1;
+  fprintf(stderr, "%s: Photoset %s created with URL %s\n", program, id, url);
+  free(url);
+  free(id);
+  return 0;
+}
+
+
+static int
+command_photosets_delete(flickcurl* fc, int argc, char *argv[])
+{
+  return flickcurl_photosets_delete(fc, argv[1]);
+}
+
+
+static int
+command_photosets_editMeta(flickcurl* fc, int argc, char *argv[])
+{
+  return flickcurl_photosets_editMeta(fc, argv[1], argv[2], argv[3]);
+}
+
+
+static int
+command_photosets_editPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  const char* photoset_id=argv[1];
+  const char* primary_photo_id=argv[2];
+  char** photo_ids=flickcurl_array_split(argv[3], ',');
+  int rc;
+  
+  rc=flickcurl_photosets_editPhotos(fc, photoset_id, primary_photo_id,
+                                    (const char**)photo_ids);
+  flickcurl_array_free(photo_ids);
+  return rc;
+}
+
+
+static int
+command_photosets_orderSets(flickcurl* fc, int argc, char *argv[])
+{
+  char** photoset_ids=flickcurl_array_split(argv[1], ',');
+  int rc;
+  
+  rc=flickcurl_photosets_orderSets(fc, (const char**)photoset_ids);
+  flickcurl_array_free(photoset_ids);
+  return rc;
+}
+
+
+static int
+command_photosets_removePhoto(flickcurl* fc, int argc, char *argv[])
+{
+  return flickcurl_photosets_removePhoto(fc, argv[1], argv[2]);
+}
+
+
 
 static struct {
   const char*     name;
@@ -2093,6 +2168,21 @@ static struct {
    "NOTE-ID X Y W H TEXT", "Edit note NOTE-ID to (X, Y, W, H, TEXT)", 
    command_photos_notes_edit,  6, 6},
 
+  {"photosets.addPhoto",
+   "PHOTOSET-ID PHOTO-ID", "Add PHOTO-ID to a PHOTOSET-ID.",
+   command_photosets_addPhoto, 2, 2},
+  {"photosets.create",
+   "TITLE DESCRIPTION PRIMARY-PHOTO-ID", "Create a photoset with TITLE, DESCRIPTION and PRIMARY-PHOTO-ID.",
+   command_photosets_create, 4, 4},
+  {"photosets.delete",
+   "PHOTOSET-ID", "Delete a photoset with PHOTOSET-ID.",
+   command_photosets_delete, 1, 1},
+  {"photosets.editMeta",
+   "PHOTOSET-ID TITLE DESCRIPTION", "Set the TITLE and/or DESCRIPTION of a PHOTOSET-ID.",
+   command_photosets_editMeta, 3, 3},
+  {"photosets.editPhotos",
+   "PHOTOSET-ID PRIMARY-PHOTO-ID PHOTO-IDS...", "Set the PHOTO-IDs of a PHOTOSET-ID and PRIMARY-PHOTO-ID.",
+   command_photosets_editPhotos, 3, 3},
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
    command_photosets_getContext, 2, 2},
@@ -2105,6 +2195,13 @@ static struct {
   {"photosets.getPhotos",
    "PHOTOSET-ID [EXTRAS [PRIVACY [PER-PAGE [PAGE]]]]", "Get the list of photos in PHOTOSET-ID with options.",
    command_photosets_getPhotos, 1, 5},
+  {"photosets.orderSets",
+   "PHOTOSET-IDS...", "Set the order of sets PHOTOSET-IDS.",
+   command_photosets_orderSets, 1, 1},
+  {"photosets.removePhoto",
+   "PHOTOSET-ID PHOTO-ID", "Remove PHOTO-ID from PHOTOSET-ID.",
+   command_photosets_removePhoto, 2, 2},
+
   {"photosets.comments.addComment",
    "PHOTOSET-ID TEXT", "Add a comment TEXT to photoset PHOTOSET-ID.",
    command_photosets_comments_addComment, 2, 2},
