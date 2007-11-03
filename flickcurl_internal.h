@@ -99,6 +99,9 @@ flickcurl_photo* flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCt
 flickcurl_photoset** flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* photoset_count_p);
 flickcurl_photoset* flickcurl_build_photoset(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 
+/* size.c */
+flickcurl_size** flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* size_count_p);
+
 /* tags.c  */
 flickcurl_tag** flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* tag_count_p);
 
