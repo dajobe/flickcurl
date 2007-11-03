@@ -990,7 +990,6 @@ flickcurl_photos_getRecent(flickcurl* fc, const char* extras,
 }
 
 
-#if 0
 /*
  * flickcurl_photos_getSizes:
  * @fc: flickcurl context
@@ -1002,17 +1001,17 @@ flickcurl_photos_getRecent(flickcurl* fc, const char* extras,
  * 
  * Return value: non-0 on failure
  */
-int
+flickcurl_size**
 flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
+  flickcurl_size** sizes=NULL;
   
   if(!photo_id)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
@@ -1034,18 +1033,18 @@ flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  sizes=flickcurl_build_sizes(fc, xpathCtx, (const xmlChar*)"/rsp/sizes/size",
+                              NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    sizes=NULL;
 
-  return (result == NULL);
+  return sizes;
 }
-#endif
 
 
 /**
