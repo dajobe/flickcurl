@@ -573,6 +573,24 @@ typedef struct {
 } flickcurl_size;
 
 
+/**
+ * flickcurl_ticket:
+ * @id: ticket ID
+ * @photoID: photoID
+ * @complete: complete flag
+ * @invalid: invalid flag
+ *
+ * An aysnchronous photo upload ticket.
+ *
+ */
+typedef struct {
+  int id;
+  int photoid;
+  int complete;
+  int invalid;
+} flickcurl_ticket;
+
+
 /* callback handlers */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
 typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
@@ -633,6 +651,9 @@ void flickcurl_free_perms(flickcurl_perms *perms);
 void flickcurl_free_location(flickcurl_location *location);
 void flickcurl_free_exif(flickcurl_exif *exif);
 void flickcurl_free_exifs(flickcurl_exif **exifs_object);
+void flickcurl_free_ticket(flickcurl_ticket *ticket);
+void flickcurl_free_tickets(flickcurl_ticket **tickets_object);
+
 
 /* utility methods */
 /* get an image URL for a photo in some size */
@@ -736,6 +757,9 @@ int flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id, in
 char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
 int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
 int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
+
+/* flickr.photos.upload */
+flickcurl_ticket** flickcurl_photos_upload_checkTickets(flickcurl* fc, const char** tickets_ids);
 
 /* flickr.photosets */
 int flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
