@@ -1737,6 +1737,30 @@ command_photos_getNotInSet(flickcurl* fc, int argc, char *argv[])
 
 
 static int
+command_photos_getSizes(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_size** sizes=NULL;
+  char* photo_id=argv[1];
+  int i;
+  
+  sizes=flickcurl_photos_getSizes(fc, photo_id);
+  if(!sizes)
+    return 1;
+
+  fprintf(stderr, "%s: Photo sizes for photo %s\n", program, photo_id);
+  for(i=0; sizes[i]; i++) {
+    fprintf(stderr, "%d: label '%s' width %d height %d\n  source %s\n  url %s\n",
+            i, sizes[i]->label, sizes[i]->width, sizes[i]->height,
+            sizes[i]->source, sizes[i]->url);
+  }
+  
+  flickcurl_free_sizes(sizes);
+
+  return 0;
+}
+    
+
+static int
 command_photos_getRecent(flickcurl* fc, int argc, char *argv[])
 {
   const char* extras=NULL;
@@ -2084,7 +2108,9 @@ static struct {
   {"photos.getRecent",
    "[PER-PAGE [PAGE]]", "Get list of recent photos", 
    command_photos_getRecent, 0, 2},
-  /* missing: photos.getSizes */
+  {"photos.getSizes",
+   "PHOTO-ID", "Get sizes of a PHOTO-ID", 
+   command_photos_getSizes, 1, 1},
   {"photos.getUntagged",
    "[PER-PAGE [PAGE]]", "Get list of photos that are not tagged", 
    command_photos_getUntagged, 0, 2},
