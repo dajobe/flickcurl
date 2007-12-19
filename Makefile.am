@@ -58,6 +58,7 @@ photo.c \
 photoset.c \
 size.c \
 ticket.c \
+user_upload_status.c \
 tags.c \
 vsnprintf.c \
 auth-api.c \

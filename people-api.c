@@ -153,7 +153,7 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
   flickcurl_group** groups=NULL;
   
   if(!user_id)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "user_id";
   parameters[count++][1]= user_id;
@@ -267,9 +267,52 @@ flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,
 }
 
 
-
-/*
- * flickr.people.getUploadStatus:
+/**
+ * flickcurl_people_getUploadStatus:
+ * @fc: flickcurl context
+ * 
+ * Returns information for the calling user related to photo uploads.
  *
- * Get information for the calling user related to photo uploads.
- */
+ * Implements flickr.people.getUploadStatus (0.13)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_user_upload_status*
+flickcurl_people_getUploadStatus(flickcurl* fc)
+{
+  const char* parameters[7][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_user_upload_status* status=NULL;
+  
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.people.getUploadStatus", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  status=flickcurl_build_user_upload_status(fc, xpathCtx, (const xmlChar*)"/rsp/user/*");
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    status=NULL;
+
+  return status;
+}
+
+

@@ -2157,6 +2157,30 @@ command_people_getPublicGroups(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_people_getUploadStatus(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_user_upload_status* u;
+  
+  u=flickcurl_people_getUploadStatus(fc);
+  if(!u)
+    return 1;
+  
+  fprintf(stderr, "user upload status for %s:\n"
+          "  bandwidth max %d/%d K  used %d/%d K  remaining %d/%d K\n"
+          "  max filesize %d/%d K  sets created %d remaining %s\n",
+            u->username,
+            u->bandwidth_maxbytes, u->bandwidth_maxkb,
+            u->bandwidth_usedbytes, u->bandwidth_usedkb,
+            u->bandwidth_remainingbytes, u->bandwidth_remainingkb,
+            u->filesize_maxbytes, u->filesize_maxkb,
+            u->sets_created, (u->sets_remaining ? u->sets_remaining : ""));
+
+  flickcurl_free_user_upload_status(u);
+  return 0;
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -2222,7 +2246,9 @@ static struct {
   {"people.getPublicPhotos",
    "USER-ID [PER-PAGE [PAGE]]", "Get PAGE pages of PER-PAGE public photos for a user USER-ID", 
    command_people_getPublicPhotos,  1, 3},
-  /* missing: people.getUploadStatus */
+  {"people.getUploadStatus",
+   "", "Get calling user upload status", 
+   command_people_getUploadStatus,  0, 0},
 
   {"photos.addTags",
    "PHOTO-ID TAGS", "Add TAGS to a PHOTO-ID.",

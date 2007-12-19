@@ -629,6 +629,40 @@ typedef struct {
 } flickcurl_ticket;
 
 
+/**
+ * flickcurl_user_upload_status:
+ * @username: user name
+ * @bandwidth_maxbytes: max bytes
+ * @bandwidth_maxkb: max kbytes
+ * @bandwidth_usedbytes: used bytes
+ * @bandwidth_usedkb: used kbytes
+ * @bandwidth_remainingbytes: remaining bytes
+ * @bandwidth_remainingkb: remaining kbytes
+ * @filesize_maxbytes: max file size in bytes
+ * @filesize_maxkb: max file size in kbytes
+ * @sets_created: number of sets created
+ * @sets_remaining: remaining sets: 0, 1, 2, 3 or "lots"
+ *
+ * A user's upload status
+ *
+ */
+typedef struct {
+  char* username;
+  int bandwidth_maxbytes;
+  int bandwidth_maxkb;
+  int bandwidth_usedbytes;
+  int bandwidth_usedkb;
+  int bandwidth_remainingbytes;
+  int bandwidth_remainingkb;
+
+  int filesize_maxbytes;
+  int filesize_maxkb;
+
+  int sets_created;
+  char* sets_remaining;
+} flickcurl_user_upload_status;
+
+
 /* callback handlers */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
 typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
@@ -691,7 +725,7 @@ void flickcurl_free_exif(flickcurl_exif *exif);
 void flickcurl_free_exifs(flickcurl_exif **exifs_object);
 void flickcurl_free_ticket(flickcurl_ticket *ticket);
 void flickcurl_free_tickets(flickcurl_ticket **tickets_object);
-
+void flickcurl_free_user_upload_status(flickcurl_user_upload_status *u);
 
 /* utility methods */
 /* get an image URL for a photo in some size */
@@ -743,6 +777,7 @@ char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 flickcurl_group** flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id);
 flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
+flickcurl_user_upload_status* flickcurl_people_getUploadStatus(flickcurl* fc);
 
 /* flickr.photos */
 int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags);
