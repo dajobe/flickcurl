@@ -2135,6 +2135,27 @@ command_groups_search(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_people_getPublicGroups(flickcurl* fc, int argc, char *argv[])
+{
+  char* user_id=argv[1];
+  flickcurl_group** groups=NULL;
+  int i;
+  
+  groups=flickcurl_people_getPublicGroups(fc, user_id);
+  if(!groups)
+    return 1;
+
+  for(i=0; groups[i]; i++) {
+    fprintf(stderr, "%s: Group %d\n", program, i);
+    command_print_group(groups[i]);
+  }
+
+  flickcurl_free_groups(groups);
+
+  return 0;
+}
+
 
 static struct {
   const char*     name;
@@ -2195,7 +2216,9 @@ static struct {
   {"people.getInfo",
    "USER-ID", "Get information about one person with id USER-ID", 
    command_people_getInfo,  1, 1},
-  /* missing: people.getPublicGroups */
+  {"people.getPublicGroups",
+   "USER-ID", "Get list of public groups a user is amember of", 
+   command_people_getPublicGroups,  1, 1},
   {"people.getPublicPhotos",
    "USER-ID [PER-PAGE [PAGE]]", "Get PAGE pages of PER-PAGE public photos for a user USER-ID", 
    command_people_getPublicPhotos,  1, 3},

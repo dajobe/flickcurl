@@ -741,6 +741,7 @@ void flickcurl_free_sizes(flickcurl_size **sizes_object);
 char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
 char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
+flickcurl_group** flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id);
 flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
 
 /* flickr.photos */

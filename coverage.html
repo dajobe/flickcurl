@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">84.6% (88/104)</span>
+<span class="coverage">87.5% (91/104)</span>
 </p>
 
 
@@ -87,9 +87,9 @@ or <span class="unsupported">unsupported</span>.
 <h3>groups</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.browse.html">flickr.groups.browse</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.getInfo.html">flickr.groups.getInfo</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.search.html">flickr.groups.search</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.browse.html">flickr.groups.browse</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.getInfo.html">flickr.groups.getInfo</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.search.html">flickr.groups.search</a> (0.13)</li>
 </ul>
 
 
@@ -275,8 +275,11 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.13</strong>: flickr.photos.getCounts, flickr.photos.getSizes, flickr.photos.upload.checkTickets, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (13 new)
+<p><strong>0.13</strong>: flickr.groups.browse, flickr.groups.getInfo, flickr.groups.search, flickr.photos.getCounts, flickr.photos.getSizes, flickr.photos.upload.checkTickets, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (16 new)
 <pre>
+flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
+flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
+flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
 int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);
 flickcurl_size** flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id);
 flickcurl_ticket** flickcurl_photos_upload_checkTickets(flickcurl* fc, const char** tickets_ids);
