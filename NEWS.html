@@ -16,6 +16,169 @@
 <p>Not yet released.
 </p>
 
+<p>20 new Flickr API calls supported (91.3% of API):</p>
+
+<ul>
+<li><strong>flickcurl_groups_browse</strong>
+<pre>
+  flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
+</pre>
+</li>
+<li><strong>flickcurl_groups_getInfo</strong>
+<pre>
+  flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc,
+        const char* group_id, const char* lang);
+</pre>
+</li>
+<li><strong>flickcurl_groups_search</strong>
+<pre>
+  flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text,
+        int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_interestingness_getList</strong>
+<pre>
+  flickcurl_photo** flickcurl_interestingness_getList(flickcurl* fc,
+        const char* date, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_people_getPublicGroups</strong>
+<pre>
+  flickcurl_group** flickcurl_people_getPublicGroups(flickcurl* fc,
+        const char* user_id);
+</pre>
+</li>
+<li><strong>flickcurl_people_getUploadStatus</strong>
+<pre>
+  flickcurl_user_upload_status* flickcurl_people_getUploadStatus(flickcurl* fc);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getCounts</strong>
+<pre>
+  int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array,
+        const char** taken_dates_array);
+</pre>
+</li>
+<li><strong>flickcurl_photos_getSizes</strong>
+<pre>
+  flickcurl_size** flickcurl_photos_getSizes(flickcurl* fc,
+        const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_photos_transform_rotate</strong>
+<pre>
+  int flickcurl_photos_transform_rotate(flickcurl* fc, const char* photo_id,
+        int degrees);
+</pre>
+</li>
+<li><strong>flickcurl_photos_upload_checkTickets</strong>
+<pre>
+  flickcurl_ticket** flickcurl_photos_upload_checkTickets(flickcurl* fc,
+        const char** tickets_ids);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_addPhoto</strong>
+<pre>
+  int flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id,
+        const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_create</strong>
+<pre>
+  char* flickcurl_photosets_create(flickcurl* fc, const char* title,
+        const char* description, const char* primary_photo_id,
+        char** photoset_url_p);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_delete</strong>
+<pre>
+  int flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_editMeta</strong>
+<pre>
+  int flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id,
+        const char* title, const char* description);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_editPhotos</strong>
+<pre>
+  int flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id,
+        const char* primary_photo_id, const char** photo_ids_array);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_getInfo</strong>
+<pre>
+  flickcurl_photoset* flickcurl_photosets_getInfo(flickcurl* fc,
+        const char* photoset_id);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_getList</strong>
+<pre>
+  flickcurl_photoset** flickcurl_photosets_getList(flickcurl* fc,
+        const char* user_id);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_getPhotos</strong>
+<pre>
+  flickcurl_photo** flickcurl_photosets_getPhotos(flickcurl* fc,
+        const char* photoset_id, const char* extras, int privacy_filter,
+        int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_orderSets</strong>
+<pre>
+  int flickcurl_photosets_orderSets(flickcurl* fc,
+        const char** photoset_ids_array);
+</pre>
+</li>
+<li><strong>flickcurl_photosets_removePhoto</strong>
+<pre>
+  int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id,
+        const char* photo_id);
+</pre>
+</li>
+</ul>
+
+<p><code>flickcurl</code> utility updated to add all new functions.
+</p>
+
+<p>Added <code>flickcurl_category</code> for categories of groups.
+</p>
+
+<p>Added <code>flickcurl_photoset</code> for photosets.
+</p>
+
+<p>Added <code>flickcurl_size</code> for returning image sizes.
+</p>
+
+<p>Added <code>flickcurl_ticket</code> for returning asynchronous
+upload tickets.
+</p>
+
+<p>Added <code>flickcurl_user_upload_status</code> for returning
+details on a user's upload status.
+</p>
+
+<p>Added destructor functions to free photosets, tickets, user status
+information and categories</p>
+<pre>
+  void flickcurl_free_photoset(flickcurl_photoset *photoset);
+  void flickcurl_free_photosets(flickcurl_photoset **photosets_object);
+  void flickcurl_free_ticket(flickcurl_ticket *ticket);
+  void flickcurl_free_tickets(flickcurl_ticket **tickets_object);
+  void flickcurl_free_user_upload_status(flickcurl_user_upload_status *u);
+  void flickcurl_free_category(flickcurl_category *category);
+  void flickcurl_free_categories(flickcurl_category **categories_object);
+</pre>
+
+<p>Added utility functions:</p>
+<pre>
+  char* flickcurl_array_join(const char *array[], char delim);
+  char** flickcurl_array_split(const char *str, char delim);
+  void flickcurl_array_free(char *array[]);
+</pre>
+
 
 <h2 id="D2007-08-11">2007-08-11 Flickcurl 0.12</h2>
 
