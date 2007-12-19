@@ -1527,8 +1527,16 @@ command_groups_pools_add(flickcurl* fc, int argc, char *argv[])
 static void
 command_print_group(flickcurl_group* g)
 {
-  fprintf(stderr, "group: nsid %s name '%s' admin %d  privacy %d  photos %d  iconserver %d\n",
-          g->nsid, g->name, g->is_admin, g->privacy, g->photos, g->iconserver);
+  fprintf(stderr,
+          "group: nsid %s  name '%s'  description '%s'  lang '%s'\n"
+          "  admin %d  pool moderated %d  18+ %d  privacy %d\n"
+          "  photos %d  iconserver %d  members %d\n"
+          "  throttle count %d  mode '%s'  remaining %d\n",
+          g->nsid, g->name, (g->description ? g->description : ""),
+            (g->lang ? g->lang : ""),
+          g->is_admin, g->is_pool_moderated, g->is_eighteenplus, g->privacy,
+          g->photos, g->iconserver, g->members,
+          g->throttle_count, (g->throttle_mode ? g->throttle_mode : ""), g->throttle_remaining);
 }
 
 
@@ -2040,6 +2048,94 @@ command_photos_upload_checkTickets(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_category(flickcurl_category* c)
+{
+  fprintf(stderr, "category: id %s  name '%s'  path '%s'  count %d\n",
+          c->id, c->name, c->path, c->count);
+  if(c->categories) {
+    int i;
+    for(i=0; c->categories[i]; i++) {
+      fprintf(stderr, "%s: Category %d\n", program, i);
+      command_print_category(c->categories[i]);
+    }
+  }
+  if(c->groups) {
+    int i;
+    for(i=0; c->groups[i]; i++) {
+      fprintf(stderr, "%s: Group %d\n", program, i);
+      command_print_group(c->groups[i]);
+    }
+  }
+}
+
+
+static int
+command_groups_browse(flickcurl* fc, int argc, char *argv[])
+{
+  int cat_id= -1;
+  flickcurl_category* category=NULL;
+  
+  if(argv[1])
+    cat_id=atoi(argv[1]);
+  
+  category=flickcurl_groups_browse(fc, cat_id);
+  if(category) {
+    command_print_category(category);
+    flickcurl_free_category(category);
+  }
+  return (category == NULL);
+}
+
+
+static int
+command_groups_getInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_group* group=NULL;
+  const char* group_id=argv[1];
+  const char* lang=argv[2];
+  
+  group=flickcurl_groups_getInfo(fc, group_id, lang);
+  if(group) {
+    command_print_group(group);
+    flickcurl_free_group(group);
+  }
+  
+  return (group == NULL);
+}
+
+
+static int
+command_groups_search(flickcurl* fc, int argc, char *argv[])
+{
+  const char* text=argv[1];
+  int per_page= -1;
+  int page= -1;
+  flickcurl_group** groups=NULL;
+  int i;
+  
+  if(argc >2) {
+    per_page=atoi(argv[2]);
+    if(argc >3)
+      page=atoi(argv[3]);
+  }
+  
+  groups=flickcurl_groups_search(fc, text, per_page, page);
+  if(!groups)
+    return 1;
+
+  for(i=0; groups[i]; i++) {
+    fprintf(stderr, "%s: Group %d\n", program, i);
+    command_print_group(groups[i]);
+  }
+
+  flickcurl_free_groups(groups);
+
+  return 0;
+}
+
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -2063,6 +2159,16 @@ static struct {
   {"auth.getToken",
    "TOKEN", "Get the auth token for the FROB, if one has been attached.",
    command_auth_getToken, 0, 0},
+
+  {"groups.browse",
+   "[CAT-ID]", "Browse groups below category CAT-ID (or root).",
+   command_groups_browse, 0, 1},
+  {"groups.getInfo",
+   "GROUP-ID [LANG]", "Get information on group GROUP-ID with language LANG.",
+   command_groups_getInfo, 1, 2},
+  {"groups.search",
+   "TEXT [PER-PAGE [PAGE]]", "Search for groups matching TEXT paging PER-PAGE and PAGE.",
+   command_groups_search, 1, 3},
 
   {"groups.pools.add",
    "PHOTO-ID GROUP-ID", "Add PHOTO-ID in GROUP-ID pool.",

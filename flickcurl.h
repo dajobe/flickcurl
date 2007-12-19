@@ -367,21 +367,59 @@ typedef struct {
  * flickcurl_group:
  * @nsid: NSID
  * @name: Group Name
+ * @description: Description
+ * @lang: Language
  * @is_admin: is admin flag
+ * @is_pool_moderated: is the pool moderated
+ * @is_eighteenplus: 18+ group
  * @privacy: privacy level
  * @photos: photos in group count
  * @iconserver: icon server ID
+ * @members: member count
+ * @throttle_count: throttle count
+ * @throttle_mode: throttle mode (day, ...)
+ * @throttle_remaining: throttle remaining
  *
  * A group.
  */
 typedef struct {
   char* nsid;
   char* name;
+  char* description;
+  char* lang;
   int is_admin;
+  int is_pool_moderated;
+  int is_eighteenplus;
   int privacy;
   int photos;
   int iconserver;
+  int members;
+  int throttle_count;
+  char* throttle_mode;
+  int throttle_remaining;
 } flickcurl_group;
+
+
+/**
+ * flickcurl_category:
+ * @id: category ID
+ * @name: Name
+ * @path: path to category
+ * @count: count
+ *
+ * A category.
+ */
+struct flickcurl_category_s {
+  char* id;
+  char* name;
+  char* path;
+  int count;
+  struct flickcurl_category_s** categories;
+  int categories_count;
+  flickcurl_group** groups;
+  int groups_count;
+};
+typedef struct flickcurl_category_s flickcurl_category;
 
 
 /*
@@ -680,6 +718,13 @@ char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 
 /* flickr.groups */
+void flickcurl_free_category(flickcurl_category *category);
+void flickcurl_free_categories(flickcurl_category **categories_object);
+flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
+flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
+flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
+
+/* flickr.groups.pools */
 int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page);

@@ -40,6 +40,15 @@ flickcurl_free_group(flickcurl_group *group)
   if(group->name)
     free(group->name);
   
+  if(group->description)
+    free(group->description);
+  
+  if(group->lang)
+    free(group->lang);
+  
+  if(group->throttle_mode)
+    free(group->throttle_mode);
+  
   free(group);
 }
 
@@ -84,6 +93,7 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     xmlNodePtr node=nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_group* g;
+    xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
@@ -100,10 +110,12 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
-      if(!strcmp(attr_name, "nsid"))
+      if(!strcmp(attr_name, "nsid") || !strcmp(attr_name, "id"))
         g->nsid=attr_value;
       else if(!strcmp(attr_name, "name"))
         g->name=attr_value;
+      else if(!strcmp(attr_name, "lang"))
+        g->lang=attr_value;
       else if(!strcmp(attr_name, "admin")) {
         g->is_admin=atoi(attr_value);
         free(attr_value);
@@ -116,12 +128,74 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "iconserver")) {
         g->iconserver=atoi(attr_value);
         free(attr_value);
+      } else if(!strcmp(attr_name, "ispoolmoderated")) {
+        g->is_pool_moderated=atoi(attr_value);
+        free(attr_value);
+      } else if(!strcmp(attr_name, "eightteenplus")) {
+        g->is_eighteenplus=atoi(attr_value);
+        free(attr_value);
+      }
+    } /* end attributes */
+
+
+    /* Walk children nodes for elements */
+    for(chnode=node->children; chnode; chnode=chnode->next) {
+      const char *chnode_name=(const char*)chnode->name;
+      char* value;
+      if(chnode->type != XML_ELEMENT_NODE)
+        continue;
+      
+      if(!strcmp(chnode_name, "throttle")) {
+        for(attr=chnode->properties; attr; attr=attr->next) {
+          const char *attr_name=(const char*)attr->name;
+          char *attr_value;
+          
+          attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+          strcpy(attr_value, (const char*)attr->children->content);
+          if(!strcmp(attr_name, "count")) {
+            g->throttle_count=atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "mode"))
+            g->throttle_mode=attr_value;
+          else if(!strcmp(attr_name, "remaining")) {
+            g->throttle_remaining=atoi(attr_value);
+            free(attr_value);
+          } else
+            free(attr_value);
+        }
+        continue;
+      }
+
+      if(!chnode->children)
+        continue;
+      
+      value=(char*)malloc(strlen((const char*)chnode->children->content)+1);
+      strcpy(value, (const char*)chnode->children->content);
+
+      if(!strcmp(chnode_name, "name"))
+        g->name=value;
+      else if(!strcmp(chnode_name, "description"))
+        g->description=value;
+      else if(!strcmp(chnode_name, "members")) {
+        g->members=atoi(value);
+        free(value);
+      } else if(!strcmp(chnode_name, "privacy")) {
+        g->privacy=atoi(value);
+        free(value);
       }
     }
+    
 
 #if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "group: nsid %s name '%s' admin %d  privacy %d  photos %d  iconserver %d\n",
-            g->nsid, g->name, g->is_admin, g->privacy, g->photos, g->iconserver);
+    fprintf(stderr,
+            "group: nsid %s  name '%s'  description '%s'  lang '%s'\n"
+            "  admin %d  pool moderated %d  18+ %d  privacy %d\n"
+            "  photos %d  iconserver %d  members %d\n"
+            "  throttle count %d  mode '%s'  remaining %d\n",
+            g->nsid, g->name, g->description, g->lang,
+            g->is_admin, g->is_pool_moderated, g->is_eighteenplus, g->privacy,
+            g->photos, g->iconserver, g->members,
+            g->throttle_count, g->throttle_mode, g->throttle_remaining);
 #endif
     
     groups[group_count++]=g;
