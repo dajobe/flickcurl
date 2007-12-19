@@ -2181,6 +2181,16 @@ command_people_getUploadStatus(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_transform_rotate(flickcurl* fc, int argc, char *argv[])
+{
+  const char* photo_id=argv[1];
+  int degrees=atoi(argv[2]);
+  
+  return flickcurl_photos_transform_rotate(fc, photo_id, degrees);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -2374,6 +2384,10 @@ static struct {
   {"photos.notes.edit",
    "NOTE-ID X Y W H TEXT", "Edit note NOTE-ID to (X, Y, W, H, TEXT)", 
    command_photos_notes_edit,  6, 6},
+
+  {"photos.transform.rotate",
+   "PHOTO-ID DEGREES", "Rotate PHOTO-ID by 90/180/270 DEGREES", 
+   command_photos_transform_rotate,  2, 2},
 
   {"photos.upload.checkTickets",
    "TICKET-IDS...", "Get the status of upload TICKET-IDS", 

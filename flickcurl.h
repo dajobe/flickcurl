@@ -842,6 +842,9 @@ int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, 
 /* flickr.photos.upload */
 flickcurl_ticket** flickcurl_photos_upload_checkTickets(flickcurl* fc, const char** tickets_ids);
 
+/* flickr.photos.transform */
+int flickcurl_photos_transform_rotate(flickcurl* fc, const char* photo_id, int degrees);
+
 /* flickr.photosets */
 int flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
 char* flickcurl_photosets_create(flickcurl* fc, const char* title, const char* description, const char* primary_photo_id, char** photoset_url_p);
