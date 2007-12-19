@@ -2191,6 +2191,62 @@ command_photos_transform_rotate(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
+{
+  int usage=0;
+  char* date;
+  char* extras;
+  int per_page= -1;
+  int page= -1;
+  flickcurl_photo** photos=NULL;
+  int i;
+  
+  argv++; argc--;
+  
+  for(; !usage && argc; argv++, argc--) {
+    if(!strcmp(argv[0], "date")) {
+      argv++; argc--;
+      date=argv[0];
+    } else if(!strcmp(argv[0], "extras")) {
+      argv++; argc--;
+      extras=argv[0];
+    } else if(!strcmp(argv[0], "per-page")) {
+      /* int: default 100, max 500 */
+      argv++; argc--;
+      per_page=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "page")) {
+      /* int: default 1 */
+      argv++; argc--;
+      page=atoi(argv[0]);
+    } else {
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      usage=1;
+    }
+  }
+
+  if(usage) {
+    photos=NULL;
+    goto tidy;
+  }
+  
+  photos=flickcurl_interestingness_getList(fc, date, extras, per_page, page);
+  if(!photos)
+    return 1;
+
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Interestingness result photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  tidy:
+  
+  return (photos == NULL);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -2240,6 +2296,10 @@ static struct {
   {"groups.pools.remove",
    "PHOTO-ID GROUP-ID", "Remove PHOTO-ID from group GROUP-ID.",
    command_groups_pools_remove, 2, 2},
+
+  {"interestingness.getList",
+   "[PARAMS]", "Get interesting photos with optional parameters\n  date DATE  extras EXTRAS  per-page PER-PAGE  page PAGE", 
+   command_interestingness_getList,  1, 0},
 
   {"people.findByEmail",
    "EMAIL", "get a user's NSID from their EMAIL address", 

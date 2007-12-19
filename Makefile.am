@@ -63,6 +63,7 @@ tags.c \
 vsnprintf.c \
 auth-api.c \
 contacts-api.c \
+interestingness-api.c \
 groups-api.c \
 groups-pools-api.c \
 people-api.c \

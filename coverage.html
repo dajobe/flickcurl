@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">90.4% (94/104)</span>
+<span class="coverage">91.3% (95/104)</span>
 </p>
 
 
@@ -107,7 +107,7 @@ or <span class="unsupported">unsupported</span>.
 <h3>interestingness</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.interestingness.getList.html">flickr.interestingness.getList</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.interestingness.getList.html">flickr.interestingness.getList</a> (0.13)</li>
 </ul>
 
 
@@ -275,11 +275,12 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.13</strong>: flickr.groups.browse, flickr.groups.getInfo, flickr.groups.search, flickr.people.getPublicGroups, flickr.people.getUploadStatus, flickr.photos.getCounts, flickr.photos.getSizes, flickr.photos.transform.rotate, flickr.photos.upload.checkTickets, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (19 new)
+<p><strong>0.13</strong>: flickr.groups.browse, flickr.groups.getInfo, flickr.groups.search, flickr.interestingness.getList, flickr.people.getPublicGroups, flickr.people.getUploadStatus, flickr.photos.getCounts, flickr.photos.getSizes, flickr.photos.transform.rotate, flickr.photos.upload.checkTickets, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (20 new)
 <pre>
 flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
 flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
 flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
+flickcurl_photo** flickcurl_interestingness_getList(flickcurl* fc, const char* date, const char* extras, int per_page, int page);
 flickcurl_group** flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id);
 flickcurl_user_upload_status* flickcurl_people_getUploadStatus(flickcurl* fc);
 int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);

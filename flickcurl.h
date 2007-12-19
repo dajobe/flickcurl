@@ -767,6 +767,9 @@ int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const cha
 void flickcurl_free_group(flickcurl_group *group);
 void flickcurl_free_groups(flickcurl_group **groups_object);
 
+/* flickr.interestingness */
+flickcurl_photo** flickcurl_interestingness_getList(flickcurl* fc, const char* date, const char* extras, int per_page, int page);
+
 /* flickr.photo.getSizes */
 void flickcurl_free_size(flickcurl_size *size);
 void flickcurl_free_sizes(flickcurl_size **sizes_object);
