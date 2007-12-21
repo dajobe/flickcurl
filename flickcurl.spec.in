@@ -4,8 +4,8 @@
 %define release 1
 
 %define major 0
-%define libname %mklibname %name %major
-%define devname %mklibname -d %name
+%define libname flickcurl
+%define devname flickcurl-devel
 
 Name:		%name
 Version:	%version
