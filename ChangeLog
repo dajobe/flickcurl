@@ -1,4 +1,61 @@
+2007-12-18  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 0.13
+
+	* Makefile.am, coverage.html, flickcurl.c, flickcurl.h,
+	interestingness-api.c: Added flickr.interestingness.getList
+
+	* Makefile.am, coverage.html, flickcurl.c, flickcurl.h,
+	photos-transform-api.c: Added photos.transform.rotate
+
+	* coverage.html: Added people.getUploadStatus
+
+	* Makefile.am, coverage.html, flickcurl.c, flickcurl.h,
+	flickcurl_internal.h, people-api.c, user_upload_status.c: Added
+	people.getUploadStatus
+
+	* coverage.html, flickcurl.c, flickcurl.h, people-api.c: Added
+	flickr.people.getPublicGroups
+
+	* Makefile.am, category.c, flickcurl.c, flickcurl.h,
+	flickcurl_internal.h, group.c, groups-api.c: Added flickr.group
+	API
+
+2007-11-03  Dave Beckett <dave@dajobe.org>
+
+	* upload-api.c: docs
+
+	* flickcurl.c: Added command_photos_upload_checkTickets
+
+	* flickcurl_internal.h: Added flickcurl_build_tickets
+
+	* flickcurl.h: Added flickcurl_ticket
+	Added flickcurl_free_ticket, flickcurl_free_tickets and
+	flickcurl_photos_upload_checkTickets
+
+	* photos-upload-api.c, ticket.c: Photos upload api
+
+	* Makefile.am: Added photos-upload-api.c
+
+	* Makefile.am: Added ticket.c
+
 2007-11-02  Dave Beckett <dave@dajobe.org>
+
+	* photos-api.c: flickcurl_photos_getSizes 0.13
+
+	* flickcurl.c: Added command_photos_getSizes
+
+	* photos-api.c: (flickcurl_photos_getSizes): Added.
+
+	* flickcurl_internal.h: Added flickcurl_build_sizes
+
+	* Makefile.am: Added size.c
+
+	* size.c: Added size
+
+	* flickcurl.h: Added flickcurl_size
+	Added flickcurl_free_size and flickcurl_free_sizes
+	Added flickcurl_photos_getSizes
 
 	* flickcurl.c: Added commands: flickr.photosets.addPhoto,
 	flickr.photosets.create, flickr.photosets.delete,
