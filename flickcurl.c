@@ -2197,8 +2197,8 @@ static int
 command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
 {
   int usage=0;
-  char* date;
-  char* extras;
+  char* date=NULL;
+  char* extras=NULL;
   int per_page= -1;
   int page= -1;
   flickcurl_photo** photos=NULL;

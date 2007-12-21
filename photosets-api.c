@@ -586,7 +586,7 @@ flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array)
   int result=1;
   char* photoset_ids;
   
-  if(!photoset_ids)
+  if(!photoset_ids_array)
     return 1;
   
   photoset_ids=flickcurl_array_join(photoset_ids_array, ',');

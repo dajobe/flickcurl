@@ -683,7 +683,7 @@ main(int argc, char *argv[])
   int help=0;
   const char* home;
   char config_path[1024];
-  char* photo_id;
+  char* photo_id=NULL;
   const char* prefix_uri="http://www.flickr.com/photos/";
   size_t prefix_uri_len=strlen(prefix_uri);
 #ifdef HAVE_RAPTOR
