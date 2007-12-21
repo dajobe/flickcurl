@@ -98,6 +98,8 @@ endif
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = flickcurl.pc
 
+man_MANS = flickcurl-config.1 flickcurl.1 flickrdf.1
+
 EXTRA_DIST= \
 ChangeLog \
 README.html NEWS.html coverage.html README NEWS AUTHORS \
@@ -105,7 +107,9 @@ LICENSE.html LICENSE-2.0.txt NOTICE \
 autogen.sh \
 flickcurl-config.in flickcurl.pc.in \
 flickcurl.rdf.in \
-example.c
+example.c \
+$(man_MANS) \
+flickcurl.spec
 
 
 # Create some text files from HTML sources

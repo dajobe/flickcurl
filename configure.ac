@@ -280,7 +280,7 @@ AC_CONFIG_FILES([Makefile
 flickcurl.rdf
 flickcurl.pc])
 
-AC_CONFIG_FILES([flickcurl-config], [chmod +x flickcurl-config])
+AC_CONFIG_FILES([flickcurl-config flickcurl.spec], [chmod +x flickcurl-config])
 
 AC_OUTPUT
 

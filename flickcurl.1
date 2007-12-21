@@ -1,0 +1,39 @@
+.TH FLICKCURL 1 "12 December 2007"
+.SH NAME
+flickcurl \- call Flickr API
+.SH SYNOPSIS
+.B flickcurl
+[\fB\-d \fIDELAY\fP\fR] [\fB\-a \fIFROB\fP\fR] [\fB\-h\fR] [\fB\-v\fR] [\fIcommands\fR] ...
+.br
+.SH DESCRIPTION
+\fBflickcurl\fP is a program that can call some of the Flickr APIs,
+plus help with authentication by turning mobile authentication method
+frobs into full auth_tokens with \fI-a NNN-NNN-NNN\fP and writing the
+\fI~/.flickcurl.conf\fP file. Use \fIflickcurl \-h\fP to get a list of
+the supported commands and their arguments.
+
+.SH OPTIONS
+These programs follow the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+A summary of options is included below.
+.TP
+.B \-h, \-\-help
+Show summary of options and exit.
+.TP
+.B \-v, \-\-version
+Display the version of the program and exit.
+.TP
+.B \-d \fIDELAY\fP, \-\-delay \fIDELAY\fP
+Set delay between requests to \fIDELAY\fP milliseconds.
+.TP
+.B \-a \fIFROB\fP, \-\-auth \fIFROB\fP
+Authenticate with a \fIFROB\fP and write auth config.
+.SH SEE ALSO
+.BR /usr/share/doc/flickcurl/README.gz,
+.BR flickrdf (1).
+.br
+.SH AUTHOR
+flickcurl was written by David Beckett.
+.PP
+This manual page was written by Kumar Appaiah <akumar@ee.iitm.ac.in>,
+for the Debian project (but may be used by others).

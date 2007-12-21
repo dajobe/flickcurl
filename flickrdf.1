@@ -1,0 +1,57 @@
+.TH FLICKRDF 1 "21 December 2007"
+.SH NAME
+flickrdf \- call Flickr API
+.SH SYNOPSIS
+.B flickrdf
+[\fB\-d \fIDELAY\fP\fR] [\fB\-a \fIFROB\fP\fR] [\fB\-h\fR] [\fB\-v\fR]
+.br
+.SH DESCRIPTION
+\fBflickrdf\fP is a utility that uses the \fIphotos.getInfo\fP API to
+interpret the description fields and the tags for a photo URI into RDF
+triples. If raptor is present, it will be used to provide proper
+serializing to RDF rather than the built in and hacky ntriples/turtle
+output.
+.PP
+Machine tags when they are found are scanned for \fIxmlns:prefix=uri\fP and
+then all other machine tags with that prefix turn into
+triples. Several prefixes are also pre-defined by the library to
+automatically get turned into triples without an xmlns, such as \fIblue:\fP,
+\fIcell:\fP, \fIfilter:\fP and \fIgeo:\fP. Non-machine tags are not yet interpreted.
+
+.SH OPTIONS
+These programs follow the usual GNU command line syntax, with long
+options starting with two dashes (`-').
+A summary of options is included below.
+.TP
+.B \-h, \-\-help
+Show summary of options and exit.
+.TP
+.B \-v, \-\-version
+Display the version of the program and exit.
+.TP
+.B \-d \fIDELAY\fP, \-\-delay \fIDELAY\fP
+Set delay between requests to \fIDELAY\fP milliseconds.
+.TP
+.B \-D, \-\-debug
+Print lots of debugging output.
+.TP
+.B \-o, \-\-output \fIFORMAT\fP
+Set output format to \fIFORMAT\fP. \fIFORMAT\fP is one of:
+      \fIntriples\fP        N-Triples (default)
+      \fIturtle\fP          Turtle
+      \fIrdfxml\fP-xmp      RDF/XML (XMP Profile)
+      \fIrdfxml\fP-abbrev   RDF/XML (Abbreviated)
+      \fIrdfxml\fP          RDF/XML
+      \fIrss-1.0\fP         RSS 1.0
+      \fIdot\fP             GraphViz DOT format
+The exact list depends on the version of Raptor that flickcurl is linked
+against.
+.SH SEE ALSO
+.BR /usr/share/doc/flickrdf/README.gz,
+.BR flickcurl (1), libraptor(3).
+.br
+.SH AUTHOR
+flickrdf was written by David Beckett.
+.PP
+This manual page was written by Kumar Appaiah <akumar@ee.iitm.ac.in>,
+for the Debian project (but may be used by others).
