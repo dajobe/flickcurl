@@ -104,6 +104,7 @@ typedef enum {
   PHOTO_FIELD_location_locality,
   PHOTO_FIELD_location_region,
   PHOTO_FIELD_location_country,
+  PHOTO_FIELD_FIRST = PHOTO_FIELD_dateuploaded,
   PHOTO_FIELD_LAST = PHOTO_FIELD_location_country,
 } flickcurl_photo_field_type;
 
@@ -443,6 +444,7 @@ typedef enum {
   PERSON_FIELD_photos_count,          /* integer */
   PERSON_FIELD_photos_views,          /* integer - not in API docs */
   PERSON_FIELD_favedate,              /* dateTime - flickr.photos.getFavorites() */
+  PERSON_FIELD_FIRST = PERSON_FIELD_isadmin,
   PERSON_FIELD_LAST = PERSON_FIELD_favedate
 } flickcurl_person_field_type;
 

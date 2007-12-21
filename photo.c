@@ -401,8 +401,8 @@ static struct {
   ,
   { 
     NULL,
-    0,
-    0
+    (flickcurl_photo_field_type)0,
+    (flickcurl_field_value_type)0
   }
 };
 
@@ -458,7 +458,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(photo->fields[expri].string)
         free(photo->fields[expri].string);
       photo->fields[expri].string = NULL;
-      photo->fields[expri].integer= -1;
+      photo->fields[expri].integer= (flickcurl_photo_field_type)-1;
       photo->fields[expri].type   = VALUE_TYPE_NONE;
     }
 
@@ -526,7 +526,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       }
 
       photo->fields[field].string = string_value;
-      photo->fields[field].integer= int_value;
+      photo->fields[field].integer= (flickcurl_photo_field_type)int_value;
       photo->fields[field].type   = datatype;
 
   #if FLICKCURL_DEBUG > 1

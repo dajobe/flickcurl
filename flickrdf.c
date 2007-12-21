@@ -415,12 +415,11 @@ static int
 flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
 {
   flickcurl_photo* photo;
-  flickcurl_photo_field_type field;
   int i;
   int need_person=0;
   flickrdf_nspace* nspaces=NULL;
   flickrdf_nspace* ns;
-
+  
   photo=flickcurl_photos_getInfo(fc, photo_id);
 
   if(!photo)
@@ -434,7 +433,8 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
   nspaces=nspace_add_if_not_declared(nspaces, NULL, XSD_NS);
 
   /* mark namespaces used in fields */
-  for(field=0; field <= PHOTO_FIELD_LAST; field++) {
+  for(i=PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
+    flickcurl_photo_field_type field=(flickcurl_photo_field_type)i;
     flickcurl_field_value_type datatype=photo->fields[field].type;
     int f;
 
@@ -515,7 +515,8 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
   
 
   /* generate triples from fields */
-  for(field=0; field <= PHOTO_FIELD_LAST; field++) {
+  for(i=PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
+    flickcurl_photo_field_type field=(flickcurl_photo_field_type)i;
     flickcurl_field_value_type datatype=photo->fields[field].type;
     int f;
 

@@ -94,7 +94,7 @@ static struct {
 } person_fields_table[PHOTO_FIELD_LAST + 4]={
   {
     (const xmlChar*)"./@nsid",
-    PHOTO_FIELD_none,
+    PERSON_FIELD_none,
     VALUE_TYPE_PERSON_ID,
   }
   ,
@@ -202,8 +202,8 @@ static struct {
   ,
   { 
     NULL,
-    0,
-    0
+    (flickcurl_person_field_type)0,
+    (flickcurl_field_value_type)0
   }
 };
 
@@ -260,7 +260,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(person->fields[expri].string)
         free(person->fields[expri].string);
       person->fields[expri].string = NULL;
-      person->fields[expri].integer= -1;
+      person->fields[expri].integer= (flickcurl_person_field_type)-1;
       person->fields[expri].type   = VALUE_TYPE_NONE;
     }
 
@@ -275,7 +275,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                                         person_fields_table[expri].xpath);
       if(!string_value) {
         person->fields[field].string = NULL;
-        person->fields[field].integer= -1;
+        person->fields[field].integer= (flickcurl_person_field_type)-1;
         person->fields[field].type   = VALUE_TYPE_NONE;
         continue;
       }
@@ -327,7 +327,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       }
       
       person->fields[field].string = string_value;
-      person->fields[field].integer= int_value;
+      person->fields[field].integer= (flickcurl_person_field_type)int_value;
       person->fields[field].type   = datatype;
       
 #if FLICKCURL_DEBUG > 1

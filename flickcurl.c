@@ -191,11 +191,12 @@ command_people_findByUsername(flickcurl* fc, int argc, char *argv[])
 static void
 command_print_person(flickcurl_person* person) 
 {
-  flickcurl_person_field_type field;
+  int i;
   
   fprintf(stderr, "Found person with ID %s\n", person->nsid);
   
-  for(field=0; field <= PERSON_FIELD_LAST; field++) {
+  for(i=(int)PERSON_FIELD_FIRST; i <= (int)PERSON_FIELD_LAST; i++) {
+    flickcurl_person_field_type field=(flickcurl_person_field_type)i;
     flickcurl_field_value_type datatype=person->fields[field].type;
     
     if(datatype == VALUE_TYPE_NONE)
@@ -250,12 +251,13 @@ command_print_tags(flickcurl_tag** tags, const char* label, const char* value)
 static void
 command_print_photo(flickcurl_photo* photo)
 {
-  flickcurl_photo_field_type field;
+  int i;
   
   fprintf(stderr, "%s: Found photo with URI %s ID %s and %d tags\n",
           program, photo->uri, photo->id, photo->tags_count);
   
-  for(field=0; field <= PHOTO_FIELD_LAST; field++) {
+  for(i=0; i <= PHOTO_FIELD_LAST; i++) {
+    flickcurl_photo_field_type field=(flickcurl_photo_field_type)i;
     flickcurl_field_value_type datatype=photo->fields[field].type;
     
     if(datatype == VALUE_TYPE_NONE)

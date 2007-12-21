@@ -92,7 +92,7 @@ static struct {
   ,
   { 
     NULL,
-    0
+    (flickcurl_method_field_type)0
   }
 };
 

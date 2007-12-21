@@ -82,7 +82,7 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
     goto tidy;
   }
 
-  category=calloc(sizeof(flickcurl_category), 1);
+  category=(flickcurl_category*)calloc(sizeof(flickcurl_category), 1);
   category->categories=flickcurl_build_categories(fc, xpathCtx,
      (const xmlChar*)"/rsp/category/subcat", &category->categories_count);
   category->groups=flickcurl_build_groups(fc, xpathCtx,
