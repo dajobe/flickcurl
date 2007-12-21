@@ -23,10 +23,10 @@ to manipulate the XML responses.
 The current version supports the majority of the API
 (see <a href="coverage.html">Flickcurl API coverage</a>)
 including the functions for photo uploading, browsing, searching,
-adding and editing comments, groups, notes, tags and photo metadata.
-It also includes a program <code>flickrdf</code> to turn photo
-metadata, tags and machine tags into RDF descriptions of photso and
-tags.
+adding and editing comments, groups, notes, photosets, categories,
+tags and photo metadata.  It also includes a program
+<code>flickrdf</code> to turn photo metadata, tags and machine tags
+into RDF descriptions of photso and tags.
 </p>
 
 <p>License: LGPL 2.1 / GPL 2  /Apache 2.0</p>
@@ -232,20 +232,6 @@ $ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
 summary for the full list of all supported Flickr API calls.
 </p>
 
-<p>There are also several utility functions to support the API
-such as:</p>
-<pre>
-  /* Get the URI for a photo's image */
-  char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
-  free(url);
-
-  /* labels for fields */
-  const char* flickcurl_get_photo_field_label(flickcurl_photo_field_type field);
-  const char* flickcurl_get_person_field_label(flickcurl_person_field_type field);
-  const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype);
-  const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
-</pre>
-
 
 <h2>Library use example</h2>
 
@@ -298,7 +284,7 @@ int main() {
 
 <p>For more extensive example code, see the source of the
 <code>flickcurl</code> utility in <code>flickcurl.c</code>
-which uses all the API.
+which has code that calls all the API functions.
 </p>
 
 
