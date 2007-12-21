@@ -1,22 +1,24 @@
 # -*- RPM-SPEC -*-
-%define name    @PACKAGE@
+%define name    @NAME@
 %define version @VERSION@
 %define release 1
 
 %define major 0
-%define libname flickcurl
-%define devname flickcurl-devel
+%define libname libflickcurl0
+%define devname libflickcurl-devel
 
+Summary:	Flickcurl C library for the Flickr API
 Name:		%name
 Version:	%version
 Release:	%release
-Summary:	C library for the Flickr API
-Source0:	http://download.dajobe.org/flickcurl/%{name}-%{version}.tar.gz
-Source1:	http://download.dajobe.org/flickcurl/%{name}-%{version}.tar.gz.asc
-URL:		http://librdf.org/flickcurl/
+Prefix:         %{_prefix}
 License:	LGPL 2.1 / ASL 2.0
 Group:		System/Libraries
+Source0:	http://download.dajobe.org/flickcurl/%{name}-%{version}.tar.gz
+URL:		http://librdf.org/flickcurl/
 BuildRequires:	curl-devel, libxml2-devel >= 2.6.8, raptor-devel >= 1.4.14
+Buildroot:      %{_tmppath}/%{name}-%{version}-%{release}-root
+
 %description
 Flickcurl is a C library for the Flickr API, handling creating the
 requests, signing, token management, calling the API, marshalling request
@@ -60,11 +62,16 @@ This package contains the developement files for the %{name} library.
 
 %build
 %configure
-%make
+
+%{__make}
 
 %install
-%{__rm} -Rf %{buildroot}
+rm -fr %{buildroot}
+
 %makeinstall
+
+%clean
+rm -fr %{buildroot}
 
 %post -n %{libname} -p /sbin/ldconfig
 
@@ -94,3 +101,7 @@ This package contains the developement files for the %{name} library.
 %{_includedir}/flickcurl.h
 
 %{_mandir}/man1/flickcurl-config.1.*
+
+%changelog
+* Thu Dec 21 2007  Dave Beckett <dave@dajobe.org>
+- Fedora 7 RPM packaging
