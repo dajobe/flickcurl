@@ -654,9 +654,9 @@ flickcurl_invoke(flickcurl *fc)
 #if defined(OFFLINE) || defined(CAPTURE)
   if(1) {
     if(fc->method)
-      sprintf(filename, "%s.xml", fc->method+7); /* skip "flickr." */
+      sprintf(filename, "xml/%s.xml", fc->method+7); /* skip "flickr." */
     else
-      sprintf(filename, "upload.xml");
+      sprintf(filename, "xml/upload.xml");
   }
 #endif
 
