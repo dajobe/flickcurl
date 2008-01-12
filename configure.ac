@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
-# Copyright (C) 2007 David Beckett http://purl.org/net/dajobe/
+# Copyright (C) 2007-2008 David Beckett http://purl.org/net/dajobe/
 
 AC_PREREQ(2.59)
-AC_INIT(Flickcurl, 0.13, http://bugs.librdf.org/, flickcurl)
+AC_INIT(Flickcurl, 0.14, http://bugs.librdf.org/, flickcurl)
 AC_CONFIG_SRCDIR([flickcurl.c])
 AM_CONFIG_HEADER([config.h])
 AC_REVISION($Revision: $)dnl
