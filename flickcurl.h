@@ -356,6 +356,7 @@ typedef struct {
  * @tags: array of tags (may be NULL)
  * @tags_count: size of tags array
  * @fields: photo fields
+ * @place: photot place
  *
  * A photo.
  *
@@ -368,6 +369,8 @@ typedef struct flickcurl_photo_s {
   int tags_count;
   
   flickcurl_photo_field fields[PHOTO_FIELD_LAST + 1];
+
+  flickcurl_place* place;
 } flickcurl_photo;
 
 

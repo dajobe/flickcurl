@@ -271,6 +271,36 @@ command_print_tags(flickcurl_tag** tags, const char* label, const char* value)
 
 
 static void
+command_print_place(flickcurl_place* place,
+                    const char* label, const char* value)
+{
+  int i;
+  if(label)
+    fprintf(stderr, "%s: %s %s places\n", program, label,
+            (value ? value : "(none)"));
+  
+  for(i=(int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
+    char* name=place->names[i];
+    char* id=place->ids[i];
+    char* url=place->urls[i];
+    
+    if(!name && !id && !url)
+      continue;
+    
+    fprintf(stderr, "%d) place %s:", i, flickcurl_get_place_type_label(i));
+    if(name)
+      fprintf(stderr," name '%s'", name);
+    if(id)
+      fprintf(stderr," id %s", id);
+    if(url)
+      fprintf(stderr," url '%s'", url);
+    fputc('\n', stderr);
+  }
+
+}
+
+
+static void
 command_print_photo(flickcurl_photo* photo)
 {
   int i;
@@ -292,6 +322,8 @@ command_print_photo(flickcurl_photo* photo)
   }
   
   command_print_tags(photo->tags, NULL, NULL);
+
+  command_print_place(photo->place, NULL, NULL);
 }
 
 
@@ -2274,33 +2306,6 @@ command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
 }
 
 
-static void
-command_print_place(flickcurl_place* place)
-{
-  int i;
-  
-  for(i=(int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
-    char* name=place->names[i];
-    char* id=place->ids[i];
-    char* url=place->urls[i];
-    
-    if(!name && !id && !url)
-      continue;
-    
-    fprintf(stderr, "field %s (%d)", flickcurl_get_place_type_label(i), i);
-    if(name)
-      fprintf(stderr," name %s", name);
-    if(id)
-      fprintf(stderr," id %s", id);
-    if(url)
-      fprintf(stderr," url %s", url);
-    fputc('\n', stderr);
-  }
-
-}
-
-
-
 static int
 command_places_resolvePlaceId(flickcurl* fc, int argc, char *argv[])
 {
@@ -2309,7 +2314,7 @@ command_places_resolvePlaceId(flickcurl* fc, int argc, char *argv[])
 
   place=flickcurl_places_resolvePlaceId(fc, place_id);
   if(place) {
-    command_print_place(place);
+    command_print_place(place, NULL, NULL);
     flickcurl_free_place(place);
   }
   
@@ -2324,7 +2329,7 @@ command_places_resolvePlaceURL(flickcurl* fc, int argc, char *argv[])
 
   place=flickcurl_places_resolvePlaceURL(fc, place_url);
   if(place) {
-    command_print_place(place);
+    command_print_place(place, NULL, NULL);
     flickcurl_free_place(place);
   }
   

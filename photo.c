@@ -106,6 +106,9 @@ flickcurl_free_photo(flickcurl_photo *photo)
   if(photo->uri)
     free(photo->uri);
   
+  if(photo->place)
+    flickcurl_free_place(photo->place);
+  
   free(photo);
 }
 
@@ -597,6 +600,9 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     photo->tags=flickcurl_build_tags(fc, photo, xpathNodeCtx, 
                                      (const xmlChar*)"./tags/tag",
                                      &photo->tags_count);
+
+    photo->place=flickcurl_build_place(fc, xpathNodeCtx,
+                                       (const xmlChar*)".");
 
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);
