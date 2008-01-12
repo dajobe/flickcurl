@@ -65,6 +65,10 @@ char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xml
 
 char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const char* value, const char* method, const xmlChar* xpathExpr);
 
+
+/* activity.c */
+flickcurl_activity** flickcurl_build_activities(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* activity_count_p);
+
 /* category.c */
 flickcurl_category** flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* category_count_p);
 

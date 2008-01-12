@@ -41,6 +41,7 @@ test_SOURCES = test.c
 test_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = \
+activity.c \
 args.c \
 blog.c \
 category.c \
@@ -63,6 +64,7 @@ ticket.c \
 user_upload_status.c \
 tags.c \
 vsnprintf.c \
+activity-api.c \
 auth-api.c \
 blogs-api.c \
 contacts-api.c \

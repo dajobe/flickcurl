@@ -161,6 +161,58 @@ typedef struct flickcurl_method_s {
 
 
 /**
+ * flickcurl_activity_event:
+ *
+ * Comment or photo activity event
+ */
+typedef struct {
+  char *type; /* comment or note */
+  char *id;
+  char *user;
+  char *username;
+  char *value;
+  int date_added;
+} flickcurl_activity_event;
+
+
+#define FLICKCURL_MAX_ACTIVITY_EVENTS 20
+
+/**
+ * flickcurl_activity:
+ *
+ * Comments or photos item with activity
+ */
+typedef struct {
+  char *type; /* photoset or photo */
+  char *owner;
+  char *owner_name;
+  char *primary;
+
+  /* photo info: ID/secret/server/farm */
+  char *id;
+  char *secret;
+  int server;
+  int farm;
+
+  /* counts */
+  int comments_old;
+  int comments_new;
+  int notes_old;
+  int notes_new;
+  int views;
+  int comments;
+  int photos;
+  int faves;
+
+  /* flags */
+  int more;
+  char* title;
+
+  /* Array of events on this item */
+  flickcurl_activity_event* events[FLICKCURL_MAX_ACTIVITY_EVENTS+1];
+} flickcurl_activity;
+
+/**
  * flickcurl_comment:
  * @name: Argument name
  * @optional: boolean flag (non-0 true) if argument is optional
@@ -801,6 +853,11 @@ int read_ini_config(const char* filename, const char* application, void* user_da
 
 
 /* Flickr API calls */
+
+/* flickr.activity */
+flickcurl_activity** flickcurl_activity_userComments(flickcurl* fc, int per_page, int page);
+flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe, int per_page, int page);
+void flickcurl_free_activities(flickcurl_activity** activities);
 
 /* flickr.auth */
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);

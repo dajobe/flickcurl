@@ -2453,6 +2453,104 @@ command_blogs_postPhoto(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_activity(flickcurl_activity* a)
+{
+  fprintf(stderr,
+          "  type %s  id %s  owner %s name '%s'  primary %s\n"
+          "  secret %s  server %d farm %d\n"
+          "  comments %d old/new %d/%d  notes old/new %d/%d\n"
+          "  views %d  photos %d  faves %d  more %d\n"
+          "  title '%s'\n"
+          ,
+          a->type, a->id, a->owner, a->owner_name,
+          (a->primary ? a->primary : ""),
+          a->secret, a->server, a->farm,
+          a->comments, a->comments_old, a->comments_new,
+          a->notes_old, a->notes_new,
+          a->views, a->photos, a->faves, a->more,
+          a->title);
+  if(a->events) {
+    int i;
+    
+    for(i=0; a->events[i]; i++) {
+      flickcurl_activity_event* ae=a->events[i];
+      
+      fprintf(stderr,
+              "    activity event %i) type %s  user %s  username %s\n      datetime %d\n      value '%s'\n",
+              i, ae->type, ae->user, ae->username, 
+              ae->date_added,
+              ae->value);
+    }
+  }
+}
+
+
+static int
+command_activity_userComments(flickcurl* fc, int argc, char *argv[])
+{
+  int per_page=10;
+  int page=0;
+  flickcurl_activity** activities=NULL;
+  int i;
+
+  if(argc >1) {
+    per_page=atoi(argv[1]);
+    if(argc >2)
+      page=atoi(argv[2]);
+  }
+
+  activities=flickcurl_activity_userComments(fc, per_page, page);
+  if(!activities)
+    return 1;
+
+  fprintf(stderr, 
+          "%s: Comments on the caller's photos (per_page %d  page %d):\n",
+          program, per_page, page);
+  for(i=0; activities[i]; i++) {
+    fprintf(stderr, "%s: Activity %d\n", program, i);
+    command_print_activity(activities[i]);
+  }
+  
+  flickcurl_free_activities(activities);
+
+  return 0;
+}
+
+
+static int
+command_activity_userPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char* timeframe=argv[1];
+  int per_page=10;
+  int page=0;
+  flickcurl_activity** activities=NULL;
+  int i;
+
+  if(argc >2) {
+    per_page=atoi(argv[2]);
+    if(argc >3)
+      page=atoi(argv[3]);
+  }
+
+  activities=flickcurl_activity_userPhotos(fc, timeframe, per_page, page);
+  if(!activities)
+    return 1;
+
+  fprintf(stderr, 
+          "%s: Recent activity on the caller's photos (timeframe %s  per_page %d  page %d):\n",
+          program, timeframe, per_page, page);
+  for(i=0; activities[i]; i++) {
+    fprintf(stderr, "%s: Activity %d\n", program, i);
+    command_print_activity(activities[i]);
+  }
+  
+  flickcurl_free_activities(activities);
+
+  return 0;
+}
+
+
 
 static struct {
   const char*     name;
@@ -2477,6 +2575,13 @@ static struct {
   {"auth.getToken",
    "TOKEN", "Get the auth token for the FROB, if one has been attached.",
    command_auth_getToken, 0, 0},
+
+  {"activity.userComments",
+   "[PER-PAGE [PAGE]]", "Get photos commented on by the caller.",
+   command_activity_userComments, 0, 2},
+  {"activity.userPhotos",
+   "[TIMEFRAME [PER-PAGE [PAGE]]]", "Get recent activity on the caller's photos.",
+   command_activity_userPhotos, 0, 3},
 
   {"blogs.getList",
    "", "Get a list of configured blogs for the calling user.",

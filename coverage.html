@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">99.1% (105/106)</span>
+<span class="coverage">100.0% (107/107)</span>
 </p>
 
 
@@ -43,8 +43,8 @@ or <span class="unsupported">unsupported</span>.
 <h3>activity</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.activity.userComments.html">flickr.activity.userComments</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.activity.userPhotos.html">flickr.activity.userPhotos</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.activity.userComments.html">flickr.activity.userComments</a> (0.14)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.activity.userPhotos.html">flickr.activity.userPhotos</a> (0.14)</li>
 </ul>
 
 
@@ -150,6 +150,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.setDates.html">flickr.photos.setDates</a> (0.11)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.setMeta.html">flickr.photos.setMeta</a> (0.11)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.setPerms.html">flickr.photos.setPerms</a> (0.11)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.setSafetyLevel.html">flickr.photos.setSafetyLevel</a> (0.11)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.setTags.html">flickr.photos.setTags</a> (0.9)</li>
 </ul>
 
@@ -283,8 +284,10 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.14</strong>: flickr.blogs.getList, flickr.blogs.postPhoto, flickr.favorites.add, flickr.favorites.getList, flickr.favorites.getPublicList, flickr.favorites.remove, flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL, flickr.test.login, flickr.test.null (10 new)</p>
+<p><strong>0.14</strong>: flickr.activity.userComments, flickr.activity.userPhotos, flickr.blogs.getList, flickr.blogs.postPhoto, flickr.favorites.add, flickr.favorites.getList, flickr.favorites.getPublicList, flickr.favorites.remove, flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL, flickr.test.login, flickr.test.null (12 new)</p>
 <pre>
+flickcurl_activity** flickcurl_activity_userComments(flickcurl* fc, int per_page, int page);
+flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe, int per_page, int page);
 flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
 int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
 int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
