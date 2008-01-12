@@ -253,8 +253,12 @@ flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 #endif
       
       if(fc->failed)
-        goto tidy;
-    }
+        goto placestidy;
+    } /* end for place fields */
+
+   placestidy:
+    if(xpathNodeCtx)
+      xmlXPathFreeContext(xpathNodeCtx);
 
     /* Handle only first place */
     break;
