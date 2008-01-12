@@ -1,4 +1,20 @@
-2007-12-21  Dave Beckett  <dave@dajobe.org>
+2008-01-11  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html: 0.14
+
+	* place.c: (flickcurl_build_place): Free xpathNodeCtx
+
+	* Makefile.am, common.c, flickcurl.c, flickcurl.h,
+	flickcurl_internal.h, photos-api.c, place.c, places-api.c: Added
+	Places API
+
+	* NEWS.html: 0.14
+
+	* codegen.c: 2008
+
+	* coverage.html: Added 2 places APIs
+
+2007-12-21  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_0_13 for 0.13 release (SVN 422)
 

@@ -2310,6 +2310,89 @@ command_places_resolvePlaceURL(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_favorites_add(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id=argv[1];
+
+  return flickcurl_favorites_add(fc, photo_id);
+}
+
+
+static int
+command_favorites_getList(flickcurl* fc, int argc, char *argv[])
+{
+  char *user_id=argv[1];
+  int per_page=10;
+  int page=0;
+  const char* extras=NULL;
+  flickcurl_photo** photos=NULL;
+  int i;
+
+  if(argc >2) {
+    per_page=atoi(argv[2]);
+    if(argc >3)
+      page=atoi(argv[3]);
+  }
+  
+  photos=flickcurl_favorites_getList(fc, user_id, extras, per_page, page);
+  if(!photos)
+    return 1;
+
+  fprintf(stderr, "%s: User %s favorite photos (per_page %d  page %d):\n",
+          program, user_id, per_page, page);
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
+static int
+command_favorites_getPublicList(flickcurl* fc, int argc, char *argv[])
+{
+  char *user_id=argv[1];
+  int per_page=10;
+  int page=0;
+  const char* extras=NULL;
+  flickcurl_photo** photos=NULL;
+  int i;
+
+  if(argc >2) {
+    per_page=atoi(argv[2]);
+    if(argc >3)
+      page=atoi(argv[3]);
+  }
+  
+  photos=flickcurl_favorites_getPublicList(fc, user_id, extras, per_page, page);
+  if(!photos)
+    return 1;
+
+  fprintf(stderr, "%s: User %s public favorite photos (per_page %d  page %d):\n",
+          program, user_id, per_page, page);
+  for(i=0; photos[i]; i++) {
+    fprintf(stderr, "%s: Photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
+static int
+command_favorites_remove(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id=argv[1];
+
+  return flickcurl_favorites_remove(fc, photo_id);
+}
+
 
 static struct {
   const char*     name;
@@ -2334,6 +2417,19 @@ static struct {
   {"auth.getToken",
    "TOKEN", "Get the auth token for the FROB, if one has been attached.",
    command_auth_getToken, 0, 0},
+
+  {"favorites.add",
+   "PHOTO-ID", "Adds PHOTO-ID to the current user's favorites.",
+   command_favorites_add, 1, 1},
+  {"favorites.getList",
+   "USER-ID [[PER-PAGE] [PAGE]]", "Get a list of USER-ID's favorite photos.",
+   command_favorites_getList, 1, 3},
+  {"favorites.getPublicList",
+   "USER-ID [[PER-PAGE] [PAGE]]", "Get a list of USER-ID's favorite public photos.",
+   command_favorites_getPublicList, 1, 3},
+  {"favorites.remove",
+   "PHOTO-ID", "Removes PHOTO-ID to the current user's favorites.",
+   command_favorites_remove, 1, 1},
 
   {"groups.browse",
    "[CAT-ID]", "Browse groups below category CAT-ID (or root).",

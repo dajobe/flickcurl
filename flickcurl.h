@@ -791,6 +791,12 @@ char* flickcurl_auth_getFrob(flickcurl* fc);
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 
+/* flickr.favorites */
+int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
+flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
+
 /* flickr.groups */
 void flickcurl_free_category(flickcurl_category *category);
 void flickcurl_free_categories(flickcurl_category **categories_object);

@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">91.5% (97/106)</span>
+<span class="coverage">95.3% (101/106)</span>
 </p>
 
 
@@ -77,10 +77,10 @@ or <span class="unsupported">unsupported</span>.
 <h3>favorites</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.add.html">flickr.favorites.add</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.getList.html">flickr.favorites.getList</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.getPublicList.html">flickr.favorites.getPublicList</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.favorites.remove.html">flickr.favorites.remove</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.add.html">flickr.favorites.add</a> (0.14)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.getList.html">flickr.favorites.getList</a> (0.14)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.getPublicList.html">flickr.favorites.getPublicList</a> (0.14)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.remove.html">flickr.favorites.remove</a> (0.14)</li>
 </ul>
 
 
@@ -283,8 +283,12 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.14</strong>: flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL (2 new)</p>
+<p><strong>0.14</strong>: flickr.favorites.add, flickr.favorites.getList, flickr.favorites.getPublicList, flickr.favorites.remove, flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL (6 new)</p>
 <pre>
+int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
+flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
 flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
 </pre>
