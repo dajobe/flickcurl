@@ -671,13 +671,11 @@ flickcurl_invoke(flickcurl *fc)
 
 #if defined(OFFLINE) || defined(CAPTURE)
 
-#define PWD "/Users/dajobe/dev/redland/flickcurl/"
-
   if(1) {
     if(fc->method)
-      sprintf(filename, PWD "xml/%s.xml", fc->method+7); /* skip "flickr." */
+      sprintf(filename, "xml/%s.xml", fc->method+7); /* skip "flickr." */
     else
-      sprintf(filename, PWD "xml/upload.xml");
+      sprintf(filename, "xml/upload.xml");
   }
 #endif
 
