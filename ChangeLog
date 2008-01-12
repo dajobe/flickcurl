@@ -1,5 +1,37 @@
 2008-01-12  Dave Beckett <dave@dajobe.org>
 
+	* README.html: place
+
+	* flickcurl.c, flickcurl.h, photo.c: Add place field to
+	flickcurl_photo so place can be got as a structure rather than
+	just raw fields
+
+	* LICENSE.html, Makefile.am, NEWS.html, activity-api.c,
+	activity.c, args.c, auth-api.c, blog.c, blogs-api.c, category.c,
+	codegen.c, comments.c, common.c, config.c, configure.ac,
+	contacts-api.c, contacts.c, context.c, coverage.html, exif.c,
+	favorites-api.c, flickcurl-config.in, flickcurl.c, flickcurl.h,
+	flickcurl.rdf.in, flickcurl_internal.h, flickrdf.c, group.c,
+	groups-api.c, groups-pools-api.c, interestingness-api.c,
+	location.c, md5.c, method.c, people-api.c, perms.c, person.c,
+	photo.c, photos-api.c, photos-comments-api.c, photos-geo-api.c,
+	photos-licenses-api.c, photos-notes-api.c, photos-transform-api.c,
+	photos-upload-api.c, photoset.c, photosets-api.c,
+	photosets-comments-api.c, place.c, places-api.c, reflection-api.c,
+	size.c, tags-api.c, tags.c, test-api.c, test.c, ticket.c,
+	upload-api.c, urls-api.c, user_upload_status.c, vsnprintf.c: 2008
+	and url tweak
+
+	* README.html: words
+
+	* NEWS.html: places 1.0
+
+	* flickcurl.h, photo.c: photo fields added for place IDs
+
+	* README.html: 100% and update output
+
+	* common.c: No PWD
+
 	* NEWS.html: 1.0
 
 	* NEWS.html, activity-api.c, blogs-api.c, configure.ac,
