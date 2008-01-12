@@ -48,7 +48,7 @@
  * 
  * Find Flickr Places information by Place Id
  *
- * Implements flickr.places.resolvePlaceId (0.14)
+ * Implements flickr.places.resolvePlaceId (1.0)
  * 
  * Return value: non-0 on failure
  **/
@@ -105,7 +105,7 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
  * 
  * Find Flickr Places information by Place URL
  *
- * Implements flickr.places.resolvePlaceURL (0.14)
+ * Implements flickr.places.resolvePlaceURL (1.0)
  * 
  * Return value: non-0 on failure
  **/

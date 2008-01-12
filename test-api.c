@@ -91,7 +91,7 @@ flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
  * A testing method which checks if the caller is logged in then
  * returns their username.
  *
- * Implements flickr.test.login (0.14)
+ * Implements flickr.test.login (1.0)
  * 
  * Return value: username or NULL on failure
  **/
@@ -140,7 +140,7 @@ flickcurl_test_login(flickcurl* fc)
  * 
  * Null test
  *
- * Implements flickr.test.null (0.14)
+ * Implements flickr.test.null (1.0)
  * 
  * Return value: non-0 on failure
  **/

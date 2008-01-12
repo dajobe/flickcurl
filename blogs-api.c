@@ -44,7 +44,7 @@
  * 
  * Get a list of configured blogs for the calling user.
  *
- * Implements flickr.blogs.getList (0.14)
+ * Implements flickr.blogs.getList (1.0)
  * 
  * Return value: non-0 on failure
  **/
@@ -96,7 +96,7 @@ flickcurl_blogs_getList(flickcurl* fc)
  *
  * Post a photo to a blog/
  *
- * Implements flickr.blogs.postPhoto (0.14)
+ * Implements flickr.blogs.postPhoto (1.0)
  * 
  * Return value: non-0 on failure
  **/

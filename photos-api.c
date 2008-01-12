@@ -1311,7 +1311,7 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  *
  * Implements flickr.photos.search (0.11)
  *
- * Flickcurl 0.14: Added place_id for places API as announced 2008-01-11
+ * Flickcurl 1.0: Added place_id for places API as announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
  * 
  * Return value: an array of #flickcurl_photo or NULL

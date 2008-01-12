@@ -11,7 +11,24 @@
 <h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-XX-YY">2008-XX-YY Flickcurl 0.14</h2>
+<h2 id="D2008-01-12">2008-01-12 Flickcurl 1.0</h2>
+
+<p>12 new Flickr API calls supported (100.0% of API):</p>
+
+<pre>
+flickcurl_activity** flickcurl_activity_userComments(flickcurl* fc, int per_page, int page);
+flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe, int per_page, int page);
+flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
+int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
+int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
+flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
+flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
+flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
+char* flickcurl_test_login(flickcurl* fc);
+int flickcurl_test_null(flickcurl* fc);
+</pre>
 
 <p>Not yet released.
 </p>

@@ -46,7 +46,7 @@
  * 
  * Returns a list of recent activity on photos commented on by the calling user. 
  *
- * Implements flickr.activity.userComments (0.14)
+ * Implements flickr.activity.userComments (1.0)
  * 
  * Return value: non-0 on failure
  **/
@@ -112,7 +112,7 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
  * 
  * Returns a list of recent activity on photos belonging to the calling user. <b>Do not poll this method more than once an hour</b>.
  *
- * Implements flickr.activity.userPhotos (0.14)
+ * Implements flickr.activity.userPhotos (1.0)
  * 
  * Return value: non-0 on failure
  **/

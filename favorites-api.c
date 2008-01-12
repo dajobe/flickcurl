@@ -45,7 +45,7 @@
  * 
  * Adds a photo to a user's favorites list.
  *
- * Implements flickr.favorites.add (0.14)
+ * Implements flickr.favorites.add (1.0)
  * 
  * Return value: non-0 on failure
  **/
@@ -103,7 +103,7 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
  *
  * Only photos which the calling user has permission to see are returned.
  *
- * Implements flickr.favorites.getList (0.14)
+ * Implements flickr.favorites.getList (1.0)
  * 
  * Return value: non-0 on failure
  **/
@@ -179,7 +179,7 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
  * 
  * Returns a list of favorite public photos for the given user.
  *
- * Implements flickr.favorites.getPublicList (0.14)
+ * Implements flickr.favorites.getPublicList (1.0)
  * 
  * Return value: non-0 on failure
  **/
@@ -254,7 +254,7 @@ flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id,
  * 
  * Removes a photo from a user's favorites list.
  *
- * Implements flickr.favorites.remove (0.14)
+ * Implements flickr.favorites.remove (1.0)
  * 
  * Return value: non-0 on failure
  **/
