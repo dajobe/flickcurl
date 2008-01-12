@@ -4,7 +4,7 @@
  *
  * All API calls and defines here many change in any release.
  *
- * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007-2008, David Beckett http://purl.org/net/dajobe/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -33,8 +33,10 @@
 #endif
 
 /* flickcurl.c */
-/* Prepare Flickr API request - GET or POST with URI parameters */
+/* Prepare Flickr API request - GET or POST with URI parameters with auth */
 int flickcurl_prepare(flickcurl *fc, const char* method, const char* parameters[][2], int count);
+/* Prepare Flickr API request - GET or POST with URI parameters without auth */
+int flickcurl_prepare_noauth(flickcurl *fc, const char* method, const char* parameters[][2], int count);
 /* Prepare Flickr API request - POST with form-data parameters */
 int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_field, const char* upload_value, const char* parameters[][2], int count);
 
@@ -104,6 +106,9 @@ flickcurl_photo* flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCt
 /* photoset.c */
 flickcurl_photoset** flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* photoset_count_p);
 flickcurl_photoset* flickcurl_build_photoset(flickcurl* fc, xmlXPathContextPtr xpathCtx);
+
+/* place.c */
+flickcurl_place* flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
 /* size.c */
 flickcurl_size** flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* size_count_p);

@@ -2,7 +2,7 @@
  *
  * flickcurl.h - Flickcurl API
  *
- * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007-2008, David Beckett http://purl.org/net/dajobe/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -166,7 +166,7 @@ typedef struct flickcurl_method_s {
  * @optional: boolean flag (non-0 true) if argument is optional
  * @description: description of argument (HTML)
  *
- * An API method argument.
+ * A photo comment.
  */
 typedef struct flickcurl_comment_s {
   char* id;
@@ -191,6 +191,8 @@ typedef struct flickcurl_comment_s {
  * flickcurl_photos_setPerms() which use public, friend, family,
  * perm_comment and perm-addmeta.  flickr.photos.geo.setPerms() uses
  * public, contact, friend and family.
+ *
+ * A Photo permission.
  */
 typedef struct 
 {
@@ -210,6 +212,8 @@ typedef struct
  * @accuracy: Recorded accuracy level of the location.
  *   World level is 1, Country is ~3, Region ~6, City ~11, Street
  *   ~16. Current range is 1-16. Defaults to 16 if not specified. (<0 for none)
+ *
+ * A Photo Location.
  */
 typedef struct 
 {
@@ -217,6 +221,36 @@ typedef struct
   double longitude;
   int accuracy;
 } flickcurl_location;
+  
+
+typedef enum {
+  FLICKCURL_PLACE_LOCATION,
+  FLICKCURL_PLACE_NEIGHBORHOOD,
+  FLICKCURL_PLACE_LOCALITY,
+  FLICKCURL_PLACE_COUNTY,
+  FLICKCURL_PLACE_REGION,
+  FLICKCURL_PLACE_COUNTRY,
+  FLICKCURL_PLACE_LAST = FLICKCURL_PLACE_COUNTRY
+} flickcurl_place_type;
+
+/**
+ * flickcurl_place:
+ * @names: Array of place names
+ * @ids: Array of place IDs
+ * @urls: Array of place urls.
+ *
+ * A Place.
+ *
+ * Index 0 in the array is the location itself. flickcurl_get_place_type_label()
+ * returns labels for the array indexes of type #flickcurl_place_type.
+ *
+ */
+typedef struct 
+{
+  char* names[FLICKCURL_PLACE_LAST+1];
+  char* ids[FLICKCURL_PLACE_LAST+1];
+  char* urls[FLICKCURL_PLACE_LAST+1];
+} flickcurl_place;
   
 
 /**
@@ -234,6 +268,8 @@ typedef struct
  *
  * Most of these fields may be NULL, 0 for numbers
  * but not all.  Either @raw or @cooked MUST appear. 
+ *
+ * A Photo Tag.
  */
 typedef struct flickcurl_tag_s {
   struct flickcurl_photo_s* photo;
@@ -539,6 +575,7 @@ typedef struct {
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>. (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * @place_id: A Flickr place id. (only used if bbox argument isn't present). Experimental.  Geo queries require some sort of limiting agent in order to prevent the database from crying. This is basically like the check against "parameterless searches" for queries without a geo component.   A tag, for instance, is considered a limiting agent as are user defined min_date_taken and min_date_upload parameters &emdash; If no limiting factor is passed we return only photos added in the last 12 hours (though we may extend the limit in the future) (or NULL)
  *
  * Search parameters for &flickcurl_photos_search()
  */
@@ -564,6 +601,7 @@ typedef struct {
   char* extras;
   int per_page;
   int page;
+  char* place_id;
 } flickcurl_search_params;
   
 
@@ -811,6 +849,12 @@ int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* ti
 int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
 int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
+
+/* flickr.places */
+flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
+flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
+const char* flickcurl_get_place_type_label(flickcurl_place_type place_type);
+void flickcurl_free_place(flickcurl_place* place);
 
 /* flickr.contacts */
 void flickcurl_free_contact(flickcurl_contact *contact_object);

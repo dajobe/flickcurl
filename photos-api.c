@@ -2,7 +2,7 @@
  *
  * photos-api.c - Flickr flickr.photos.* API calls
  *
- * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007-2008, David Beckett http://purl.org/net/dajobe/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -1310,13 +1310,16 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * the photos. Unauthenticated calls will only return public photos.
  *
  * Implements flickr.photos.search (0.11)
+ *
+ * Flickcurl 0.14: Added place_id for places API as announced 2008-01-11
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
  * 
  * Return value: an array of #flickcurl_photo or NULL
  **/
 flickcurl_photo**
 flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
 {
-  const char* parameters[28][2];
+  const char* parameters[29][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -1429,6 +1432,10 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
       parameters[count][0]  = "page";
       parameters[count++][1]= page_s;
     }
+  }
+  if(params->place_id) {
+    parameters[count][0]  = "place_id";
+    parameters[count++][1]= params->place_id;
   }
   parameters[count][0]  = NULL;
 

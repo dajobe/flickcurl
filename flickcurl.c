@@ -2,7 +2,7 @@
  *
  * flickcurl utility - Invoke the Flickcurl library
  *
- * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007-2008, David Beckett http://purl.org/net/dajobe/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -1287,6 +1287,9 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
       /* int: default 1 */
       argv++; argc--;
       params.page=atoi(argv[0]);
+    } else if(!strcmp(argv[0], "place-id")) {
+      argv++; argc--;
+      params.place_id=argv[0];
     } else if(!strcmp(argv[0], "tags")) {
       size_t tags_len=0;
       int j;
@@ -2249,6 +2252,65 @@ command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_place(flickcurl_place* place)
+{
+  int i;
+  
+  for(i=(int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
+    char* name=place->names[i];
+    char* id=place->ids[i];
+    char* url=place->urls[i];
+    
+    if(!name && !id && !url)
+      continue;
+    
+    fprintf(stderr, "field %s (%d)", flickcurl_get_place_type_label(i), i);
+    if(name)
+      fprintf(stderr," name %s", name);
+    if(id)
+      fprintf(stderr," id %s", id);
+    if(url)
+      fprintf(stderr," url %s", url);
+    fputc('\n', stderr);
+  }
+
+}
+
+
+
+static int
+command_places_resolvePlaceId(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place* place=NULL;
+  char* place_id=argv[1];
+
+  place=flickcurl_places_resolvePlaceId(fc, place_id);
+  if(place) {
+    command_print_place(place);
+    flickcurl_free_place(place);
+  }
+  
+  return (place == NULL);
+}
+
+static int
+command_places_resolvePlaceURL(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place* place=NULL;
+  char* place_url=argv[1];
+
+  place=flickcurl_places_resolvePlaceURL(fc, place_url);
+  if(place) {
+    command_print_place(place);
+    flickcurl_free_place(place);
+  }
+  
+  return (place == NULL);
+}
+
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -2380,7 +2442,7 @@ static struct {
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
   {"photos.search",
-   "[PARAMS] tags TAGS...", "Search for photos with many optional parameters\n        user USER  tag-mode any|all  text TEXT\n        (min|max)-(upload|taken)-date DATE\n        license LICENSE  privacy PRIVACY  bbox a,b,c,d\n        sort date-(posted|taken)-(asc|desc)|interestingness-(desc|asc)|relevance\n        accuracy 1-16  safe-search 1-3  type 1-4\n        machine-tags TAGS  machine-tag-mode any|all\n        group-id ID  extras EXTRAS\n        per-page PER-PAGE  page PAGE",
+   "[PARAMS] tags TAGS...", "Search for photos with many optional parameters\n        user USER  tag-mode any|all  text TEXT\n        (min|max)-(upload|taken)-date DATE\n        license LICENSE  privacy PRIVACY  bbox a,b,c,d\n        sort date-(posted|taken)-(asc|desc)|interestingness-(desc|asc)|relevance\n        accuracy 1-16  safe-search 1-3  type 1-4\n        machine-tags TAGS  machine-tag-mode any|all\n        group-id ID  place-id ID  extras EXTRAS\n        per-page PER-PAGE  page PAGE",
    command_photos_search, 1, 0},
   {"photos.setContentType",
    "PHOTO-ID TYPE", "Set photo TYPE to one of 'photo', 'screenshot' or 'other'",
@@ -2501,6 +2563,13 @@ static struct {
   {"photosets.comments.getList",
    "PHOTOSET-ID", "Get the comments for a photoset PHOTOSET-ID.",
    command_photosets_comments_getList, 1, 1},
+
+  {"places.resolvePlaceId",
+   "PLACE-ID", "Find Flickr Places information by PLACE-ID.",
+   command_places_resolvePlaceId, 1, 1},
+  {"places.resolvePlaceURL",
+   "PLACE-URL", "Find Flickr Places information by PLACE-URL.",
+   command_places_resolvePlaceURL, 1, 1},
 
   {"reflection.getMethods",
    "", "Get API methods",

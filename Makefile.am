@@ -56,6 +56,7 @@ method.c \
 person.c \
 photo.c \
 photoset.c \
+place.c \
 size.c \
 ticket.c \
 user_upload_status.c \
@@ -77,6 +78,7 @@ photos-transform-api.c \
 photos-upload-api.c \
 photosets-api.c \
 photosets-comments-api.c \
+places-api.c \
 reflection-api.c \
 tags-api.c \
 test-api.c \

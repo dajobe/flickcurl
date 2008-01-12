@@ -42,9 +42,9 @@
 #include <flickcurl_internal.h>
 
 
-const char* const flickcurl_short_copyright_string = "Copyright 2007 David Beckett.";
+const char* const flickcurl_short_copyright_string = "Copyright 2007-2008 David Beckett.";
 
-const char* const flickcurl_copyright_string = "Copyright (C) 2007 David Beckett - http://purl.org/net/dajobe/";
+const char* const flickcurl_copyright_string = "Copyright (C) 2007-2008 David Beckett - http://purl.org/net/dajobe/";
 
 const char* const flickcurl_license_string = "LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.\nSee http://librdf.org/flickcurl/ for full terms.";
 
@@ -415,7 +415,7 @@ flickcurl_prepare_common(flickcurl *fc,
                          const char* method,
                          const char* upload_field, const char* upload_value,
                          const char* parameters[][2], int count,
-                         int parameters_in_url)
+                         int parameters_in_url, int need_auth)
 {
   int i;
   char *md5_string=NULL;
@@ -489,7 +489,7 @@ flickcurl_prepare_common(flickcurl *fc,
   parameters[count][0]  = "api_key";
   parameters[count++][1]= fc->api_key;
 
-  if(fc->auth_token) {
+  if(need_auth && fc->auth_token) {
     parameters[count][0]  = "auth_token";
     parameters[count++][1]= fc->auth_token;
   }
@@ -501,7 +501,7 @@ flickcurl_prepare_common(flickcurl *fc,
   fc->param_values=(char**)calloc(count+2, sizeof(char*));
   values_len=(size_t*)calloc(count+2, sizeof(size_t));
 
-  if(fc->auth_token || fc->sign)
+  if((need_auth && fc->auth_token) || fc->sign)
     flickcurl_sort_args(fc, parameters, count);
 
   /* Save away the parameters and calculate the value lengths */
@@ -524,7 +524,7 @@ flickcurl_prepare_common(flickcurl *fc,
     strcpy(fc->upload_value, upload_value);
   }
 
-  if(fc->auth_token || fc->sign) {
+  if((need_auth && fc->auth_token) || fc->sign) {
     size_t buf_len=0;
     char *buf;
     
@@ -609,6 +609,24 @@ flickcurl_prepare_common(flickcurl *fc,
 
 
 int
+flickcurl_prepare_noauth(flickcurl *fc, const char* method,
+                         const char* parameters[][2], int count)
+{
+  if(!method) {
+    flickcurl_error(fc, "No method to prepare");
+    return 1;
+  }
+  
+  return flickcurl_prepare_common(fc,
+                                  "http://www.flickr.com/services/rest/?",
+                                  method,
+                                  NULL, NULL,
+                                  parameters, count,
+                                  1, 0);
+}
+
+
+int
 flickcurl_prepare(flickcurl *fc, const char* method,
                   const char* parameters[][2], int count)
 {
@@ -622,7 +640,7 @@ flickcurl_prepare(flickcurl *fc, const char* method,
                                   method,
                                   NULL, NULL,
                                   parameters, count,
-                                  1);
+                                  1, 1);
 }
 
 
@@ -637,7 +655,7 @@ flickcurl_prepare_upload(flickcurl *fc,
                                   NULL,
                                   upload_field, upload_value,
                                   parameters, count,
-                                  0);
+                                  0, 1);
 }
 
 
