@@ -15,23 +15,98 @@
 
 <p>12 new Flickr API calls supported (100.0% of API):</p>
 
+<ul>
+<li><strong>flickcurl_activity_userComments</strong>
 <pre>
-flickcurl_activity** flickcurl_activity_userComments(flickcurl* fc, int per_page, int page);
-flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe, int per_page, int page);
-flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
-int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
-int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
-flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
-int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
-flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
-flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
-char* flickcurl_test_login(flickcurl* fc);
-int flickcurl_test_null(flickcurl* fc);
+  flickcurl_activity** flickcurl_activity_userComments(flickcurl* fc,
+        int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_activity_userPhotos</strong>
+<pre>
+  flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc,
+        const char* timeframe, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_blogs_getList</strong>
+<pre>
+  flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
+</pre>
+</li>
+<li><strong>flickcurl_blogs_postPhoto</strong>
+<pre>
+  int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id,
+            const char* photo_id, const char* title, const char* description,
+            const char* blog_password);
+</pre>
+</li>
+<li><strong>flickcurl_favorites_add</strong>
+<pre>
+  int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_favorites_getList</strong>
+<pre>
+  flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc,
+        const char* user_id, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_favorites_getPublicList</strong>
+<pre>
+  flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc,
+        const char* user_id, const char* extras, int per_page, int page);
+</pre>
+</li>
+<li><strong>flickcurl_favorites_remove</strong>
+<pre>
+  int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
+</pre>
+</li>
+<li><strong>flickcurl_places_resolvePlaceId</strong>
+<pre>
+  flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc,
+        const char* place_id);
+</pre>
+</li>
+<li><strong>flickcurl_places_resolvePlaceURL</strong>
+<pre>
+  flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc,
+        const char* url);
+</pre>
+</li>
+<li><strong>flickcurl_test_login</strong>
+<pre>
+  char* flickcurl_test_login(flickcurl* fc);
+</pre>
+</li>
+<li><strong>flickcurl_test_null</strong>
+<pre>
+  int flickcurl_test_null(flickcurl* fc);
+</pre>
+</li>
+</ul>
+
+<p><code>flickcurl</code> utility updated to add all new functions.
+</p>
+
+<p>Added <code>flickcurl_activity</code> and
+<code>flickcurl_activity_event</code> for photo/comment activity
+</p>
+
+<p>Added <code>flickcurl_blog</code> for photo blogs.</p>
+
+<p>Added <code>flickcurl_place</code> for places.</p>
+
+<p>Added place_id to search parameters</p>
+
+<p>Added destructor functions to free photosets, tickets, user status
+information and categories</p>
+<pre>
+  void flickcurl_free_activities(flickcurl_activity** activities);
+  void flickcurl_free_blogs(flickcurl_blog **blogs_object);
+  void flickcurl_free_place(flickcurl_place* place);
 </pre>
 
-<p>Not yet released.
-</p>
 
 
 <h2 id="D2007-12-22">2007-12-22 Flickcurl 0.13</h2>
