@@ -1,4 +1,31 @@
+2008-01-12  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 1.0
+
+	* NEWS.html, activity-api.c, blogs-api.c, configure.ac,
+	coverage.html, favorites-api.c, photos-api.c, places-api.c,
+	test-api.c: 0.14 is now 1.0 since 100% of the API is supported
+
+	* Makefile.am, activity-api.c, activity.c, common.c,
+	coverage.html, flickcurl.c, flickcurl.h, flickcurl_internal.h:
+	Implement activity API - 100% of API DONE
+
 2008-01-11  Dave Beckett <dave@dajobe.org>
+
+	* category.c: categories comment out debug message
+
+	* Makefile.am, blog.c, blogs-api.c, coverage.html, flickcurl.c,
+	flickcurl.h, flickcurl_internal.h: Added Blogs API
+
+	* configure.ac: 0.14
+
+	* coverage.html, flickcurl.c, flickcurl.h, test-api.c: Completed
+	flickr.test API
+
+	* ChangeLog, Makefile.am, coverage.html, favorites-api.c,
+	flickcurl.c, flickcurl.h: Added Favorites API
+
+	* places-api.c: doc
 
 	* coverage.html: 0.14
 
