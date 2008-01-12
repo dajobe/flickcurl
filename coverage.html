@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">95.3% (101/106)</span>
+<span class="coverage">97.2% (103/106)</span>
 </p>
 
 
@@ -265,8 +265,8 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.test.echo.html">flickr.test.echo</a> (0.5)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.test.login.html">flickr.test.login</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.test.null.html">flickr.test.null</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.test.login.html">flickr.test.login</a> (0.14)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.test.null.html">flickr.test.null</a> (0.14)</li>
 </ul>
 
 
@@ -283,7 +283,7 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.14</strong>: flickr.favorites.add, flickr.favorites.getList, flickr.favorites.getPublicList, flickr.favorites.remove, flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL (6 new)</p>
+<p><strong>0.14</strong>: flickr.favorites.add, flickr.favorites.getList, flickr.favorites.getPublicList, flickr.favorites.remove, flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL, flickr.test.login, flickr.test.null (8 new)</p>
 <pre>
 int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
 flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
@@ -291,6 +291,8 @@ flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* u
 int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
 flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
+char* flickcurl_test_login(flickcurl* fc);
+int flickcurl_test_null(flickcurl* fc);
 </pre>
 
 

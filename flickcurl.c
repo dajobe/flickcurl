@@ -157,6 +157,28 @@ command_test_echo(flickcurl* fc, int argc, char *argv[])
 
 
 static int
+command_test_login(flickcurl* fc, int argc, char *argv[])
+{
+  char* username;
+  
+  username=flickcurl_test_login(fc);
+  if(username) {
+    fprintf(stderr, "%s: Returned username '%s'\n", program, username);
+    free(username);
+  }
+  
+  return (username == NULL);
+}
+
+
+static int
+command_test_null(flickcurl* fc, int argc, char *argv[])
+{
+  return flickcurl_test_null(fc);
+}
+
+
+static int
 command_people_findByEmail(flickcurl* fc, int argc, char *argv[])
 {
   char* nsid=NULL;
@@ -2694,8 +2716,14 @@ static struct {
    command_tags_getRelated, 1, 1},
 
   {"test.echo",
-   "KEY VALUE", "Test echo of KEY VALUE",
+   "KEY VALUE", "Test echo API call; echos KEY VALUE",
    command_test_echo,  2, 2},
+  {"test.login",
+   "", "Test login API call: returns username",
+   command_test_login,  0, 0},
+  {"test.null",
+   "KEY VALUE", "Test null API call: no return",
+   command_test_null,  0, 0},
 
   {"urls.getGroup",
    "GROUP-ID", "Get the url of the group page for GROUP-ID.", 

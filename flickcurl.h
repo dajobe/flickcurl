@@ -934,6 +934,8 @@ flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
 
 /* flickr.test */
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
+char* flickcurl_test_login(flickcurl* fc);
+int flickcurl_test_null(flickcurl* fc);
 
 /* flickr.urls */
 char* flickcurl_urls_getGroup(flickcurl* fc, const char* group_id);

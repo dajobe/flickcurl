@@ -2,7 +2,7 @@
  *
  * test-api.c - Flickr flickr.test.* API calls
  *
- * Copyright (C) 2007, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007-2008, David Beckett http://purl.org/net/dajobe/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -86,14 +86,94 @@ flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
 
 /**
  * flickcurl_test_login:
+ * @fc: flickcurl context
+ * 
+ * A testing method which checks if the caller is logged in then
+ * returns their username.
  *
- * flickr.test.login
- */
+ * Implements flickr.test.login (0.14)
+ * 
+ * Return value: username or NULL on failure
+ **/
+char*
+flickcurl_test_login(flickcurl* fc)
+{
+  const char* parameters[7][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  char* username=NULL;
+  
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.test.login", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  username=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/user/username");
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    username=NULL;
+
+  return username;
+}
 
 
 /**
  * flickcurl_test_null:
+ * @fc: flickcurl context
+ * 
+ * Null test
  *
- * flickr.test.null
- */
+ * Implements flickr.test.null (0.14)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_test_null(flickcurl* fc)
+{
+  const char* parameters[7][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.test.null", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  return fc->failed;
+}
+
 
