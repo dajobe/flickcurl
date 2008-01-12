@@ -1,5 +1,5 @@
 #                                               -*- Autoconf -*-
-# Copyright (C) 2007-2008 David Beckett http://purl.org/net/dajobe/
+# Copyright (C) 2007-2008 David Beckett http://www.dajobe.org/
 
 AC_PREREQ(2.59)
 AC_INIT(Flickcurl, 1.0, http://bugs.librdf.org/, flickcurl)

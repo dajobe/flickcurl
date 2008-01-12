@@ -5,7 +5,7 @@
  * Places API announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
  *
- * Copyright (C) 2008, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2008, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version

@@ -2,7 +2,7 @@
  *
  * codegen utility - Make C code from Flickr API by reflection
  *
- * Copyright (C) 2007-2008, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -289,7 +289,7 @@ main(int argc, char *argv[])
           argv[1], section);
 
   fprintf(stdout,
-" * Copyright (C) 2008, David Beckett http://purl.org/net/dajobe/\n"
+" * Copyright (C) 2008, David Beckett http://www.dajobe.org/\n"
 " * \n"
 " * This file is licensed under the following three licenses as alternatives:\n"
 " *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version\n"
