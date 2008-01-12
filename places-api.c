@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * flickr.places-api.c - Flickr flickr.places.* API calls
+ * places-api.c - Flickr flickr.places.* API calls
  *
  * Places API announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
