@@ -118,11 +118,11 @@ flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       }
     }
 
-//#if FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
     fprintf(stderr,
             "category: id %s  name '%s'  path '%s'  count %d\n",
             c->id, c->name, c->path, c->count);
-//#endif
+#endif
     
     categories[category_count++]=c;
   } /* for nodes */
