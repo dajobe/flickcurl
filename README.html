@@ -8,7 +8,7 @@
 <body>
 
 <h1 style="text-align:center">Flickcurl: C library for the Flickr API</h1>
-<h2 style="text-align:center"><a href="http://purl.org/net/dajobe/">Dave Beckett</a></h2>
+<h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
 <p>Flickcurl is a C library for the
@@ -20,13 +20,13 @@ It uses
 <a href="http://www.flickr.com/services/api/request.rest.html">REST web service</a>
 and <a href="http://xmlsoft.org/">libxml2</a>
 to manipulate the XML responses.
-The current version supports the majority of the API
+Flickcurl 1.0 or later supports 100% of the 2008-01-11 version of the API
 (see <a href="coverage.html">Flickcurl API coverage</a>)
 including the functions for photo uploading, browsing, searching,
 adding and editing comments, groups, notes, photosets, categories,
-tags and photo metadata.  It also includes a program
-<code>flickrdf</code> to turn photo metadata, tags and machine tags
-into RDF descriptions of photso and tags.
+activity, blogs, favorites, places, tags and photo metadata.  It also
+includes a program <code>flickrdf</code> to turn photo metadata, tags
+and machine tags into RDF descriptions of photso and tags.
 </p>
 
 <p>License: LGPL 2.1 / GPL 2  /Apache 2.0</p>
@@ -119,7 +119,7 @@ field geoperms_ispublic (18) with boolean value: '1' / 1
 field location_accuracy (19) with integer value: '12' / 12
 field location_latitude (20) with float value: '36.620487' / -1
 field location_longitude (21) with float value: '-121.904468' / -1
-field owner_location (22) with string value: 'near Sunnyvale, California, USA' / -1
+field owner_location (22) with string value: 'Mountain View, California, USA' / -1
 field owner_nsid (23) with string value: '13355580@N00' / -1
 field owner_realname (24) with string value: 'Dave Beckett' / -1
 field owner_username (25) with string value: 'dajobe' / -1
@@ -127,11 +127,16 @@ field title (26) with string value: 'Jellyfish at Monterey Aquarium' / -1
 field visibility_isfamily (27) with boolean value: '0' / 0
 field visibility_isfriend (28) with boolean value: '0' / 0
 field visibility_ispublic (29) with boolean value: '1' / 1
-field secret (30) with string value: '123456789a' / -1
-field originalsecret (31) with string value: 'bcdef01234' / -1
+field secret (30) with string value: 'b34cb0af68' / -1
+field originalsecret (31) with string value: 'b34cb0af68' / -1
 field location_locality (33) with string value: 'Pacific Grove' / -1
-field location_region (34) with string value: 'California' / -1
-field location_country (35) with string value: 'United States' / -1
+field location_region (35) with string value: 'California' / -1
+field location_country (36) with string value: 'United States' / -1
+field location_placeid (37) with string value: 'WM3JEXSbBZqqRtGA' / -1
+field locality_placeid (39) with string value: 'WM3JEXSbBZqqRtGA' / -1
+field county_placeid (40) with string value: 'AQ4UpRqYA5l0BiyF.A' / -1
+field region_placeid (41) with string value: 'SVrAMtCbAphCLAtP' / -1
+field country_placeid (42) with string value: '4KO02SibApitvSBieQ' / -1
 0) regular tag: id 94493-196308964-3362 author ID 13355580@N00 name (Unknown) raw 'jellyfish' cooked 'jellyfish' count 0
 1) regular tag: id 94493-196308964-119180 author ID 13355580@N00 name (Unknown) raw 'montereyaquarium' cooked 'montereyaquarium' count 0
 2) regular tag: id 94493-196308964-2443 author ID 13355580@N00 name (Unknown) raw 'monterey' cooked 'monterey' count 0
@@ -162,37 +167,20 @@ are not yet interpreted.
 
 <pre>
 $ flickrdf http://www.flickr.com/photos/dajobe/196308964/
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/creator&gt; _:person .
-_:person &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt;
-&lt;http://xmlns.com/foaf/0.1/#Person&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/date&gt;
-"2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/rights&gt;
-&lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/date&gt;
-"2007-01-24T21:07:18Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/date&gt;
-"2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/date&gt;
-"2006-07-23T05:28:50Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://www.w3.org/2003/01/geo/wgs84_pos#lat&gt;
-"36.620487"^^&lt;http://www.w3.org/2001/XMLSchema#double&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://www.w3.org/2003/01/geo/wgs84_pos#long&gt;
-"-121.904468"^^&lt;http://www.w3.org/2001/XMLSchema#double&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/creator&gt; _:person .
+_:person &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Person&gt; .
+_:person &lt;http://xmlns.com/foaf/0.1/#maker&gt; &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/dateSubmitted&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/rights&gt; &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/modified&gt; "2007-02-25T07:45:46Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/issued&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/created&gt; "2006-07-23T05:28:50Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#lat&gt; "36.620487" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#long&gt; "-121.904468" .
 _:person &lt;http://xmlns.com/foaf/0.1/#name&gt; "Dave Beckett" .
 _:person &lt;http://xmlns.com/foaf/0.1/#nick&gt; "dajobe" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/title&gt; "Jellyfish at Monterey Aquarium" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-&lt;http://purl.org/dc/elements/1.1/subject&gt; "jellyfish" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/title&gt; "Jellyfish at Monterey Aquarium" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/subject&gt; "jellyfish" .
 </pre>
 
 <p>If you have raptor installed, you can get nicer RDF triples out
@@ -200,37 +188,29 @@ and with <code>rapper</code> 1.4.14+, pretty-printed turtle:</p>
 <pre>
 $ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/ 
 @prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
-@prefix blue: &lt;x-urn:blue:#&gt; .
-@prefix cell: &lt;http://www.machinetags.org/wiki/Cell#&gt; .
 @prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .
-@prefix filtr: &lt;x-urn:filtr:&gt; .
 @prefix foaf: &lt;http://xmlns.com/foaf/0.1/#&gt; .
 @prefix geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt; .
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 
 &lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
     dc:creator [
-        a foaf:Person;
-        foaf:name "Dave Beckett";
+        a foaf:Person ;
+        foaf:maker &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; ;
+        foaf:name "Dave Beckett" ;
         foaf:nick "dajobe"
-    ];
-    dc:date "2006-07-23T18:16:13Z"^^xsd:dateTime;
-    dc:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt;;
-    dc:date "2007-02-25T07:45:46Z"^^xsd:dateTime, "2006-07-23T18:16:13Z"^^xsd:dateTime, "2006-07-23T05:28:50Z"^^xsd:dateTime;
-    geo:lat 3.6620487E1;
-    geo:long -1.21904468E2;
-    dc:title "Jellyfish at Monterey Aquarium";
+    ] ;
+    dc:dateSubmitted "2006-07-23T18:16:13Z"^^xsd:dateTime ;
+    dc:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; ;
+    dc:modified "2007-02-25T07:45:46Z"^^xsd:dateTime ;
+    dc:issued "2006-07-23T18:16:13Z"^^xsd:dateTime ;
+    dc:created "2006-07-23T05:28:50Z"^^xsd:dateTime ;
+    geo:lat "36.620487" ;
+    geo:long "-121.904468" ;
+    dc:title "Jellyfish at Monterey Aquarium" ;
     dc:subject "jellyfish" .
 
 </pre>
-
-
-<h2>Flickr API calls supported</h2>
-
-<p>See the
-<a href="coverage.html">Flickcurl API coverage</a>
-summary for the full list of all supported Flickr API calls.
-</p>
 
 
 <h2>Library use example</h2>
@@ -290,7 +270,7 @@ which has code that calls all the API functions.
 
 <hr />
 
-<p>Copyright (C) 2007 <a href="http://purl.org/net/dajobe/">Dave Beckett</a></p>
+<p>Copyright (C) 2007-2008 <a href="http://www.dajobe.org/">Dave Beckett</a></p>
 
 </body>
 </html>
