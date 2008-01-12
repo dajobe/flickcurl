@@ -233,6 +233,14 @@ or <span class="unsupported">unsupported</span>.
 </ul>
 
 
+<h3>places</h3>
+
+<ul>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceId.html">flickr.places.resolvePlaceId</a></li>
+  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceURL.html">flickr.places.resolvePlaceURL</a></li>
+</ul>
+
+
 <h3>reflection</h3>
 
 <ul>
@@ -275,7 +283,7 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.13</strong>: flickr.groups.browse, flickr.groups.getInfo, flickr.groups.search, flickr.interestingness.getList, flickr.people.getPublicGroups, flickr.people.getUploadStatus, flickr.photos.getCounts, flickr.photos.getSizes, flickr.photos.transform.rotate, flickr.photos.upload.checkTickets, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (20 new)
+<p><strong>0.13</strong>: flickr.groups.browse, flickr.groups.getInfo, flickr.groups.search, flickr.interestingness.getList, flickr.people.getPublicGroups, flickr.people.getUploadStatus, flickr.photos.getCounts, flickr.photos.getSizes, flickr.photos.transform.rotate, flickr.photos.upload.checkTickets, flickr.photosets.addPhoto, flickr.photosets.create, flickr.photosets.delete, flickr.photosets.editMeta, flickr.photosets.editPhotos, flickr.photosets.getInfo, flickr.photosets.getList, flickr.photosets.getPhotos, flickr.photosets.orderSets, flickr.photosets.removePhoto (20 new)</p>
 <pre>
 flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
 flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
@@ -298,9 +306,8 @@ flickcurl_photo** flickcurl_photosets_getPhotos(flickcurl* fc, const char* photo
 int flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array);
 int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
 </pre>
-</p>
 
-<p><strong>0.12</strong>: flickr.groups.pools.add, flickr.groups.pools.getGroups, flickr.groups.pools.getPhotos, flickr.groups.pools.remove, flickr.people.getPublicPhotos, flickr.photos.getContactsPublicPhotos, flickr.photos.getExif, flickr.photos.getFavorites, flickr.photos.getNotInSet, flickr.photos.getRecent, flickr.photos.getUntagged, flickr.photos.getWithGeoData, flickr.photos.getWithoutGeoData, flickr.photos.recentlyUpdated, flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (23 new)
+<p><strong>0.12</strong>: flickr.groups.pools.add, flickr.groups.pools.getGroups, flickr.groups.pools.getPhotos, flickr.groups.pools.remove, flickr.people.getPublicPhotos, flickr.photos.getContactsPublicPhotos, flickr.photos.getExif, flickr.photos.getFavorites, flickr.photos.getNotInSet, flickr.photos.getRecent, flickr.photos.getUntagged, flickr.photos.getWithGeoData, flickr.photos.getWithoutGeoData, flickr.photos.recentlyUpdated, flickr.photos.geo.getLocation, flickr.photos.geo.getPerms, flickr.photos.geo.removeLocation, flickr.photos.geo.setLocation, flickr.photos.geo.setPerms, flickr.photos.licenses.setLicense, flickr.photos.notes.add, flickr.photos.notes.delete, flickr.photos.notes.edit (23 new)</p>
 <pre>
 int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page);
@@ -326,9 +333,8 @@ char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id, int note_x
 int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
 int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
 </pre>
-</p>
 
-<p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.getContactsPhotos, flickr.photos.getPerms, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (10 new)
+<p><strong>0.11</strong>: flickr.contacts.getList, flickr.contacts.getPublicList, flickr.photos.getContactsPhotos, flickr.photos.getPerms, flickr.photos.search, flickr.photos.setContentType, flickr.photos.setDates, flickr.photos.setMeta, flickr.photos.setPerms, flickr.photos.setSafetyLevel (10 new)</p>
 <pre>
 flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc, const char* filter, int page, int per_page);
 flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
@@ -341,9 +347,8 @@ int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* ti
 int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
 int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
 </pre>
-</p>
 
-<p><strong>0.10</strong>: flickr.photos.comments.addComment, flickr.photos.comments.deleteComment, flickr.photos.comments.editComment, flickr.photos.comments.getList, flickr.photosets.comments.addComment, flickr.photosets.comments.deleteComment, flickr.photosets.comments.editComment, flickr.photosets.comments.getList, flickr.reflection.getMethods, flickr.reflection.getMethodInfo, Uploading Photos, Replacing Photos, Asynchronous Uploading (13 new)
+<p><strong>0.10</strong>: flickr.photos.comments.addComment, flickr.photos.comments.deleteComment, flickr.photos.comments.editComment, flickr.photos.comments.getList, flickr.photosets.comments.addComment, flickr.photosets.comments.deleteComment, flickr.photosets.comments.editComment, flickr.photosets.comments.getList, flickr.reflection.getMethods, flickr.reflection.getMethodInfo, Uploading Photos, Replacing Photos, Asynchronous Uploading (13 new)</p>
 <pre>
 char* flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id, const char* comment_text);
 int flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id);
@@ -356,9 +361,8 @@ flickcurl_comment** flickcurl_photosets_comments_getList(flickcurl* fc, const ch
 char** flickcurl_reflection_getMethods(flickcurl* fc);
 flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name);
 </pre>
-</p>
 
-<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.photos.addTags, flickr.photos.delete, flickr.photos.removeTag, flickr.photos.setTags, flickr.tags.getHotList, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated, flickr.urls.getGroup, flickr.urls.getUserPhotos, flickr.urls.getUserProfile, flickr.urls.lookupGroup (17 new)
+<p><strong>0.9</strong>: flickr.auth.checkToken, flickr.auth.getFrob, flickr.auth.getToken, flickr.photos.addTags, flickr.photos.delete, flickr.photos.removeTag, flickr.photos.setTags, flickr.tags.getHotList, flickr.tags.getListPhoto, flickr.tags.getListUser, flickr.tags.getListUserPopular, flickr.tags.getListUserRaw, flickr.tags.getRelated, flickr.urls.getGroup, flickr.urls.getUserPhotos, flickr.urls.getUserProfile, flickr.urls.lookupGroup (17 new)</p>
 <pre>
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
 char* flickcurl_auth_getFrob(flickcurl* fc);
@@ -378,44 +382,40 @@ char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
 char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
 char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
 </pre>
-</p>
 
-<p><strong>0.8</strong>: flickr.people.findByEmail, flickr.people.findByUsername (2 new)
+<p><strong>0.8</strong>: flickr.people.findByEmail, flickr.people.findByUsername (2 new)</p>
 <pre>
 char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
 char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 </pre>
-</p>
 
-<p><strong>0.7</strong>: flickr.groups.pools.getContext, flickr.photos.getAllContexts, flickr.photos.getContext, flickr.photosets.getContext (4 new)
+<p><strong>0.7</strong>: flickr.groups.pools.getContext, flickr.photos.getAllContexts, flickr.photos.getContext, flickr.photosets.getContext (4 new)</p>
 <pre>
 flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
 </pre>
-</p>
 
-<p><strong>0.6</strong>: flickr.people.getInfo, flickr.photos.licenses.getInfo, flickr.urls.lookupUser (3 new)
+<p><strong>0.6</strong>: flickr.people.getInfo, flickr.photos.licenses.getInfo, flickr.urls.lookupUser (3 new)</p>
 <pre>
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
 </pre>
-</p>
 
-<p><strong>0.5</strong>: flickr.auth.getFullToken, flickr.photos.getInfo, flickr.test.echo (3 new)
+<p><strong>0.5</strong>: flickr.auth.getFullToken, flickr.photos.getInfo, flickr.test.echo (3 new)</p>
 <pre>
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
 </pre>
-</p>
 
 
 <hr />
 
-<p>Copyright (C) 2007 <a href="http://purl.org/net/dajobe/">Dave Beckett</a></p>
+<p>Copyright (C) 2007-2008
+<a href="http://purl.org/net/dajobe/">Dave Beckett</a></p>
 
 </body>
 </html>
