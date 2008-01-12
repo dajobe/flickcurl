@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">97.2% (103/106)</span>
+<span class="coverage">99.1% (105/106)</span>
 </p>
 
 
@@ -61,8 +61,8 @@ or <span class="unsupported">unsupported</span>.
 <h3>blogs</h3>
 
 <ul>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.blogs.getList.html">flickr.blogs.getList</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.blogs.postPhoto.html">flickr.blogs.postPhoto</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.blogs.getList.html">flickr.blogs.getList</a> (0.14)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.blogs.postPhoto.html">flickr.blogs.postPhoto</a> (0.14)</li>
 </ul>
 
 
@@ -283,8 +283,10 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>0.14</strong>: flickr.favorites.add, flickr.favorites.getList, flickr.favorites.getPublicList, flickr.favorites.remove, flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL, flickr.test.login, flickr.test.null (8 new)</p>
+<p><strong>0.14</strong>: flickr.blogs.getList, flickr.blogs.postPhoto, flickr.favorites.add, flickr.favorites.getList, flickr.favorites.getPublicList, flickr.favorites.remove, flickr.places.resolvePlaceId, flickr.places.resolvePlaceURL, flickr.test.login, flickr.test.null (10 new)</p>
 <pre>
+flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
+int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
 int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
 flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
 flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);

@@ -2416,6 +2416,44 @@ command_favorites_remove(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_blogs_getList(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_blog** blogs=NULL;
+  
+  blogs=flickcurl_blogs_getList(fc);
+  if(blogs) {
+    int i;
+    
+    for(i=0; blogs[i]; i++) {
+      fprintf(stderr,
+              "Blog %d) id %s  name '%s'  needs password '%d'  url '%s'\n",
+              i,
+              blogs[i]->id, blogs[i]->name, blogs[i]->needs_password, 
+              blogs[i]->url);
+    }
+
+    flickcurl_free_blogs(blogs);
+  }
+  return (blogs == NULL);
+}
+
+
+static int
+command_blogs_postPhoto(flickcurl* fc, int argc, char *argv[])
+{
+  const char* blog_id=argv[1];
+  const char* photo_id=argv[2];
+  const char* title=argv[3];
+  const char* description=argv[4];
+  const char* blog_password=argv[5];
+
+  return flickcurl_blogs_postPhoto(fc, blog_id, photo_id, title,
+                                   description, blog_password);
+}
+
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -2439,6 +2477,13 @@ static struct {
   {"auth.getToken",
    "TOKEN", "Get the auth token for the FROB, if one has been attached.",
    command_auth_getToken, 0, 0},
+
+  {"blogs.getList",
+   "", "Get a list of configured blogs for the calling user.",
+   command_blogs_getList, 0, 0},
+  {"blogs.postPhoto",
+   "BLOG-ID PHOTO-ID TITLE DESCRIPTION [BLOG-PASSWORD]", "Post PHOTO-ID to blog BLOG-ID with TITLE, DESCRIPTION and optional password.",
+   command_blogs_postPhoto, 4, 5},
 
   {"favorites.add",
    "PHOTO-ID", "Adds PHOTO-ID to the current user's favorites.",

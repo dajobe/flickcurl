@@ -438,6 +438,23 @@ typedef struct {
 
 
 /**
+ * flickcurl_blog:
+ * @id: ID
+ * @name: Group Name
+ * @needspassword: needs password
+ * @url: URL
+ *
+ * A blog.
+ */
+typedef struct {
+  char* id;
+  char* name;
+  int needs_password;
+  char* url;
+} flickcurl_blog;
+
+
+/**
  * flickcurl_category:
  * @id: category ID
  * @name: Name
@@ -790,6 +807,11 @@ char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
 char* flickcurl_auth_getFrob(flickcurl* fc);
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
+
+/* flickr.blogs */
+flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
+int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
+void flickcurl_free_blogs(flickcurl_blog **blogs_object);
 
 /* flickr.favorites */
 int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);

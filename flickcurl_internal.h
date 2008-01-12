@@ -47,6 +47,9 @@ xmlDocPtr flickcurl_invoke(flickcurl *fc);
 void flickcurl_free_arg(flickcurl_arg *arg);
 flickcurl_arg** flickcurl_build_args(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* arg_count_p);
 
+/* blog.c */
+flickcurl_blog** flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* blog_count_p);
+
 /* common.c */
 /* invoke an error */
 void flickcurl_error(flickcurl* fc, const char *message, ...);

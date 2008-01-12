@@ -42,6 +42,7 @@ test_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = \
 args.c \
+blog.c \
 category.c \
 common.c \
 comments.c \
@@ -63,6 +64,7 @@ user_upload_status.c \
 tags.c \
 vsnprintf.c \
 auth-api.c \
+blogs-api.c \
 contacts-api.c \
 favorites-api.c \
 interestingness-api.c \
