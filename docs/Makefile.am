@@ -16,3 +16,5 @@
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
 man_MANS = flickcurl-config.1 flickcurl.1 flickrdf.1
+
+EXTRA_DIST = flickcurl-config.1 flickcurl.1 flickrdf.1
