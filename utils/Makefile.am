@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+# Copyright (C) 2008, David Beckett http://www.dajobe.org/
 # 
 # This file is licensed under the following three licenses as alternatives:
 #   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -17,119 +17,30 @@
 
 bin_PROGRAMS = flickcurl flickrdf
 
-EXTRA_PROGRAMS = test codegen
+EXTRA_PROGRAMS = codegen
 
-bin_SCRIPTS = flickcurl-config
-
-lib_LTLIBRARIES = libflickcurl.la
-
-include_HEADERS = flickcurl.h
+AM_CPPFLAGS= -I$(top_srcdir)/src 
 
 flickcurl_SOURCES = flickcurl.c
 if GETOPT
 flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
-flickcurl_LDADD= libflickcurl.la
-
-codegen_SOURCES = codegen.c
-if GETOPT
-codegen_SOURCES += getopt.c flickcurl_getopt.h
-endif
-codegen_LDADD= libflickcurl.la
-
-test_SOURCES = test.c
-test_LDADD= libflickcurl.la
-
-libflickcurl_la_SOURCES = \
-activity.c \
-args.c \
-blog.c \
-category.c \
-common.c \
-comments.c \
-contacts.c \
-context.c \
-config.c \
-exif.c \
-group.c \
-md5.c \
-location.c \
-method.c \
-person.c \
-photo.c \
-photoset.c \
-place.c \
-size.c \
-ticket.c \
-user_upload_status.c \
-tags.c \
-vsnprintf.c \
-activity-api.c \
-auth-api.c \
-blogs-api.c \
-contacts-api.c \
-favorites-api.c \
-interestingness-api.c \
-groups-api.c \
-groups-pools-api.c \
-people-api.c \
-perms.c \
-photos-api.c \
-photos-comments-api.c \
-photos-geo-api.c \
-photos-licenses-api.c \
-photos-notes-api.c \
-photos-transform-api.c \
-photos-upload-api.c \
-photosets-api.c \
-photosets-comments-api.c \
-places-api.c \
-reflection-api.c \
-tags-api.c \
-test-api.c \
-upload-api.c \
-urls-api.c \
-flickcurl_internal.h
+flickcurl_LDADD= $(top_builddir)/src/libflickcurl.la
 
 flickrdf_SOURCES = flickrdf.c
 if GETOPT
 flickrdf_SOURCES += getopt.c flickcurl_getopt.h
 endif
 flickrdf_CFLAGS=
-flickrdf_LDADD= libflickcurl.la
+flickrdf_LDADD= $(top_builddir)/src/libflickcurl.la
 if RAPTOR
 flickrdf_CFLAGS += @RAPTOR_CFLAGS@
 flickrdf_LDADD += @RAPTOR_LIBS@
 endif
 
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = flickcurl.pc
 
-man_MANS = flickcurl-config.1 flickcurl.1 flickrdf.1
-
-EXTRA_DIST= \
-ChangeLog \
-README.html NEWS.html coverage.html README NEWS AUTHORS \
-LICENSE.html LICENSE-2.0.txt NOTICE \
-autogen.sh \
-flickcurl-config.in flickcurl.pc.in \
-flickcurl.rdf.in \
-example.c \
-$(man_MANS) \
-flickcurl.spec
-
-
-# Create some text files from HTML sources
-LYNX=lynx
-HTML_TO_TEXT=TERM=vt100 $(LYNX) -dump
-
-SUFFIXES = .html .txt
-
-.html.txt:
-	$(HTML_TO_TEXT) $< > $@
-
-README: README.html
-	$(HTML_TO_TEXT) $< > $@
-
-NEWS: NEWS.html
-	$(HTML_TO_TEXT) $< > $@
+codegen_SOURCES = codegen.c
+if GETOPT
+codegen_SOURCES += getopt.c flickcurl_getopt.h
+endif
+codegen_LDADD= $(top_builddir)/src/libflickcurl.la

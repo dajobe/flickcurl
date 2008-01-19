@@ -3,8 +3,8 @@
 
 AC_PREREQ(2.59)
 AC_INIT(Flickcurl, 1.1, http://bugs.librdf.org/, flickcurl)
-AC_CONFIG_SRCDIR([flickcurl.c])
-AM_CONFIG_HEADER([config.h])
+AC_CONFIG_SRCDIR([src/flickcurl.h])
+AM_CONFIG_HEADER([src/config.h])
 AC_REVISION($Revision: $)dnl
 
 AM_MAINTAINER_MODE
@@ -277,6 +277,8 @@ fi
 AC_SUBST(STANDARD_CFLAGS)
 
 AC_CONFIG_FILES([Makefile
+src/Makefile
+utils/Makefile
 flickcurl.rdf
 flickcurl.pc])
 

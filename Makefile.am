@@ -15,92 +15,9 @@
 # complete terms and further detail along with the license texts for
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
-bin_PROGRAMS = flickcurl flickrdf
-
-EXTRA_PROGRAMS = test codegen
+SUBDIRS = src utils
 
 bin_SCRIPTS = flickcurl-config
-
-lib_LTLIBRARIES = libflickcurl.la
-
-include_HEADERS = flickcurl.h
-
-flickcurl_SOURCES = flickcurl.c
-if GETOPT
-flickcurl_SOURCES += getopt.c flickcurl_getopt.h
-endif
-flickcurl_LDADD= libflickcurl.la
-
-codegen_SOURCES = codegen.c
-if GETOPT
-codegen_SOURCES += getopt.c flickcurl_getopt.h
-endif
-codegen_LDADD= libflickcurl.la
-
-test_SOURCES = test.c
-test_LDADD= libflickcurl.la
-
-libflickcurl_la_SOURCES = \
-activity.c \
-args.c \
-blog.c \
-category.c \
-common.c \
-comments.c \
-contacts.c \
-context.c \
-config.c \
-exif.c \
-group.c \
-md5.c \
-location.c \
-method.c \
-person.c \
-photo.c \
-photoset.c \
-place.c \
-size.c \
-ticket.c \
-user_upload_status.c \
-tags.c \
-vsnprintf.c \
-activity-api.c \
-auth-api.c \
-blogs-api.c \
-contacts-api.c \
-favorites-api.c \
-interestingness-api.c \
-groups-api.c \
-groups-pools-api.c \
-people-api.c \
-perms.c \
-photos-api.c \
-photos-comments-api.c \
-photos-geo-api.c \
-photos-licenses-api.c \
-photos-notes-api.c \
-photos-transform-api.c \
-photos-upload-api.c \
-photosets-api.c \
-photosets-comments-api.c \
-places-api.c \
-reflection-api.c \
-tags-api.c \
-test-api.c \
-upload-api.c \
-urls-api.c \
-flickcurl_internal.h
-
-flickrdf_SOURCES = flickrdf.c
-if GETOPT
-flickrdf_SOURCES += getopt.c flickcurl_getopt.h
-endif
-flickrdf_CFLAGS=
-flickrdf_LDADD= libflickcurl.la
-if RAPTOR
-flickrdf_CFLAGS += @RAPTOR_CFLAGS@
-flickrdf_LDADD += @RAPTOR_LIBS@
-endif
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = flickcurl.pc
@@ -114,7 +31,6 @@ LICENSE.html LICENSE-2.0.txt NOTICE \
 autogen.sh \
 flickcurl-config.in flickcurl.pc.in \
 flickcurl.rdf.in \
-example.c \
 $(man_MANS) \
 flickcurl.spec
 

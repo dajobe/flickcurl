@@ -15,30 +15,9 @@
 # complete terms and further detail along with the license texts for
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
-bin_PROGRAMS = flickcurl flickrdf
-
-EXTRA_PROGRAMS = test codegen
-
-bin_SCRIPTS = flickcurl-config
-
 lib_LTLIBRARIES = libflickcurl.la
 
 include_HEADERS = flickcurl.h
-
-flickcurl_SOURCES = flickcurl.c
-if GETOPT
-flickcurl_SOURCES += getopt.c flickcurl_getopt.h
-endif
-flickcurl_LDADD= libflickcurl.la
-
-codegen_SOURCES = codegen.c
-if GETOPT
-codegen_SOURCES += getopt.c flickcurl_getopt.h
-endif
-codegen_LDADD= libflickcurl.la
-
-test_SOURCES = test.c
-test_LDADD= libflickcurl.la
 
 libflickcurl_la_SOURCES = \
 activity.c \
@@ -91,45 +70,5 @@ upload-api.c \
 urls-api.c \
 flickcurl_internal.h
 
-flickrdf_SOURCES = flickrdf.c
-if GETOPT
-flickrdf_SOURCES += getopt.c flickcurl_getopt.h
-endif
-flickrdf_CFLAGS=
-flickrdf_LDADD= libflickcurl.la
-if RAPTOR
-flickrdf_CFLAGS += @RAPTOR_CFLAGS@
-flickrdf_LDADD += @RAPTOR_LIBS@
-endif
-
-pkgconfigdir = $(libdir)/pkgconfig
-pkgconfig_DATA = flickcurl.pc
-
-man_MANS = flickcurl-config.1 flickcurl.1 flickrdf.1
-
 EXTRA_DIST= \
-ChangeLog \
-README.html NEWS.html coverage.html README NEWS AUTHORS \
-LICENSE.html LICENSE-2.0.txt NOTICE \
-autogen.sh \
-flickcurl-config.in flickcurl.pc.in \
-flickcurl.rdf.in \
-example.c \
-$(man_MANS) \
-flickcurl.spec
-
-
-# Create some text files from HTML sources
-LYNX=lynx
-HTML_TO_TEXT=TERM=vt100 $(LYNX) -dump
-
-SUFFIXES = .html .txt
-
-.html.txt:
-	$(HTML_TO_TEXT) $< > $@
-
-README: README.html
-	$(HTML_TO_TEXT) $< > $@
-
-NEWS: NEWS.html
-	$(HTML_TO_TEXT) $< > $@
+example.c
