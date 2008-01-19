@@ -115,6 +115,7 @@ flickcurl_photoset** flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr
 flickcurl_photoset* flickcurl_build_photoset(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 
 /* place.c */
+flickcurl_place** flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* place_count_p);
 flickcurl_place* flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
 /* size.c */

@@ -602,7 +602,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                                      &photo->tags_count);
 
     photo->place=flickcurl_build_place(fc, xpathNodeCtx,
-                                       (const xmlChar*)".");
+                                       (const xmlChar*)"./location");
 
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);

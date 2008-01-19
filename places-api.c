@@ -42,6 +42,70 @@
 
 
 /**
+ * flickcurl_places_find:
+ * @fc: flickcurl context
+ * @query: The query string to use for place ID lookups
+ * 
+ * Return a list of place IDs for a query string.
+ *
+ * The flickr.places.find method is NOT a geocoder. It will round up
+ * to the nearest place type to which place IDs apply. For example,
+ * if you pass it a street level address it will return the city that
+ * contains the address rather than the street, or building, itself.
+ *
+ * This API announced 2008-01-18
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/3716
+ *
+ * Implements flickr.places.find (1.1)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_place**
+flickcurl_places_find(flickcurl* fc, const char* query)
+{
+  const char* parameters[8][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_place** places=NULL;
+  
+  if(!query)
+    return NULL;
+
+  parameters[count][0]  = "query";
+  parameters[count++][1]= query;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.find", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  places=flickcurl_build_places(fc, xpathCtx, (const xmlChar*)"/rsp/places/place", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    places=NULL;
+
+  return places;
+}
+
+
+/**
  * flickcurl_places_resolvePlaceId:
  * @fc: flickcurl context
  * @place_id: A Flickr Places ID
@@ -85,7 +149,8 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
     goto tidy;
   }
 
-  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp");
+  place=flickcurl_build_place(fc, xpathCtx,
+                              (const xmlChar*)"/rsp/location");
 
   tidy:
   if(xpathCtx)
@@ -142,7 +207,7 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
     goto tidy;
   }
 
-  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp");
+  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/location");
 
   tidy:
   if(xpathCtx)

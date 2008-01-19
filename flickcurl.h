@@ -297,6 +297,8 @@ typedef enum {
  * @names: Array of place names
  * @ids: Array of place IDs
  * @urls: Array of place urls.
+ * @type: Location type of index 0 (the location) usually 
+ *        FLICKCURL_PLACE_LOCATION but may be wider
  *
  * A Place.
  *
@@ -309,6 +311,7 @@ typedef struct
   char* names[FLICKCURL_PLACE_LAST+1];
   char* ids[FLICKCURL_PLACE_LAST+1];
   char* urls[FLICKCURL_PLACE_LAST+1];
+  flickcurl_place_type type;
 } flickcurl_place;
   
 
@@ -845,6 +848,9 @@ void flickcurl_free_exifs(flickcurl_exif **exifs_object);
 void flickcurl_free_ticket(flickcurl_ticket *ticket);
 void flickcurl_free_tickets(flickcurl_ticket **tickets_object);
 void flickcurl_free_user_upload_status(flickcurl_user_upload_status *u);
+void flickcurl_free_place(flickcurl_place* place);
+void flickcurl_free_places(flickcurl_place** places_object);
+
 
 /* utility methods */
 /* get an image URL for a photo in some size */
@@ -946,10 +952,11 @@ int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int saf
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
 
 /* flickr.places */
+flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
 flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
 const char* flickcurl_get_place_type_label(flickcurl_place_type place_type);
-void flickcurl_free_place(flickcurl_place* place);
+flickcurl_place_type flickcurl_get_place_type_by_label(const char* place_label);
 
 /* flickr.contacts */
 void flickcurl_free_contact(flickcurl_contact *contact_object);

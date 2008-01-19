@@ -278,6 +278,10 @@ command_print_place(flickcurl_place* place,
   if(label)
     fprintf(stderr, "%s: %s %s places\n", program, label,
             (value ? value : "(none)"));
+
+  if(place->type != FLICKCURL_PLACE_LOCATION)
+    fprintf(stderr, "Location is type %s (%d)\n",
+            flickcurl_get_place_type_label(place->type), (int)place->type);
   
   for(i=(int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
     char* name=place->names[i];
@@ -2556,6 +2560,24 @@ command_activity_userPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_places_find(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place** places=NULL;
+  char* query=argv[1];
+
+  places=flickcurl_places_find(fc, query);
+  if(places) {
+    int i;
+    for(i=0; places[i]; i++) {
+      command_print_place(places[i], NULL, NULL);
+    }
+    flickcurl_free_places(places);
+  }
+  
+  return (places == NULL);
+}
+
 
 static struct {
   const char*     name;
@@ -2837,6 +2859,9 @@ static struct {
    "PHOTOSET-ID", "Get the comments for a photoset PHOTOSET-ID.",
    command_photosets_comments_getList, 1, 1},
 
+  {"places.find",
+   "TEXT", "Find Flickr Places by TEXT query.",
+   command_places_find, 1, 1},
   {"places.resolvePlaceId",
    "PLACE-ID", "Find Flickr Places information by PLACE-ID.",
    command_places_resolvePlaceId, 1, 1},

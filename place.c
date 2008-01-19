@@ -57,6 +57,19 @@ flickcurl_get_place_type_label(flickcurl_place_type place_type)
 }
 
 
+flickcurl_place_type
+flickcurl_get_place_type_by_label(const char* place_label)
+{
+  int i;
+  for(i=0; flickcurl_place_type_label[i]; i++) {
+    if(!strcmp(flickcurl_place_type_label[i], place_label))
+      return (flickcurl_place_type)i;
+  }
+  
+  return FLICKCURL_PLACE_LOCATION;
+}
+
+
 void
 flickcurl_free_place(flickcurl_place *place)
 {
@@ -73,6 +86,18 @@ flickcurl_free_place(flickcurl_place *place)
   free(place);
 }
 
+void
+flickcurl_free_places(flickcurl_place **places_object)
+{
+  int i;
+  
+  for(i=0; places_object[i]; i++)
+    flickcurl_free_place(places_object[i]);
+  
+  free(places_object);
+}
+
+
 /* flickcurl_place arrays */
 /* place->names[x] */
 #define PLACE_NAME 0
@@ -80,6 +105,8 @@ flickcurl_free_place(flickcurl_place *place)
 #define PLACE_ID   1
 /* place->urls[x] */
 #define PLACE_URL  2
+
+#define PLACE_TYPE 3
 
 /*
  * The XPaths here are relative, such as prefixed by /rsp/place
@@ -90,69 +117,75 @@ static struct {
   unsigned short place_array;
 } place_fields_table[PHOTO_FIELD_LAST + 4]={
   {
-    (const xmlChar*)"./location/@name",
+    (const xmlChar*)"./@name",
     FLICKCURL_PLACE_LOCATION,
     PLACE_NAME,
   }
   ,
   {
-    (const xmlChar*)"./location/@place_id",
+    (const xmlChar*)"./@place_id",
     FLICKCURL_PLACE_LOCATION,
     PLACE_ID
   }
   ,
   {
-    (const xmlChar*)"./location/@place_url",
+    (const xmlChar*)"./@place_url",
     FLICKCURL_PLACE_LOCATION,
     PLACE_URL
   }
   ,
   {
-    (const xmlChar*)"./location/locality/@place_id",
+    (const xmlChar*)"./locality/@place_id",
     FLICKCURL_PLACE_LOCALITY,
     PLACE_ID,
   }
   ,
   {
-    (const xmlChar*)"./location/locality",
+    (const xmlChar*)"./locality",
     FLICKCURL_PLACE_LOCALITY,
     PLACE_NAME,
   }
   ,
   {
-    (const xmlChar*)"./location/county/@place_id",
+    (const xmlChar*)"./county/@place_id",
     FLICKCURL_PLACE_COUNTY,
     PLACE_ID,
   }
   ,
   {
-    (const xmlChar*)"./location/county",
+    (const xmlChar*)"./county",
     FLICKCURL_PLACE_COUNTY,
     PLACE_NAME,
   }
   ,
   {
-    (const xmlChar*)"./location/region/@place_id",
+    (const xmlChar*)"./region/@place_id",
     FLICKCURL_PLACE_REGION,
     PLACE_ID,
   }
   ,
   {
-    (const xmlChar*)"./location/region",
+    (const xmlChar*)"./region",
     FLICKCURL_PLACE_REGION,
     PLACE_NAME,
   }
   ,
   {
-    (const xmlChar*)"./location/country/@place_id",
+    (const xmlChar*)"./country/@place_id",
     FLICKCURL_PLACE_COUNTRY,
     PLACE_ID,
   }
   ,
   {
-    (const xmlChar*)"./location/country",
+    (const xmlChar*)"./country",
     FLICKCURL_PLACE_COUNTRY,
     PLACE_NAME,
+  }
+  ,
+  {
+    (const xmlChar*)"./@place_type",
+    (flickcurl_place_type)0,
+    PLACE_TYPE,
   }
   ,
   { 
@@ -164,12 +197,13 @@ static struct {
 
 
 
-flickcurl_place*
-flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
-                      const xmlChar* xpathExpr)
+flickcurl_place**
+flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                       const xmlChar* xpathExpr, int* place_count_p)
 {
-  flickcurl_place* place=NULL;
+  flickcurl_place** places=NULL;
   int nodes_count;
+  int place_count;
   xmlXPathObjectPtr xpathObj=NULL;
   xmlNodeSetPtr nodes;
   xmlChar full_xpath[512];
@@ -190,11 +224,13 @@ flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes=xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count=xmlXPathNodeSetGetLength(nodes);
+  places=(flickcurl_place**)calloc(sizeof(flickcurl_place*), nodes_count+1);
 
-  for(i=0; i < nodes_count; i++) {
+  for(i=0, place_count=0; i < nodes_count; i++) {
     xmlNodePtr node=nodes->nodeTab[i];
     int expri;
     xmlXPathContextPtr xpathNodeCtx=NULL;
+    flickcurl_place* place;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
@@ -203,6 +239,7 @@ flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     }
     
     place=(flickcurl_place*)calloc(sizeof(flickcurl_place), 1);
+    place->type=FLICKCURL_PLACE_LOCATION;
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
@@ -232,6 +269,11 @@ flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                                  place_fields_table[expri].xpath);
       if(!value)
         continue;
+
+      if(place_array == PLACE_TYPE) {
+        place->type=flickcurl_get_place_type_by_label(value);
+        continue;
+      }
       
       switch(place_array) {
         case PLACE_NAME:
@@ -260,17 +302,38 @@ flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);
 
-    /* Handle only first place */
-    break;
-
+    places[place_count++]=place;
   } /* for places */
+  
+  if(place_count_p)
+    *place_count_p=place_count;
   
  tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
   if(fc->failed)
-    place=NULL;
+    places=NULL;
 
-  return place;
+  return places;
 }
+
+
+flickcurl_place*
+flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                      const xmlChar* xpathExpr)
+{
+  flickcurl_place** places;
+  flickcurl_place* result=NULL;
+
+  places=flickcurl_build_places(fc, xpathCtx, xpathExpr, NULL);
+
+  if(places) {
+    result=places[0];
+    free(places);
+  }
+  
+  return result;
+}
+
+
