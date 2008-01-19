@@ -279,6 +279,7 @@ AC_SUBST(STANDARD_CFLAGS)
 AC_CONFIG_FILES([Makefile
 src/Makefile
 utils/Makefile
+docs/Makefile
 flickcurl.rdf
 flickcurl.pc])
 

@@ -15,14 +15,12 @@
 # complete terms and further detail along with the license texts for
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
-SUBDIRS = src utils
+SUBDIRS = src utils docs
 
 bin_SCRIPTS = flickcurl-config
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = flickcurl.pc
-
-man_MANS = flickcurl-config.1 flickcurl.1 flickrdf.1
 
 EXTRA_DIST= \
 ChangeLog \
