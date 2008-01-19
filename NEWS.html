@@ -15,6 +15,26 @@
 
 <p>Not released.</p>
 
+<p>1 new Flickr API call:</p>
+<pre>
+flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
+</pre>
+
+<p>Added <em>type</em> field to <code>flickcurl_place</code> structure
+for use by results from <code>flickcurl_places_find()</code>.
+</p>
+
+<p>Added method to turn a place type label into an enum:</p>
+<pre>
+  flickcurl_place_type flickcurl_get_place_type_by_label(const char* place_label);
+</pre>
+
+<p>Added destructor function to free list of places</p>
+<pre>
+  void flickcurl_free_places(flickcurl_place **places_object);
+</pre>
+
+
 <h2 id="D2008-01-12">2008-01-12 Flickcurl 1.0</h2>
 
 <p>Now supports the entire Flickr API including the new Places API:
