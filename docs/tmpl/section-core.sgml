@@ -1,0 +1,199 @@
+<!-- ##### SECTION Title ##### -->
+Core
+
+<!-- ##### SECTION Short_Description ##### -->
+Core library functions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### TYPEDEF flickcurl ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### USER_FUNCTION flickcurl_message_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@message: 
+
+
+<!-- ##### FUNCTION flickcurl_init ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_finish ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION flickcurl_new ##### -->
+<para>
+
+</para>
+
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_free ##### -->
+<para>
+
+</para>
+
+@fc: 
+
+
+<!-- ##### FUNCTION flickcurl_get_api_key ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_auth_token ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_set_api_key ##### -->
+<para>
+
+</para>
+
+@fc: 
+@api_key: 
+
+
+<!-- ##### FUNCTION flickcurl_set_auth_token ##### -->
+<para>
+
+</para>
+
+@fc: 
+@auth_token: 
+
+
+<!-- ##### FUNCTION flickcurl_set_data ##### -->
+<para>
+
+</para>
+
+@fc: 
+@data: 
+@data_length: 
+
+
+<!-- ##### FUNCTION flickcurl_set_error_handler ##### -->
+<para>
+
+</para>
+
+@fc: 
+@error_handler: 
+@error_data: 
+
+
+<!-- ##### FUNCTION flickcurl_set_http_accept ##### -->
+<para>
+
+</para>
+
+@fc: 
+@value: 
+
+
+<!-- ##### FUNCTION flickcurl_set_proxy ##### -->
+<para>
+
+</para>
+
+@fc: 
+@proxy: 
+
+
+<!-- ##### FUNCTION flickcurl_set_request_delay ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Param2: 
+
+
+<!-- ##### FUNCTION flickcurl_set_shared_secret ##### -->
+<para>
+
+</para>
+
+@fc: 
+@secret: 
+
+
+<!-- ##### FUNCTION flickcurl_set_sign ##### -->
+<para>
+
+</para>
+
+@fc: 
+
+
+<!-- ##### FUNCTION flickcurl_set_tag_handler ##### -->
+<para>
+
+</para>
+
+@fc: 
+@tag_handler: 
+@tag_data: 
+
+
+<!-- ##### FUNCTION flickcurl_set_user_agent ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_agent: 
+
+
+<!-- ##### FUNCTION flickcurl_set_write ##### -->
+<para>
+
+</para>
+
+@fc: 
+@is_write: 
+
+
+<!-- ##### FUNCTION flickcurl_set_xml_data ##### -->
+<para>
+
+</para>
+
+@fc: 
+@doc: 
+
+

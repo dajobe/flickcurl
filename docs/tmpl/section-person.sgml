@@ -1,0 +1,83 @@
+<!-- ##### SECTION Title ##### -->
+Person API
+
+<!-- ##### SECTION Short_Description ##### -->
+Person API
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION flickcurl_free_person ##### -->
+<para>
+
+</para>
+
+@person: 
+
+
+<!-- ##### FUNCTION flickcurl_free_persons ##### -->
+<para>
+
+</para>
+
+@persons: 
+
+
+<!-- ##### FUNCTION flickcurl_get_person_field_label ##### -->
+<para>
+
+</para>
+
+@field: 
+@Returns: 
+
+
+<!-- ##### STRUCT flickcurl_person ##### -->
+<para>
+
+</para>
+
+@nsid: 
+@fields: 
+
+<!-- ##### STRUCT flickcurl_person_field ##### -->
+<para>
+
+</para>
+
+@string: 
+@integer: 
+@type: 
+
+<!-- ##### ENUM flickcurl_person_field_type ##### -->
+<para>
+
+</para>
+
+@PERSON_FIELD_none: 
+@PERSON_FIELD_isadmin: 
+@PERSON_FIELD_ispro: 
+@PERSON_FIELD_iconserver: 
+@PERSON_FIELD_iconfarm: 
+@PERSON_FIELD_username: 
+@PERSON_FIELD_realname: 
+@PERSON_FIELD_mbox_sha1sum: 
+@PERSON_FIELD_location: 
+@PERSON_FIELD_photosurl: 
+@PERSON_FIELD_profileurl: 
+@PERSON_FIELD_mobileurl: 
+@PERSON_FIELD_photos_firstdate: 
+@PERSON_FIELD_photos_firstdatetaken: 
+@PERSON_FIELD_photos_count: 
+@PERSON_FIELD_photos_views: 
+@PERSON_FIELD_favedate: 
+@PERSON_FIELD_FIRST: 
+@PERSON_FIELD_LAST: 
+

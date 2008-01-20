@@ -1,0 +1,100 @@
+<!-- ##### SECTION Title ##### -->
+Uploading
+
+<!-- ##### SECTION Short_Description ##### -->
+Uploading APIs and Asynchronous upload tickets
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_ticket ##### -->
+<para>
+
+</para>
+
+@id: 
+@photoid: 
+@complete: 
+@invalid: 
+
+<!-- ##### FUNCTION flickcurl_free_ticket ##### -->
+<para>
+
+</para>
+
+@ticket: 
+
+
+<!-- ##### FUNCTION flickcurl_free_tickets ##### -->
+<para>
+
+</para>
+
+@tickets_object: 
+
+
+<!-- ##### STRUCT flickcurl_upload_params ##### -->
+<para>
+
+</para>
+
+@photo_file: 
+@title: 
+@description: 
+@tags: 
+@is_public: 
+@is_friend: 
+@is_family: 
+@safety_level: 
+@content_type: 
+
+<!-- ##### STRUCT flickcurl_upload_status ##### -->
+<para>
+
+</para>
+
+@photoid: 
+@secret: 
+@originalsecret: 
+@ticketid: 
+
+<!-- ##### STRUCT flickcurl_user_upload_status ##### -->
+<para>
+
+</para>
+
+@username: 
+@bandwidth_maxbytes: 
+@bandwidth_maxkb: 
+@bandwidth_usedbytes: 
+@bandwidth_usedkb: 
+@bandwidth_remainingbytes: 
+@bandwidth_remainingkb: 
+@filesize_maxbytes: 
+@filesize_maxkb: 
+@sets_created: 
+@sets_remaining: 
+
+<!-- ##### FUNCTION flickcurl_free_upload_status ##### -->
+<para>
+
+</para>
+
+@status: 
+
+
+<!-- ##### FUNCTION flickcurl_free_user_upload_status ##### -->
+<para>
+
+</para>
+
+@u: 
+
+

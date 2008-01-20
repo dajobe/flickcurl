@@ -1,0 +1,64 @@
+<!-- ##### SECTION Title ##### -->
+Unused
+
+<!-- ##### SECTION Short_Description ##### -->
+Unused
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_s ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### STRUCT flickcurl_category_s ##### -->
+<para>
+
+</para>
+
+@id: 
+@name: 
+@path: 
+@count: 
+@categories: 
+@categories_count: 
+@groups: 
+@groups_count: 
+
+<!-- ##### STRUCT flickcurl_photo_s ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION read_ini_config ##### -->
+<para>
+
+</para>
+
+@filename: 
+@application: 
+@user_data: 
+@handler: 
+@Returns: 
+
+
+<!-- ##### USER_FUNCTION set_config_var_handler ##### -->
+<para>
+
+</para>
+
+@userdata: 
+@key: 
+@value: 
+
+

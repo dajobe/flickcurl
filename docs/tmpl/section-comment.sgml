@@ -1,0 +1,44 @@
+<!-- ##### SECTION Title ##### -->
+Comments
+
+<!-- ##### SECTION Short_Description ##### -->
+Photos comments
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_comment ##### -->
+<para>
+
+</para>
+
+@id: 
+@author: 
+@authorname: 
+@datecreate: 
+@permalink: 
+@text: 
+
+<!-- ##### FUNCTION flickcurl_free_comment ##### -->
+<para>
+
+</para>
+
+@comment_object: 
+
+
+<!-- ##### FUNCTION flickcurl_free_comments ##### -->
+<para>
+
+</para>
+
+@comments_object: 
+
+

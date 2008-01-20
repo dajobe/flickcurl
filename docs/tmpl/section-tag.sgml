@@ -1,0 +1,109 @@
+<!-- ##### SECTION Title ##### -->
+Tags
+
+<!-- ##### SECTION Short_Description ##### -->
+Photo tagging
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_tag ##### -->
+<para>
+
+</para>
+
+@photo: 
+@id: 
+@author: 
+@authorname: 
+@raw: 
+@cooked: 
+@machine_tag: 
+@count: 
+
+<!-- ##### FUNCTION flickcurl_free_tag ##### -->
+<para>
+
+</para>
+
+@t: 
+
+
+<!-- ##### USER_FUNCTION flickcurl_tag_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@tag: 
+
+
+<!-- ##### FUNCTION flickcurl_tags_getHotList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@period: 
+@tag_count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_tags_getListPhoto ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_tags_getListUser ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_tags_getListUserPopular ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@pop_count: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_tags_getListUserRaw ##### -->
+<para>
+
+</para>
+
+@fc: 
+@tag: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_tags_getRelated ##### -->
+<para>
+
+</para>
+
+@fc: 
+@tag: 
+@Returns: 
+
+

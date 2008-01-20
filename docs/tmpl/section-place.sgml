@@ -1,0 +1,93 @@
+<!-- ##### SECTION Title ##### -->
+Places
+
+<!-- ##### SECTION Short_Description ##### -->
+Places in the real world
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION flickcurl_free_place ##### -->
+<para>
+
+</para>
+
+@place: 
+
+
+<!-- ##### FUNCTION flickcurl_free_places ##### -->
+<para>
+
+</para>
+
+@places_object: 
+
+
+<!-- ##### ENUM flickcurl_place_type ##### -->
+<para>
+
+</para>
+
+@FLICKCURL_PLACE_LOCATION: 
+@FLICKCURL_PLACE_NEIGHBORHOOD: 
+@FLICKCURL_PLACE_LOCALITY: 
+@FLICKCURL_PLACE_COUNTY: 
+@FLICKCURL_PLACE_REGION: 
+@FLICKCURL_PLACE_COUNTRY: 
+@FLICKCURL_PLACE_LAST: 
+
+<!-- ##### FUNCTION flickcurl_places_find ##### -->
+<para>
+
+</para>
+
+@fc: 
+@query: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_place_type_by_label ##### -->
+<para>
+
+</para>
+
+@place_label: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_place_type_label ##### -->
+<para>
+
+</para>
+
+@place_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_resolvePlaceId ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_resolvePlaceURL ##### -->
+<para>
+
+</para>
+
+@fc: 
+@url: 
+@Returns: 
+
+

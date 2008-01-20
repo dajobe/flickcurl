@@ -1,0 +1,58 @@
+<!-- ##### SECTION Title ##### -->
+General
+
+<!-- ##### SECTION Short_Description ##### -->
+General functions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### MACRO FLICKCURL_DEPRECATED ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO FLICKCURL_MAX_ACTIVITY_EVENTS ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### FUNCTION flickcurl_array_free ##### -->
+<para>
+
+</para>
+
+@array: 
+
+
+<!-- ##### FUNCTION flickcurl_array_join ##### -->
+<para>
+
+</para>
+
+@array: 
+@delim: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_array_split ##### -->
+<para>
+
+</para>
+
+@str: 
+@delim: 
+@Returns: 
+
+

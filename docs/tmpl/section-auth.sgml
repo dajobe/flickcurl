@@ -1,0 +1,55 @@
+<!-- ##### SECTION Title ##### -->
+Authentication
+
+<!-- ##### SECTION Short_Description ##### -->
+Authentication of web service requests
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION flickcurl_auth_checkToken ##### -->
+<para>
+
+</para>
+
+@fc: 
+@token: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_auth_getFrob ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_auth_getFullToken ##### -->
+<para>
+
+</para>
+
+@fc: 
+@frob: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_auth_getToken ##### -->
+<para>
+
+</para>
+
+@fc: 
+@frob: 
+@Returns: 
+
+

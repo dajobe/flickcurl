@@ -1,0 +1,108 @@
+<!-- ##### SECTION Title ##### -->
+Miscellaneous
+
+<!-- ##### SECTION Short_Description ##### -->
+Miscellaneous functions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_size ##### -->
+<para>
+
+</para>
+
+@label: 
+@width: 
+@height: 
+@source: 
+@url: 
+
+<!-- ##### FUNCTION flickcurl_free_size ##### -->
+<para>
+
+</para>
+
+@size: 
+
+
+<!-- ##### FUNCTION flickcurl_free_sizes ##### -->
+<para>
+
+</para>
+
+@sizes_object: 
+
+
+<!-- ##### FUNCTION flickcurl_free_location ##### -->
+<para>
+
+</para>
+
+@location: 
+
+
+<!-- ##### FUNCTION flickcurl_free_perms ##### -->
+<para>
+
+</para>
+
+@perms: 
+
+
+<!-- ##### FUNCTION flickcurl_get_field_value_type_label ##### -->
+<para>
+
+</para>
+
+@datatype: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_location_accuracy_label ##### -->
+<para>
+
+</para>
+
+@accuracy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_shared_secret ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_interestingness_getList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@date: 
+@extras: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### STRUCT flickcurl_license ##### -->
+<para>
+
+</para>
+
+@id: 
+@url: 
+@name: 
+

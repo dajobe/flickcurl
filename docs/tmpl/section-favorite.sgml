@@ -1,0 +1,62 @@
+<!-- ##### SECTION Title ##### -->
+Favorites
+
+<!-- ##### SECTION Short_Description ##### -->
+Favorite photos
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION flickcurl_favorites_add ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_favorites_getList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@extras: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_favorites_getPublicList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@extras: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_favorites_remove ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@Returns: 
+
+

@@ -1,0 +1,86 @@
+<!-- ##### SECTION Title ##### -->
+Activity
+
+<!-- ##### SECTION Short_Description ##### -->
+Activity on notes and comments
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_activity ##### -->
+<para>
+
+</para>
+
+@type: 
+@owner: 
+@owner_name: 
+@primary: 
+@id: 
+@secret: 
+@server: 
+@farm: 
+@comments_old: 
+@comments_new: 
+@notes_old: 
+@notes_new: 
+@views: 
+@comments: 
+@photos: 
+@faves: 
+@more: 
+@title: 
+@events: 
+
+<!-- ##### STRUCT flickcurl_activity_event ##### -->
+<para>
+
+</para>
+
+@type: 
+@id: 
+@user: 
+@username: 
+@value: 
+@date_added: 
+
+<!-- ##### FUNCTION flickcurl_activity_userComments ##### -->
+<para>
+
+</para>
+
+@fc: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_activity_userPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@timeframe: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_free_activities ##### -->
+<para>
+
+</para>
+
+@activities_object: 
+<!-- # Unused Parameters # -->
+@activities: 
+
+

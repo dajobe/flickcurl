@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+URLs
+
+<!-- ##### SECTION Short_Description ##### -->
+Support functions to get URls
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION flickcurl_urls_getGroup ##### -->
+<para>
+
+</para>
+
+@fc: 
+@group_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_urls_getUserPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_urls_getUserProfile ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_urls_lookupGroup ##### -->
+<para>
+
+</para>
+
+@fc: 
+@url: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_urls_lookupUser ##### -->
+<para>
+
+</para>
+
+@fc: 
+@url: 
+@Returns: 
+
+

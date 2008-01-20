@@ -1,0 +1,65 @@
+<!-- ##### SECTION Title ##### -->
+Reflection
+
+<!-- ##### SECTION Short_Description ##### -->
+Flickr introspection API
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_arg ##### -->
+<para>
+
+</para>
+
+@name: 
+@optional: 
+@description: 
+
+<!-- ##### STRUCT flickcurl_method ##### -->
+<para>
+
+</para>
+
+@name: 
+@needslogin: 
+@description: 
+@response: 
+@explanation: 
+@args: 
+@args_count: 
+
+<!-- ##### FUNCTION flickcurl_free_method ##### -->
+<para>
+
+</para>
+
+@method: 
+
+
+<!-- ##### FUNCTION flickcurl_reflection_getMethodInfo ##### -->
+<para>
+
+</para>
+
+@fc: 
+@name: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_reflection_getMethods ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+

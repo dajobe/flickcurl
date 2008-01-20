@@ -1,0 +1,78 @@
+<!-- ##### SECTION Title ##### -->
+People
+
+<!-- ##### SECTION Short_Description ##### -->
+People API
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### FUNCTION flickcurl_people_findByEmail ##### -->
+<para>
+
+</para>
+
+@fc: 
+@email: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_people_findByUsername ##### -->
+<para>
+
+</para>
+
+@fc: 
+@username: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_people_getInfo ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_people_getPublicGroups ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_people_getPublicPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@extras: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_people_getUploadStatus ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+

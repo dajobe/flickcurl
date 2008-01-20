@@ -1,0 +1,38 @@
+<!-- ##### SECTION Title ##### -->
+Categories
+
+<!-- ##### SECTION Short_Description ##### -->
+Categories of groups
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### TYPEDEF flickcurl_category ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION flickcurl_free_categories ##### -->
+<para>
+
+</para>
+
+@categories_object: 
+
+
+<!-- ##### FUNCTION flickcurl_free_category ##### -->
+<para>
+
+</para>
+
+@category: 
+
+

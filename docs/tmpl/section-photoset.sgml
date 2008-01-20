@@ -1,0 +1,212 @@
+<!-- ##### SECTION Title ##### -->
+Photosets
+
+<!-- ##### SECTION Short_Description ##### -->
+Sets of Photos
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_photoset ##### -->
+<para>
+
+</para>
+
+@id: 
+@primary: 
+@secret: 
+@server: 
+@farm: 
+@photos_count: 
+@title: 
+@description: 
+
+<!-- ##### FUNCTION flickcurl_free_photoset ##### -->
+<para>
+
+</para>
+
+@photoset: 
+
+
+<!-- ##### FUNCTION flickcurl_free_photosets ##### -->
+<para>
+
+</para>
+
+@photosets_object: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_addPhoto ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@photo_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_comments_addComment ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@comment_text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_comments_deleteComment ##### -->
+<para>
+
+</para>
+
+@fc: 
+@comment_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_comments_editComment ##### -->
+<para>
+
+</para>
+
+@fc: 
+@comment_id: 
+@comment_text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_comments_getList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_create ##### -->
+<para>
+
+</para>
+
+@fc: 
+@title: 
+@description: 
+@primary_photo_id: 
+@photoset_url_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_delete ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_editMeta ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@title: 
+@description: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_editPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@primary_photo_id: 
+@photo_ids_array: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_getContext ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@photoset_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_getInfo ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_getList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_getPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@extras: 
+@privacy_filter: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_orderSets ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_ids_array: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_removePhoto ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@photo_id: 
+@Returns: 
+
+

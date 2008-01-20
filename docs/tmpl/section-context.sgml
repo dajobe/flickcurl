@@ -1,0 +1,67 @@
+<!-- ##### SECTION Title ##### -->
+Contexts
+
+<!-- ##### SECTION Short_Description ##### -->
+Photo contexts
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_context ##### -->
+<para>
+
+</para>
+
+@type: 
+@id: 
+@secret: 
+@server: 
+@farm: 
+@title: 
+@url: 
+@thumb: 
+
+<!-- ##### ENUM flickcurl_context_type ##### -->
+<para>
+
+</para>
+
+@FLICKCURL_CONTEXT_NONE: 
+@FLICKCURL_CONTEXT_SET: 
+@FLICKCURL_CONTEXT_POOL: 
+@FLICKCURL_CONTEXT_PREV: 
+@FLICKCURL_CONTEXT_NEXT: 
+@FLICKCURL_CONTEXT_LAST: 
+
+<!-- ##### FUNCTION flickcurl_get_context_type_field_label ##### -->
+<para>
+
+</para>
+
+@type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_free_context ##### -->
+<para>
+
+</para>
+
+@context: 
+
+
+<!-- ##### FUNCTION flickcurl_free_contexts ##### -->
+<para>
+
+</para>
+
+@contexts: 
+
+

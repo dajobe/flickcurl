@@ -1,0 +1,44 @@
+<!-- ##### SECTION Title ##### -->
+EXIF
+
+<!-- ##### SECTION Short_Description ##### -->
+EXIF photo metadata
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### STRUCT flickcurl_exif ##### -->
+<para>
+
+</para>
+
+@tagspace: 
+@tagspaceid: 
+@tag: 
+@label: 
+@raw: 
+@clean: 
+
+<!-- ##### FUNCTION flickcurl_free_exif ##### -->
+<para>
+
+</para>
+
+@exif: 
+
+
+<!-- ##### FUNCTION flickcurl_free_exifs ##### -->
+<para>
+
+</para>
+
+@exifs_object: 
+
+
