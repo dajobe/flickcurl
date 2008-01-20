@@ -32,6 +32,8 @@ flickcurl.rdf.in \
 $(man_MANS) \
 flickcurl.spec
 
+# Allows 'make distcheck' to work
+DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc
 
 # Create some text files from HTML sources
 LYNX=lynx
