@@ -262,25 +262,25 @@ typedef struct {
 
 /**
  * flickcurl_activity:
- * @type:
- * @owner:
- * @owner_name:
- * @primary:
- * @id:
- * @secret:
- * @server:
- * @farm:
- * @comments_old:
- * @comments_new:
- * @notes_old:
- * @notes_new:
- * @views:
- * @comments:
- * @photos:
- * @faves:
- * @more:
- * @title:
- * @events:
+ * @type: activity type photoset or photo
+ * @owner: owner NSID
+ * @owner_name: owner name
+ * @primary: primary
+ * @id: photo id
+ * @secret: photo secret
+ * @server: photo server
+ * @farm: photo farm
+ * @comments_old: old comments count
+ * @comments_new: new comments count
+ * @notes_old: old notes count
+ * @notes_new: new notes count
+ * @views: views count
+ * @comments: comments count
+ * @photos: photos count
+ * @faves: favourites count
+ * @more: more boolean flag
+ * @title: title of acitivty
+ * @events: array of events associated with this actiivty
  *
  * Comments or photos item with activity
  */
