@@ -227,7 +227,7 @@ flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
  * flickcurl_tags_getListUserPopular:
  * @fc: flickcurl context
  * @user_id: user NSID (or NULL)
- * @count: number of popular tags to return (or <0 for default)
+ * @pop_count: number of popular tags to return (or <0 for default)
  *
  * Get the popular tag list for a given user (or current user)
  *

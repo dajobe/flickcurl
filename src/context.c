@@ -41,6 +41,14 @@ static const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2]={
 };
 
 
+/**
+ * flickcurl_get_context_type_field_label:
+ * @type: context type
+ *
+ * Get label for context type
+ *
+ * Return value: label string or NULL if none valid
+ */
 const char*
 flickcurl_get_context_type_field_label(flickcurl_context_type type)
 {
@@ -50,6 +58,12 @@ flickcurl_get_context_type_field_label(flickcurl_context_type type)
 }
 
 
+/**
+ * flickcurl_free_context:
+ * @context: context object
+ *
+ * Destructor for context object
+ */
 void
 flickcurl_free_context(flickcurl_context *context)
 {
@@ -67,6 +81,12 @@ flickcurl_free_context(flickcurl_context *context)
 }
 
 
+/**
+ * flickcurl_free_contexts:
+ * @contexts: context object array
+ *
+ * Destructor for array of context object
+ */
 void
 flickcurl_free_contexts(flickcurl_context** contexts)
 {

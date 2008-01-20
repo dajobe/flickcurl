@@ -73,6 +73,12 @@ flickcurl_free_activity(flickcurl_activity *activity)
 }
 
 
+/**
+ * flickcurl_free_activities:
+ * @activities_object: activity object array
+ *
+ * Destructor for array of activity objects
+ */
 void
 flickcurl_free_activities(flickcurl_activity **activities_object)
 {

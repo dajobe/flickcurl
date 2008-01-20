@@ -31,6 +31,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_category:
+ * @category: category object
+ *
+ * Destructor for category object
+ */
 void
 flickcurl_free_category(flickcurl_category *category)
 {
@@ -50,6 +56,12 @@ flickcurl_free_category(flickcurl_category *category)
 }
 
 
+/**
+ * flickcurl_free_categories:
+ * @categories_object: category object array
+ *
+ * Destructor for array of category object
+ */
 void
 flickcurl_free_categories(flickcurl_category **categories_object)
 {

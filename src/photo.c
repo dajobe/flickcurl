@@ -78,6 +78,14 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
 };
 
 
+/**
+ * flickcurl_get_photo_field_label:
+ * @field: field enum
+ *
+ * Get label for photo field.
+ *
+ * Return value: label string or NULL if none valid
+ */
 const char*
 flickcurl_get_photo_field_label(flickcurl_photo_field_type field)
 {
@@ -87,6 +95,12 @@ flickcurl_get_photo_field_label(flickcurl_photo_field_type field)
 }
 
 
+/**
+ * flickcurl_free_photo:
+ * @photo: photo object
+ *
+ * Destructor for photo object
+ */
 void
 flickcurl_free_photo(flickcurl_photo *photo)
 {
@@ -113,10 +127,17 @@ flickcurl_free_photo(flickcurl_photo *photo)
 }
 
 
-/*
+/**
+ * flickcurl_photo_as_source_uri:
+ * @photo: photo object
+ * @c: size s, m, t or b
+ *
  * Get a photo's image source URIs
+ *
  * @c can be s,m,t,b for sizes, o for original, otherwise default
  * http://www.flickr.com/services/api/misc.urls.html
+ *
+ * Return value: source URI or NULL on failure
  */
 char*
 flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
@@ -640,6 +661,12 @@ flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx)
 }
 
 
+/**
+ * flickcurl_free_photos:
+ * @photos: photo object array
+ *
+ * Destructor for array of photo objects
+ */
 void
 flickcurl_free_photos(flickcurl_photo** photos)
 {

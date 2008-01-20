@@ -44,6 +44,7 @@
 /**
  * flickcurl_photos_upload_params:
  * @fc: flickcurl context
+ * @params: upload parameters
  * 
  * Uploads a photo with safety level and content type
  *

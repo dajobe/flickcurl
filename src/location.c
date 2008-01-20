@@ -30,6 +30,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_location:
+ * @location: location object
+ *
+ * Destructor for location object
+ */
 void
 flickcurl_free_location(flickcurl_location *location)
 {
@@ -112,6 +118,15 @@ static const char* flickcurl_accuracy_labels[16]={
   "city",    "city",   "city",    "street"
 };
 
+
+/**
+ * flickcurl_get_location_accuracy_label:
+ * @accuracy: accuracy
+ *
+ * Get label for an accuracy
+ *
+ * Return value: label string or NULL if none valid
+ */
 const char*
 flickcurl_get_location_accuracy_label(int accuracy)
 {

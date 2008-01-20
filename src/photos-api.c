@@ -47,6 +47,8 @@
  * Add tags to a photo.
  *
  * Implements flickr.photos.addTags (0.9)
+ *
+ * Return value: non-0 on failure
  */
 int
 flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags)
@@ -90,6 +92,8 @@ flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags)
  * Delete a photo.
  *
  * Implements flickr.photos.delete (0.9)
+ *
+ * Return value: non-0 on failure
  */
 int
 flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
@@ -130,7 +134,7 @@ flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
 /**
  * flickcurl_photos_getAllContexts:
  * @fc: flickcurl context
- * @id: photo ID
+ * @photo_id: photo ID
  * 
  * Get all visible sets and pools the photo belongs to.
  *
@@ -174,7 +178,7 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
 /**
  * flickcurl_photos_getContactsPhotos:
  * @fc: flickcurl context
- * @count: Number of photos to return (Default 10, maximum 50)
+ * @contact_count: Number of photos to return (Default 10, maximum 50)
  * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts).
  * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
  * @include_self: Set to non-0 to include photos from the calling user.
@@ -350,7 +354,7 @@ flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
 /**
  * flickcurl_photos_getContext:
  * @fc: flickcurl context
- * @id: photo ID
+ * @photo_id: photo ID
  * 
  * Get next and previous photos for a photo in a photostream.
  *
@@ -471,11 +475,11 @@ flickcurl_build_photocounts(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 }
 
 
-/*
+/**
  * flickcurl_photos_getCounts:
  * @fc: flickcurl context
- * @dates: A comma delimited list of unix timestamps, denoting the periods to return counts for. They should be specified <b>smallest first</b>. (or NULL)
- * @taken_dates: A comma delimited list of mysql datetimes, denoting the periods to return counts for. They should be specified <b>smallest first</b>. (or NULL)
+ * @dates_array: A comma delimited list of unix timestamps, denoting the periods to return counts for. They should be specified smallest first. (or NULL)
+ * @taken_dates_array: A comma delimited list of mysql datetimes, denoting the periods to return counts for. They should be specified mallest first. (or NULL)
  * 
  * Gets a list of photo counts for the given date ranges for the calling user.
  *
@@ -691,7 +695,7 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
 /**
  * flickcurl_photos_getInfo:
  * @fc: flickcurl context
- * @id: photo ID
+ * @photo_id: photo ID
  * 
  * Get information about a photo
  *
@@ -990,7 +994,7 @@ flickcurl_photos_getRecent(flickcurl* fc, const char* extras,
 }
 
 
-/*
+/**
  * flickcurl_photos_getSizes:
  * @fc: flickcurl context
  * @photo_id: The id of the photo to fetch size information for.
@@ -1093,15 +1097,11 @@ flickcurl_photos_getUntagged(flickcurl* fc,
  * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
  * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
  * @privacy_filter: Return photos only matching a certain privacy level. Valid values are:
-<ul>
-<li>1 public photos</li>
-<li>2 private photos visible to friends</li>
-<li>3 private photos visible to family</li>
-<li>4 private photos visible to friends & family</li>
-<li>5 completely private photos</li>
-</ul>
- (or NULL)
- * @sort: The order in which to sort returned photos. Deafults to date-posted-desc. The possible values are: date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, and interestingness-asc. (or NULL)
+1 public photos;
+2 private photos visible to friends;
+3 private photos visible to family;
+4 private photos visible to friends and family;
+5 completely private photos. (or NULL)
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
@@ -1135,15 +1135,12 @@ flickcurl_photos_getWithGeoData(flickcurl* fc,
  * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
  * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
  * @privacy_filter: Return photos only matching a certain privacy level. Valid values are:
-<ul>
-<li>1 public photos</li>
-<li>2 private photos visible to friends</li>
-<li>3 private photos visible to family</li>
-<li>4 private photos visible to friends & family</li>
-<li>5 completely private photos</li>
-</ul>
+1 public photos;
+2 private photos visible to friends;
+3 private photos visible to family;
+4 private photos visible to friends and family;
+5 completely private photos.
  (or NULL)
- * @sort: The order in which to sort returned photos. Deafults to date-posted-desc. The possible values are: date-posted-asc, date-posted-desc, date-taken-asc, date-taken-desc, interestingness-desc, and interestingness-asc. (or NULL)
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
@@ -1265,6 +1262,8 @@ flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date,
  * The @tag_id is returned such as from flickr_photos_getInfo()
  *
  * Implements flickr.photos.removeTag (0.9)
+ *
+ * Return value: non-0 on failure
  */
 int
 flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
@@ -1687,7 +1686,7 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
  * flickcurl_photos_setPerms:
  * @fc: flickcurl context
  * @photo_id: The id of the photo to set permissions for.
- * @params: The #flickcurl_perms photo permissions
+ * @perms: The #flickcurl_perms photo permissions
  * 
  * Set permissions for a photo.
  *
@@ -1860,6 +1859,8 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
  * Note that this replaces all existing tags with the @tags here.
  *
  * Implements flickr.photos.setTags (0.9)
+ *
+ * Return value: non-0 on failure
  */
 int
 flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags)

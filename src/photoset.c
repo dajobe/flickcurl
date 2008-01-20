@@ -31,6 +31,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_photoset:
+ * @photoset: photoset object
+ *
+ * Destructor for photoset object
+ */
 void
 flickcurl_free_photoset(flickcurl_photoset *photoset)
 {
@@ -53,6 +59,12 @@ flickcurl_free_photoset(flickcurl_photoset *photoset)
 }
 
 
+/**
+ * flickcurl_free_photosets:
+ * @photosets_object: photoset object array
+ *
+ * Destructor for array of photoset object
+ */
 void
 flickcurl_free_photosets(flickcurl_photoset **photosets_object)
 {

@@ -59,6 +59,14 @@ static const char* flickcurl_person_field_label[PERSON_FIELD_LAST+1]={
 };
 
 
+/**
+ * flickcurl_get_person_field_label:
+ * @field: field enum
+ *
+ * Get label for person field
+ *
+ * Return value: label string or NULL if none valid
+ */
 const char*
 flickcurl_get_person_field_label(flickcurl_person_field_type field)
 {
@@ -68,6 +76,12 @@ flickcurl_get_person_field_label(flickcurl_person_field_type field)
 }
 
 
+/**
+ * flickcurl_free_person:
+ * @person: person object
+ *
+ * Destructor for person object
+ */
 void
 flickcurl_free_person(flickcurl_person *person)
 {
@@ -374,6 +388,12 @@ flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 }
 
 
+/**
+ * flickcurl_free_persons:
+ * @persons: person object array
+ *
+ * Destructor for array of person object
+ */
 void
 flickcurl_free_persons(flickcurl_person** persons)
 {

@@ -30,6 +30,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_user_upload_status:
+ * @u: user upload status object
+ *
+ * Destructor for user upload status object
+ */
 void
 flickcurl_free_user_upload_status(flickcurl_user_upload_status *u)
 {

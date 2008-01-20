@@ -31,6 +31,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_group:
+ * @group: group object
+ *
+ * Destructor for group object
+ */
 void
 flickcurl_free_group(flickcurl_group *group)
 {
@@ -53,6 +59,12 @@ flickcurl_free_group(flickcurl_group *group)
 }
 
 
+/**
+ * flickcurl_free_groups:
+ * @groups_object: group object array
+ *
+ * Destructor for array of group object
+ */
 void
 flickcurl_free_groups(flickcurl_group **groups_object)
 {

@@ -92,7 +92,8 @@ flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id,
 /**
  * flickcurl_groups_pools_getContext:
  * @fc: flickcurl context
- * @id: photo ID
+ * @photo_id: photo ID
+ * @group_id: group ID
  * 
  * Get next and previous photos for a photo in a group pool.
  * 

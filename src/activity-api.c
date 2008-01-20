@@ -110,7 +110,7 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
  * @per_page: Number of items to return per page. If this argument is omitted, it defaults to 10. The maximum allowed value is 50. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
  * 
- * Returns a list of recent activity on photos belonging to the calling user. <b>Do not poll this method more than once an hour</b>.
+ * Returns a list of recent activity on photos belonging to the calling user. Do not poll this method more than once an hour.
  *
  * Implements flickr.activity.userPhotos (1.0)
  * 

@@ -44,6 +44,12 @@ flickcurl_free_blog(flickcurl_blog *blog)
 }
 
 
+/**
+ * flickcurl_free_blogs:
+ * @blogs_object: blog object array
+ *
+ * Destructor for array of blog objects
+ */
 void
 flickcurl_free_blogs(flickcurl_blog **blogs_object)
 {

@@ -41,7 +41,7 @@
 /**
  * flickcurl_auth_checkToken:
  * @fc: flickcurl context
- * @frob: frob string
+ * @token: token string
  * 
  * Get the credentials attached to an authentication token.
  *

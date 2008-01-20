@@ -31,6 +31,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_method:
+ * @method: method object
+ *
+ * Destructor for method object
+ */
 void
 flickcurl_free_method(flickcurl_method *method)
 {

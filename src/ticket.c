@@ -31,6 +31,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_ticket:
+ * @ticket: ticket object
+ *
+ * Destructor for ticket object
+ */
 void
 flickcurl_free_ticket(flickcurl_ticket *ticket)
 {
@@ -38,6 +44,12 @@ flickcurl_free_ticket(flickcurl_ticket *ticket)
 }
 
 
+/**
+ * flickcurl_free_tickets:
+ * @tickets_object: ticket object array
+ *
+ * Destructor for array of ticket objects
+ */
 void
 flickcurl_free_tickets(flickcurl_ticket **tickets_object)
 {

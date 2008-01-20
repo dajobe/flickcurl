@@ -30,6 +30,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_comment:
+ * @comment_object: comment object
+ *
+ * Destructor for comment object
+ */
 void
 flickcurl_free_comment(flickcurl_comment *comment_object)
 {
@@ -48,6 +54,12 @@ flickcurl_free_comment(flickcurl_comment *comment_object)
 }
 
 
+/**
+ * flickcurl_free_comments:
+ * @comments_object: comment object array
+ *
+ * Destructor for array of comment object
+ */
 void
 flickcurl_free_comments(flickcurl_comment **comments_object)
 {

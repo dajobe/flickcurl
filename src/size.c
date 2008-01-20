@@ -31,6 +31,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_size:
+ * @size: size object
+ *
+ * Destructor for size object
+ */
 void
 flickcurl_free_size(flickcurl_size *size)
 {
@@ -47,6 +53,12 @@ flickcurl_free_size(flickcurl_size *size)
 }
 
 
+/**
+ * flickcurl_free_sizes:
+ * @sizes_object: size object array
+ *
+ * Destructor for array of size objects
+ */
 void
 flickcurl_free_sizes(flickcurl_size **sizes_object)
 {

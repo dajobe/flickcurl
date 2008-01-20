@@ -30,6 +30,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_perms:
+ * @perms: perms object
+ *
+ * Destructor for perms object
+ */
 void
 flickcurl_free_perms(flickcurl_perms *perms)
 {

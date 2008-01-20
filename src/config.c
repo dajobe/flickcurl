@@ -35,8 +35,18 @@
 
 #undef CONFIG_DEBUG
 
-/*
+/**
+ * read_ini_config:
+ * @filename: filename
+ * @application: application key to look up
+ * @user_data: user data pointer for handler
+ * @handler: config variable handler function
+ *
+ * Read .INI config
+ *
  * FIXME - where do you start.  This just needs a pile of error checking
+ *
+ * Return value: non-0 on failure
  */
 int
 read_ini_config(const char* filename, const char* application,

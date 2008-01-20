@@ -31,6 +31,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_exif:
+ * @exif: exif object
+ *
+ * Destructor for exif object
+ */
 void
 flickcurl_free_exif(flickcurl_exif *exif)
 {
@@ -48,6 +54,12 @@ flickcurl_free_exif(flickcurl_exif *exif)
 }
 
 
+/**
+ * flickcurl_free_exifs:
+ * @exifs_object: array of exif objects
+ *
+ * Destructor for array of exif objects
+ */
 void
 flickcurl_free_exifs(flickcurl_exif **exifs_object)
 {

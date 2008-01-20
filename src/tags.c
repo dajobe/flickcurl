@@ -30,6 +30,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_tag:
+ * @t: tag object
+ *
+ * Destructor for tag object
+ */
 void
 flickcurl_free_tag(flickcurl_tag *t)
 {

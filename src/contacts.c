@@ -33,6 +33,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_contact:
+ * @contact_object: contact object
+ *
+ * Destructor for contact object
+ */
 void
 flickcurl_free_contact(flickcurl_contact *contact_object)
 {
@@ -47,6 +53,12 @@ flickcurl_free_contact(flickcurl_contact *contact_object)
 }
 
 
+/**
+ * flickcurl_free_contacts:
+ * @contacts_object: contact object array
+ *
+ * Destructor for array of contact object
+ */
 void
 flickcurl_free_contacts(flickcurl_contact **contacts_object)
 {

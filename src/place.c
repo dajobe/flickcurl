@@ -48,6 +48,14 @@ static const char* flickcurl_place_type_label[FLICKCURL_PLACE_LAST+1]={
 };
 
 
+/**
+ * flickcurl_get_place_type_label:
+ * @place_type: place type
+ *
+ * Get label for a place type
+ *
+ * Return value: label string or NULL if none valid
+ */
 const char*
 flickcurl_get_place_type_label(flickcurl_place_type place_type)
 {
@@ -57,6 +65,14 @@ flickcurl_get_place_type_label(flickcurl_place_type place_type)
 }
 
 
+/**
+ * flickcurl_get_place_type_by_label:
+ * @place_label: place type
+ *
+ * Get a place type by label
+ *
+ * Return value: place type
+ */
 flickcurl_place_type
 flickcurl_get_place_type_by_label(const char* place_label)
 {
@@ -70,6 +86,12 @@ flickcurl_get_place_type_by_label(const char* place_label)
 }
 
 
+/**
+ * flickcurl_free_place:
+ * @place: place object
+ *
+ * Destructor for place object
+ */
 void
 flickcurl_free_place(flickcurl_place *place)
 {
@@ -86,6 +108,13 @@ flickcurl_free_place(flickcurl_place *place)
   free(place);
 }
 
+
+/**
+ * flickcurl_free_places:
+ * @places_object: place object array
+ *
+ * Destructor for array of place object
+ */
 void
 flickcurl_free_places(flickcurl_place **places_object)
 {

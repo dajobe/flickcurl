@@ -41,7 +41,7 @@
 /**
  * flickcurl_photos_upload_checkTickets:
  * @fc: flickcurl context
- * @ticket_ids: Array of ticket ids
+ * @tickets_ids: Array of ticket ids
  * 
  * Checks the status of one or more asynchronous photo upload tickets.
  *

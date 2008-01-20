@@ -128,6 +128,13 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
 }
 
 
+/**
+ * flickcurl_new:
+ *
+ * Create a Flickcurl sesssion
+ *
+ * Return value: new #flickcurl object or NULL on fialure
+ */
 flickcurl*
 flickcurl_new(void)
 {
@@ -169,6 +176,13 @@ flickcurl_new(void)
 }
 
 
+/**
+ * flickcurl_free:
+ * @fc: flickcurl object
+ * 
+ * Destroy flickcurl session
+ *
+ */
 void
 flickcurl_free(flickcurl *fc)
 {
@@ -239,14 +253,27 @@ flickcurl_free(flickcurl *fc)
 }
 
 
-void
+/**
+ * flickcurl_init:
+ *
+ * Initialise Flickcurl library.
+ *
+ * Return value: non-0 on failure
+ */
+int
 flickcurl_init(void)
 {
   curl_global_init(CURL_GLOBAL_ALL);
   xmlInitParser();
+  return 0;
 }
 
 
+/**
+ * flickcurl_finish:
+ *
+ * Terminate Flickcurl library.
+ */
 void
 flickcurl_finish(void)
 {
@@ -255,6 +282,14 @@ flickcurl_finish(void)
 }
 
 
+/**
+ * flickcurl_set_error_handler:
+ * @fc: flickcurl object
+ * @error_handler: error handler function
+ * @error_data: error handler data
+ *
+ * Set Flickcurl error handler.
+ */
 void
 flickcurl_set_error_handler(flickcurl* fc, 
                             flickcurl_message_handler error_handler, 
@@ -265,6 +300,14 @@ flickcurl_set_error_handler(flickcurl* fc,
 }
 
 
+/**
+ * flickcurl_set_tag_handler:
+ * @fc: flickcurl object
+ * @tag_handler: tag handler function
+ * @tag_data: tag handler data
+ *
+ * Set Flickcurl tag handler.
+ */
 void
 flickcurl_set_tag_handler(flickcurl* fc, 
                           flickcurl_tag_handler tag_handler, 
@@ -275,6 +318,13 @@ flickcurl_set_tag_handler(flickcurl* fc,
 }
 
 
+/**
+ * flickcurl_set_user_agent:
+ * @fc: flickcurl object
+ * @user_agent: user agent string
+ *
+ * Set Flickcurl HTTP user agent string
+ */
 void
 flickcurl_set_user_agent(flickcurl* fc, const char *user_agent)
 {
@@ -287,6 +337,13 @@ flickcurl_set_user_agent(flickcurl* fc, const char *user_agent)
 }
 
 
+/**
+ * flickcurl_set_proxy:
+ * @fc: flickcurl object
+ * @proxy: HTTP proxy string
+ *
+ * Set HTTP proxy for flickcurl requests
+ */
 void
 flickcurl_set_proxy(flickcurl* fc, const char *proxy)
 {
@@ -299,6 +356,13 @@ flickcurl_set_proxy(flickcurl* fc, const char *proxy)
 }
 
 
+/**
+ * flickcurl_set_http_accept:
+ * @fc: flickcurl object
+ * @value: HTTP Accept header value
+ *
+ * Set HTTP accept header value for flickcurl requests
+ */
 void
 flickcurl_set_http_accept(flickcurl* fc, const char *value)
 {
@@ -323,6 +387,13 @@ flickcurl_set_http_accept(flickcurl* fc, const char *value)
 }
 
 
+/**
+ * flickcurl_set_api_key:
+ * @fc: flickcurl object
+ * @api_key: API Key
+ *
+ * Set application API Key for flickcurl requests
+ */
 void
 flickcurl_set_api_key(flickcurl* fc, const char *api_key)
 {
@@ -335,6 +406,14 @@ flickcurl_set_api_key(flickcurl* fc, const char *api_key)
 }
 
 
+/**
+ * flickcurl_get_api_key:
+ * @fc: flickcurl object
+ *
+ * Get current application API Key
+ *
+ * Return value: API key or NULL if none set
+ */
 const char*
 flickcurl_get_api_key(flickcurl* fc)
 {
@@ -342,6 +421,13 @@ flickcurl_get_api_key(flickcurl* fc)
 }
 
 
+/**
+ * flickcurl_set_shared_secret:
+ * @fc: flickcurl object
+ * @secret: shared secret
+ *
+ * Set Shared Secret for flickcurl requests
+ */
 void
 flickcurl_set_shared_secret(flickcurl* fc, const char *secret)
 {
@@ -354,6 +440,14 @@ flickcurl_set_shared_secret(flickcurl* fc, const char *secret)
 }
 
 
+/**
+ * flickcurl_get_shared_secret:
+ * @fc: flickcurl object
+ *
+ * Get current Shared Secret
+ *
+ * Return value: shared secret or NULL if none set
+ */
 const char*
 flickcurl_get_shared_secret(flickcurl* fc)
 {
@@ -361,6 +455,13 @@ flickcurl_get_shared_secret(flickcurl* fc)
 }
 
 
+/**
+ * flickcurl_set_auth_token:
+ * @fc: flickcurl object
+ * @auth_token: auth token
+ *
+ * Set Auth Token for flickcurl requests
+ */
 void
 flickcurl_set_auth_token(flickcurl *fc, const char* auth_token)
 {
@@ -373,6 +474,14 @@ flickcurl_set_auth_token(flickcurl *fc, const char* auth_token)
 }
 
 
+/**
+ * flickcurl_get_auth_token:
+ * @fc: flickcurl object
+ *
+ * Get current auth token
+ *
+ * Return value: auth token or NULL if none set
+ */
 const char*
 flickcurl_get_auth_token(flickcurl *fc)
 {
@@ -380,6 +489,12 @@ flickcurl_get_auth_token(flickcurl *fc)
 }
 
 
+/**
+ * flickcurl_set_sign:
+ * @fc: flickcurl object
+ *
+ * Make the next request signed.
+ */
 void
 flickcurl_set_sign(flickcurl *fc)
 {
@@ -387,6 +502,13 @@ flickcurl_set_sign(flickcurl *fc)
 }
 
 
+/**
+ * flickcurl_set_request_delay:
+ * @fc: flickcurl object
+ * @delay_msec: web service delay in milliseconds
+ *
+ * Set web service request delay
+ */
 void
 flickcurl_set_request_delay(flickcurl *fc, long delay_msec)
 {
@@ -1014,6 +1136,13 @@ flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
 }
 
 
+/**
+ * flickcurl_set_write:
+ * @fc: flickcurl object
+ * @is_write: writeable flag
+ *
+ * Set writeable flag.
+ */
 void
 flickcurl_set_write(flickcurl *fc, int is_write)
 {
@@ -1021,6 +1150,14 @@ flickcurl_set_write(flickcurl *fc, int is_write)
 }
 
 
+/**
+ * flickcurl_set_data:
+ * @fc: flickcurl object
+ * @data: data pointer
+ * @data_length: data length
+ *
+ * Set web service request content data.
+ */
 void
 flickcurl_set_data(flickcurl *fc, void* data, size_t data_length)
 {
@@ -1035,6 +1172,13 @@ flickcurl_set_data(flickcurl *fc, void* data, size_t data_length)
 }
 
 
+/**
+ * flickcurl_set_xml_data:
+ * @fc: flickcurl object
+ * @doc: XML dom
+ *
+ * Set web service request content data from XML DOM.
+ */
 void
 flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc)
 {
@@ -1068,6 +1212,14 @@ static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1]={
 };
 
 
+/**
+ * flickcurl_get_field_value_type_label:
+ * @datatype: datatype enum
+ *
+ * Get label for datatype
+ *
+ * Return value: label string or NULL if none valid
+ */
 const char*
 flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype)
 {
@@ -1116,6 +1268,15 @@ flickcurl_call_get_one_string_field(flickcurl* fc,
 }
 
 
+/**
+ * flickcurl_array_join:
+ * @array: C array
+ * @delim: delimeter character
+ *
+ * Join elements of a C array into a string
+ *
+ * Return value: newly allocated string or NULL on failure
+ */
 char*
 flickcurl_array_join(const char *array[], char delim)
 {
@@ -1147,6 +1308,15 @@ flickcurl_array_join(const char *array[], char delim)
 }
 
 
+/**
+ * flickcurl_array_split:
+ * @str: string
+ * @delim: delimeter character
+ *
+ * Split a string into a C array
+ *
+ * Return value: newly allocated array or NULL on failure
+ */
 char**
 flickcurl_array_split(const char *str, char delim)
 {
@@ -1188,6 +1358,12 @@ flickcurl_array_split(const char *str, char delim)
 }
 
 
+/**
+ * flickcurl_array_free:
+ * @array: C array
+ *
+ * Free an array.
+ */
 void
 flickcurl_array_free(char* array[])
 {

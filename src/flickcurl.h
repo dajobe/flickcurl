@@ -45,7 +45,21 @@ extern "C" {
 #define FLICKCURL_DEPRECATED
 #endif
 
-/*
+/**
+ * flickcurl_field_value_type:
+ * @VALUE_TYPE_PHOTO_ID: photo ID
+ * @VALUE_TYPE_PHOTO_URI: photo URI
+ * @VALUE_TYPE_UNIXTIME: a unixtime
+ * @VALUE_TYPE_BOOLEAN: boolean
+ * @VALUE_TYPE_DATETIME: date time
+ * @VALUE_TYPE_FLOAT: floating point number
+ * @VALUE_TYPE_INTEGER: integer
+ * @VALUE_TYPE_STRING: string
+ * @VALUE_TYPE_URI: URI
+ * @VALUE_TYPE_PERSON_ID: person ID
+ * @VALUE_TYPE_NONE: internal
+ * @VALUE_TYPE_LAST: internal offset to last in enum list
+ * 
  * Field data types
  */
 typedef enum {
@@ -64,7 +78,54 @@ typedef enum {
 } flickcurl_field_value_type;
   
 
-/*
+/**
+ * flickcurl_photo_field_type:
+ * @PHOTO_FIELD_dateuploaded: date uploaded
+ * @PHOTO_FIELD_farm: farm number
+ * @PHOTO_FIELD_isfavorite: is favorite boolean
+ * @PHOTO_FIELD_license: license
+ * @PHOTO_FIELD_originalformat: original format
+ * @PHOTO_FIELD_rotation: rotation
+ * @PHOTO_FIELD_server: server
+ * @PHOTO_FIELD_dates_lastupdate: last update date
+ * @PHOTO_FIELD_dates_posted: posted date
+ * @PHOTO_FIELD_dates_taken: taken date
+ * @PHOTO_FIELD_dates_takengranularity: taken granularity
+ * @PHOTO_FIELD_description: description
+ * @PHOTO_FIELD_editability_canaddmeta: can add metadata boolean
+ * @PHOTO_FIELD_editability_cancomment: can comment boolean
+ * @PHOTO_FIELD_geoperms_iscontact: geo perms are for contacts
+ * @PHOTO_FIELD_geoperms_isfamily: geo perms are for family
+ * @PHOTO_FIELD_geoperms_isfriend: geo perms are for frind
+ * @PHOTO_FIELD_geoperms_ispublic: geo perms are for public
+ * @PHOTO_FIELD_location_accuracy: location accuracy
+ * @PHOTO_FIELD_location_latitude: location latitude
+ * @PHOTO_FIELD_location_longitude: location longitude
+ * @PHOTO_FIELD_owner_location: owner location
+ * @PHOTO_FIELD_owner_nsid: owner NSID
+ * @PHOTO_FIELD_owner_realname: owner real name
+ * @PHOTO_FIELD_owner_username: owner user name
+ * @PHOTO_FIELD_title: title
+ * @PHOTO_FIELD_visibility_isfamily: visibility is for family
+ * @PHOTO_FIELD_visibility_isfriend: visibility is for friend
+ * @PHOTO_FIELD_visibility_ispublic: visibility is for public
+ * @PHOTO_FIELD_secret: photo secret
+ * @PHOTO_FIELD_originalsecret: photo original secret
+ * @PHOTO_FIELD_location_neighborhood: location neighborhood
+ * @PHOTO_FIELD_location_locality: location locality
+ * @PHOTO_FIELD_location_county: location county
+ * @PHOTO_FIELD_location_region: location region
+ * @PHOTO_FIELD_location_country: location country
+ * @PHOTO_FIELD_location_placeid: location place ID
+ * @PHOTO_FIELD_neighborhood_placeid: neighborhood place ID
+ * @PHOTO_FIELD_locality_placeid: locality place ID
+ * @PHOTO_FIELD_county_placeid: county place ID
+ * @PHOTO_FIELD_region_placeid: region place ID
+ * @PHOTO_FIELD_country_placeid: country place ID
+ * @PHOTO_FIELD_none: internal
+ * @PHOTO_FIELD_FIRST: internal offset to first in enum list
+ * @PHOTO_FIELD_LAST: internal offset to last in enum list
+ *
  * Fields of a flickcurl_photo*
  */
 typedef enum {
@@ -116,7 +177,11 @@ typedef enum {
 } flickcurl_photo_field_type;
 
 
-/* The main object type */
+/**
+ * @flickcurl:
+ *
+ * Flickcurl session object created by flickcurl_new() and destroyed by flickcurl_free()
+ */
 typedef struct flickcurl_s flickcurl;
   
 
@@ -148,7 +213,7 @@ typedef struct flickcurl_arg_s {
  * @response: example response (HTML)
  * @explanation: explanation of example response or NULL if missing
  * @args: method arguments
- * @arg_count: number of arguments, may be 0
+ * @args_count: number of arguments, may be 0
  *
  * An API method
  */
@@ -169,6 +234,12 @@ typedef struct flickcurl_method_s {
 
 /**
  * flickcurl_activity_event:
+ * @type: activty event type
+ * @id: ID
+ * @user: user ID
+ * @username: user name
+ * @value: event value
+ * @date_added: date added
  *
  * Comment or photo activity event
  */
@@ -182,10 +253,34 @@ typedef struct {
 } flickcurl_activity_event;
 
 
+/**
+ * FLICKCURL_MAX_ACTIVITY_EVENTS:
+ *
+ * Max number of activity events.
+ */
 #define FLICKCURL_MAX_ACTIVITY_EVENTS 20
 
 /**
  * flickcurl_activity:
+ * @type:
+ * @owner:
+ * @owner_name:
+ * @primary:
+ * @id:
+ * @secret:
+ * @server:
+ * @farm:
+ * @comments_old:
+ * @comments_new:
+ * @notes_old:
+ * @notes_new:
+ * @views:
+ * @comments:
+ * @photos:
+ * @faves:
+ * @more:
+ * @title:
+ * @events:
  *
  * Comments or photos item with activity
  */
@@ -219,11 +314,15 @@ typedef struct {
   flickcurl_activity_event* events[FLICKCURL_MAX_ACTIVITY_EVENTS+1];
 } flickcurl_activity;
 
+
 /**
  * flickcurl_comment:
- * @name: Argument name
- * @optional: boolean flag (non-0 true) if argument is optional
- * @description: description of argument (HTML)
+ * @id: comment ID
+ * @author: author ID
+ * @authorname: author name
+ * @datecreate: date of creation
+ * @permalink: permanent link of comment
+ * @text: comment text
  *
  * A photo comment.
  */
@@ -282,6 +381,18 @@ typedef struct
 } flickcurl_location;
   
 
+/**
+ * flickcurl_place_type:
+ * @FLICKCURL_PLACE_LOCATION: a general location
+ * @FLICKCURL_PLACE_NEIGHBORHOOD: neighborhood (narrowest place)
+ * @FLICKCURL_PLACE_LOCALITY: locality
+ * @FLICKCURL_PLACE_COUNTY: county
+ * @FLICKCURL_PLACE_REGION: region
+ * @FLICKCURL_PLACE_COUNTRY: country (widest place)
+ * @FLICKCURL_PLACE_LAST: internal offset to last in enum list
+ *
+ * Place type
+*/
 typedef enum {
   FLICKCURL_PLACE_LOCATION,
   FLICKCURL_PLACE_NEIGHBORHOOD,
@@ -291,6 +402,7 @@ typedef enum {
   FLICKCURL_PLACE_COUNTRY,
   FLICKCURL_PLACE_LAST = FLICKCURL_PLACE_COUNTRY
 } flickcurl_place_type;
+
 
 /**
  * flickcurl_place:
@@ -320,7 +432,7 @@ typedef struct
  * @photo: Associated photo object if any
  * @id: tag identifier
  * @author: author (may be NULL)
- * @authornamae: author real name (may be NULL)
+ * @authorname: author real name (may be NULL)
  * @raw: raw tag as user typed it (may be NULL, but if so @cooked must be not NULL)
  * @cooked: cooked tag (may be NULL, but if so @raw must not be NULL)
  * @machine_tag: boolean (non-0 true) if tag is a Machine Tag
@@ -345,6 +457,14 @@ typedef struct flickcurl_tag_s {
 } flickcurl_tag;
 
 
+/**
+ * flickcurl_photo_field:
+ * @string: string field value
+ * @integer: integer field value
+ * @type: field type
+ *
+ * Field of a photo structure
+ */
 typedef struct {
   char* string;
   flickcurl_photo_field_type integer;
@@ -400,11 +520,11 @@ typedef struct {
  * flickcurl_contact:
  * @nsid: NSID
  * @username: user name
- * @iconserver:
- * @realname:
- * @is_friend:
- * @is_family:
- * @ignored:
+ * @iconserver: icon server
+ * @realname: real name
+ * @is_friend: is friend boolean
+ * @is_family: is family boolean
+ * @ignored: ignored
  *
  * A contact.
  */
@@ -419,7 +539,15 @@ typedef struct flickcurl_contact_s {
 } flickcurl_contact;
 
 
-/*
+/**
+ * flickcurl_context_type:
+ * @FLICKCURL_CONTEXT_SET: context is a set
+ * @FLICKCURL_CONTEXT_POOL: context is a pool
+ * @FLICKCURL_CONTEXT_PREV: context is a previous photo
+ * @FLICKCURL_CONTEXT_NEXT: context is a next photo
+ * @FLICKCURL_CONTEXT_NONE: internal
+ * @FLICKCURL_CONTEXT_LAST: internal offset to last in enum list
+ *
  * Types of photo context: relationship between photo and another item
  */
 typedef enum {
@@ -432,6 +560,19 @@ typedef enum {
 } flickcurl_context_type;
 
 
+/**
+ * flickcurl_context:
+ * @type: Type of context
+ * @id: ID
+ * @secret: secret 
+ * @server: server
+ * @farm: farm
+ * @title: use title
+ * @url: url
+ * @thumb: thumbnail
+ *
+ * Photo use context.
+ */
 typedef struct {
   flickcurl_context_type type;
   char* id;
@@ -506,7 +647,7 @@ typedef struct {
  * flickcurl_blog:
  * @id: ID
  * @name: Group Name
- * @needspassword: needs password
+ * @needs_password: needs password
  * @url: URL
  *
  * A blog.
@@ -541,7 +682,28 @@ struct flickcurl_category_s {
 typedef struct flickcurl_category_s flickcurl_category;
 
 
-/*
+/**
+ * flickcurl_person_field_type:
+ * @PERSON_FIELD_isadmin: is admin field boolean
+ * @PERSON_FIELD_ispro:  is pro field boolean
+ * @PERSON_FIELD_iconserver: icon server integer
+ * @PERSON_FIELD_iconfarm: icon farm integer
+ * @PERSON_FIELD_username: username
+ * @PERSON_FIELD_realname: real name
+ * @PERSON_FIELD_mbox_sha1sum: Email SHA1 sum
+ * @PERSON_FIELD_location: location
+ * @PERSON_FIELD_photosurl: photos URL
+ * @PERSON_FIELD_profileurl: profile URL
+ * @PERSON_FIELD_mobileurl: mobile URL
+ * @PERSON_FIELD_photos_firstdate: photos first date
+ * @PERSON_FIELD_photos_firstdatetaken: photos first date taken
+ * @PERSON_FIELD_photos_count: photos count
+ * @PERSON_FIELD_photos_views: photos views
+ * @PERSON_FIELD_favedate: favorite date
+ * @PERSON_FIELD_none: internal
+ * @PERSON_FIELD_FIRST: internal offset to first in enum list
+ * @PERSON_FIELD_LAST: internal offset to last in enum list
+ *
  * Fields of a flickcurl_person*
  */
 typedef enum {
@@ -567,6 +729,14 @@ typedef enum {
 } flickcurl_person_field_type;
 
 
+/**
+ * flickcurl_person_field:
+ * @string: string field value
+ * @integer: integer field value
+ * @type: field type
+ *
+ * Field of a person structure
+ */
 typedef struct {
   char* string;
   flickcurl_person_field_type integer;
@@ -579,8 +749,7 @@ typedef struct {
  * @nsid: user NSID
  * @fields: person fields
  *
- * A flickr user.
- *
+ * A user.
  */
 typedef struct {
   char *nsid;
@@ -657,9 +826,9 @@ typedef struct {
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>. (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
- * @place_id: A Flickr place id. (only used if bbox argument isn't present). Experimental.  Geo queries require some sort of limiting agent in order to prevent the database from crying. This is basically like the check against "parameterless searches" for queries without a geo component.   A tag, for instance, is considered a limiting agent as are user defined min_date_taken and min_date_upload parameters &emdash; If no limiting factor is passed we return only photos added in the last 12 hours (though we may extend the limit in the future) (or NULL)
+ * @place_id: A Flickr place id. (only used if bbox argument isn't present). Experimental.  Geo queries require some sort of limiting agent in order to prevent the database from crying. This is basically like the check against "parameterless searches" for queries without a geo component.   A tag, for instance, is considered a limiting agent as are user defined min_date_taken and min_date_upload parameters - If no limiting factor is passed we return only photos added in the last 12 hours (though we may extend the limit in the future) (or NULL)
  *
- * Search parameters for &flickcurl_photos_search()
+ * Search parameters for flickcurl_photos_search()
  */
 typedef struct {
   char* user_id;
@@ -786,7 +955,23 @@ typedef struct {
 
 
 /* callback handlers */
+
+/**
+ * flickcurl_message_handler
+ * @user_data: user data pointer
+ * @message: error message
+ *
+ * Flickcurl Message handler callback.
+ */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
+
+/**
+ * flickcurl_tag_handler
+ * @user_data: user data pointer
+ * @tag: tag
+ *
+ * Flickcurl Tag handler callback.
+ */
 typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
 
 
@@ -799,7 +984,7 @@ extern const char* const flickcurl_version_string;
 
 
 /* library init - call once before creating anything */
-void flickcurl_init(void);
+int flickcurl_init(void);
 /* library cleanup - call once before exit */
 void flickcurl_finish(void);
 
@@ -862,7 +1047,14 @@ const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type data
 const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
 
 
-/* read a 'INI' style configuration file  */
+/**
+ * set_config_var_handler:
+ * @userdata: user data pointer
+ * @key: key
+ * @value: value
+ *
+ * Handler to get variables returned from an 'INI' style configuration file
+*/
 typedef void (*set_config_var_handler)(void* userdata, const char* key, const char* value);
 int read_ini_config(const char* filename, const char* application, void* user_data, set_config_var_handler handler);
 
@@ -873,7 +1065,7 @@ int read_ini_config(const char* filename, const char* application, void* user_da
 /* flickr.activity */
 flickcurl_activity** flickcurl_activity_userComments(flickcurl* fc, int per_page, int page);
 flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe, int per_page, int page);
-void flickcurl_free_activities(flickcurl_activity** activities);
+void flickcurl_free_activities(flickcurl_activity **activities_object);
 
 /* flickr.auth */
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
@@ -928,7 +1120,7 @@ int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* ta
 int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
 flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
-flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int count, int just_friends,  int single_photo, int include_self, const char* extras);
+flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int photo_count, int just_friends,  int single_photo, int include_self, const char* extras);
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
 int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);
 flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
@@ -1050,6 +1242,36 @@ FLICKCURL_DEPRECATED void flickcurl_upload_status_free(flickcurl_upload_status* 
 char* flickcurl_array_join(const char *array[], char delim);
 char** flickcurl_array_split(const char *str, char delim);
 void flickcurl_array_free(char *array[]);
+
+/* ignore these */
+/**
+ * FLICKCURL_DEPRECATED:
+ *
+ * deprecated
+ */
+/**
+ * flickcurl_category_s:
+ * @id: ignore
+ * @name: ignore
+ * @path: ignore
+ * @count: ignore
+ * @categories: ignore
+ * @categories_count: ignore
+ * @groups: ignore
+ * @groups_count: ignore
+ *
+ * category_s
+ */
+/**
+ * flickcurl_photo_s:
+ *
+ * photo_s
+ */
+/**
+ * flickcurl_s:
+ *
+ * flickcurl
+ */
 
 #ifdef __cplusplus
 }
