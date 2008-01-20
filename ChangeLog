@@ -1,4 +1,99 @@
-2008-01-12  Dave Beckett  <dave@dajobe.org>
+2008-01-19  Dave Beckett <dave@dajobe.org>
+
+	* docs/Makefile.am: Fix dist for mans
+
+	* Makefile.am, configure.ac, docs, docs/Makefile.am (from
+	/trunk/Makefile.am:457), docs/flickcurl-config.1 (from
+	/trunk/flickcurl-config.1:457), docs/flickcurl.1 (from
+	/trunk/flickcurl.1:457), docs/flickrdf.1 (from
+	/trunk/flickrdf.1:457), flickcurl-config.1, flickcurl.1,
+	flickrdf.1: Move man pages to docs/
+
+	* Makefile.am, configure.ac, src/Makefile.am, src/codegen.c,
+	src/flickcurl_getopt.h, src/flickrdf.c, src/getopt.c, src/test.c,
+	utils/Makefile.am, utils/codegen.c (from
+	/trunk/src/codegen.c:456), utils/flickcurl_getopt.h (from
+	/trunk/src/flickcurl_getopt.h:456), utils/flickrdf.c (from
+	/trunk/src/flickrdf.c:456), utils/getopt.c (from
+	/trunk/src/getopt.c:456): Updates for source dir reorg.
+
+	* activity-api.c, activity.c, args.c, auth-api.c, blog.c,
+	blogs-api.c, category.c, codegen.c, comments.c, common.c,
+	config.c, contacts-api.c, contacts.c, context.c, docs, example.c,
+	exif.c, favorites-api.c, flickcurl.c, flickcurl.h,
+	flickcurl_getopt.h, flickcurl_internal.h, flickrdf.c, getopt.c,
+	group.c, groups-api.c, groups-pools-api.c, interestingness-api.c,
+	location.c, md5.c, method.c, people-api.c, perms.c, person.c,
+	photo.c, photos-api.c, photos-comments-api.c, photos-geo-api.c,
+	photos-licenses-api.c, photos-notes-api.c, photos-transform-api.c,
+	photos-upload-api.c, photoset.c, photosets-api.c,
+	photosets-comments-api.c, place.c, places-api.c, reflection-api.c,
+	size.c, src, src/Makefile.am (from /trunk/Makefile.am:455),
+	src/activity-api.c (from /trunk/activity-api.c:455),
+	src/activity.c (from /trunk/activity.c:455), src/args.c (from
+	/trunk/args.c:455), src/auth-api.c (from /trunk/auth-api.c:455),
+	src/blog.c (from /trunk/blog.c:455), src/blogs-api.c (from
+	/trunk/blogs-api.c:455), src/category.c (from
+	/trunk/category.c:455), src/codegen.c (from /trunk/codegen.c:455),
+	src/comments.c (from /trunk/comments.c:455), src/common.c (from
+	/trunk/common.c:455), src/config.c (from /trunk/config.c:455),
+	src/contacts-api.c (from /trunk/contacts-api.c:455),
+	src/contacts.c (from /trunk/contacts.c:455), src/context.c (from
+	/trunk/context.c:455), src/example.c (from /trunk/example.c:455),
+	src/exif.c (from /trunk/exif.c:455), src/favorites-api.c (from
+	/trunk/favorites-api.c:455), src/flickcurl.h (from
+	/trunk/flickcurl.h:455), src/flickcurl_getopt.h (from
+	/trunk/flickcurl_getopt.h:455), src/flickcurl_internal.h (from
+	/trunk/flickcurl_internal.h:455), src/flickrdf.c (from
+	/trunk/flickrdf.c:455), src/getopt.c (from /trunk/getopt.c:455),
+	src/group.c (from /trunk/group.c:455), src/groups-api.c (from
+	/trunk/groups-api.c:455), src/groups-pools-api.c (from
+	/trunk/groups-pools-api.c:455), src/interestingness-api.c (from
+	/trunk/interestingness-api.c:455), src/location.c (from
+	/trunk/location.c:455), src/md5.c (from /trunk/md5.c:455),
+	src/method.c (from /trunk/method.c:455), src/people-api.c (from
+	/trunk/people-api.c:455), src/perms.c (from /trunk/perms.c:455),
+	src/person.c (from /trunk/person.c:455), src/photo.c (from
+	/trunk/photo.c:455), src/photos-api.c (from
+	/trunk/photos-api.c:455), src/photos-comments-api.c (from
+	/trunk/photos-comments-api.c:455), src/photos-geo-api.c (from
+	/trunk/photos-geo-api.c:455), src/photos-licenses-api.c (from
+	/trunk/photos-licenses-api.c:455), src/photos-notes-api.c (from
+	/trunk/photos-notes-api.c:455), src/photos-transform-api.c (from
+	/trunk/photos-transform-api.c:455), src/photos-upload-api.c (from
+	/trunk/photos-upload-api.c:455), src/photoset.c (from
+	/trunk/photoset.c:455), src/photosets-api.c (from
+	/trunk/photosets-api.c:455), src/photosets-comments-api.c (from
+	/trunk/photosets-comments-api.c:455), src/place.c (from
+	/trunk/place.c:455), src/places-api.c (from
+	/trunk/places-api.c:455), src/reflection-api.c (from
+	/trunk/reflection-api.c:455), src/size.c (from /trunk/size.c:455),
+	src/tags-api.c (from /trunk/tags-api.c:455), src/tags.c (from
+	/trunk/tags.c:455), src/test-api.c (from /trunk/test-api.c:455),
+	src/test.c (from /trunk/test.c:455), src/ticket.c (from
+	/trunk/ticket.c:455), src/upload-api.c (from
+	/trunk/upload-api.c:455), src/urls-api.c (from
+	/trunk/urls-api.c:455), src/user_upload_status.c (from
+	/trunk/user_upload_status.c:455), src/vsnprintf.c (from
+	/trunk/vsnprintf.c:455), tags-api.c, tags.c, test-api.c, test.c,
+	ticket.c, upload-api.c, urls-api.c, user_upload_status.c, utils,
+	utils/Makefile.am (from /trunk/Makefile.am:455),
+	utils/flickcurl.c (from /trunk/flickcurl.c:455), vsnprintf.c: Move
+	sources to src/ utils to utils/
+
+	* NEWS.html: 1.1 news
+
+	* coverage.html: 1.1
+
+	* coverage.html, flickcurl.c, flickcurl.h, flickcurl_internal.h,
+	photo.c, place.c, places-api.c: (flickcurl_places_find): Added to
+	support flickr.places.find announced 2008-01-18
+
+2008-01-12  Dave Beckett <dave@dajobe.org>
+
+	* README.html: word
+
+	* NEWS.html, configure.ac: Bump version to 1.1
 
 	* Snapshotted flickcurl_1_0 for 1.0 release (SVN 449)
 
