@@ -415,7 +415,7 @@ typedef enum {
  * A Place.
  *
  * Index 0 in the array is the location itself. flickcurl_get_place_type_label()
- * returns labels for the array indexes of type #flickcurl_place_type.
+ * can give labels for the array indexes of type #flickcurl_place_type.
  *
  */
 typedef struct 
