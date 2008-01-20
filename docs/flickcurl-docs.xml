@@ -54,9 +54,7 @@ C library for the Flickr web service API.
   </chapter>
 
       <para>For the latest information, see the
-      <ulink url="http://librdf.org/flickcurl/">Flickcurl Home Page</ulink>
-      and the <ulink url="../README.html">main document overview</ulink>
-      in this document tree.
+      <ulink url="http://librdf.org/flickcurl/">Flickcurl Home Page</ulink>.
       </para>
 
     <xi:include href="xml/section-core.xml"/>
