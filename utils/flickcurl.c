@@ -140,6 +140,8 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 
 #ifdef FLICKCURL_MANPAGE
 #define GETOPT_STRING_MORE "m"
+#else
+#define GETOPT_STRING_MORE
 #endif
 
 #ifdef HAVE_GETOPT_LONG
