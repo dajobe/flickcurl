@@ -1,4 +1,4 @@
-.TH FLICKCURL 1 "12 December 2007"
+.TH FLICKCURL 1 "23 January 2008"
 .SH NAME
 flickcurl \- call Flickr API
 .SH SYNOPSIS
@@ -30,7 +30,6 @@ Set delay between requests to \fIDELAY\fP milliseconds.
 Authenticate with a \fIFROB\fP and write auth config.
 .SH COMMANDS
 .SH SEE ALSO
-.BR /usr/share/doc/flickcurl/README.gz,
 .BR flickrdf (1).
 .br
 .SH AUTHOR
