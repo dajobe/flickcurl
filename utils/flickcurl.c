@@ -1015,8 +1015,9 @@ command_upload(flickcurl* fc, int argc, char *argv[])
     status=NULL;
     goto tidy;
   }
-  
-  while(!usage && argc) {
+
+  argv++; argc--;
+  for(; !usage && argc; argv++, argc--) {
     argv++; argc--;
     if(!strcmp(argv[0], "description")) {
       argv++; argc--;
