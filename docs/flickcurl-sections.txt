@@ -226,6 +226,7 @@ flickcurl_free_place
 flickcurl_free_places
 flickcurl_place_type
 flickcurl_places_find
+flickcurl_places_findByLatLon
 flickcurl_get_place_type_by_label
 flickcurl_get_place_type_label
 flickcurl_places_resolvePlaceId
