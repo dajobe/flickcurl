@@ -2955,7 +2955,7 @@ static struct {
    command_urls_lookupUser,  1, 1},
 
   {"upload",
-   "FILE [PARAMS...]", "Upload a photo FILE with optional parameters PARAM or PARAM VALUE\n      title TITLE | description DESC | tags TAGS... | friend | public | family", 
+   "FILE [PARAMS...]", "Upload a photo FILE with optional parameters PARAM or PARAM VALUE\n      title TITLE  description DESC  tags TAGS...  friend  public  family", 
    command_upload,  1, 0},
 
   {"replace",
@@ -3082,9 +3082,35 @@ main(int argc, char *argv[])
 
 #ifdef FLICKCURL_MANPAGE
       case 'm':
-        for(i=0; commands[i].name; i++)
-          printf(".IP \"\\fB%s\\fP \\fI%s\\fP\"\n%s\n", 
-                 commands[i].name, commands[i].args, commands[i].description);
+        for(i=0; commands[i].name; i++) {
+          int d, dc, nl=1, lastdc= -1;
+          printf(".IP \"\\fB%s\\fP \\fI%s\\fP\"\n",
+                 commands[i].name, commands[i].args);
+          for(d=0; (dc = commands[i].description[d]); d++) {
+            if(nl && dc == ' ') {
+              lastdc=dc;
+              continue;
+            }
+            
+            if(dc == ' ' && lastdc == ' ') {
+              puts("\n.br");
+              do {
+                d++;
+                dc = commands[i].description[d];
+              } while(dc == ' ');
+              lastdc= -1;
+            }
+
+            nl=0;
+            if(dc == '\n') {
+              puts("\n.br");
+              nl=1;
+            } else
+              putchar(dc);
+            lastdc=dc;
+          }
+          putchar('\n');
+        }
         rc=0;
         goto tidy;
 #endif
