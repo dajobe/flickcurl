@@ -1,3 +1,34 @@
+2008-01-23  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: (command_upload): Handle upload with just
+	filenme arg crash
+
+	* utils/flickcurl.c: sort commands before writing to manpage
+
+	* utils/flickcurl.c: docs.
+	Update man output to do escaping and newlines
+
+	* docs/flickcurl.1.in: no seealso
+
+	* utils/flickcurl.c: Added -m option to build manpage when
+	FLICKCURL_MANPAGE is defined
+
+	* docs/Makefile.am, docs/flickcurl.1, docs/flickcurl.1.in (from
+	/trunk/docs/flickcurl.1:479): Build flickcurl.1 using the utility
+	itself and -m option
+
+	* utils/Makefile.am: When bulding flickcurl in maintainer mode,
+	add -DFLICKCURL_MANPAGE
+
+	* coverage.html: flickr.places.findByLatLon
+
+	* utils/flickcurl.c: make getopt_long() not permute args
+	* src/flickcurl.h: typo
+
+	* ChangeLog, coverage.html, src/flickcurl.h, src/places-api.c,
+	utils/flickcurl.c: (flickcurl_places_findByLatLon): Added,
+	implementing flickr.places.findByLatLon
+
 2008-01-19  Dave Beckett <dave@dajobe.org>
 
 	* Makefile.am: Enable gtk doc for make distcheck
