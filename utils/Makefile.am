@@ -25,6 +25,10 @@ flickcurl_SOURCES = flickcurl.c
 if GETOPT
 flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
+flickcurl_CFLAGS=
+if MAINTAINER_MODE
+flickcurl_CFLAGS += -DFLICKCURL_MANPAGE
+endif
 flickcurl_LDADD= $(top_builddir)/src/libflickcurl.la
 
 flickrdf_SOURCES = flickrdf.c
