@@ -131,7 +131,12 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 #endif
 
 
+#ifdef HAVE_GETOPT_LONG
+/* + makes GNU getopt_long() never permute the arguments */
+#define GETOPT_STRING "+a:d:hv"
+#else
 #define GETOPT_STRING "a:d:hv"
+#endif
 
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options[] =
