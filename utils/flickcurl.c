@@ -138,6 +138,10 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 #define GETOPT_STRING "a:d:hv"
 #endif
 
+#ifdef FLICKCURL_MANPAGE
+#define GETOPT_STRING_MORE "m"
+#endif
+
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options[] =
 {
@@ -145,6 +149,9 @@ static struct option long_options[] =
   {"auth",    1, 0, 'a'},
   {"delay",   1, 0, 'd'},
   {"help",    0, 0, 'h'},
+#ifdef FLICKCURL_MANPAGE
+  {"manpage", 0, 0, 'm'},
+#endif
   {"version", 0, 0, 'v'},
   {NULL,      0, 0, 0}
 };
@@ -3019,9 +3026,10 @@ main(int argc, char *argv[])
 #ifdef HAVE_GETOPT_LONG
     int option_index = 0;
 
-    c = getopt_long (argc, argv, GETOPT_STRING, long_options, &option_index);
+    c = getopt_long (argc, argv, GETOPT_STRING GETOPT_STRING_MORE,
+                     long_options, &option_index);
 #else
-    c = getopt (argc, argv, GETOPT_STRING);
+    c = getopt (argc, argv, GETOPT_STRING GETOPT_STRING_MORE);
 #endif
     if (c == -1)
       break;
@@ -3071,6 +3079,15 @@ main(int argc, char *argv[])
       case 'h':
         help=1;
         break;
+
+#ifdef FLICKCURL_MANPAGE
+      case 'm':
+        for(i=0; commands[i].name; i++)
+          printf(".IP \"\\fB%s\\fP \\fI%s\\fP\"\n%s\n", 
+                 commands[i].name, commands[i].args, commands[i].description);
+        rc=0;
+        goto tidy;
+#endif
 
       case 'v':
         fputs(flickcurl_version_string, stdout);
