@@ -15,9 +15,11 @@
 
 <p>Not released.</p>
 
-<p>1 new Flickr API call:</p>
+<p>2 new Flickr API calls:</p>
 <pre>
 flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
+flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat,
+                                               double lon, int accuracy);
 </pre>
 
 <p>Added <em>type</em> field to <code>flickcurl_place</code> structure
