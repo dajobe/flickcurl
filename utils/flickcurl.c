@@ -2609,14 +2609,28 @@ command_places_findByLatLon(flickcurl* fc, int argc, char *argv[])
 }
 
 
-static struct {
+typedef struct {
   const char*     name;
   const char*     args;
   const char*     description;
   command_handler handler;
   int             min;
   int             max;
-} commands[] = {
+} flickcurl_cmd;
+
+
+#ifdef FLICKCURL_MANPAGE
+static int flickcurl_cmd_compare(const void *a, const void *b)
+{
+  flickcurl_cmd* a_cmd=(flickcurl_cmd*)a;
+  flickcurl_cmd* b_cmd=(flickcurl_cmd*)b;
+  return strcmp(a_cmd->name, b_cmd->name);
+}
+
+#endif
+
+
+static flickcurl_cmd commands[] = {
   /* {fn name, 
    *  args desc, fn description, handler, min args, max args },
    */
@@ -3082,6 +3096,9 @@ main(int argc, char *argv[])
 
 #ifdef FLICKCURL_MANPAGE
       case 'm':
+        qsort(commands, (sizeof(commands) / sizeof(flickcurl_cmd))-1,
+              sizeof(flickcurl_cmd), flickcurl_cmd_compare);
+
         for(i=0; commands[i].name; i++) {
           int d, dc, nl=1, lastdc= -1;
           printf(".IP \"\\fB%s\\fP \\fI%s\\fP\"\n",
