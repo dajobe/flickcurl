@@ -1145,7 +1145,7 @@ int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* ta
 
 /* flickr.places */
 flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
-flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon, int xaccuracy);
+flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon, int accuracy);
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
 flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
 const char* flickcurl_get_place_type_label(flickcurl_place_type place_type);
