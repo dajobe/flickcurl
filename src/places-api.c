@@ -119,6 +119,9 @@ flickcurl_places_find(flickcurl* fc, const char* query)
  * allow users to find photos for "places" and will round up to the
  * nearest place type to which corresponding place IDs apply.
  *
+ * This API announced 2008-01-23
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/3735
+ *
  * Implements flickr.places.findByLatLon (1.1)
  * 
  * Return value: non-0 on failure
