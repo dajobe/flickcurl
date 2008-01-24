@@ -106,6 +106,81 @@ flickcurl_places_find(flickcurl* fc, const char* query)
 
 
 /**
+ * flickcurl_places_findByLatLon:
+ * @fc: flickcurl context
+ * @lat: The latitude whose valid range is -90 to 90. Anything more than 4 decimal places will be truncated.
+ * @lon: The longitude whose valid range is -180 to 180. Anything more than 4 decimal places will be truncated.
+ * @accuracy: Recorded accuracy level of the location information. World level is 1, Country is ~3, Region ~6, City ~11, Street ~16. Current range is 1-16. The default is 16.
+ * 
+ * Return a place ID for a latitude, longitude and accuracy triple.
+ *
+ * The flickr.places.findByLatLon method is not meant to be a
+ * (reverse) geocoder in the traditional sense. It is designed to
+ * allow users to find photos for "places" and will round up to the
+ * nearest place type to which corresponding place IDs apply.
+ *
+ * Implements flickr.places.findByLatLon (1.1)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_place*
+flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
+                              int accuracy)
+{
+  const char* parameters[10][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_place* place=NULL;
+  char lat_str[20];
+  char lon_str[20];
+  char accuracy_str[4];
+  
+  if(accuracy < 0 || accuracy > 16)
+    accuracy=16;
+  
+  sprintf(lat_str, "%f", lat);
+  parameters[count][0]  = "lat";
+  parameters[count++][1]= lat_str;
+  sprintf(lon_str, "%f", lon);
+  parameters[count][0]  = "lon";
+  parameters[count++][1]= lon_str;
+  sprintf(accuracy_str, "%d", accuracy);
+  parameters[count][0]  = "accuracy";
+  parameters[count++][1]= accuracy_str;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.findByLatLon", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  place=flickcurl_build_place(fc, xpathCtx,
+                              (const xmlChar*)"/rsp/places/place");
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    place=NULL;
+
+  return place;
+}
+
+
+/**
  * flickcurl_places_resolvePlaceId:
  * @fc: flickcurl context
  * @place_id: A Flickr Places ID

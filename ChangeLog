@@ -1,5 +1,44 @@
 2008-01-19  Dave Beckett <dave@dajobe.org>
 
+	* Makefile.am: Enable gtk doc for make distcheck
+
+	* src/flickcurl.h: activity autodocs
+
+	* docs/flickcurl-docs.xml: docd
+
+	* docs/version.xml.in: add version.xml.in
+
+	* docs/flickcurl-sections.txt: Add gtkdoc files
+
+	* docs, docs/flickcurl-docs.xml, docs/flickcurl-overrides.txt,
+	docs/flickcurl.types: Add gtkdoc files
+
+	* configure.ac: gtk-doc
+
+	* docs/Makefile.am, docs/tmpl, docs/tmpl/flickcurl-unused.sgml,
+	docs/tmpl/section-activity.sgml, docs/tmpl/section-auth.sgml,
+	docs/tmpl/section-blogs.sgml, docs/tmpl/section-category.sgml,
+	docs/tmpl/section-comment.sgml, docs/tmpl/section-contact.sgml,
+	docs/tmpl/section-context.sgml, docs/tmpl/section-core.sgml,
+	docs/tmpl/section-exif.sgml, docs/tmpl/section-favorite.sgml,
+	docs/tmpl/section-general.sgml, docs/tmpl/section-group.sgml,
+	docs/tmpl/section-misc.sgml, docs/tmpl/section-people.sgml,
+	docs/tmpl/section-person.sgml, docs/tmpl/section-photo.sgml,
+	docs/tmpl/section-photoset.sgml, docs/tmpl/section-place.sgml,
+	docs/tmpl/section-reflection.sgml, docs/tmpl/section-tag.sgml,
+	docs/tmpl/section-test.sgml, docs/tmpl/section-unused.sgml,
+	docs/tmpl/section-upload.sgml, docs/tmpl/section-urls.sgml: gtkdoc
+	from docucomments
+
+	* src/activity-api.c, src/activity.c, src/auth-api.c, src/blog.c,
+	src/category.c, src/comments.c, src/common.c, src/config.c,
+	src/contacts.c, src/context.c, src/exif.c, src/flickcurl.h,
+	src/group.c, src/groups-pools-api.c, src/location.c, src/method.c,
+	src/perms.c, src/person.c, src/photo.c, src/photos-api.c,
+	src/photos-upload-api.c, src/photoset.c, src/photosets-api.c,
+	src/place.c, src/size.c, src/tags-api.c, src/tags.c, src/ticket.c,
+	src/upload-api.c, src/user_upload_status.c: docucomments
+
 	* docs/Makefile.am: Fix dist for mans
 
 	* Makefile.am, configure.ac, docs, docs/Makefile.am (from

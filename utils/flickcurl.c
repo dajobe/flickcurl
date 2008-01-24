@@ -2579,6 +2579,24 @@ command_places_find(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_places_findByLatLon(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place* place=NULL;
+  double lat=atof(argv[1]);
+  double lon=atof(argv[2]);
+  int accuracy=atoi(argv[3]);
+
+  place=flickcurl_places_findByLatLon(fc, lat, lon, accuracy);
+  if(place) {
+    command_print_place(place, NULL, NULL);
+    flickcurl_free_place(place);
+  }
+  
+  return (place == NULL);
+}
+
+
 static struct {
   const char*     name;
   const char*     args;
@@ -2862,6 +2880,9 @@ static struct {
   {"places.find",
    "TEXT", "Find Flickr Places by TEXT query.",
    command_places_find, 1, 1},
+  {"places.findByLatLon",
+   "LAT LON ACCURACY", "Find Flickr Places by LAT and LON with ACCURACY 1-16.",
+   command_places_findByLatLon, 3, 3},
   {"places.resolvePlaceId",
    "PLACE-ID", "Find Flickr Places information by PLACE-ID.",
    command_places_resolvePlaceId, 1, 1},
