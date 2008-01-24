@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (108/108)</span>
+<span class="coverage">100.0% (109/109)</span>
 </p>
 
 
@@ -238,7 +238,7 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.find.html">flickr.places.find</a> (1.1)</li>
-  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon</A> (1.1)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon</a> (1.1)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceId.html">flickr.places.resolvePlaceId</a> (1.0)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceURL.html">flickr.places.resolvePlaceURL</a> (1.0)</li>
 </ul>
@@ -286,9 +286,11 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>1.1</strong>: flickr.places.find (1 new)</p>
+<p><strong>1.1</strong>: flickr.places.findByLatLon, flickr.places.find, flickr.places.findByLatLon (3 new)</p>
 <pre>
+flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon, int accuracy);
 flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
+flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon, int accuracy);
 </pre>
 
 
@@ -341,7 +343,7 @@ flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int 
 flickcurl_photo** flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, const char* extras, int per_page, int page);
 int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int count, int just_friends,  int single_photo, int include_self, const char* extras);
+flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int photo_count, int just_friends,  int single_photo, int include_self, const char* extras);
 flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
 flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
 flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
