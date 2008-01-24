@@ -67,3 +67,11 @@ include $(top_srcdir)/gtk-doc.make
 EXTRA_DIST+= \
 $(man_MANS) \
 version.xml.in
+
+flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
+	( cd $(top_builddir)/utils && $(MAKE) flickcurl ) && \
+	sed -ne '1,/SH COMMANDS/p' $(srcdir)/flickcurl.1.in > flickcurl.1.head && \
+	$(top_builddir)/utils/flickcurl -m > flickcurl.1.body && \
+	sed -ne '/SH SEE ALSO/,$$p' $(srcdir)/flickcurl.1.in > flickcurl.1.tail && \
+	cat flickcurl.1.head flickcurl.1.body flickcurl.1.tail > flickcurl.1 && \
+	rm -f flickcurl.1.head flickcurl.1.body flickcurl.1.tail

@@ -28,6 +28,7 @@ Set delay between requests to \fIDELAY\fP milliseconds.
 .TP
 .B \-a \fIFROB\fP, \-\-auth \fIFROB\fP
 Authenticate with a \fIFROB\fP and write auth config.
+.SH COMMANDS
 .SH SEE ALSO
 .BR /usr/share/doc/flickcurl/README.gz,
 .BR flickrdf (1).
