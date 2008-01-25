@@ -46,6 +46,8 @@ AC_PROG_LIBTOOL
 
 libxml_min_version=2.6.8
 raptor_min_version=1.4.0
+libcurl_min_version=7.10.0
+libcurl_min_vernum=070A00
 
 # Checks for header files.
 AC_HEADER_STDC
@@ -123,7 +125,7 @@ LIBXML_VERSION=`$XML_CONFIG --version`
 libxml_version_dec=`echo $LIBXML_VERSION | awk -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
 libxml_min_version_dec=`echo $libxml_min_version | awk -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
 if test $libxml_version_dec -lt $libxml_min_version_dec; then
-  AC_MSG_WARN(Using libxml $LIBXML_VERSION is unsupported - $libxml_min_version or newer required.)
+  AC_MSG_ERROR(libxml $LIBXML_VERSION is too old - $libxml_min_version or newer required.)
 fi
 
 
@@ -154,6 +156,11 @@ LIBS="$LIBS `$CURL_CONFIG --libs`"
 CPPFLAGS="`$CURL_CONFIG --cflags` $CPPFLAGS"
 
 LIBCURL_VERSION=`$CURL_CONFIG --version | sed -e 's/^libcurl *//'`
+LIBCURL_VERNUM=`$CURL_CONFIG --vernum`
+if test $LIBCURL_VERNUM '<' $libcurl_min_vernum; then
+  AC_MSG_ERROR(curl $LIBCURL_VERSION is too old - $libcurl_min_version or newer required.)
+fi
+
 
 
 AC_ARG_WITH(raptor-config, [  --with-raptor-config=PATH   Location of raptor raptor-config []], raptor_config="$withval", raptor_config="")
