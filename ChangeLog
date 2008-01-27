@@ -1,4 +1,41 @@
+2008-01-26  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 1.1
+
+2008-01-24  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: min libcurl and libxml
+
+	* configure.ac: Set min curl version to 7.10.0 when curl_free()
+	was added, but still ancient (Oct 1 2002)
+	Die if either libxml or libcurl is too old in configure.
+
 2008-01-23  Dave Beckett <dave@dajobe.org>
+
+	* README.html: 2008-01-23 places API
+
+	* docs/tmpl/section-activity.sgml, docs/tmpl/section-auth.sgml,
+	docs/tmpl/section-blogs.sgml, docs/tmpl/section-category.sgml,
+	docs/tmpl/section-comment.sgml, docs/tmpl/section-contact.sgml,
+	docs/tmpl/section-context.sgml, docs/tmpl/section-core.sgml,
+	docs/tmpl/section-exif.sgml, docs/tmpl/section-favorite.sgml,
+	docs/tmpl/section-general.sgml, docs/tmpl/section-group.sgml,
+	docs/tmpl/section-misc.sgml, docs/tmpl/section-people.sgml,
+	docs/tmpl/section-person.sgml, docs/tmpl/section-photo.sgml,
+	docs/tmpl/section-photoset.sgml, docs/tmpl/section-place.sgml,
+	docs/tmpl/section-reflection.sgml, docs/tmpl/section-tag.sgml,
+	docs/tmpl/section-test.sgml, docs/tmpl/section-unused.sgml,
+	docs/tmpl/section-upload.sgml, docs/tmpl/section-urls.sgml: long
+	desc
+
+	* docs/flickcurl-sections.txt: Added flickcurl_places_findByLatLon
+
+	* src/places-api.c: flickcurl_places_findByLatLon docs
+
+	* utils/flickcurl.c: Add -m to help
+
+	* utils/flickcurl.c: define GETOPT_STRING_MORE to null when not
+	maintainer
 
 	* utils/flickcurl.c: (command_upload): Handle upload with just
 	filenme arg crash
