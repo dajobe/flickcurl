@@ -14,6 +14,9 @@ Photo.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT flickcurl_photo ##### -->
 <para>
 
@@ -291,8 +294,6 @@ Photo.
 @include_self: 
 @extras: 
 @Returns: 
-<!-- # Unused Parameters # -->
-@count: 
 
 
 <!-- ##### FUNCTION flickcurl_photos_getContext ##### -->
