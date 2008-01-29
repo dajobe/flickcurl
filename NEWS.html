@@ -11,9 +11,17 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-XX-XX">2008-XX-XX Flickcurl 1.2</h2>
+<h2 id="D2008-01-28">2008-01-28 Flickcurl 1.2</h2>
 
-<p>Not yet released.</p>
+<p>Oops, 'make' didn't work in 1.1 as docs/flickcurl.1.in was missing
+from the tarball:</p>
+<pre>
+make[1]: *** No rule to make target `flickcurl.1.in', needed by `flickcurl.1'.  Stop.
+</pre>
+
+<p>Added configure search for <code>nanosleep()</code> in librt and
+libposix4 for building on Solaris.
+</p>
 
 
 <h2 id="D2008-01-26">2008-01-26 Flickcurl 1.1</h2>
