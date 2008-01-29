@@ -630,8 +630,12 @@ flickcurl_prepare_common(flickcurl *fc,
   for(i=0; parameters[i][0]; i++) {
     size_t param_len=strlen(parameters[i][0]);
 
-    values_len[i]=strlen(parameters[i][1]);
-
+    if(parameters[i][1])
+      values_len[i]=strlen(parameters[i][1]);
+    else {
+      values_len[i] = 0;
+      parameters[i][1] = "";
+    }
     fc->param_fields[i]=(char*)malloc(param_len+1);
     strcpy(fc->param_fields[i], parameters[i][0]);
     fc->param_values[i]=(char*)malloc(values_len[i]+1);
