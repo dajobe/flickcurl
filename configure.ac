@@ -69,6 +69,7 @@ AC_FUNC_REALLOC
 AC_FUNC_STRFTIME
 AC_FUNC_VPRINTF
 AC_CHECK_FUNCS([getopt getopt_long memset strdup vsnprintf])
+AC_SEARCH_LIBS(nanosleep, rt posix4, , AC_MSG_ERROR(nanosleep was not found))
 
 AM_CONDITIONAL(GETOPT, test $ac_cv_func_getopt = no -a $ac_cv_func_getopt_long = no)
 
