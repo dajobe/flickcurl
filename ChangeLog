@@ -1,4 +1,17 @@
-2008-01-26  Dave Beckett  <dave@dajobe.org>
+2008-01-28  Dave Beckett <dave@dajobe.org>
+
+	* ChangeLog: Snapshotted flickcurl_1_2 for 1.2 release (SVN 518)
+
+	* configure.ac: Look for nanosleep in -lrt and -lposix4 to help solaris.
+
+	* docs/Makefile.am: Add flickcurl.1.in to dist.  Make build rule
+	maintainer only
+
+2008-01-26  Dave Beckett <dave@dajobe.org>
+
+	* README.html: curl min
+
+	* ChangeLog: Snapshotted flickcurl_1_1 for 1.1 release (SVN 507)
 
 	* NEWS.html, configure.ac: Bump version to 1.2
 
