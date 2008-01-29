@@ -13,14 +13,15 @@
 
 <h2 id="D2008-01-28">2008-01-28 Flickcurl 1.2</h2>
 
-<p>Oops, 'make' didn't work in 1.1 as docs/flickcurl.1.in was missing
+<p>Fixed "brown paper bag" issue.
+1.1 could not be built as docs/flickcurl.1.in was missing
 from the tarball:</p>
 <pre>
 make[1]: *** No rule to make target `flickcurl.1.in', needed by `flickcurl.1'.  Stop.
 </pre>
 
-<p>Added configure search for <code>nanosleep()</code> in librt and
-libposix4 for building on Solaris.
+<p>Added <code>configure</code> search for <code>nanosleep()</code>
+in librt and libposix4 for building on Solaris.
 </p>
 
 
