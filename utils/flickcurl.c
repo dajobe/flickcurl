@@ -341,7 +341,8 @@ command_print_photo(flickcurl_photo* photo)
   
   command_print_tags(photo->tags, NULL, NULL);
 
-  command_print_place(photo->place, NULL, NULL);
+  if(photo->place)
+    command_print_place(photo->place, NULL, NULL);
 }
 
 
