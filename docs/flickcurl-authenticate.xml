@@ -1,0 +1,168 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="flickcurl-auth">
+
+<title>Authenticating Flickcurl</title>
+
+<section id="flickcurl-auth-intro">
+
+<title>Build Flickcurl library and flickcurl utility</title>
+
+<programlisting>
+  $ ./configure
+  $ make
+</programlisting>
+
+<para>
+You should get an error if you now try the utility:
+</para>
+<programlisting>
+  $ utils/flickcurl photos.getInfo 1234567
+  flickcurl: ERROR: No shared secret
+  flickcurl: Command photos.getInfo failed
+</programlisting>
+
+<para>
+This is because there is no configuration set for the library.  For
+the flickcurl utility, it reads the configuration from a file
+<code>~/.flickcurl.conf</code> which contains parameters used
+for authentication.  This section describes how those parameters
+are obtained.
+</para>
+
+</section>
+
+
+<section id="flickcurl-auth-register">
+
+<title>Register application to get API Key and Shared Secret</title>
+
+<para>
+Go to
+<ulink url="http://www.flickr.com/services/api/keys/">http://www.flickr.com/services/api/keys/</ulink>
+and click on 'Apply for a new key online now'
+</para>
+
+<para>
+Fill in the form and click Apply.  Flickr will give you a new key
+that looks something like:
+</para>
+<programlisting>
+   0123456789abcdef0123456789abcdef
+</programlisting>
+<para>
+which is the <emphasis>API Key</emphasis>
+</para>
+
+<para>Then authenticate it to get the <emphasis>Shared
+Secret</emphasis> which looks something like:</para>
+<programlisting>
+   fedcba9876543210
+</programlisting>
+
+<para>
+You need to choose the authentication type.  Here the type 'mobile'
+is recommended since no callback URL is usually appropriate for a
+command-line application or library.  Set the permissions to 'read',
+'write' or 'delete' as appropriate.
+</para>
+
+<para>
+The result will be a new key with an 'Auth mode Mobile'
+and an <emphasis>authentication URL</emphasis> that looks like:
+</para>
+<programlisting>
+   Mobile (http://www.flickr.com/auth-11111111111111111 Read)
+</programlisting>
+
+</section>
+
+
+<section id="flickcurl-auth-authenticate">
+
+<title>Getting Authentication Token from API Key and Secret</title>
+
+<para>
+Create a file <code>~/.flickcurl.conf</code> with the two
+values above (API Key, Shared Secret) like this:
+</para>
+
+<programlisting>
+[flickr]
+api_key=0123456789abcdef0123456789abcdef
+secret=fedcba9876543210
+</programlisting>
+
+
+<para>Then visit the Authentication URL mentioned in the previous section
+(http://www.flickr.com/auth-11111111111111111) in a web browser.
+</para>
+
+<para>Flickr will return a page that says something like:</para>
+<programlisting>
+  "[APP NAME] wants to link to your Flickr account"
+</programlisting>
+<para>with more information and a big blue button that reads:</para>
+<programlisting>
+  [OK, I'll ALLOW IT]
+</programlisting>
+
+<para>Click that button.</para>
+
+<para>Flickr will return on the next page a
+9-digit <emphasis>FROB</emphasis> that looks like this:</para>
+<programlisting>
+  123-456-789
+</programlisting>
+
+<para>
+Switch back to the command line and run the flickcurl utility with that FROB:
+</para>
+<programlisting>
+$ utils/flickcurl -a 123-456-789
+</programlisting>
+
+<para>and the result will be that an
+<emphasis>Authentication Token</emphasis> (auth token) is calculated
+and returned.</para>
+
+<para>The utils/flickcurl utility will automatically update the
+<code>~/.flickcurl.conf</code> configuration file with
+the <code>auth_token</code> field to give something like:</para>
+
+<programlisting>
+$ cat ~/.flickcurl.conf
+[flickr]
+auth_token=1234567-8901234567890123
+api_key=0123456789abcdef0123456789abcdef
+secret=fedcba9876543210
+</programlisting>
+
+</section>
+
+
+<section id="flickcurl-auth-use">
+
+<title>Use flickcurl</title>
+
+<para>Now the configuration has been created and authentication
+completed, the library and utility will work.
+</para>
+
+<programlisting>
+  $ utils/flickcurl photos.getInfo 1234567
+  flickcurl: Found photo with URI http://www.flickr.com/photos/yogi/1234567/ ID 1234567 and 1 tags
+  ...
+</programlisting>
+
+</section>
+
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("flickcurl-docs.xml" "book" "part")
+End:
+-->
