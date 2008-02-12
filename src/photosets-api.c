@@ -139,6 +139,13 @@ flickcurl_photosets_create(flickcurl* fc, const char* title,
   if(!doc)
     goto tidy;
 
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
   photoset_id=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoset/@id");
   if(photoset_url_p) {
     *photoset_url_p=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoset/@url");
