@@ -1,4 +1,44 @@
+2008-02-11  Dave Beckett <dave@dajobe.org>
+
+	* src/photosets-api.c: (flickcurl_photosets_create): Initialise
+	xpathCtx
+
+	* utils/flickcurl.c: photosets.create has 3 args not 4
+
+2008-02-08  Dave Beckett <dave@dajobe.org>
+
+	* docs/Makefile.am, docs/flickcurl-authenticate.xml,
+	docs/flickcurl-docs.xml, docs/tmpl/flickcurl-unused.sgml,
+	docs/tmpl/section-activity.sgml, docs/tmpl/section-auth.sgml,
+	docs/tmpl/section-blogs.sgml, docs/tmpl/section-category.sgml,
+	docs/tmpl/section-comment.sgml, docs/tmpl/section-contact.sgml,
+	docs/tmpl/section-context.sgml, docs/tmpl/section-core.sgml,
+	docs/tmpl/section-exif.sgml, docs/tmpl/section-favorite.sgml,
+	docs/tmpl/section-general.sgml, docs/tmpl/section-group.sgml,
+	docs/tmpl/section-misc.sgml, docs/tmpl/section-people.sgml,
+	docs/tmpl/section-person.sgml, docs/tmpl/section-photo.sgml,
+	docs/tmpl/section-photoset.sgml, docs/tmpl/section-place.sgml,
+	docs/tmpl/section-reflection.sgml, docs/tmpl/section-tag.sgml,
+	docs/tmpl/section-test.sgml, docs/tmpl/section-unused.sgml,
+	docs/tmpl/section-upload.sgml, docs/tmpl/section-urls.sgml: Added
+	flickcurl-authenticate.xml for authenticating howto
+
+2008-01-31  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: (command_print_photo): Print place only if
+	not NULL
+
+2008-01-29  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Patch from Kumar Appaiah to change USER-ID
+	references in help messages to use USER-NSID.
+
+	* src/common.c: (flickcurl_prepare_common): Patch from Kumar
+	Appaiah to prevent a crash when a parameter has a NULL value.
+
 2008-01-28  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 1.3
 
 	* ChangeLog: Snapshotted flickcurl_1_2 for 1.2 release (SVN 518)
 
