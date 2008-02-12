@@ -2865,7 +2865,7 @@ static flickcurl_cmd commands[] = {
    command_photosets_addPhoto, 2, 2},
   {"photosets.create",
    "TITLE DESCRIPTION PRIMARY-PHOTO-ID", "Create a photoset with TITLE, DESCRIPTION and PRIMARY-PHOTO-ID.",
-   command_photosets_create, 4, 4},
+   command_photosets_create, 3, 3},
   {"photosets.delete",
    "PHOTOSET-ID", "Delete a photoset with PHOTOSET-ID.",
    command_photosets_delete, 1, 1},
