@@ -287,6 +287,7 @@ AC_SUBST(STANDARD_CFLAGS)
 AC_CONFIG_FILES([Makefile
 src/Makefile
 utils/Makefile
+examples/Makefile
 docs/Makefile
 docs/version.xml
 flickcurl.rdf

@@ -15,7 +15,7 @@
 # complete terms and further detail along with the license texts for
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
-SUBDIRS = src utils docs
+SUBDIRS = src utils docs examples
 
 bin_SCRIPTS = flickcurl-config
 
