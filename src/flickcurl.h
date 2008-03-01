@@ -31,6 +31,33 @@ extern "C" {
 #include <libxml/tree.h>
 
 
+/**
+ * FLICKCURL_API:
+ *
+ * Macro for wrapping API function call declarations.
+ *
+ */
+#ifndef FLICKCURL_API
+#  ifdef WIN32
+#    ifdef __GNUC__
+#      undef _declspec
+#      define _declspec(x) __declspec(x)
+#    endif
+#    ifdef FLICKCURL_STATIC
+#      define FLICKCURL_API
+#    else
+#      ifdef FLICKCURL_INTERNAL
+#        define FLICKCURL_API _declspec(dllexport)
+#      else
+#        define FLICKCURL_API _declspec(dllimport)
+#      endif
+#    endif
+#  else
+#    define FLICKCURL_API
+#  endif
+#endif
+
+
 /* Use gcc 3.1+ feature to allow marking of deprecated API calls.
  * This gives a warning during compiling.
  */
@@ -976,74 +1003,122 @@ typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
 
 
 /* library constants */
+FLICKCURL_API
 extern const char* const flickcurl_short_copyright_string;
+FLICKCURL_API
 extern const char* const flickcurl_copyright_string;
+FLICKCURL_API
 extern const char* const flickcurl_license_string;
+FLICKCURL_API
 extern const char* const flickcurl_home_url_string;
+FLICKCURL_API
 extern const char* const flickcurl_version_string;
 
 
 /* library init - call once before creating anything */
+FLICKCURL_API
 int flickcurl_init(void);
 /* library cleanup - call once before exit */
+FLICKCURL_API
 void flickcurl_finish(void);
 
 
 /* flickcurl* object constructor */
+FLICKCURL_API
 flickcurl* flickcurl_new(void);
 
 /* flickcurl* object destructor */
+FLICKCURL_API
 void flickcurl_free(flickcurl *fc);
 
 /* flickcurl* object set methods */
+FLICKCURL_API
 void flickcurl_set_api_key(flickcurl* fc, const char *api_key);
+FLICKCURL_API
 void flickcurl_set_auth_token(flickcurl *fc, const char* auth_token);
+FLICKCURL_API
 void flickcurl_set_data(flickcurl *fc, void* data, size_t data_length);
+FLICKCURL_API
 void flickcurl_set_error_handler(flickcurl* fc, flickcurl_message_handler error_handler,  void *error_data);
+FLICKCURL_API
 void flickcurl_set_http_accept(flickcurl* fc, const char *value);
+FLICKCURL_API
 void flickcurl_set_proxy(flickcurl* fc, const char *proxy);
+FLICKCURL_API
 void flickcurl_set_request_delay(flickcurl *fc, long delay_msec);
+FLICKCURL_API
 void flickcurl_set_shared_secret(flickcurl* fc, const char *secret);
+FLICKCURL_API
 void flickcurl_set_sign(flickcurl *fc);
+FLICKCURL_API
 void flickcurl_set_tag_handler(flickcurl* fc,  flickcurl_tag_handler tag_handler, void *tag_data);
+FLICKCURL_API
 void flickcurl_set_user_agent(flickcurl* fc, const char *user_agent);
+FLICKCURL_API
 void flickcurl_set_write(flickcurl *fc, int is_write);
+FLICKCURL_API
 void flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc);
 
 /* flickcurl* object set methods */
+FLICKCURL_API
 const char* flickcurl_get_api_key(flickcurl *fc);
+FLICKCURL_API
 const char* flickcurl_get_shared_secret(flickcurl *fc);
+FLICKCURL_API
 const char* flickcurl_get_auth_token(flickcurl *fc);
 
 /* other flickcurl class destructors */
+FLICKCURL_API
 void flickcurl_free_tag(flickcurl_tag *t);
+FLICKCURL_API
 void flickcurl_free_photo(flickcurl_photo *photo);
+FLICKCURL_API
 void flickcurl_free_photos(flickcurl_photo** photos);
+FLICKCURL_API
 void flickcurl_free_photoset(flickcurl_photoset *photoset);
+FLICKCURL_API
 void flickcurl_free_photosets(flickcurl_photoset **photosets_object);
 /* void flickcurl_free_license(flickcurl_person *license); */
+FLICKCURL_API
 void flickcurl_free_person(flickcurl_person *person);
+FLICKCURL_API
 void flickcurl_free_persons(flickcurl_person** persons);
+FLICKCURL_API
 void flickcurl_free_context(flickcurl_context *context);
+FLICKCURL_API
 void flickcurl_free_contexts(flickcurl_context** contexts);
+FLICKCURL_API
 void flickcurl_free_perms(flickcurl_perms *perms);
+FLICKCURL_API
 void flickcurl_free_location(flickcurl_location *location);
+FLICKCURL_API
 void flickcurl_free_exif(flickcurl_exif *exif);
+FLICKCURL_API
 void flickcurl_free_exifs(flickcurl_exif **exifs_object);
+FLICKCURL_API
 void flickcurl_free_ticket(flickcurl_ticket *ticket);
+FLICKCURL_API
 void flickcurl_free_tickets(flickcurl_ticket **tickets_object);
+FLICKCURL_API
 void flickcurl_free_user_upload_status(flickcurl_user_upload_status *u);
+FLICKCURL_API
 void flickcurl_free_place(flickcurl_place* place);
+FLICKCURL_API
 void flickcurl_free_places(flickcurl_place** places_object);
 
 
 /* utility methods */
 /* get an image URL for a photo in some size */
+FLICKCURL_API
 char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
 /* get labels for various field/types */
+FLICKCURL_API
 const char* flickcurl_get_photo_field_label(flickcurl_photo_field_type field);
+FLICKCURL_API
 const char* flickcurl_get_person_field_label(flickcurl_person_field_type field);
+FLICKCURL_API
 const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype);
+FLICKCURL_API
 const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
 
 
@@ -1056,6 +1131,7 @@ const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
  * Handler to get variables returned from an 'INI' style configuration file
 */
 typedef void (*set_config_var_handler)(void* userdata, const char* key, const char* value);
+FLICKCURL_API
 int read_ini_config(const char* filename, const char* application, void* user_data, set_config_var_handler handler);
 
 
@@ -1063,185 +1139,316 @@ int read_ini_config(const char* filename, const char* application, void* user_da
 /* Flickr API calls */
 
 /* flickr.activity */
+FLICKCURL_API
 flickcurl_activity** flickcurl_activity_userComments(flickcurl* fc, int per_page, int page);
+FLICKCURL_API
 flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe, int per_page, int page);
+FLICKCURL_API
 void flickcurl_free_activities(flickcurl_activity **activities_object);
 
 /* flickr.auth */
+FLICKCURL_API
 char* flickcurl_auth_checkToken(flickcurl* fc, const char* token);
+FLICKCURL_API
 char* flickcurl_auth_getFrob(flickcurl* fc);
+FLICKCURL_API
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
+FLICKCURL_API
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 
 /* flickr.blogs */
+FLICKCURL_API
 flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
+FLICKCURL_API
 int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
+FLICKCURL_API
 void flickcurl_free_blogs(flickcurl_blog **blogs_object);
 
 /* flickr.favorites */
+FLICKCURL_API
 int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+FLICKCURL_API
 int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
 
 /* flickr.groups */
+FLICKCURL_API
 void flickcurl_free_category(flickcurl_category *category);
+FLICKCURL_API
 void flickcurl_free_categories(flickcurl_category **categories_object);
+FLICKCURL_API
 flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
+FLICKCURL_API
 flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
+FLICKCURL_API
 flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
 
 /* flickr.groups.pools */
+FLICKCURL_API
 int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
+FLICKCURL_API
 flickcurl_context** flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id, const char* group_id);
+FLICKCURL_API
 flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page);
+FLICKCURL_API
 flickcurl_photo** flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, const char* extras, int per_page, int page);
+FLICKCURL_API
 int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const char* group_id);
+FLICKCURL_API
 void flickcurl_free_group(flickcurl_group *group);
+FLICKCURL_API
 void flickcurl_free_groups(flickcurl_group **groups_object);
 
 /* flickr.interestingness */
+FLICKCURL_API
 flickcurl_photo** flickcurl_interestingness_getList(flickcurl* fc, const char* date, const char* extras, int per_page, int page);
 
 /* flickr.photo.getSizes */
+FLICKCURL_API
 void flickcurl_free_size(flickcurl_size *size);
+FLICKCURL_API
 void flickcurl_free_sizes(flickcurl_size **sizes_object);
 
 /* flickr.people */
+FLICKCURL_API
 char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
+FLICKCURL_API
 char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
+FLICKCURL_API
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
+FLICKCURL_API
 flickcurl_group** flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_user_upload_status* flickcurl_people_getUploadStatus(flickcurl* fc);
 
 /* flickr.photos */
+FLICKCURL_API
 int flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags);
+FLICKCURL_API
 int flickcurl_photos_delete(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int photo_count, int just_friends,  int single_photo, int include_self, const char* extras);
+FLICKCURL_API
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);
+FLICKCURL_API
 flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
+FLICKCURL_API
 flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
+FLICKCURL_API
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getRecent(flickcurl* fc, const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_size** flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getUntagged(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getWithGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getWithoutGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date, const char* extras, int per_page, int page);
+FLICKCURL_API
 int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
+FLICKCURL_API
 int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);
+FLICKCURL_API
 int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id, int date_posted, int date_taken, int date_taken_granularity);
+FLICKCURL_API
 int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* title, const char* description);
+FLICKCURL_API
 int flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
+FLICKCURL_API
 int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int safety_level, int hidden);
+FLICKCURL_API
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
 
 /* flickr.places */
+FLICKCURL_API
 flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
+FLICKCURL_API
 flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon, int accuracy);
+FLICKCURL_API
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
+FLICKCURL_API
 flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
+FLICKCURL_API
 const char* flickcurl_get_place_type_label(flickcurl_place_type place_type);
 flickcurl_place_type flickcurl_get_place_type_by_label(const char* place_label);
 
 /* flickr.contacts */
+FLICKCURL_API
 void flickcurl_free_contact(flickcurl_contact *contact_object);
+FLICKCURL_API
 void flickcurl_free_contacts(flickcurl_contact **contacts_object);
+FLICKCURL_API
 flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc, const char* filter, int page, int per_page);
+FLICKCURL_API
 flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
 
 /* flickr.photos.comments */
+FLICKCURL_API
 void flickcurl_free_comment(flickcurl_comment *comment_object);
+FLICKCURL_API
 void flickcurl_free_comments(flickcurl_comment **comments_object);
+FLICKCURL_API
 char* flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id, const char* comment_text);
+FLICKCURL_API
 int flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id);
+FLICKCURL_API
 int flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
+FLICKCURL_API
 flickcurl_comment** flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id);
 
 /* flickr.photos.geo */
+FLICKCURL_API
 flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 int flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id, flickcurl_location* location);
+FLICKCURL_API
 int flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id, flickcurl_perms* perms);
+FLICKCURL_API
 const char* flickcurl_get_location_accuracy_label(int accuracy);
 
 /* flickr.photos.licenses */
+FLICKCURL_API
 flickcurl_license** flickcurl_photos_licenses_getInfo(flickcurl *fc);
+FLICKCURL_API
 flickcurl_license* flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id);
+FLICKCURL_API
 int flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id, int license_id);
 
 /* flickr.photos.notes */
+FLICKCURL_API
 char* flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
+FLICKCURL_API
 int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
+FLICKCURL_API
 int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
+FLICKCURL_API
 
 /* flickr.photos.upload */
+FLICKCURL_API
 flickcurl_ticket** flickcurl_photos_upload_checkTickets(flickcurl* fc, const char** tickets_ids);
 
 /* flickr.photos.transform */
+FLICKCURL_API
 int flickcurl_photos_transform_rotate(flickcurl* fc, const char* photo_id, int degrees);
 
 /* flickr.photosets */
+FLICKCURL_API
 int flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
+FLICKCURL_API
 char* flickcurl_photosets_create(flickcurl* fc, const char* title, const char* description, const char* primary_photo_id, char** photoset_url_p);
+FLICKCURL_API
 int flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id);
+FLICKCURL_API
 int flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id, const char* title, const char* description);
+FLICKCURL_API
 int flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id, const char* primary_photo_id, const char** photo_ids_array);
+FLICKCURL_API
 flickcurl_context** flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id, const char* photoset_id);
+FLICKCURL_API
 flickcurl_photoset* flickcurl_photosets_getInfo(flickcurl* fc, const char* photoset_id);
+FLICKCURL_API
 flickcurl_photoset** flickcurl_photosets_getList(flickcurl* fc, const char* user_id);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id, const char* extras, int privacy_filter, int per_page, int page);
+FLICKCURL_API
 int flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array);
+FLICKCURL_API
 int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
 
 /* flickr.photosets.comments */
+FLICKCURL_API
 char* flickcurl_photosets_comments_addComment(flickcurl* fc, const char* photoset_id, const char* comment_text);
+FLICKCURL_API
 int flickcurl_photosets_comments_deleteComment(flickcurl* fc, const char* comment_id);
+FLICKCURL_API
 int flickcurl_photosets_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
+FLICKCURL_API
 flickcurl_comment** flickcurl_photosets_comments_getList(flickcurl* fc, const char* photoset_id);
   
 /* flickr.reflection */
+FLICKCURL_API
 void flickcurl_free_method(flickcurl_method *method);
+FLICKCURL_API
 char** flickcurl_reflection_getMethods(flickcurl* fc);
+FLICKCURL_API
 flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name);
 
 /* flickr.tag */
+FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count);
+FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getListUser(flickcurl* fc, const char* user_id);
+FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id, int pop_count);
+FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag);
+FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
 
 /* flickr.test */
+FLICKCURL_API
 int flickcurl_test_echo(flickcurl* fc, const char* key, const char* value);
+FLICKCURL_API
 char* flickcurl_test_login(flickcurl* fc);
+FLICKCURL_API
 int flickcurl_test_null(flickcurl* fc);
 
 /* flickr.urls */
+FLICKCURL_API
 char* flickcurl_urls_getGroup(flickcurl* fc, const char* group_id);
+FLICKCURL_API
 char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
+FLICKCURL_API
 char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
+FLICKCURL_API
 char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
+FLICKCURL_API
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
 
 /* Upload API */
+FLICKCURL_API
 FLICKCURL_DEPRECATED flickcurl_upload_status* flickcurl_photos_upload(flickcurl* fc, const char* photo_file, const char *title, const char *description, const char *tags, int is_public, int is_friend, int is_family);
+FLICKCURL_API
 flickcurl_upload_status* flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params);
+FLICKCURL_API
 flickcurl_upload_status* flickcurl_photos_replace(flickcurl* fc, const char* photo_file, const char *photo_id, int async);
+FLICKCURL_API
 void flickcurl_free_upload_status(flickcurl_upload_status* status);
+FLICKCURL_API
 FLICKCURL_DEPRECATED void flickcurl_upload_status_free(flickcurl_upload_status* status);
 
+FLICKCURL_API
 char* flickcurl_array_join(const char *array[], char delim);
+FLICKCURL_API
 char** flickcurl_array_split(const char *str, char delim);
+FLICKCURL_API
 void flickcurl_array_free(char *array[]);
 
 /* ignore these */
