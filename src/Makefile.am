@@ -69,6 +69,3 @@ test-api.c \
 upload-api.c \
 urls-api.c \
 flickcurl_internal.h
-
-EXTRA_DIST= \
-example.c
