@@ -34,7 +34,7 @@ AC_SUBST(FLICKCURL_VERSION_DECIMAL)
 AM_INIT_AUTOMAKE([1.7 check-news std-options -Wobsolete -Wportability -Wsyntax -Wunsupported])
 
 # Checks for programs.
-AC_PROG_CC
+AM_PROG_CC_C_O
 
 m4_undefine([AC_PROG_CXX])
 m4_defun([AC_PROG_CXX],[])
