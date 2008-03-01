@@ -1,4 +1,18 @@
-<!-- ##### SECTION Stability_Level ##### -->
+<!-- ##### SECTION ./tmpl/flickcurl-unused.sgml:Stability_Level ##### -->
 
 
+
+<!-- ##### STRUCT flickcurl_category_s ##### -->
+<para>
+
+</para>
+
+@id: 
+@name: 
+@path: 
+@count: 
+@categories: 
+@categories_count: 
+@groups: 
+@groups_count: 
 

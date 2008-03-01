@@ -14,25 +14,21 @@ Unused.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### MACRO FLICKCURL_API ##### -->
+<para>
+
+</para>
+
+
+
 <!-- ##### STRUCT flickcurl_s ##### -->
 <para>
 
 </para>
 
-
-<!-- ##### STRUCT flickcurl_category_s ##### -->
-<para>
-
-</para>
-
-@id: 
-@name: 
-@path: 
-@count: 
-@categories: 
-@categories_count: 
-@groups: 
-@groups_count: 
 
 <!-- ##### STRUCT flickcurl_photo_s ##### -->
 <para>

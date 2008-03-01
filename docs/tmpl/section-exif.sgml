@@ -14,6 +14,9 @@ EXIF photo metadata.
 
 </para>
 
+<!-- ##### SECTION Stability_Level ##### -->
+
+
 <!-- ##### STRUCT flickcurl_exif ##### -->
 <para>
 
