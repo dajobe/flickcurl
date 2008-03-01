@@ -15,7 +15,7 @@ int main(int argc, char *argv[]);
 int main(int argc, char *argv[]) {
   flickcurl *fc;
   flickcurl_photo *photo;
-  flickcurl_photo_field field;
+  flickcurl_photo_field_type field_type;
   int i;
 
   flickcurl_init(); /* optional static initialising of resources */
@@ -28,14 +28,15 @@ int main(int argc, char *argv[]) {
 
   photo=flickcurl_photos_getInfo(fc, "123456789"); /* photo ID */
 
-  for(field=0; field <= PHOTO_FIELD_LAST; field++) {
-    flickcurl_field_value_type datatype=photo->fields[field].type;
+  for(field_type=0; field_type <= PHOTO_FIELD_LAST; field_type++) {
+    flickcurl_field_value_type datatype=photo->fields[field_type].type;
     
     if(datatype != VALUE_TYPE_NONE)
       fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
-              flickcurl_get_photo_field_label(field), field,
+              flickcurl_get_photo_field_label(field_type), (int)field_type,
               flickcurl_get_field_value_type_label(datatype),
-              photo->fields[field].string, photo->fields[field].integer);
+              photo->fields[field_type].string,
+              photo->fields[field_type].integer);
   }
 
   for(i=0; i < photo->tags_count; i++) {
