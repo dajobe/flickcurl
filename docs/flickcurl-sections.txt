@@ -299,6 +299,7 @@ flickcurl_license
 
 <SECTION>
 <FILE>section-unused</FILE>
+FLICKCURL_API
 flickcurl_s
 flickcurl_category_s
 flickcurl_photo_s
