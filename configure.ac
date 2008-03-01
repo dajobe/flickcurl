@@ -52,6 +52,7 @@ libcurl_min_vernum=070A00
 # Checks for header files.
 AC_HEADER_STDC
 AC_CHECK_HEADERS([errno.h getopt.h stdlib.h string.h unistd.h])
+AC_HEADER_TIME
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
