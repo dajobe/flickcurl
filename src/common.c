@@ -37,6 +37,9 @@
 #ifdef HAVE_ERRNO_H
 #include <errno.h>
 #endif
+#ifdef HAVE_TIME_H
+#include <time.h>
+#endif
 
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
@@ -527,7 +530,7 @@ compare_args(const void *a, const void *b)
 static void
 flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 {
-  qsort(parameters, count, sizeof(char*[2]), compare_args);
+  qsort((void*)parameters, count, sizeof(char*[2]), compare_args);
 }
 
 
@@ -1070,7 +1073,7 @@ flickcurl_unixtime_to_isotime(time_t unix_time)
   size_t len;
   char *value=NULL;
   
-  structured_time=gmtime(&unix_time);
+  structured_time=(struct tm*)gmtime(&unix_time);
   len=ISO_DATE_LEN;
   strftime(date_buffer, len+1, ISO_DATE_FORMAT, structured_time);
   
@@ -1090,7 +1093,7 @@ flickcurl_unixtime_to_sqltimestamp(time_t unix_time)
   size_t len;
   char *value=NULL;
   
-  structured_time=gmtime(&unix_time);
+  structured_time=(struct tm*)gmtime(&unix_time);
   len=ISO_DATE_LEN;
   strftime(date_buffer, len+1, SQL_DATETIME_FORMAT, structured_time);
   
