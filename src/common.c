@@ -799,6 +799,106 @@ flickcurl_prepare_upload(flickcurl *fc,
 }
 
 
+/* Need gettimeofday() which is a BSD function not POSIX so may not
+ * be in standard C libraries
+ */
+
+#ifdef HAVE_GETTIMEOFDAY
+#ifdef WIN32
+/* have it as an external function */
+int gettimeofday(struct timeval* tp, void *tzp);
+#endif
+
+#else
+
+/* seconds between 1 Jan 1601 (windows epoch) and 1 Jan 1970 (unix epoch) */
+#define EPOCH_WIN_UNIX_DELTA 11644473600.0
+
+/* 100 nano-seconds (=1/10 usec) in seconds */
+#define NSEC100 (1e-7)
+
+/* factor to convert high-dword count into seconds = NSEC100 * (2<<32) */
+#define 4GIGANSEC100 (4294967296e-7)
+
+static int
+gettimeofday(struct timeval* tp, void* tzp)
+{
+  FILETIME ft;
+  double t;
+  
+  /* returns time since windows epoch in 100ns (1/10us) units */
+  GetSystemTimeAsFileTime(&ft);
+
+  /* convert time into seconds as a double */
+  t = ((ft.dwHighDateTime * 4GIGANSEC100) - EPOCH_WIN_UNIX_DELTA) +
+      (ft.dwLowDateTime  * NSEC100);
+
+  tv->tv_sec  = (long) t;
+  tv->tv_usec = (long) ((t - tv->tv_sec) * 1e6);
+
+  /* tzp is ignored */
+
+  return 0;
+}
+#endif
+/* end HAVE_GETTIMEOFDAY */
+
+
+/* Need nanosleep() to wait between service calls */
+#ifdef HAVE_NANOSLEEP
+/* nop */
+#else
+
+#ifdef WIN32
+struct timespec
+{
+  long int tv_sec;              /* seconds */
+  long int tv_nsec;             /* nanoseconds */
+};
+#endif
+
+static int
+nanosleep(const struct timespec *rqtp, struct timespec *rmtp)
+{
+  unsigned int msec;
+  unsigned int sec;
+
+  sec= rqtp->tv_sec;
+  msec= (rqtp->tv_nsec / 1000000);
+
+  /* carefully avoid sleeping forever with a sleep(0) */
+#ifdef WIN32
+  msec += 1000 * sec;
+  if(!msec)
+    msec=1;
+
+  Sleep(msec);
+#else
+  /* otherwise use sleep() (POSIX) and possibly usleep() (4.3BSD) */
+  if(sec > 0)
+    sleep(sec);
+  else {
+    /* 0 seconds so ensure msec is at least 1 */
+    if(!msec)
+      msec=1;
+  }
+#ifdef HAVE_USLEEP
+  /* use usleep() for fractions of a second only (when available)
+   * since some implementations won't let it sleep for more than a
+   * second.
+   */
+  if(msec > 0)
+    usleep(msec * 1000);
+#endif
+#endif
+
+  return 0;
+}
+
+#endif
+/* end HAVE_NANOSLEEP */
+
+
 xmlDocPtr
 flickcurl_invoke(flickcurl *fc)
 {
