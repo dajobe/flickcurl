@@ -818,7 +818,7 @@ int gettimeofday(struct timeval* tp, void *tzp);
 #define NSEC100 (1e-7)
 
 /* factor to convert high-dword count into seconds = NSEC100 * (2<<32) */
-#define 4GIGANSEC100 (4294967296e-7)
+#define FOUR_GIGA_NSEC100 (4294967296e-7)
 
 static int
 gettimeofday(struct timeval* tp, void* tzp)
@@ -830,7 +830,7 @@ gettimeofday(struct timeval* tp, void* tzp)
   GetSystemTimeAsFileTime(&ft);
 
   /* convert time into seconds as a double */
-  t = ((ft.dwHighDateTime * 4GIGANSEC100) - EPOCH_WIN_UNIX_DELTA) +
+  t = ((ft.dwHighDateTime * FOUR_GIGA_NSEC100) - EPOCH_WIN_UNIX_DELTA) +
       (ft.dwLowDateTime  * NSEC100);
 
   tv->tv_sec  = (long) t;
