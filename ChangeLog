@@ -1,3 +1,94 @@
+2008-03-01  Dave Beckett <dave@dajobe.org>
+
+	* src/win32_flickcurl_config.h: win32_flickcurl_config.h for
+	windows config
+
+	* configure.ac: Test for usleep.  Warn, don't fail if no nanosleep
+	is present, the static version can be used.
+
+	* src/common.c: (gettimeofday): Added static version for win32
+	based on GetSystemTimeAsFileTime()
+	(nanosleep): Added static version for win32 or other systems based
+	on Sleep, sleep and/or usleep.
+
+2008-02-29  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac: Use AM_PROG_CC_C_O to stop libtool warnings
+
+	* docs/tmpl/flickcurl-unused.sgml,
+	docs/tmpl/section-activity.sgml, docs/tmpl/section-auth.sgml,
+	docs/tmpl/section-blogs.sgml, docs/tmpl/section-category.sgml,
+	docs/tmpl/section-comment.sgml, docs/tmpl/section-contact.sgml,
+	docs/tmpl/section-context.sgml, docs/tmpl/section-core.sgml,
+	docs/tmpl/section-exif.sgml, docs/tmpl/section-favorite.sgml,
+	docs/tmpl/section-general.sgml, docs/tmpl/section-group.sgml,
+	docs/tmpl/section-misc.sgml, docs/tmpl/section-people.sgml,
+	docs/tmpl/section-person.sgml, docs/tmpl/section-photo.sgml,
+	docs/tmpl/section-photoset.sgml, docs/tmpl/section-place.sgml,
+	docs/tmpl/section-reflection.sgml, docs/tmpl/section-tag.sgml,
+	docs/tmpl/section-test.sgml, docs/tmpl/section-unused.sgml,
+	docs/tmpl/section-upload.sgml, docs/tmpl/section-urls.sgml: gtkdoc
+
+	* NOTICE: url
+
+	* LICENSE.html: Make it clear it's any newer version
+
+	* docs/flickcurl-sections.txt: Add FLICKCURL_API
+
+	* examples/Makefile.am: example Makefile.am
+
+	* src/activity-api.c, src/activity.c, src/args.c, src/auth-api.c,
+	src/blog.c, src/blogs-api.c, src/category.c, src/comments.c,
+	src/common.c, src/config.c, src/contacts-api.c, src/contacts.c,
+	src/context.c, src/exif.c, src/favorites-api.c, src/group.c,
+	src/groups-api.c, src/groups-pools-api.c,
+	src/interestingness-api.c, src/location.c, src/md5.c,
+	src/method.c, src/people-api.c, src/perms.c, src/person.c,
+	src/photo.c, src/photos-api.c, src/photos-comments-api.c,
+	src/photos-geo-api.c, src/photos-licenses-api.c,
+	src/photos-notes-api.c, src/photos-transform-api.c,
+	src/photos-upload-api.c, src/photoset.c, src/photosets-api.c,
+	src/photosets-comments-api.c, src/place.c, src/places-api.c,
+	src/reflection-api.c, src/size.c, src/tags-api.c, src/tags.c,
+	src/test-api.c, src/ticket.c, src/upload-api.c, src/urls-api.c,
+	src/user_upload_status.c, src/vsnprintf.c: Conditionally include
+	win32_flickcurl_config.h if WIN32 defined
+
+	* configure.ac: Add -DFLICKCURL_INTERNAL to CPPFLAGS
+
+	* src/flickcurl.h: Add FLICKCURL_API macro for handling win32
+	declspec dllexport/dllimport
+
+	* src/common.c: Add AC_HEADER_TIME standed ifdef headers to get
+	time structs and prototypes.
+
+	* configure.ac: Add AC_HEADER_TIME
+
+	* src/common.c: Add time.h if it's present for time prototype
+	functions.
+	(flickcurl_sort_args): Cast for qsort array
+	(flickcurl_unixtime_to_isotime,
+	flickcurl_unixtime_to_sqltimestamp): Casts for gmtime() return
+	value.
+
+	* src/example.c: move example.c to examples/
+
+	* examples, examples/print-photo-info.c: Added new example based
+	on old src/example.c
+
+	* Makefile.am, configure.ac: Added examples dir
+
+	* src/Makefile.am: Removed example.c
+
+	* src/example.c: Change flickcurl_photo_field field to
+	flickcurl_photo_field_type field_type;
+
+2008-02-17  Dave Beckett <dave@dajobe.org>
+
+	* INSTALL: Remove INSTALL from svn
+
+	* autogen.sh: Update autogen.sh to latest
+
 2008-02-11  Dave Beckett <dave@dajobe.org>
 
 	* src/photosets-api.c: (flickcurl_photosets_create): Initialise
