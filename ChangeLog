@@ -1,4 +1,13 @@
+2008-03-04  Dave Beckett <dave@dajobe.org>
+
+	* src/person.c, src/photo.c: Add cast for time_t to int to prevent
+	non-gcc compiler warning
+
 2008-03-01  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: Use FOUR_GIGA_NSEC100 as legal macro name
+
+	* configure.ac: Search for gettimeofday and nanosleep
 
 	* src/win32_flickcurl_config.h: win32_flickcurl_config.h for
 	windows config
