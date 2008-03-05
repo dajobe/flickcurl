@@ -26,6 +26,27 @@ response and error message.  Fixed.</p>
 <p><code>flickcurl</code> help message was edited to use USER-NSID
 not USER-ID.</p>
 
+<p>Fixed example code and renamed it to
+examples/print-photo-info.c</p>
+
+<p>Portability fixes for time headers.</p>
+
+<p>Win32 compilation fixes:</p>
+<ul>
+<li>Add FLICKCURL_API macro for handling win32 declspec
+dllexport and dllimport.</li>
+<li>Added check for FLICKCURL_STATIC macro to compile without dll parts</li>
+<li>Added FLICKCURL_INTERNAL define when compiling library</li>
+<li>Added some casts to remove warnings</li>
+</ul>
+
+<p>Add portable gettimeofday() which does not exist on Win32 and may
+not exist on non-BSD systems.</p>
+
+<p>Added an implementation of nanosleep() using (on win32) Sleep(),
+sleep() and/or usleep().</p>
+
+
 
 <h2 id="D2008-01-28">2008-01-28 Flickcurl 1.2</h2>
 
