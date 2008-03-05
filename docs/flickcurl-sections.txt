@@ -234,6 +234,14 @@ flickcurl_places_resolvePlaceURL
 </SECTION>
 
 <SECTION>
+<FILE>section-prefs</FILE>
+flickcurl_prefs_getContentType
+flickcurl_prefs_getHidden
+flickcurl_prefs_getPrivacy
+flickcurl_prefs_getSafetyLevel
+</SECTION>
+
+<SECTION>
 <FILE>section-reflection</FILE>
 flickcurl_arg
 flickcurl_method
