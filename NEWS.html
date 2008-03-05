@@ -15,6 +15,14 @@
 
 <p>Not yet released</p>
 
+<p>4 new Flickr API calls for updates to the new prefs APIs:</p>
+<pre>
+  int flickcurl_prefs_getContentType(flickcurl* fc);
+  int flickcurl_prefs_getHidden(flickcurl* fc);
+  int flickcurl_prefs_getPrivacy(flickcurl* fc);
+  int flickcurl_prefs_getSafetyLevel(flickcurl* fc);
+</pre>
+
 <p><code>flickcurl_photosets_create()</code> performed the creation
 but failed to set up the XML xpath context so returned a failure
 response and error message.  Fixed.</p>
@@ -66,9 +74,9 @@ in librt and libposix4 for building on Solaris.
 
 <p>2 new Flickr API calls for updates to the places APIs:</p>
 <pre>
-flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
-flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat,
-                                               double lon, int accuracy);
+  flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
+  flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat,
+                                                 double lon, int accuracy);
 </pre>
 
 <p>Added <em>type</em> field to <code>flickcurl_place</code> structure
