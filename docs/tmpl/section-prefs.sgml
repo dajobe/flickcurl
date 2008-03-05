@@ -1,0 +1,57 @@
+<!-- ##### SECTION Title ##### -->
+section-prefs
+
+<!-- ##### SECTION Short_Description ##### -->
+User preferences
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+User preferences
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION flickcurl_prefs_getContentType ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_prefs_getHidden ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_prefs_getPrivacy ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_prefs_getSafetyLevel ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
