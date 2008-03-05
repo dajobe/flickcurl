@@ -321,7 +321,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 #endif
             free(string_value);
             string_value= new_value;
-            int_value= unix_time;
+            int_value= (int)unix_time;
             datatype=VALUE_TYPE_DATETIME;
           } else
             /* failed to convert, make it a string */
