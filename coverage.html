@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (109/109)</span>
+<span class="coverage">100.0% (113/113)</span>
 </p>
 
 
@@ -243,6 +243,14 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceURL.html">flickr.places.resolvePlaceURL</a> (1.0)</li>
 </ul>
 
+<h3>prefs</h3>
+<ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.prefs.getContentType.html">flickr.prefs.getContentType</a> (1.3)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.prefs.getHidden.html">flickr.prefs.getHidden</a> (1.3)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.prefs.getPrivacy.html">flickr.prefs.getPrivacy</a> (1.3)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.prefs.getSafetyLevel.html">flickr.prefs.getSafetyLevel</a> (1.3)</li>
+</ul>
+
 
 <h3>reflection</h3>
 
@@ -285,6 +293,15 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.3</strong>: flickr.prefs.getContentType, flickr.prefs.getHidden, flickr.prefs.getPrivacy, flickr.prefs.getSafetyLevel (4 new)</p>
+<pre>
+int flickcurl_prefs_getContentType(flickcurl* fc);
+int flickcurl_prefs_getHidden(flickcurl* fc);
+int flickcurl_prefs_getPrivacy(flickcurl* fc);
+int flickcurl_prefs_getSafetyLevel(flickcurl* fc);
+</pre>
+
 
 <p><strong>1.1</strong>: flickr.places.find, flickr.places.findByLatLon (2 new)</p>
 <pre>

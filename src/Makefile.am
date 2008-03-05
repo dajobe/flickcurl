@@ -63,6 +63,7 @@ photos-upload-api.c \
 photosets-api.c \
 photosets-comments-api.c \
 places-api.c \
+prefs-api.c \
 reflection-api.c \
 tags-api.c \
 test-api.c \

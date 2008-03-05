@@ -2613,6 +2613,64 @@ command_places_findByLatLon(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_prefs_getContentType(flickcurl* fc, int argc, char *argv[])
+{
+  int content_type;
+
+  content_type=flickcurl_prefs_getContentType(fc);
+  if(content_type) {
+    fprintf(stderr, "%s: Content type preference is %d\n", program,
+            content_type);
+  }
+
+  return (content_type <0);
+}
+
+
+static int
+command_prefs_getHidden(flickcurl* fc, int argc, char *argv[])
+{
+  int hidden;
+
+  hidden=flickcurl_prefs_getHidden(fc);
+  if(hidden >= 0) {
+    fprintf(stderr, "%s: Hidden preference is %d\n", program, hidden);
+  }
+
+  return (hidden < 0);
+}
+
+
+static int
+command_prefs_getPrivacy(flickcurl* fc, int argc, char *argv[])
+{
+  int privacy;
+
+  privacy=flickcurl_prefs_getPrivacy(fc);
+  if(privacy >= 0) {
+    fprintf(stderr, "%s: Privacy preference is %d\n", program, privacy);
+  }
+
+  return (privacy < 0);
+}
+
+
+static int
+command_prefs_getSafetyLevel(flickcurl* fc, int argc, char *argv[])
+{
+  int safety_level;
+
+  safety_level=flickcurl_prefs_getSafetyLevel(fc);
+  if(safety_level >= 0) {
+    fprintf(stderr, "%s: Safety level preference is %d\n", program,
+            safety_level);
+  }
+
+  return (safety_level < 0);
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -2919,6 +2977,19 @@ static flickcurl_cmd commands[] = {
   {"places.resolvePlaceURL",
    "PLACE-URL", "Find Flickr Places information by PLACE-URL.",
    command_places_resolvePlaceURL, 1, 1},
+
+  {"prefs.getContentType",
+   "", "Get default content type preference for user.",
+   command_prefs_getContentType, 0, 0},
+  {"prefs.getHidden",
+   "", "Get default hidden preference for user.",
+   command_prefs_getHidden, 0, 0},
+  {"prefs.getPrivacy",
+   "", "Get default privacy preference for user.",
+   command_prefs_getPrivacy, 0, 0},
+  {"prefs.getSafetyLevel",
+   "", "Get default safety level for user.",
+   command_prefs_getSafetyLevel, 0, 0},
 
   {"reflection.getMethods",
    "", "Get API methods",

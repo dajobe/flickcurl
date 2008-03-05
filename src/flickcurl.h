@@ -1389,7 +1389,17 @@ FLICKCURL_API
 int flickcurl_photosets_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
 FLICKCURL_API
 flickcurl_comment** flickcurl_photosets_comments_getList(flickcurl* fc, const char* photoset_id);
-  
+
+/* flickr.prefs */
+FLICKCURL_API
+int flickcurl_prefs_getContentType(flickcurl* fc);
+FLICKCURL_API
+int flickcurl_prefs_getHidden(flickcurl* fc);
+FLICKCURL_API
+int flickcurl_prefs_getPrivacy(flickcurl* fc);
+FLICKCURL_API
+int flickcurl_prefs_getSafetyLevel(flickcurl* fc);
+
 /* flickr.reflection */
 FLICKCURL_API
 void flickcurl_free_method(flickcurl_method *method);
