@@ -107,6 +107,8 @@ flickcurl_free_place(flickcurl_place *place)
       free(place->ids[i]);
     if(place->urls[i])
       free(place->urls[i]);
+    if(place->woe_ids[i])
+      free(place->woe_ids[i]);
   }
   
   free(place);
@@ -138,8 +140,10 @@ flickcurl_free_places(flickcurl_place **places_object)
 #define PLACE_ID   1
 /* place->urls[x] */
 #define PLACE_URL  2
+/* place->woe_ids[x] */
+#define PLACE_WOE_ID  3
 
-#define PLACE_TYPE 3
+#define PLACE_TYPE 4
 
 /*
  * The XPaths here are relative, such as prefixed by /rsp/place
@@ -168,9 +172,21 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./@woeid",
+    FLICKCURL_PLACE_LOCATION,
+    PLACE_WOE_ID
+  }
+  ,
+  {
     (const xmlChar*)"./locality/@place_id",
     FLICKCURL_PLACE_LOCALITY,
     PLACE_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"./locality/@woeid",
+    FLICKCURL_PLACE_LOCALITY,
+    PLACE_WOE_ID,
   }
   ,
   {
@@ -186,6 +202,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./county/@woeid",
+    FLICKCURL_PLACE_COUNTY,
+    PLACE_WOE_ID,
+  }
+  ,
+  {
     (const xmlChar*)"./county",
     FLICKCURL_PLACE_COUNTY,
     PLACE_NAME,
@@ -198,6 +220,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./region/@woeid",
+    FLICKCURL_PLACE_REGION,
+    PLACE_WOE_ID,
+  }
+  ,
+  {
     (const xmlChar*)"./region",
     FLICKCURL_PLACE_REGION,
     PLACE_NAME,
@@ -207,6 +235,12 @@ static struct {
     (const xmlChar*)"./country/@place_id",
     FLICKCURL_PLACE_COUNTRY,
     PLACE_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"./country/@woeid",
+    FLICKCURL_PLACE_COUNTRY,
+    PLACE_WOE_ID,
   }
   ,
   {
@@ -315,6 +349,10 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           
         case PLACE_ID:
           place->ids[(int)place_type]=value;
+          break;
+
+        case PLACE_WOE_ID:
+          place->woe_ids[(int)place_type]=value;
           break;
 
         case PLACE_URL:
