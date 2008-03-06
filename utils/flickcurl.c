@@ -301,8 +301,9 @@ command_print_place(flickcurl_place* place,
     char* name=place->names[i];
     char* id=place->ids[i];
     char* url=place->urls[i];
+    char* woe_id=place->woe_ids[i];
     
-    if(!name && !id && !url)
+    if(!name && !id && !url && !woe_id)
       continue;
     
     fprintf(stderr, "%d) place %s:", i, flickcurl_get_place_type_label(i));
@@ -310,6 +311,8 @@ command_print_place(flickcurl_place* place,
       fprintf(stderr," name '%s'", name);
     if(id)
       fprintf(stderr," id %s", id);
+    if(woe_id)
+      fprintf(stderr," woeid %s", woe_id);
     if(url)
       fprintf(stderr," url '%s'", url);
     fputc('\n', stderr);
@@ -2966,16 +2969,16 @@ static flickcurl_cmd commands[] = {
    command_photosets_comments_getList, 1, 1},
 
   {"places.find",
-   "TEXT", "Find Flickr Places by TEXT query.",
+   "TEXT", "Find places by TEXT query.",
    command_places_find, 1, 1},
   {"places.findByLatLon",
-   "LAT LON ACCURACY", "Find Flickr Places by LAT and LON with ACCURACY 1-16.",
+   "LAT LON ACCURACY", "Find places by LAT and LON with ACCURACY 1-16.",
    command_places_findByLatLon, 3, 3},
   {"places.resolvePlaceId",
-   "PLACE-ID", "Find Flickr Places information by PLACE-ID.",
+   "PLACE-ID  / WOE-ID", "Find places information by PLACE-ID or WOE-ID (number).",
    command_places_resolvePlaceId, 1, 1},
   {"places.resolvePlaceURL",
-   "PLACE-URL", "Find Flickr Places information by PLACE-URL.",
+   "PLACE-URL", "Find places information by PLACE-URL.",
    command_places_resolvePlaceURL, 1, 1},
 
   {"prefs.getContentType",
