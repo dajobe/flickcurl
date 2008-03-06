@@ -77,7 +77,13 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
   "locality_placeid",
   "county_placeid",
   "region_placeid",
-  "country_placeid"
+  "country_placeid",
+  "location_woeid",
+  "neighborhood_woeid",
+  "locality_woeid",
+  "county_woeid",
+  "region_woeid",
+  "country_woeid"
 };
 
 
@@ -446,8 +452,20 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./location/@woeid",
+    PHOTO_FIELD_location_woeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./location/neighborhood/@place_id",
     PHOTO_FIELD_neighborhood_placeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./location/neighborhood/@woeid",
+    PHOTO_FIELD_neighborhood_woeid,
     VALUE_TYPE_STRING
   }
   ,
@@ -458,8 +476,20 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./location/locality/@woeid",
+    PHOTO_FIELD_locality_woeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./location/region/@place_id",
     PHOTO_FIELD_region_placeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./location/region/@woeid",
+    PHOTO_FIELD_region_woeid,
     VALUE_TYPE_STRING
   }
   ,
@@ -470,14 +500,32 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./location/county/@woeid",
+    PHOTO_FIELD_county_woeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./location/region/@place_id",
     PHOTO_FIELD_region_placeid,
     VALUE_TYPE_STRING
   }
   ,
   {
+    (const xmlChar*)"./location/region/@woeid",
+    PHOTO_FIELD_region_woeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./location/country/@place_id",
     PHOTO_FIELD_country_placeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./location/country/@woeid",
+    PHOTO_FIELD_country_woeid,
     VALUE_TYPE_STRING
   }
   ,
