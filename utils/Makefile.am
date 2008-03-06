@@ -17,7 +17,7 @@
 
 bin_PROGRAMS = flickcurl flickrdf
 
-EXTRA_PROGRAMS = codegen
+EXTRA_PROGRAMS = codegen list-methods
 
 AM_CPPFLAGS= -I$(top_srcdir)/src 
 
@@ -48,3 +48,9 @@ if GETOPT
 codegen_SOURCES += getopt.c flickcurl_getopt.h
 endif
 codegen_LDADD= $(top_builddir)/src/libflickcurl.la
+
+list_methods_SOURCES = list-methods.c
+if GETOPT
+list_methods_SOURCES += getopt.c flickcurl_getopt.h
+endif
+list_methods_LDADD= $(top_builddir)/src/libflickcurl.la
