@@ -199,8 +199,14 @@ typedef enum {
   PHOTO_FIELD_county_placeid,
   PHOTO_FIELD_region_placeid,
   PHOTO_FIELD_country_placeid,
+  PHOTO_FIELD_location_woeid,
+  PHOTO_FIELD_neighborhood_woeid,
+  PHOTO_FIELD_locality_woeid,
+  PHOTO_FIELD_county_woeid,
+  PHOTO_FIELD_region_woeid,
+  PHOTO_FIELD_country_woeid,
   PHOTO_FIELD_FIRST = PHOTO_FIELD_dateuploaded,
-  PHOTO_FIELD_LAST = PHOTO_FIELD_country_placeid,
+  PHOTO_FIELD_LAST = PHOTO_FIELD_country_woeid,
 } flickcurl_photo_field_type;
 
 
@@ -438,6 +444,7 @@ typedef enum {
  * @urls: Array of place urls.
  * @type: Location type of index 0 (the location) usually 
  *        FLICKCURL_PLACE_LOCATION but may be wider
+ * @woe_ids: Array of WOE IDs
  *
  * A Place.
  *
@@ -451,6 +458,7 @@ typedef struct
   char* ids[FLICKCURL_PLACE_LAST+1];
   char* urls[FLICKCURL_PLACE_LAST+1];
   flickcurl_place_type type;
+  char* woe_ids[FLICKCURL_PLACE_LAST+1];
 } flickcurl_place;
   
 
