@@ -11,11 +11,10 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-XX-XX">2008-XX-XX Flickcurl 1.3</h2>
+<h2 id="D2008-03-08">2008-03-08 Flickcurl 1.3</h2>
 
-<p>Not yet released</p>
-
-<p>4 new Flickr API calls for updates to the new prefs APIs:</p>
+<p>4 new Flickr API calls for updates to the new
+<code>flickr.prefs</code> APIs:</p>
 <pre>
   int flickcurl_prefs_getContentType(flickcurl* fc);
   int flickcurl_prefs_getHidden(flickcurl* fc);
@@ -23,23 +22,25 @@
   int flickcurl_prefs_getSafetyLevel(flickcurl* fc);
 </pre>
 
-<p><code>flickcurl_photosets_create()</code> performed the creation
-but failed to set up the XML xpath context so returned a failure
-response and error message.  Fixed.</p>
+<p>Fixed <code>flickcurl_photosets_create()</code> to return properly
+on success.  It used to do the creation correctly but failed to set
+up the XML xpath context so returned a failure response and error
+message even on success..</p>
 
-<p><code>flickcurl</code> photosets.create has 3 args not 4.</p>
-
-<p>Added documentation on how to do Flickr authentication.</p>
+<p>Fixed <code>flickcurl</code> photosets.create command to take 3
+args not 4.</p>
 
 <p><code>flickcurl</code> help message was edited to use USER-NSID
-not USER-ID.</p>
+for NSIDs not USER-ID for user login IDs.</p>
+
+<p>Added documentation section on how to do Flickr authentication.</p>
 
 <p>Fixed example code and renamed it to
 examples/print-photo-info.c</p>
 
 <p>Portability fixes for time headers.</p>
 
-<p>Win32 compilation fixes:</p>
+<p>Win32 and portability compilation fixes:</p>
 <ul>
 <li>Add FLICKCURL_API macro for handling win32 declspec
 dllexport and dllimport.</li>
@@ -51,9 +52,17 @@ dllexport and dllimport.</li>
 <p>Add portable gettimeofday() which does not exist on Win32 and may
 not exist on non-BSD systems.</p>
 
-<p>Added an implementation of nanosleep() using (on win32) Sleep(),
-sleep() and/or usleep().</p>
+<p>Added an implementation of the nanosleep() using either on win32:
+Sleep() or on unixes: sleep() and/or usleep().</p>
 
+<p>Added support for place woeid field and added new photo fields
+<code>PHOTO_FIELD_location_woeid</code>,
+<code>PHOTO_FIELD_neighborhood_woeid</code>,
+<code>PHOTO_FIELD_locality_woeid</code>,
+<code>PHOTO_FIELD_county_woeid</code>,
+<code>PHOTO_FIELD_region_woeid</code> and
+<code>PHOTO_FIELD_country_woeid</code>.
+</p>
 
 
 <h2 id="D2008-01-28">2008-01-28 Flickcurl 1.2</h2>
