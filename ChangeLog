@@ -1,4 +1,30 @@
+2008-03-05  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: (command_print_place): Added woe ID printing.
+	Tidy places help messages
+
+	* src/place.c: Added place woe_ids parsing
+
+	* src/photo.c: Add photo woeid fields parsing
+
+	* src/flickcurl.h: Added WOE ID photo fiels:
+	PHOTO_FIELD_location_woeid, PHOTO_FIELD_neighborhood_woeid,
+	PHOTO_FIELD_locality_woeid, PHOTO_FIELD_county_woeid,
+	PHOTO_FIELD_region_woeid and PHOTO_FIELD_country_woeid
+	flickcurl_place gains woe_ids array
+
+	* utils/Makefile.am, utils/list-methods.c: Added list-methods
+	example utility
+
 2008-03-04  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-prefs.sgml, docs/flickcurl-docs.xml: Added
+	section-prefs.xml
+
+	* coverage.html, src/Makefile.am, src/flickcurl.h,
+	src/prefs-api.c, utils/flickcurl.c: Added flickr.prefs calls
+	flickcurl_prefs_getContentType, flickcurl_prefs_getHidden,
+	flickcurl_prefs_getPrivacy and flickcurl_prefs_getSafetyLevel
 
 	* src/person.c, src/photo.c: Add cast for time_t to int to prevent
 	non-gcc compiler warning
