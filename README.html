@@ -227,19 +227,20 @@ $ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
 
 <h2>Library use example</h2>
 
-<p>See <code>example.c</code></p>
+<p>See <code>examples/print-photo-info.c</code></p>
 <pre>
 #include &lt;stdio.h&gt;
 #include &lt;flickcurl.h&gt;
 
-int main() {
+int main(int argc, char *argv[]);
+
+int main(int argc, char *argv[]) {
   flickcurl *fc;
   flickcurl_photo *photo;
-  flickcurl_photo_field field;
+  flickcurl_photo_field_type field_type;
   int i;
-  
+
   flickcurl_init(); /* optional static initialising of resources */
-  
   fc=flickcurl_new();
 
   /* Set configuration, or more likely read from a config file */
@@ -249,28 +250,33 @@ int main() {
 
   photo=flickcurl_photos_getInfo(fc, "123456789"); /* photo ID */
 
-  for(field=0; field &lt;= PHOTO_FIELD_LAST; field++) {
-    flickcurl_field_value_type datatype=photo-&gt;fields[field].type;
+  for(field_type=0; field_type &lt;= PHOTO_FIELD_LAST; field_type++) {
+    flickcurl_field_value_type datatype=photo-&gt;fields[field_type].type;
     
     if(datatype != VALUE_TYPE_NONE)
       fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
-              flickcurl_get_photo_field_label(field), field,
+              flickcurl_get_photo_field_label(field_type), (int)field_type,
               flickcurl_get_field_value_type_label(datatype),
-              photo-&gt;fields[field].string, photo-&gt;fields[field].integer);
+              photo-&gt;fields[field_type].string,
+              photo-&gt;fields[field_type].integer);
   }
 
   for(i=0; i &lt; photo-&gt;tags_count; i++) {
     flickcurl_tag* tag=photo-&gt;tags[i];
-    fprintf(stderr, "%d) %s tag: id %s author %s raw '%s' cooked '%s'\n",
+    fprintf(stderr,
+            "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
             i, (tag-&gt;machine_tag ? "machine" : "regular"),
-            tag-&gt;id, tag-&gt;author, tag-&gt;raw, tag-&gt;cooked);
+            tag-&gt;id, tag-&gt;author, 
+            (tag-&gt;authorname ? tag-&gt;authorname : "(Unknown)"), 
+            tag-&gt;raw, tag-&gt;cooked,
+            tag-&gt;count);
   }
 
   flickcurl_free_photo(photo);
-
   flickcurl_free(fc);
-
   flickcurl_finish(); /* optional static free of resources */
+
+  return 0;
 }
 </pre>
 
