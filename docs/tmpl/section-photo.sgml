@@ -121,6 +121,12 @@ Photo.
 @PHOTO_FIELD_county_placeid: 
 @PHOTO_FIELD_region_placeid: 
 @PHOTO_FIELD_country_placeid: 
+@PHOTO_FIELD_location_woeid: 
+@PHOTO_FIELD_neighborhood_woeid: 
+@PHOTO_FIELD_locality_woeid: 
+@PHOTO_FIELD_county_woeid: 
+@PHOTO_FIELD_region_woeid: 
+@PHOTO_FIELD_country_woeid: 
 @PHOTO_FIELD_FIRST: 
 @PHOTO_FIELD_LAST: 
 
