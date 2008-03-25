@@ -1402,6 +1402,8 @@ flickcurl_comment** flickcurl_photosets_comments_getList(flickcurl* fc, const ch
 FLICKCURL_API
 int flickcurl_prefs_getContentType(flickcurl* fc);
 FLICKCURL_API
+int flickcurl_prefs_getGeoPerms(flickcurl* fc);
+FLICKCURL_API
 int flickcurl_prefs_getHidden(flickcurl* fc);
 FLICKCURL_API
 int flickcurl_prefs_getPrivacy(flickcurl* fc);

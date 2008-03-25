@@ -2674,6 +2674,20 @@ command_prefs_getSafetyLevel(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_prefs_getGeoPerms(flickcurl* fc, int argc, char *argv[])
+{
+  int geo_perms;
+
+  geo_perms=flickcurl_prefs_getGeoPerms(fc);
+  if(geo_perms >= 0) {
+    fprintf(stderr, "%s: Geographic information preference is %d\n", program, geo_perms);
+  }
+
+  return (geo_perms < 0);
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -2984,6 +2998,9 @@ static flickcurl_cmd commands[] = {
   {"prefs.getContentType",
    "", "Get default content type preference for user.",
    command_prefs_getContentType, 0, 0},
+  {"prefs.getGeoPerms",
+   "", "Get default privacy level for geographic info for user.",
+   command_prefs_getGeoPerms, 0, 0},
   {"prefs.getHidden",
    "", "Get default hidden preference for user.",
    command_prefs_getHidden, 0, 0},

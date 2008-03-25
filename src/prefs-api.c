@@ -93,6 +93,37 @@ flickcurl_prefs_getContentType(flickcurl* fc)
 
 
 /**
+ * flickcurl_prefs_getGeoPerms:
+ * @fc: flickcurl context
+ * 
+ * Returns the default privacy level for geographic information attached to the user's photos. 
+ *
+ * Possible values are: 0: no default, 1: public, 2: contacts only, 3: friends
+ * and family only, 4: friends only, 5: family only, 6: private.
+ *
+ * Implements flickr.prefs.getGeoPerms (1.4)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_prefs_getGeoPerms(flickcurl* fc)
+{
+  char* v;
+  int r= -1;
+
+  v=flickcurl_call_get_one_string_field(fc, NULL, NULL,
+                                        "flickr.prefs.getGeoPerms",
+                                        (const xmlChar*)"/rsp/person/@geoperms");
+  if(v) {
+    r=atoi(v);
+    free(v);
+  }
+
+  return r;
+}
+
+
+/**
  * flickcurl_prefs_getHidden:
  * @fc: flickcurl context
  * 

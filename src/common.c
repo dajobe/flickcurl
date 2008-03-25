@@ -1359,11 +1359,10 @@ flickcurl_call_get_one_string_field(flickcurl* fc,
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
 
-  if(!value)
-    return NULL;
-  
-  parameters[count][0]  = key;
-  parameters[count++][1]= value;
+  if(key && value) {
+    parameters[count][0]  = key;
+    parameters[count++][1]= value;
+  }
 
   parameters[count][0]  = NULL;
 
