@@ -236,6 +236,7 @@ flickcurl_places_resolvePlaceURL
 <SECTION>
 <FILE>section-prefs</FILE>
 flickcurl_prefs_getContentType
+flickcurl_prefs_getGeoPerms
 flickcurl_prefs_getHidden
 flickcurl_prefs_getPrivacy
 flickcurl_prefs_getSafetyLevel

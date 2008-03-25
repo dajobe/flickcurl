@@ -26,6 +26,15 @@ User preferences
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_prefs_getGeoPerms ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_prefs_getHidden ##### -->
 <para>
 
