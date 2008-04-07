@@ -304,6 +304,10 @@ flickcurl_get_location_accuracy_label
 flickcurl_get_shared_secret
 flickcurl_interestingness_getList
 flickcurl_license
+flickcurl_get_content_type_label
+flickcurl_get_content_type_from_string
+flickcurl_get_safety_level_label
+flickcurl_get_safety_level_from_string
 </SECTION>
 
 <SECTION>
