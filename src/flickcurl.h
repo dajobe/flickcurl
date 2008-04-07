@@ -149,6 +149,8 @@ typedef enum {
  * @PHOTO_FIELD_county_placeid: county place ID
  * @PHOTO_FIELD_region_placeid: region place ID
  * @PHOTO_FIELD_country_placeid: country place ID
+ * @PHOTO_FIELD_location_woeid: location WOE ID
+ * @PHOTO_FIELD_neighborhood_woeid: neighborhood WOE ID
  * @PHOTO_FIELD_locality_woeid: locality WOE ID
  * @PHOTO_FIELD_county_woeid: county WOE ID
  * @PHOTO_FIELD_region_woeid: region WOE ID
