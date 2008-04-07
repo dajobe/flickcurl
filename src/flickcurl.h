@@ -149,6 +149,10 @@ typedef enum {
  * @PHOTO_FIELD_county_placeid: county place ID
  * @PHOTO_FIELD_region_placeid: region place ID
  * @PHOTO_FIELD_country_placeid: country place ID
+ * @PHOTO_FIELD_locality_woeid: locality WOE ID
+ * @PHOTO_FIELD_county_woeid: county WOE ID
+ * @PHOTO_FIELD_region_woeid: region WOE ID
+ * @PHOTO_FIELD_country_woeid: country WOE ID
  * @PHOTO_FIELD_none: internal
  * @PHOTO_FIELD_FIRST: internal offset to first in enum list
  * @PHOTO_FIELD_LAST: internal offset to last in enum list
