@@ -82,7 +82,9 @@ extern char *optarg;
 #endif
 
 
+static int verbose=0;
 static const char* program;
+
 
 static const char*
 my_basename(const char *name)
@@ -133,9 +135,9 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 
 #ifdef HAVE_GETOPT_LONG
 /* + makes GNU getopt_long() never permute the arguments */
-#define GETOPT_STRING "+a:d:hv"
+#define GETOPT_STRING "+a:d:hvV"
 #else
-#define GETOPT_STRING "a:d:hv"
+#define GETOPT_STRING "a:d:hvV"
 #endif
 
 #ifdef FLICKCURL_MANPAGE
@@ -155,6 +157,7 @@ static struct option long_options[] =
   {"manpage", 0, 0, 'm'},
 #endif
   {"version", 0, 0, 'v'},
+  {"verbose", 0, 0, 'V'},
   {NULL,      0, 0, 0}
 };
 #endif
@@ -983,33 +986,71 @@ command_photosets_comments_getList(flickcurl* fc, int argc, char *argv[])
 
 
 static void
-print_upload_status(flickcurl_upload_status* status, const char* label)
+print_upload_status(FILE* handle, flickcurl_upload_status* status,
+                    const char* label)
 {
   if(label)
-    fprintf(stderr, "%s: %s status\n", program, label);
+    fprintf(handle, "%s: %s status\n", program, label);
   if(status->photoid)
-    fprintf(stderr, "  Photo ID: %s\n", status->photoid);
+    fprintf(handle, "  Photo ID: %s\n", status->photoid);
   if(status->secret)
-    fprintf(stderr, "  Secret: %s\n", status->secret);
+    fprintf(handle, "  Secret: %s\n", status->secret);
   if(status->originalsecret)
-    fprintf(stderr, "  Original Secret: %s\n", status->originalsecret);
+    fprintf(handle, "  Original Secret: %s\n", status->originalsecret);
   if(status->ticketid)
-    fprintf(stderr, "  Ticket ID: %s\n", status->ticketid);
+    fprintf(handle, "  Ticket ID: %s\n", status->ticketid);
+}
+
+
+static const char* yn_strings[2]={"no", "yes"};
+
+static const char*
+yesno(int v) 
+{
+  return yn_strings[(v ? 1 : 0)];
+}
+
+
+static void
+print_upload_params(FILE* handle, flickcurl_upload_params* params,
+                    const char* label)
+{
+  if(label)
+    fprintf(handle, "%s: %s\n", program, label);
+
+  fprintf(handle, "  File: %s\n", params->photo_file);
+  if(params->title)
+    fprintf(handle, "  Title: '%s'\n", params->title);
+  else
+    fprintf(handle, "  Title: none\n");
+  if(params->description)
+    fprintf(handle, "  Description: '%s'\n", params->description);
+  else
+    fprintf(handle, "  Description: none\n");
+  fprintf(handle, "  Tags: %s\n", (params->tags ? params->tags : ""));
+  fprintf(handle, "  Viewable by Public: %s  Friends: %s  Family: %s\n",
+          yesno(params->is_public), yesno(params->is_friend),
+          yesno(params->is_family));
+  fprintf(handle, "  Safety level: %s (%d)\n",
+          flickcurl_get_safety_level_label(params->safety_level),
+          params->safety_level);
+  fprintf(handle, "  Content type: %s (%d)\n",
+          flickcurl_get_content_type_label(params->content_type),
+          params->content_type);
 }
 
 
 static int
 command_upload(flickcurl* fc, int argc, char *argv[])
 {
-  const char *file=argv[1];
   char *tags_string=NULL;
   flickcurl_upload_status* status=NULL;
   int usage=0;
   flickcurl_upload_params params;
   
   memset(&params, '\0', sizeof(flickcurl_upload_params));
-  params.safety_level=1;
-  params.content_type=1;
+  params.safety_level=1; /* default safe */
+  params.content_type=1; /* default photo */
   
   
   argv++; argc--;
@@ -1023,49 +1064,50 @@ command_upload(flickcurl* fc, int argc, char *argv[])
   }
 
   argv++; argc--;
-  for(; !usage && argc; argv++, argc--) {
+  while(!usage && argc) {
+    char* field=argv[0];
     argv++; argc--;
-    if(!strcmp(argv[0], "description")) {
-      argv++; argc--;
+
+    if(!strcmp(field, "description")) {
       params.description=argv[0];
-    } else if(!strcmp(argv[0], "title")) {
       argv++; argc--;
+    } else if(!strcmp(field, "title")) {
       params.title=argv[0];
-    } else if(!strcmp(argv[0], "safety_level")) {
       argv++; argc--;
-      params.safety_level=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "content_type")) {
+    } else if(!strcmp(field, "safety_level")) {
+      params.safety_level=flickcurl_get_safety_level_from_string(argv[0]);
       argv++; argc--;
-      params.content_type=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "friend")) {
+    } else if(!strcmp(field, "content_type")) {
+      params.content_type=flickcurl_get_content_type_from_string(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "friend")) {
       params.is_friend=1;
-    } else if(!strcmp(argv[0], "family")) {
+    } else if(!strcmp(field, "family")) {
       params.is_family=1;
-    } else if(!strcmp(argv[0], "public")) {
+    } else if(!strcmp(field, "public")) {
       params.is_public=1;
-    } else if(!strcmp(argv[0], "tags")) {
+    } else if(!strcmp(field, "tags")) {
       size_t tags_len=0;
       int i;
       char *p;
 
       /* tags absorb all remaining parameters */
-      for(i=1; i<argc; i++)
+      for(i=0; i<argc; i++)
         tags_len+=strlen(argv[i])+1;
       tags_string=(char*)malloc(tags_len);
       
       p=tags_string;
-      for(i=1; i<argc; i++) {
+      for(i=0; i<argc; i++) {
         size_t tag_len=strlen(argv[i]);
         strncpy(p, argv[i], tag_len); p+= tag_len;
         *p++=' ';
       }
       *(--p)='\0';
       
-      fprintf(stderr, "%s: Setting tags: '%s'\n", program, tags_string);
       params.tags=tags_string;
       break;
     } else {
-      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, field);
       usage=1;
     }
   }
@@ -1074,12 +1116,15 @@ command_upload(flickcurl* fc, int argc, char *argv[])
     status=NULL;
     goto tidy;
   }
-  
-  fprintf(stderr, "%s: Uploading file %s\n", program, file);
-  
+
+  if(!verbose)
+    fprintf(stderr, "%s: Uploading file %s\n", program, params.photo_file);
+  else
+    print_upload_params(stderr, &params, "Photo upload");
+
   status=flickcurl_photos_upload_params(fc, &params);
   if(status) {
-    print_upload_status(status, "Photo upload");
+    print_upload_status(stderr, status, "Photo upload");
 
     flickcurl_free_upload_status(status);
   }
@@ -1112,7 +1157,7 @@ command_replace(flickcurl* fc, int argc, char *argv[])
 
   status=flickcurl_photos_replace(fc, file, photo_id, async);
   if(status) {
-    print_upload_status(status, "Photo replace");
+    print_upload_status(stderr, status, "Photo replace");
 
     flickcurl_free_upload_status(status);
   }
@@ -1130,15 +1175,13 @@ command_photos_setContentType(flickcurl* fc, int argc, char *argv[])
   const char* content_type_str=argv[2];
   int content_type;
 
-  if(!strcmp(content_type_str, "photo"))
-    content_type=1;
-  else if(!strcmp(content_type_str, "screenshot"))
-    content_type=2;
-  else {
-    content_type_str="other";
-    content_type=3;
+  content_type=flickcurl_get_content_type_from_string(content_type_str);
+  if(content_type < 0) {
+    fprintf(stderr, "%s: Bad content type '%s'\n", program, content_type_str);
+    return 1;
   }
 
+  content_type_str=flickcurl_get_content_type_label(content_type);
   fprintf(stderr, "%s: Setting photo %s to content type %d (%s)\n",
           program, photo_id, content_type, content_type_str);
   
@@ -1200,12 +1243,20 @@ static int
 command_photos_setSafetyLevel(flickcurl* fc, int argc, char *argv[])
 {
   const char *photo_id=argv[1];
-  int safety_level=atoi(argv[2]);
+  const char* safety_level_str=argv[2];
   int hidden=atoi(argv[3]);
+  int safety_level;
 
-  if(safety_level < 1 || safety_level >3)
-    safety_level= -1;
+  safety_level=flickcurl_get_safety_level_from_string(safety_level_str);
+  if(safety_level < 0) {
+    fprintf(stderr, "%s: Bad safety level '%s'\n", program, safety_level_str);
+    return 1;
+  }
 
+  safety_level_str=flickcurl_get_safety_level_label(safety_level);
+  fprintf(stderr, "%s: Setting photo %s safety level to %d (%s), hidden %d\n",
+          program, photo_id, safety_level, safety_level_str, hidden);
+  
   return flickcurl_photos_setSafetyLevel(fc, photo_id, safety_level, hidden);
 }
 
@@ -1215,11 +1266,10 @@ command_print_perms(flickcurl_perms* perms, int show_comment_metadata)
 {
   static const char* perms_labels[4]={"nobody", "friends and family", "contacts", "everybody" };
 
-#define YESNO(x) ((x) ? "yes" : "no")
   fprintf(stderr,
           "view perms: public: %s  contact: %s  friend: %s  family: %s\n",
-          YESNO(perms->is_public), YESNO(perms->is_contact),
-          YESNO(perms->is_friend), YESNO(perms->is_family));
+          yesno(perms->is_public), yesno(perms->is_contact),
+          yesno(perms->is_friend), yesno(perms->is_family));
 
 #define PERM_LABEL(x) (((x) >=0 && (x) <= 3) ? perms_labels[(x)] : "?")
   if(show_comment_metadata)
@@ -1285,100 +1335,102 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
   memset(&params, '\0', sizeof(flickcurl_search_params));
   
   argv++; argc--;
-  
-  for(; !usage && argc; argv++, argc--) {
-    if(!strcmp(argv[0], "user")) {
-      argv++; argc--;
+  while(!usage && argc) {
+    char* field=argv[0];
+    argv++; argc--;
+
+    if(!strcmp(field, "user")) {
       params.user_id=argv[0];
-    } else if(!strcmp(argv[0], "tag-mode")) {
       argv++; argc--;
+    } else if(!strcmp(field, "tag-mode")) {
       /* "any" or "all" */
       params.tag_mode=argv[0];
-    } else if(!strcmp(argv[0], "text")) {
       argv++; argc--;
+    } else if(!strcmp(field, "text")) {
       params.text=argv[0];
-    } else if(!strcmp(argv[0], "min-upload-date")) {
-      /* timestamp */
       argv++; argc--;
+    } else if(!strcmp(field, "min-upload-date")) {
+      /* timestamp */
       params.min_upload_date=curl_getdate(argv[0], NULL);
-    } else if(!strcmp(argv[0], "max-upload-date")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "max-upload-date")) {
       /* timestamp */
-      argv++; argc--;
       params.max_upload_date=curl_getdate(argv[0], NULL);
-    } else if(!strcmp(argv[0], "min-taken-date")) {
-      /* MYSQL datetime */
       argv++; argc--;
+    } else if(!strcmp(field, "min-taken-date")) {
+      /* MYSQL datetime */
       params.min_taken_date=argv[0];
-    } else if(!strcmp(argv[0], "max-taken-date")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "max-taken-date")) {
       /* MYSQL datetime */
-      argv++; argc--;
       params.max_taken_date=argv[0];
-    } else if(!strcmp(argv[0], "license")) {
       argv++; argc--;
+    } else if(!strcmp(field, "license")) {
       params.license=argv[0];
-    } else if(!strcmp(argv[0], "sort")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "sort")) {
       /* date-posted-asc, date-posted-desc (default), date-taken-asc,
        * date-taken-desc, interestingness-desc, interestingness-asc,
        * and relevance
        */
-      argv++; argc--;
       params.sort=argv[0];
-    } else if(!strcmp(argv[0], "privacy")) {
       argv++; argc--;
+    } else if(!strcmp(field, "privacy")) {
       params.privacy_filter=argv[0];
-    } else if(!strcmp(argv[0], "bbox")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "bbox")) {
       /* "a,b,c,d" */
-      argv++; argc--;
       params.bbox=argv[0];
-    } else if(!strcmp(argv[0], "accuracy")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "accuracy")) {
       /* int 1-16 */
-      argv++; argc--;
       params.accuracy=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "safe-search")) {
-      /* int Safe search setting: 1 safe, 2 moderate, 3 restricted. */
       argv++; argc--;
+    } else if(!strcmp(field, "safe-search")) {
+      /* int Safe search setting: 1 safe, 2 moderate, 3 restricted. */
       params.safe_search=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "type")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "type")) {
       /* int Content Type setting: 1 for photos only, 2 for screenshots
        * only, 3 for 'other' only, 4 for all types. */
-      argv++; argc--;
       params.content_type=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "machine-tags")) {
       argv++; argc--;
+    } else if(!strcmp(field, "machine-tags")) {
       params.machine_tags=argv[0];
-    } else if(!strcmp(argv[0], "machine-tag-mode")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "machine-tag-mode")) {
       /* any (default) or all */
-      argv++; argc--;
       params.machine_tag_mode=argv[0];
-    } else if(!strcmp(argv[0], "group-id")) {
       argv++; argc--;
+    } else if(!strcmp(field, "group-id")) {
       params.group_id=argv[0];
-    } else if(!strcmp(argv[0], "extras")) {
       argv++; argc--;
+    } else if(!strcmp(field, "extras")) {
       params.extras=argv[0];
-    } else if(!strcmp(argv[0], "per-page")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "per-page")) {
       /* int: default 100, max 500 */
-      argv++; argc--;
       params.per_page=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "page")) {
-      /* int: default 1 */
       argv++; argc--;
+    } else if(!strcmp(field, "page")) {
+      /* int: default 1 */
       params.page=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "place-id")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "place-id")) {
       argv++; argc--;
       params.place_id=argv[0];
-    } else if(!strcmp(argv[0], "tags")) {
+    } else if(!strcmp(field, "tags")) {
       size_t tags_len=0;
       int j;
       char *p;
 
       /* tags absorb all remaining parameters */
-      for(j=1; j<argc; j++)
+      for(j=0; j<argc; j++)
         tags_len+=strlen(argv[j])+1;
       tags_string=(char*)malloc(tags_len);
       
       p=tags_string;
-      for(j=1; j<argc; j++) {
+      for(j=0; j<argc; j++) {
         size_t tag_len=strlen(argv[j]);
         strncpy(p, argv[j], tag_len); p+= tag_len;
         *p++=',';
@@ -2286,23 +2338,26 @@ command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
   
   argv++; argc--;
   
-  for(; !usage && argc; argv++, argc--) {
-    if(!strcmp(argv[0], "date")) {
-      argv++; argc--;
+  while(!usage && argc) {
+    char* field=argv[0];
+    argv++; argc--;
+
+    if(!strcmp(field, "date")) {
       date=argv[0];
-    } else if(!strcmp(argv[0], "extras")) {
       argv++; argc--;
+    } else if(!strcmp(field, "extras")) {
       extras=argv[0];
-    } else if(!strcmp(argv[0], "per-page")) {
+      argv++; argc--;
+    } else if(!strcmp(field, "per-page")) {
       /* int: default 100, max 500 */
-      argv++; argc--;
       per_page=atoi(argv[0]);
-    } else if(!strcmp(argv[0], "page")) {
-      /* int: default 1 */
       argv++; argc--;
+    } else if(!strcmp(field, "page")) {
+      /* int: default 1 */
       page=atoi(argv[0]);
+      argv++; argc--;
     } else {
-      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, field);
       usage=1;
     }
   }
@@ -3232,6 +3287,10 @@ main(int argc, char *argv[])
         fputc('\n', stdout);
 
         exit(0);
+
+      case 'V':
+        verbose++;
+        break;
     }
     
   }
@@ -3326,6 +3385,7 @@ main(int argc, char *argv[])
     puts(HELP_TEXT("m", "manpage         ", "Print a manpage fragment for commands, then exit"));
 #endif
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
+    puts(HELP_TEXT("V", "verbose         ", "Print more information while running"));
 
     fputs("\nCommands:\n", stdout);
     for(i=0; commands[i].name; i++)
