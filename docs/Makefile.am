@@ -38,7 +38,7 @@ IGNORE_CFILES=
 
 # Headers to ignore
 IGNORE_HFILES= \
-	config.h \
+	config.h win32_flickcurl_config.h \
 	flickcurl_internal.h
 
 # CFLAGS and LDFLAGS for compiling scan program. Only needed
