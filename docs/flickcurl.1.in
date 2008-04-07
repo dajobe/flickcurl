@@ -17,17 +17,20 @@ These programs follow the usual GNU command line syntax, with long
 options starting with two dashes (`-').
 A summary of options is included below.
 .TP
+.B \-a \fIFROB\fP, \-\-auth \fIFROB\fP
+Authenticate with a \fIFROB\fP and write auth config.
+.TP
+.B \-d \fIDELAY\fP, \-\-delay \fIDELAY\fP
+Set delay between requests to \fIDELAY\fP milliseconds.
+.TP
 .B \-h, \-\-help
 Show summary of options and exit.
 .TP
 .B \-v, \-\-version
 Display the version of the program and exit.
 .TP
-.B \-d \fIDELAY\fP, \-\-delay \fIDELAY\fP
-Set delay between requests to \fIDELAY\fP milliseconds.
-.TP
-.B \-a \fIFROB\fP, \-\-auth \fIFROB\fP
-Authenticate with a \fIFROB\fP and write auth config.
+.B \-V, \-\-verbose
+Display more information while the program runs.
 .SH COMMANDS
 .SH SEE ALSO
 .BR flickrdf (1).
