@@ -217,9 +217,10 @@ typedef enum {
 
 
 /**
- * @flickcurl:
+ * flickcurl:
  *
- * Flickcurl session object created by flickcurl_new() and destroyed by flickcurl_free()
+ * Flickcurl session object created by flickcurl_new() and destroyed
+ * by flickcurl_free()
  */
 typedef struct flickcurl_s flickcurl;
   
