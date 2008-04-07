@@ -1502,7 +1502,9 @@ static const char* flickcurl_content_type_labels[CONTENT_TYPE_COUNT+1]=
  * flickcurl_get_content_type_label:
  * @content_type: safety level index
  * 
- * Returns: pointer to shared string label for content type or "unknown"
+ * Get label for a content type.
+ *
+ * Return value: pointer to shared string label for content type or "unknown"
  **/
 const char*
 flickcurl_get_content_type_label(int content_type)
@@ -1513,6 +1515,17 @@ flickcurl_get_content_type_label(int content_type)
 }
 
 
+/**
+ * flickcurl_get_content_type_from_string:
+ * @content_type_string: string
+ * 
+ * Get the enumeration value for a content type string.
+ *
+ * Parses the string value into a content type either from an
+ * integer form like '1' or a label like 'photo'.
+ * 
+ * Returns: content type enumeration value or <0 on error
+ **/
 int
 flickcurl_get_content_type_from_string(const char* content_type_string)
 {
@@ -1545,7 +1558,9 @@ static const char* flickcurl_safety_level_labels[SAFETY_LEVEL_COUNT+1]=
  * flickcurl_get_safety_level_label:
  * @safety_level: safety level index
  * 
- * Returns: pointer to shared string label for safety level or "unknown"
+ * Get label for a safety level.
+ *
+ * Return value: pointer to shared string label for safety level or "unknown"
  **/
 const char*
 flickcurl_get_safety_level_label(int safety_level)
@@ -1556,6 +1571,17 @@ flickcurl_get_safety_level_label(int safety_level)
 }
 
 
+/**
+ * flickcurl_get_safety_level_from_string:
+ * @safety_level_string: string
+ * 
+ * Get the enumeration value for a safety level string.
+ *
+ * Parses the string value into a safety level either from an
+ * integer form like '1' or a label like 'safe'.
+ * 
+ * Returns: safety level enumeration value or <0 on error
+ **/
 int
 flickcurl_get_safety_level_from_string(const char* safety_level_string)
 {
