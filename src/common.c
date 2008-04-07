@@ -1446,7 +1446,7 @@ flickcurl_array_split(const char *str, char delim)
       array_size++;
   }
   
-  array=(char**)malloc(array_size+1);
+  array=(char**)malloc(sizeof(char*)*(array_size+1));
   if(!array)
     return NULL;
 
@@ -1492,3 +1492,88 @@ flickcurl_array_free(char* array[])
   free(array);
 }
 
+
+#define CONTENT_TYPE_COUNT 3
+static const char* flickcurl_content_type_labels[CONTENT_TYPE_COUNT+1]=
+  {"unknown", "photo", "screenshot", "other"};
+
+
+/**
+ * flickcurl_get_content_type_label:
+ * @content_type: safety level index
+ * 
+ * Returns: pointer to shared string label for content type or "unknown"
+ **/
+const char*
+flickcurl_get_content_type_label(int content_type)
+{
+  if(content_type < 1 || content_type > CONTENT_TYPE_COUNT)
+    content_type= 0;
+  return flickcurl_content_type_labels[content_type];
+}
+
+
+int
+flickcurl_get_content_type_from_string(const char* content_type_string)
+{
+  char* endptr=NULL;
+  int content_type = -1;
+
+  content_type=(int)strtol(content_type_string, &endptr, 10);
+  /* If not all of string was used - fail */
+  if(endptr && *endptr)
+    content_type= -1;
+  if(content_type < 1 || content_type > CONTENT_TYPE_COUNT) {
+    int i;
+    for(i=1; i< CONTENT_TYPE_COUNT; i++)
+      if(!strcmp(flickcurl_content_type_labels[i], content_type_string)) {
+        content_type=i;
+        break;
+      }
+  }
+
+  return content_type;
+}
+
+
+#define SAFETY_LEVEL_COUNT 4
+static const char* flickcurl_safety_level_labels[SAFETY_LEVEL_COUNT+1]=
+  {"unknown", "safe", "moderate", "restricted", "(no change)"};
+
+
+/**
+ * flickcurl_get_safety_level_label:
+ * @safety_level: safety level index
+ * 
+ * Returns: pointer to shared string label for safety level or "unknown"
+ **/
+const char*
+flickcurl_get_safety_level_label(int safety_level)
+{
+  if(safety_level < 1 || safety_level > SAFETY_LEVEL_COUNT)
+    safety_level= 0;
+  return flickcurl_safety_level_labels[safety_level];
+}
+
+
+int
+flickcurl_get_safety_level_from_string(const char* safety_level_string)
+{
+  char* endptr=NULL;
+  int safety_level= -1;
+
+  safety_level=(int)strtol(safety_level_string, &endptr, 10);
+  /* If not all of string was used - fail */
+  if(endptr && *endptr)
+    safety_level= -1;
+  if(safety_level < 1 || safety_level > SAFETY_LEVEL_COUNT) {
+    int i;
+    for(i=1; i< SAFETY_LEVEL_COUNT; i++)
+      if(!strcmp(flickcurl_safety_level_labels[i], safety_level_string)) {
+        safety_level=i;
+        break;
+      }
+  }
+
+  return safety_level;
+}

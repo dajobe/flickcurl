@@ -1129,6 +1129,15 @@ const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type data
 FLICKCURL_API
 const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
 
+FLICKCURL_API
+const char* flickcurl_get_content_type_label(int content_type);
+FLICKCURL_API
+int flickcurl_get_content_type_from_string(const char* content_type_string);
+FLICKCURL_API
+const char* flickcurl_get_safety_level_label(int safety_level);
+FLICKCURL_API
+int flickcurl_get_safety_level_from_string(const char* safety_level_string);
+
 
 /**
  * set_config_var_handler:
