@@ -109,3 +109,39 @@ Miscellaneous functions.
 @url: 
 @name: 
 
+<!-- ##### FUNCTION flickcurl_get_content_type_label ##### -->
+<para>
+
+</para>
+
+@content_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_content_type_from_string ##### -->
+<para>
+
+</para>
+
+@content_type_string: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_safety_level_label ##### -->
+<para>
+
+</para>
+
+@safety_level: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_safety_level_from_string ##### -->
+<para>
+
+</para>
+
+@safety_level_string: 
+@Returns: 
+
+
