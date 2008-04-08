@@ -65,7 +65,6 @@ static const char* program;
 static int debug=0;
 
 #ifdef HAVE_RAPTOR
-static raptor_serializer* serializer=NULL;
 #else
 static int output_turtle=0;
 #endif
@@ -214,21 +213,44 @@ flickrdf_init(void)
 }
 
 
-static void
-emit_namespace(FILE* fh, flickrdf_nspace* ns)
+struct flickrdf_context_s
 {
+  void *data;
+  void (*emit_namespace)(struct flickrdf_context_s* frc, flickrdf_nspace* ns);
+  void (*emit_triple)(struct flickrdf_context_s* frc,
+                      const char* subject, raptor_identifier_type subject_type,
+                      const char* predicate_nspace, const char* predicate_name,
+                      const char *object, raptor_identifier_type object_type,
+                      const char *datatype_uri);
+  void (*emit_finish)(struct flickrdf_context_s* frc);
+};
+
+typedef struct flickrdf_context_s flickrdf_context;
+
+
+
 #ifdef HAVE_RAPTOR
+static void
+ser_emit_namespace(flickrdf_context* frc, flickrdf_nspace* ns)
+{
+  raptor_serializer* serializer=(raptor_serializer*)frc->data;
   raptor_uri *ns_uri=NULL;
 
   ns_uri=raptor_new_uri((const unsigned char*)ns->uri);
   raptor_serialize_set_namespace(serializer, ns_uri, 
                                  (const unsigned char*)ns->prefix);
   raptor_free_uri(ns_uri);
+}
 #else
+static void
+fh_emit_namespace(flickrdf_context* frc, flickrdf_nspace* ns)
+{
+  FILE *fh=(FILE*)frc->data;
+
   if(output_turtle)
     fprintf(fh, "@prefix %s: <%s> .\n", ns->prefix, ns->uri);
-#endif
 }
+#endif
 
 
 #ifdef HAVE_RAPTOR
@@ -239,15 +261,16 @@ emit_namespace(FILE* fh, flickrdf_nspace* ns)
 #define raptor_identifier_type int
 #endif
 
+#ifdef HAVE_RAPTOR
 /* subject/object type: 0 literal, 1 uri, 2 blank */
 static void
-emit_triple(FILE* fh,
-            const char* subject, raptor_identifier_type subject_type,
-            const char* predicate_nspace, const char* predicate_name,
-            const char *object, raptor_identifier_type object_type,
-            const char *datatype_uri)
+ser_emit_triple(flickrdf_context* frc,
+                const char* subject, raptor_identifier_type subject_type,
+                const char* predicate_nspace, const char* predicate_name,
+                const char *object, raptor_identifier_type object_type,
+                const char *datatype_uri)
 {
-#ifdef HAVE_RAPTOR
+  raptor_serializer* serializer=(raptor_serializer*)frc->data;
   raptor_statement s;
   raptor_uri* predicate_ns_uri;
   
@@ -283,7 +306,18 @@ emit_triple(FILE* fh,
     raptor_free_uri((raptor_uri*)s.object);
   if(datatype_uri)
     raptor_free_uri(s.object_literal_datatype);
+}
 #else
+/* subject/object type: 0 literal, 1 uri, 2 blank */
+static void
+fh_emit_triple(flickrdf_context* frc,
+               const char* subject, raptor_identifier_type subject_type,
+               const char* predicate_nspace, const char* predicate_name,
+               const char *object, raptor_identifier_type object_type,
+               const char *datatype_uri)
+{
+  FILE *fh=(FILE*)frc->data;
+
   if(subject_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     fprintf(fh, "<%s>", subject);
   else /* blank node */
@@ -304,8 +338,25 @@ emit_triple(FILE* fh,
     fprintf(fh, "_:%s", object);
   
   fputs(" . \n", fh);
-#endif
 }
+#endif
+
+
+#ifdef HAVE_RAPTOR
+static void
+ser_emit_finish(flickrdf_context* frc)
+{
+  raptor_serializer* serializer=(raptor_serializer*)frc->data;
+  raptor_serialize_end(serializer);
+}
+#else
+static void
+fh_emit_finish(flickrdf_context* frc)
+{
+  FILE *fh=(FILE*)frc->data;
+  fflush(fh);
+}
+#endif
 
 
 static flickrdf_nspace*
@@ -410,16 +461,15 @@ free_nspaces(flickrdf_nspace* list)
 }
     
 
-
 static int
-flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
+flickrdf(flickrdf_context* frc, flickcurl* fc, const char* photo_id)
 {
   flickcurl_photo* photo;
   int i;
   int need_person=0;
   flickrdf_nspace* nspaces=NULL;
   flickrdf_nspace* ns;
-  
+
   photo=flickcurl_photos_getInfo(fc, photo_id);
 
   if(!photo)
@@ -496,21 +546,21 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
 
   /* generate seen namespace declarations */
   for(ns=nspaces; ns; ns=ns->next)
-    emit_namespace(fh, ns);
+    frc->emit_namespace(frc, ns);
   
   if(need_person) {
-    emit_triple(fh, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-                DC_NS, "creator",
-                "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
-                NULL);
-    emit_triple(fh, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
-                RDF_NS, "type",
-                FOAF_NS "Person", RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-                NULL);
-    emit_triple(fh, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
-                FOAF_NS, "maker",
-                photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-                NULL);
+    frc->emit_triple(frc, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+                     DC_NS, "creator",
+                     "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
+                     NULL);
+    frc->emit_triple(frc, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
+                     RDF_NS, "type",
+                     FOAF_NS "Person", RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+                     NULL);
+    frc->emit_triple(frc, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
+                     FOAF_NS, "maker",
+                     photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+                     NULL);
   }
   
 
@@ -595,15 +645,15 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
       }
 
       if(field_table[f].flags & FIELD_FLAGS_PERSON)
-        emit_triple(fh, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
-                    field_table[f].nspace_uri, field_table[f].name,
-                    object, type,
-                    datatype_uri);
+        frc->emit_triple(frc, "person", RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
+                         field_table[f].nspace_uri, field_table[f].name,
+                         object, type,
+                         datatype_uri);
       else
-        emit_triple(fh, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-                    field_table[f].nspace_uri, field_table[f].name,
-                    object, type,
-                    datatype_uri);
+        frc->emit_triple(frc, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+                         field_table[f].nspace_uri, field_table[f].name,
+                         object, type,
+                         datatype_uri);
       break;
     }
   }
@@ -652,10 +702,10 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
               program, p, f, v, 
               ns->uri);
     
-    emit_triple(fh, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-                ns->uri, f,
-                v, RAPTOR_IDENTIFIER_TYPE_LITERAL, 
-                NULL);
+    frc->emit_triple(frc, photo->uri, RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+                     ns->uri, f,
+                     v, RAPTOR_IDENTIFIER_TYPE_LITERAL, 
+                     NULL);
     
   }
   
@@ -664,6 +714,8 @@ flickrdf(FILE* fh, flickcurl* fc, const char* photo_id)
   
   flickcurl_free_photo(photo);
 
+  frc->emit_finish(frc);
+  
   return 0;
 }
 
@@ -689,8 +741,10 @@ main(int argc, char *argv[])
 #ifdef HAVE_RAPTOR
   const char *serializer_syntax_name="ntriples";
   raptor_uri* base_uri=NULL;
+  raptor_serializer* serializer=NULL;
 #endif
   int request_delay= -1;
+  flickrdf_context frc;
 
   program=my_basename(argv[0]);
 
@@ -934,18 +988,30 @@ main(int argc, char *argv[])
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
 
+  memset(&frc, sizeof(flickrdf_context), '\0');
+  
   /* Perform the API call */
-  rc=flickrdf(stdout, fc, photo_id);
+#ifdef HAVE_RAPTOR
+  frc.data=serializer;
+  frc.emit_namespace=ser_emit_namespace;
+  frc.emit_triple=ser_emit_triple;
+  frc.emit_finish=ser_emit_finish;
+#else
+  frc.data=stdout;
+  frc.emit_namespace=fh_emit_namespace;
+  frc.emit_triple=fh_emit_triple;
+  frc.emit_finish=fh_emit_finish;
+#endif
+
+  rc=flickrdf(&frc, fc, photo_id);
 
  tidy:
   if(fc)
     flickcurl_free(fc);
 
 #ifdef HAVE_RAPTOR
-  if(serializer) {
-    raptor_serialize_end(serializer);
+  if(serializer)
     raptor_free_serializer(serializer);
-  }
   if(base_uri)
     raptor_free_uri(base_uri);
   
