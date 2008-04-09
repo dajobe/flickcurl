@@ -52,6 +52,9 @@
  * 
  * Returns the list of interesting photos for the most recent day or a user-specified date.
  *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.interestingness.getList (0.13)
  * 
  * Return value: non-0 on failure

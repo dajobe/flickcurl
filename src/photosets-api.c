@@ -505,6 +505,9 @@ flickcurl_photosets_getList(flickcurl* fc, const char* user_id)
  * date_taken, owner_name, icon_server, original_format,
  * last_update.
  *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.photosets.getPhotos (0.13)
  * 
  * Return value: list of photos or NULL on failure

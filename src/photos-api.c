@@ -193,6 +193,9 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
  * 
  * Fetch a list of recent photos from the calling users' contacts.
  *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.photos.getContactsPhotos (0.11)
  * 
  * Return value: non-0 on failure
@@ -279,6 +282,9 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
  * last_update. (or NULL)
  * 
  * Fetch a list of recent public photos from a users' contacts.
+ *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Implements flickr.photos.getContactsPublicPhotos (0.12)
  * 
@@ -940,6 +946,9 @@ flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
  * 
  * Returns a list of the latest public photos uploaded to flickr.
  *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.photos.getRecent (0.12)
  * 
  * Return value: non-0 on failure
@@ -1187,6 +1196,9 @@ flickcurl_photos_getWithoutGeoData(flickcurl* fc,
  * description, tags) may have been changed or a comment has been
  * added (or just modified somehow :-)
  *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.photos.recentlyUpdated (0.12)
  * 
  * Return value: non-0 on failure
@@ -1316,13 +1328,17 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  *
  * Flickcurl 1.0: Added place_id for places API as announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
+ *
+ * Optional parameter "media" that defaults to "all" but can also be
+ * set to "photos" or "videos" to filter results by media type.
+ * API addition 2008-04-07.
  * 
  * Return value: an array of #flickcurl_photo or NULL
  **/
 flickcurl_photo**
 flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
 {
-  const char* parameters[29][2];
+  const char* parameters[30][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -1439,6 +1455,10 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
   if(params->place_id) {
     parameters[count][0]  = "place_id";
     parameters[count++][1]= params->place_id;
+  }
+  if(params->media) {
+    parameters[count][0]  = "media";
+    parameters[count++][1]= params->media;
   }
   parameters[count][0]  = NULL;
 

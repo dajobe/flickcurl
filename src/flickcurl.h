@@ -74,8 +74,6 @@ extern "C" {
 
 /**
  * flickcurl_field_value_type:
- * @VALUE_TYPE_PHOTO_ID: photo ID
- * @VALUE_TYPE_PHOTO_URI: photo URI
  * @VALUE_TYPE_UNIXTIME: a unixtime
  * @VALUE_TYPE_BOOLEAN: boolean
  * @VALUE_TYPE_DATETIME: date time
@@ -84,6 +82,9 @@ extern "C" {
  * @VALUE_TYPE_STRING: string
  * @VALUE_TYPE_URI: URI
  * @VALUE_TYPE_PERSON_ID: person ID
+ * @VALUE_TYPE_PHOTO_ID: internal
+ * @VALUE_TYPE_PHOTO_URI: internal
+ * @VALUE_TYPE_MEDIA_TYPE: internal
  * @VALUE_TYPE_NONE: internal
  * @VALUE_TYPE_LAST: internal offset to last in enum list
  * 
@@ -101,7 +102,8 @@ typedef enum {
   VALUE_TYPE_STRING,
   VALUE_TYPE_URI,
   VALUE_TYPE_PERSON_ID, /* internal */
-  VALUE_TYPE_LAST = VALUE_TYPE_PERSON_ID
+  VALUE_TYPE_MEDIA_TYPE, /* internal */
+  VALUE_TYPE_LAST = VALUE_TYPE_MEDIA_TYPE
 } flickcurl_field_value_type;
   
 
@@ -155,6 +157,9 @@ typedef enum {
  * @PHOTO_FIELD_county_woeid: county WOE ID
  * @PHOTO_FIELD_region_woeid: region WOE ID
  * @PHOTO_FIELD_country_woeid: country WOE ID
+ * @PHOTO_FIELD_usage_candownload: can download
+ * @PHOTO_FIELD_usage_canblog: can blog
+ * @PHOTO_FIELD_usage_canprint: can print
  * @PHOTO_FIELD_none: internal
  * @PHOTO_FIELD_FIRST: internal offset to first in enum list
  * @PHOTO_FIELD_LAST: internal offset to last in enum list
@@ -211,8 +216,11 @@ typedef enum {
   PHOTO_FIELD_county_woeid,
   PHOTO_FIELD_region_woeid,
   PHOTO_FIELD_country_woeid,
+  PHOTO_FIELD_usage_candownload,
+  PHOTO_FIELD_usage_canblog,
+  PHOTO_FIELD_usage_canprint,
   PHOTO_FIELD_FIRST = PHOTO_FIELD_dateuploaded,
-  PHOTO_FIELD_LAST = PHOTO_FIELD_country_woeid,
+  PHOTO_FIELD_LAST = PHOTO_FIELD_usage_canprint
 } flickcurl_photo_field_type;
 
 
@@ -515,6 +523,28 @@ typedef struct {
 
 
 /**
+ * flickcurl_video: 
+ * @ready: video is ready flag
+ * @failed: video failed
+ * @pending: video pending
+ * @duration: video duratuion in seconds
+ * @width: video width
+ * @height: video height
+ *
+ * A video.
+ *
+ **/
+typedef struct {
+  int ready;
+  int failed;
+  int pending;
+  int duration;
+  int width;
+  int height;
+} flickcurl_video;
+
+
+/**
  * flickcurl_photo: 
  * @id: photo ID
  * @uri: photo page URI
@@ -536,6 +566,10 @@ typedef struct flickcurl_photo_s {
   flickcurl_photo_field fields[PHOTO_FIELD_LAST + 1];
 
   flickcurl_place* place;
+
+  flickcurl_video* video;
+
+  char *media_type;
 } flickcurl_photo;
 
 
@@ -869,6 +903,7 @@ typedef struct {
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
  * @place_id: A Flickr place id. (only used if bbox argument isn't present). Experimental.  Geo queries require some sort of limiting agent in order to prevent the database from crying. This is basically like the check against "parameterless searches" for queries without a geo component.   A tag, for instance, is considered a limiting agent as are user defined min_date_taken and min_date_upload parameters - If no limiting factor is passed we return only photos added in the last 12 hours (though we may extend the limit in the future) (or NULL)
+ * @media: "photos" or "videos" (or NULL)
  *
  * Search parameters for flickcurl_photos_search()
  */
@@ -895,6 +930,7 @@ typedef struct {
   int per_page;
   int page;
   char* place_id;
+  char* media;
 } flickcurl_search_params;
   
 
@@ -1120,6 +1156,8 @@ FLICKCURL_API
 void flickcurl_free_place(flickcurl_place* place);
 FLICKCURL_API
 void flickcurl_free_places(flickcurl_place** places_object);
+FLICKCURL_API
+void flickcurl_free_video(flickcurl_video *video);
 
 
 /* utility methods */

@@ -129,8 +129,14 @@ flickcurl_free_photo(flickcurl_photo *photo)
   if(photo->uri)
     free(photo->uri);
   
+  if(photo->media_type)
+    free(photo->media_type);
+  
   if(photo->place)
     flickcurl_free_place(photo->place);
+  
+  if(photo->video)
+    flickcurl_free_video(photo->video);
   
   free(photo);
 }
@@ -201,6 +207,12 @@ static struct {
     (const xmlChar*)"./urls/url[@type=\"photopage\"]",
     PHOTO_FIELD_none,
     VALUE_TYPE_PHOTO_URI
+  }
+  ,
+  {
+    (const xmlChar*)"./@media",
+    PHOTO_FIELD_none,
+    VALUE_TYPE_MEDIA_TYPE
   }
   ,
   {
@@ -529,6 +541,24 @@ static struct {
     VALUE_TYPE_STRING
   }
   ,
+  {
+    (const xmlChar*)"./usage/@candownload",
+    PHOTO_FIELD_usage_candownload,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"./usage/@canblog",
+    PHOTO_FIELD_usage_canblog,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"./usage/@canprint",
+    PHOTO_FIELD_usage_canprint,
+    VALUE_TYPE_BOOLEAN
+  }
+  ,
   { 
     NULL,
     (flickcurl_photo_field_type)0,
@@ -617,6 +647,12 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           datatype=VALUE_TYPE_NONE;
           break;
 
+        case VALUE_TYPE_MEDIA_TYPE:
+          photo->media_type=string_value;
+          string_value=NULL;
+          datatype=VALUE_TYPE_NONE;
+          break;
+
         case VALUE_TYPE_UNIXTIME:
         case VALUE_TYPE_DATETIME:
 
@@ -675,6 +711,9 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
     photo->place=flickcurl_build_place(fc, xpathNodeCtx,
                                        (const xmlChar*)"./location");
+
+    photo->video=flickcurl_build_video(fc, xpathNodeCtx,
+                                       (const xmlChar*)"./video");
 
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);

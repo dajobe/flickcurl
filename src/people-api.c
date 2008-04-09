@@ -206,7 +206,10 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
  *  Currently supported extras fields are: license, date_upload,
  *  date_taken, owner_name, icon_server, original_format,
  *  last_update, geo, tags, machine_tags.
-
+ *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.people.getPublicPhotos (0.12)
  * 
  * Return value: non-0 on failure

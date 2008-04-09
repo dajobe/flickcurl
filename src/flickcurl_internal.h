@@ -130,6 +130,8 @@ flickcurl_ticket** flickcurl_build_tickets(flickcurl* fc, xmlXPathContextPtr xpa
 /* vsnprintf.c */
 extern char* my_vsnprintf(const char *message, va_list arguments);
 
+/* video.c */
+flickcurl_video* flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
 struct flickcurl_s {
   int total_bytes;

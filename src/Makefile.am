@@ -42,6 +42,7 @@ size.c \
 ticket.c \
 user_upload_status.c \
 tags.c \
+video.c \
 vsnprintf.c \
 activity-api.c \
 auth-api.c \

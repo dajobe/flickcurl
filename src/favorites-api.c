@@ -107,6 +107,9 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
  *
  * Only photos which the calling user has permission to see are returned.
  *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.favorites.getList (1.0)
  * 
  * Return value: non-0 on failure
@@ -182,6 +185,9 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
  * 
  * Returns a list of favorite public photos for the given user.
+ *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Implements flickr.favorites.getPublicList (1.0)
  * 

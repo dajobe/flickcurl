@@ -220,6 +220,9 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
  *  date_taken, owner_name, icon_server, original_format,
  *  last_update, geo, tags, machine_tags.
  *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
  * Implements flickr.groups.pools.getPhotos (0.12)
  * 
  * Return value: non-0 on failure
