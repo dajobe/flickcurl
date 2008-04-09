@@ -83,7 +83,10 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
   "locality_woeid",
   "county_woeid",
   "region_woeid",
-  "country_woeid"
+  "country_woeid",
+  "usage_candownload",
+  "usage_canblog",
+  "usage_canprint"
 };
 
 
