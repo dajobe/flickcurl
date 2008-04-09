@@ -293,6 +293,12 @@ flickcurl_urls_lookupUser
 </SECTION>
 
 <SECTION>
+<FILE>section-video</FILE>
+flickcurl_video
+flickcurl_free_video
+</SECTION>
+
+<SECTION>
 <FILE>section-misc</FILE>
 flickcurl_size
 flickcurl_free_size
