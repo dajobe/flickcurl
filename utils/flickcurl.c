@@ -325,12 +325,23 @@ command_print_place(flickcurl_place* place,
 
 
 static void
+command_print_video(flickcurl_video* v)
+{
+  fprintf(stderr,
+          "video: ready %d  failed %d  pending %d  duration %d  width %d  height %d\n",
+          v->ready, v->failed, v->pending, v->duration,
+          v->width, v->height);
+}
+
+
+static void
 command_print_photo(flickcurl_photo* photo)
 {
   int i;
   
-  fprintf(stderr, "%s: Found photo with URI %s ID %s and %d tags\n",
-          program, photo->uri, photo->id, photo->tags_count);
+  fprintf(stderr, "%s: Found %s with URI %s ID %s and %d tags\n",
+          program, photo->media_type,
+          photo->uri, photo->id, photo->tags_count);
   
   for(i=0; i <= PHOTO_FIELD_LAST; i++) {
     flickcurl_photo_field_type field=(flickcurl_photo_field_type)i;
@@ -349,6 +360,9 @@ command_print_photo(flickcurl_photo* photo)
 
   if(photo->place)
     command_print_place(photo->place, NULL, NULL);
+
+  if(photo->video)
+    command_print_video(photo->video);
 }
 
 
@@ -1417,8 +1431,12 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
       params.page=atoi(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "place-id")) {
-      argv++; argc--;
       params.place_id=argv[0];
+      argv++; argc--;
+    } else if(!strcmp(field, "media")) {
+      /* "all" (default if missing) or "photos" or "video" */
+      params.media=argv[0];
+      argv++; argc--;
     } else if(!strcmp(field, "tags")) {
       size_t tags_len=0;
       int j;
@@ -2915,7 +2933,7 @@ static flickcurl_cmd commands[] = {
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
   {"photos.search",
-   "[PARAMS] tags TAGS...", "Search for photos with many optional parameters\n        user USER  tag-mode any|all  text TEXT\n        (min|max)-(upload|taken)-date DATE\n        license LICENSE  privacy PRIVACY  bbox a,b,c,d\n        sort date-(posted|taken)-(asc|desc)|interestingness-(desc|asc)|relevance\n        accuracy 1-16  safe-search 1-3  type 1-4\n        machine-tags TAGS  machine-tag-mode any|all\n        group-id ID  place-id ID  extras EXTRAS\n        per-page PER-PAGE  page PAGE",
+   "[PARAMS] tags TAGS...", "Search for photos/videos with many optional parameters\n        user USER  tag-mode any|all  text TEXT\n        (min|max)-(upload|taken)-date DATE\n        license LICENSE  privacy PRIVACY  bbox a,b,c,d\n        sort date-(posted|taken)-(asc|desc)|interestingness-(desc|asc)|relevance\n        accuracy 1-16  safe-search 1-3  type 1-4\n        machine-tags TAGS  machine-tag-mode any|all\n        group-id ID  place-id ID  extras EXTRAS\n        per-page PER-PAGE  page PAGES\n        media all|photos|videos",
    command_photos_search, 1, 0},
   {"photos.setContentType",
    "PHOTO-ID TYPE", "Set photo TYPE to one of 'photo', 'screenshot' or 'other'",
