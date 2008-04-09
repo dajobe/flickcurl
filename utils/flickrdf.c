@@ -51,6 +51,11 @@
 
 #ifdef HAVE_RAPTOR
 #include <raptor.h>
+#else
+#define RAPTOR_IDENTIFIER_TYPE_LITERAL    0
+#define RAPTOR_IDENTIFIER_TYPE_RESOURCE   1
+#define RAPTOR_IDENTIFIER_TYPE_ANONYMOUS  2
+#define raptor_identifier_type int
 #endif
 
 
@@ -216,6 +221,7 @@ flickrdf_init(void)
 struct flickrdf_context_s
 {
   void *data;
+  void (*emit_start)(struct flickrdf_context_s* frc, const char* base_uri_string, FILE* handle);
   void (*emit_namespace)(struct flickrdf_context_s* frc, flickrdf_nspace* ns);
   void (*emit_triple)(struct flickrdf_context_s* frc,
                       const char* subject, raptor_identifier_type subject_type,
@@ -241,27 +247,7 @@ ser_emit_namespace(flickrdf_context* frc, flickrdf_nspace* ns)
                                  (const unsigned char*)ns->prefix);
   raptor_free_uri(ns_uri);
 }
-#else
-static void
-fh_emit_namespace(flickrdf_context* frc, flickrdf_nspace* ns)
-{
-  FILE *fh=(FILE*)frc->data;
 
-  if(output_turtle)
-    fprintf(fh, "@prefix %s: <%s> .\n", ns->prefix, ns->uri);
-}
-#endif
-
-
-#ifdef HAVE_RAPTOR
-#else
-#define RAPTOR_IDENTIFIER_TYPE_LITERAL    0
-#define RAPTOR_IDENTIFIER_TYPE_RESOURCE   1
-#define RAPTOR_IDENTIFIER_TYPE_ANONYMOUS  2
-#define raptor_identifier_type int
-#endif
-
-#ifdef HAVE_RAPTOR
 /* subject/object type: 0 literal, 1 uri, 2 blank */
 static void
 ser_emit_triple(flickrdf_context* frc,
@@ -307,7 +293,26 @@ ser_emit_triple(flickrdf_context* frc,
   if(datatype_uri)
     raptor_free_uri(s.object_literal_datatype);
 }
+
+static void
+ser_emit_finish(flickrdf_context* frc)
+{
+  raptor_serializer* serializer=(raptor_serializer*)frc->data;
+  raptor_serialize_end(serializer);
+}
+
+
 #else
+
+static void
+fh_emit_namespace(flickrdf_context* frc, flickrdf_nspace* ns)
+{
+  FILE *fh=(FILE*)frc->data;
+
+  if(output_turtle)
+    fprintf(fh, "@prefix %s: <%s> .\n", ns->prefix, ns->uri);
+}
+
 /* subject/object type: 0 literal, 1 uri, 2 blank */
 static void
 fh_emit_triple(flickrdf_context* frc,
@@ -339,17 +344,7 @@ fh_emit_triple(flickrdf_context* frc,
   
   fputs(" . \n", fh);
 }
-#endif
 
-
-#ifdef HAVE_RAPTOR
-static void
-ser_emit_finish(flickrdf_context* frc)
-{
-  raptor_serializer* serializer=(raptor_serializer*)frc->data;
-  raptor_serialize_end(serializer);
-}
-#else
 static void
 fh_emit_finish(flickrdf_context* frc)
 {
@@ -640,6 +635,7 @@ flickrdf(flickrdf_context* frc, flickcurl* fc, const char* photo_id)
         case VALUE_TYPE_PHOTO_URI:
         case VALUE_TYPE_UNIXTIME:
         case VALUE_TYPE_PERSON_ID:
+        case VALUE_TYPE_MEDIA_TYPE:
         default:
           break;
       }
