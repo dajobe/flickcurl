@@ -85,6 +85,7 @@ C library for the Flickr web service API.
     <xi:include href="xml/section-test.xml"/>
     <xi:include href="xml/section-upload.xml"/>
     <xi:include href="xml/section-urls.xml"/>
+    <xi:include href="xml/section-video.xml"/>
 
     <!-- <xi:include href="xml/section-unused.xml"/> -->
 
