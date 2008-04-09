@@ -546,14 +546,16 @@ typedef struct {
 
 /**
  * flickcurl_photo: 
- * @id: photo ID
- * @uri: photo page URI
+ * @id: photo/video ID
+ * @uri: photo/video page URI
  * @tags: array of tags (may be NULL)
  * @tags_count: size of tags array
- * @fields: photo fields
- * @place: photot place
+ * @fields: metadata fields
+ * @place: place
+ * @video: video (may be NULL)
+ * @media_type: "photo" or "video"
  *
- * A photo.
+ * A photo or video.
  *
  */
 typedef struct flickcurl_photo_s {
