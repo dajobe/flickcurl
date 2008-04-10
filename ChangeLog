@@ -1,3 +1,71 @@
+2008-04-08  Dave Beckett <dave@dajobe.org>
+
+	* src/photo.c: Add labels for usage* fields
+
+	* utils/flickcurl.c: (command_print_video): Added.
+	(command_print_photo): Use command_print_video
+	(command_photos_search): Add media arg
+
+	* src/Makefile.am, src/favorites-api.c, src/flickcurl.h,
+	src/flickcurl_internal.h, src/groups-pools-api.c,
+	src/interestingness-api.c, src/people-api.c, src/person.c,
+	src/photo.c, src/photos-api.c, src/photosets-api.c, src/video.c:
+	Added video support.
+	Photos have a media_type and an optional pointer to new
+	flickcurl_video* object.  Search API takes media param.
+	Added VALUE_TYPE_MEDIA_TYPE (internal).
+	Added PHOTO_FIELD_usage_candownload, PHOTO_FIELD_usage_canblog,
+	PHOTO_FIELD_usage_canprint. 
+	Added flickcurl_free_video().
+
+	* utils/flickrdf.c: more refactoring
+
+	* utils/flickrdf.c: Add flickrdf_context_s to refactor
+	raptor/non-raptor code
+
+2008-04-07  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-misc.sgml: new doc functions
+
+2008-04-06  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl.1.in: date
+
+	* docs/flickcurl.1.in: Add -V/--verbose
+
+	* src/flickcurl.h: document flickcurl typedef
+
+	* docs/Makefile.am: ignore win32_flickcurl_config.h
+
+	* docs/flickcurl-sections.txt: Added
+	flickcurl_get_content_type_label,
+	flickcurl_get_content_type_from_string,
+	flickcurl_get_safety_level_label and
+	flickcurl_get_safety_level_from_string
+
+	* utils/flickcurl.c: Add a -V/--verbose flag
+	(print_upload_status): Add FILE* handle
+	(yesno): Added earlier
+	(print_upload_params): Added.
+	(command_upload): Fix command arg to be a while loop and not be
+	off-per-1 each loop.  Use flickcurl_get_safety_level_from_string
+	and flickcurl_get_content_type_from_string Print more when verbose
+	with print_upload_params()
+	(command_photos_setContentType): Use
+	flickcurl_get_content_type_from_string and
+	flickcurl_get_content_type_label.
+	(command_photos_setSafetyLevel): Use
+	flickcurl_get_safety_level_from_string and
+	flickcurl_get_safety_level_label
+	(command_photos_search, command_interestingness_getList): Fix arg
+	parsing to be a while loop.
+
+	* src/common.c,
+	src/flickcurl.h: (flickcurl_get_content_type_label,
+	flickcurl_get_content_type_from_string,
+	flickcurl_get_safety_level_label,
+	flickcurl_get_safety_level_from_string): Added
+
 2008-03-24  Dave Beckett <dave@dajobe.org>
 
 	* docs/flickcurl-sections.txt, docs/tmpl/section-prefs.sgml: Added
