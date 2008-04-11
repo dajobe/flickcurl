@@ -293,8 +293,8 @@ static struct
   const char *name;
   const char *label;
 } serializers[NSERIALIZERS]= {
-  { "turtle",  "Turtle"  },
-  { "ntriples",  "N-Triples" }
+  { "ntriples",  "N-Triples" },
+  { "turtle",    "Turtle" }
 };
 
 static int
@@ -1061,7 +1061,7 @@ main(int argc, char *argv[])
 #ifdef HAVE_RAPTOR
     printf("    via Raptor %s serializers\n", raptor_version_string);
 #else
-    puts("    via internal RDDF serializer");
+    puts("    via internal RDF serializer");
 #endif
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
