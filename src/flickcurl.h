@@ -1043,7 +1043,6 @@ struct flickcurl_serializer_s;
 
 typedef struct
 {
-  void (*emit_start)(void* user_data, const char* base_uri_string, FILE* handle);
   void (*emit_namespace)(void* user_data, const char* prefix, size_t prefix_len, const char* uri, size_t uri_len);
   void (*emit_triple)(void* user_data,
                       const char* subject, int subject_type,

@@ -258,14 +258,14 @@ free_nspaces(flickrdf_nspace* list)
     
 
 int
-flickcurl_serialize_photo(flickcurl_serializer* frc, flickcurl_photo* photo)
+flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 {
   int i;
   int need_person=0;
   flickrdf_nspace* nspaces=NULL;
   flickrdf_nspace* ns;
-  flickcurl_serializer_factory* fsf=frc->factory;
-  flickcurl* fc=frc->fc;
+  flickcurl_serializer_factory* fsf=fcs->factory;
+  flickcurl* fc=fcs->fc;
 #ifdef FLICKCURL_DEBUG
   FILE* fh=stderr;
   const char* label="libflickcurl";
@@ -343,18 +343,22 @@ flickcurl_serialize_photo(flickcurl_serializer* frc, flickcurl_photo* photo)
 
   /* generate seen namespace declarations */
   for(ns=nspaces; ns; ns=ns->next)
-    fsf->emit_namespace(frc, ns->prefix, ns->prefix_len, ns->uri, ns->uri_len);
+    fsf->emit_namespace(fcs->data,
+                        ns->prefix, ns->prefix_len, ns->uri, ns->uri_len);
   
   if(need_person) {
-    fsf->emit_triple(frc, photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
+    fsf->emit_triple(fcs->data,
+                     photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
                      DC_NS, "creator",
                      "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
                      NULL);
-    fsf->emit_triple(frc, "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
+    fsf->emit_triple(fcs->data,
+                     "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
                      RDF_NS, "type",
                      FOAF_NS "Person", FLICKCURL_TERM_TYPE_RESOURCE,
                      NULL);
-    fsf->emit_triple(frc, "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
+    fsf->emit_triple(fcs->data,
+                     "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
                      FOAF_NS, "maker",
                      photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
                      NULL);
@@ -444,12 +448,14 @@ flickcurl_serialize_photo(flickcurl_serializer* frc, flickcurl_photo* photo)
       }
 
       if(field_table[f].flags & FIELD_FLAGS_PERSON)
-        fsf->emit_triple(frc, "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
+        fsf->emit_triple(fcs->data,
+                         "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
                          field_table[f].nspace_uri, field_table[f].name,
                          object, type,
                          datatype_uri);
       else
-        fsf->emit_triple(frc, photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
+        fsf->emit_triple(fcs->data,
+                         photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
                          field_table[f].nspace_uri, field_table[f].name,
                          object, type,
                          datatype_uri);
@@ -502,7 +508,8 @@ flickcurl_serialize_photo(flickcurl_serializer* frc, flickcurl_photo* photo)
               ns->uri);
 #endif
     
-    fsf->emit_triple(frc, photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
+    fsf->emit_triple(fcs->data,
+                     photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
                      ns->uri, f,
                      v, FLICKCURL_TERM_TYPE_LITERAL, 
                      NULL);
@@ -514,7 +521,8 @@ flickcurl_serialize_photo(flickcurl_serializer* frc, flickcurl_photo* photo)
   
   flickcurl_free_photo(photo);
 
-  fsf->emit_finish(frc);
+  if(fsf->emit_finish)
+    fsf->emit_finish(fcs);
   
   return 0;
 }
