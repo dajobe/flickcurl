@@ -279,6 +279,7 @@ flickcurl_init(void)
 {
   curl_global_init(CURL_GLOBAL_ALL);
   xmlInitParser();
+  flickcurl_serializer_init();
   return 0;
 }
 
@@ -291,6 +292,7 @@ flickcurl_init(void)
 void
 flickcurl_finish(void)
 {
+  flickcurl_serializer_terminate();
   xmlCleanupParser();
   curl_global_cleanup();
 }

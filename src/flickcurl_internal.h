@@ -218,3 +218,13 @@ struct flickcurl_s {
   FILE* fh;
 #endif
 };
+
+struct flickcurl_serializer_s
+{
+  flickcurl* fc;
+  void *data;
+  flickcurl_serializer_factory* factory;
+};
+
+void flickcurl_serializer_init(void);
+void flickcurl_serializer_terminate(void);

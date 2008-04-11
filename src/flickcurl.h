@@ -1034,6 +1034,36 @@ typedef struct {
 } flickcurl_user_upload_status;
 
 
+struct flickcurl_serializer_s;
+
+/* Same as raptor_identifier_type values */
+#define FLICKCURL_TERM_TYPE_LITERAL    0
+#define FLICKCURL_TERM_TYPE_RESOURCE   1
+#define FLICKCURL_TERM_TYPE_ANONYMOUS  2
+
+typedef struct
+{
+  void (*emit_start)(void* user_data, const char* base_uri_string, FILE* handle);
+  void (*emit_namespace)(void* user_data, const char* prefix, size_t prefix_len, const char* uri, size_t uri_len);
+  void (*emit_triple)(void* user_data,
+                      const char* subject, int subject_type,
+                      const char* predicate_nspace, const char* predicate_name,
+                      const char *object, int object_type,
+                      const char *datatype_uri);
+  void (*emit_finish)(void* user_data);
+} flickcurl_serializer_factory;
+
+typedef struct flickcurl_serializer_s flickcurl_serializer;
+
+FLICKCURL_API
+flickcurl_serializer* flickcurl_new_serializer(flickcurl* fc, void* data, flickcurl_serializer_factory* factory);
+FLICKCURL_API
+void flickcurl_free_serializer(flickcurl_serializer* serializer);
+FLICKCURL_API
+int flickcurl_serialize_photo(flickcurl_serializer* frc, flickcurl_photo* photo);
+
+
+
 /* callback handlers */
 
 /**

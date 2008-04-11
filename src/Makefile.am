@@ -38,6 +38,7 @@ person.c \
 photo.c \
 photoset.c \
 place.c \
+serializer.c \
 size.c \
 ticket.c \
 user_upload_status.c \
