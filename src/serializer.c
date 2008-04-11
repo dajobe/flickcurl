@@ -350,15 +350,15 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
     fsf->emit_triple(fcs->data,
                      photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
                      DC_NS, "creator",
-                     "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
+                     "person", FLICKCURL_TERM_TYPE_BLANK,
                      NULL);
     fsf->emit_triple(fcs->data,
-                     "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
+                     "person", FLICKCURL_TERM_TYPE_BLANK,
                      RDF_NS, "type",
                      FOAF_NS "Person", FLICKCURL_TERM_TYPE_RESOURCE,
                      NULL);
     fsf->emit_triple(fcs->data,
-                     "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
+                     "person", FLICKCURL_TERM_TYPE_BLANK,
                      FOAF_NS, "maker",
                      photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
                      NULL);
@@ -449,7 +449,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
       if(field_table[f].flags & FIELD_FLAGS_PERSON)
         fsf->emit_triple(fcs->data,
-                         "person", FLICKCURL_TERM_TYPE_ANONYMOUS,
+                         "person", FLICKCURL_TERM_TYPE_BLANK,
                          field_table[f].nspace_uri, field_table[f].name,
                          object, type,
                          datatype_uri);
