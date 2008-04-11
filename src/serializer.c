@@ -525,7 +525,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   flickcurl_free_photo(photo);
 
   if(fsf->emit_finish)
-    fsf->emit_finish(fcs);
+    fsf->emit_finish(fcs->data);
   
   return 0;
 }
