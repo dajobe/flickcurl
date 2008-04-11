@@ -635,13 +635,15 @@ main(int argc, char *argv[])
     flickcurl_set_request_delay(fc, request_delay);
   
   fs=flickcurl_new_serializer(fc, serializer, &flickrdf_serializer_factory);
-  if(!fs)
+  if(!fs) {
+    fprintf(stderr, "%s: Failed to create Flickcurl serializer\n", program);
     goto tidy;
+  }
   
   photo=flickcurl_photos_getInfo(fc, photo_id);
 
   if(!photo)
-    return 1;
+    goto tidy;
 
   if(debug)
     fprintf(stderr, "%s: Photo with URI %s ID %s has %d tags\n",
