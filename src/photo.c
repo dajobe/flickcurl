@@ -717,6 +717,11 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
     photo->video=flickcurl_build_video(fc, xpathNodeCtx,
                                        (const xmlChar*)"./video");
+    
+    if(!photo->media_type) {
+      photo->media_type=(char*)malloc(6);
+      strncpy(photo->media_type, "photo", 6);
+    }
 
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);
