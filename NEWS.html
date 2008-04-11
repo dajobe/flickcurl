@@ -15,6 +15,54 @@
 
 <p>Not yet released.</p>
 
+<p>Added video support.</p
+
+<p>Updated <code>flickcurl(1)</code> utility to report video
+information when found.  Document that <em>photos.search</em> can now
+take a media argument to search over photos, videos or both.
+</p>
+
+<p>Added a <em>char* media type</em> field to
+<code>flickcurl_photo</code> to allow detection of photos or videos
+by type, and in the case of type <code>"video"</code>, provide extra
+video information in another new field <code>flickcurl_video* video</code>.
+</p>
+
+<p>Added new<code>flickcurl_video</code> structure for providing
+video-specific information such as duration and 
+<code>flickcurl_free_video()</code> to free it.
+</p>
+
+<p>Fixed argument parsing bugs for the <code>flickcurl(1)</code>
+utility commands <em>photos.search</em> and <em>photos.upload</em> -
+1 argument was skipped for every argument found.
+</p>
+
+<p><code>flickcurl(1)</code> utility commands
+<em>photos.setContentType</em> and <em>photos.setSafetyLevel</em> now
+accept both integer and label values.
+</p>
+
+<p>Added a <code>-V</code> / <code>--verbose</code> flag to the
+<code>flickcurl(1)</code> utility.
+</p>
+
+<p>Added helper functions for to/from labels for content type and
+safety level.</p>
+<pre>
+  const char* flickcurl_get_content_type_label(int content_type);
+  int flickcurl_get_content_type_from_string(const char* content_type_string);
+  const char* flickcurl_get_safety_level_label(int safety_level);
+  int flickcurl_get_safety_level_from_string(const char* safety_level_string);
+</pre>
+
+<p>Added 1 new Flickr API call for the preferences API
+added to the public API around 2008-03-24.
+</p>
+<pre>
+  int flickcurl_prefs_getGeoPerms(flickcurl* fc);
+</pre>
+
 
 <h2 id="D2008-03-08">2008-03-08 Flickcurl 1.3</h2>
 
