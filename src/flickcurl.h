@@ -1036,10 +1036,21 @@ typedef struct {
 
 struct flickcurl_serializer_s;
 
-/* Same as raptor_identifier_type values */
-#define FLICKCURL_TERM_TYPE_LITERAL    0
-#define FLICKCURL_TERM_TYPE_RESOURCE   1
-#define FLICKCURL_TERM_TYPE_ANONYMOUS  2
+/**
+ * flickcurl_term_type:
+ * @FLICKCURL_TERM_TYPE_RESOURCE: resource/URI term
+ * @FLICKCURL_TERM_TYPE_BLANK: blank node/anonymous term
+ * @FLICKCURL_TERM_TYPE_LITERAL: literal term
+ *
+ * Triple part types
+ *
+ * These are the same as raptor_identifier_type values.
+ */
+typedef enum {
+  FLICKCURL_TERM_TYPE_RESOURCE = 1,
+  FLICKCURL_TERM_TYPE_BLANK    = 2,
+  FLICKCURL_TERM_TYPE_LITERAL  = 5
+} flickcurl_term_type;
 
 typedef struct
 {
