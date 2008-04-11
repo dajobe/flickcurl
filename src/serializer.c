@@ -480,6 +480,9 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
     
     for(p=prefix; *p && *p != ':'; p++)
       ;
+    if(!*p) /* No ':' found */
+      continue;
+    
     /* ":" seen */
     *p='\0';
 
