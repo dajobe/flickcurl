@@ -255,7 +255,7 @@ raptor_serialize_start_to_file_handle(raptor_serializer* serializer,
                                       raptor_uri* base_uri, FILE* fh)
 {
   serializer->fh=fh;
-  if(base_uri)
+  if(base_uri && serializer->output_turtle)
     fprintf(fh, "@base <%s>\n", (char*)base_uri);
 }
 
