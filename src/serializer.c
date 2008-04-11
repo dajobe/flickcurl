@@ -266,7 +266,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   flickrdf_nspace* ns;
   flickcurl_serializer_factory* fsf=fcs->factory;
   flickcurl* fc=fcs->fc;
-#ifdef FLICKCURL_DEBUG
+#if FLICKCURL_DEBUG > 1
   FILE* fh=stderr;
   const char* label="libflickcurl";
 #endif
@@ -316,7 +316,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
       /* "xmlns:PREFIX=" seen */
       *p='\0';
       nspaces=nspace_add_new(nspaces, prefix, p+1);
-#ifdef FLICKCURL_DEBUG
+#if FLICKCURL_DEBUG > 1
         fprintf(fh,
                 "%s: Found declaration of namespace prefix %s uri %s in tag '%s'\n",
                 label, prefix, p+1, tag->raw);
@@ -337,7 +337,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   }
 
 
-#ifdef FLICKCURL_DEBUG
+#if FLICKCURL_DEBUG > 1
     print_nspaces(fh, label , nspaces);
 #endif
 
@@ -382,7 +382,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
       if(field_table[f].field != field) 
         continue;
 
-#ifdef FLICKCURL_DEBUG
+#if FLICKCURL_DEBUG > 1
         fprintf(fh,
                 "%s: field %s (%d) with %s value: '%s' has predicate %s%s\n", 
                 label,
@@ -504,7 +504,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
         
     ns=nspace_get_by_prefix(nspaces, prefix);
 
-#ifdef FLICKCURL_DEBUG
+#if FLICKCURL_DEBUG > 1
       fprintf(fh,
               "%s: prefix '%s' field '%s' value '%s' namespace uri %s\n",
               label, p, f, v, 
