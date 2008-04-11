@@ -374,7 +374,25 @@ raptor_serialize_statement(raptor_serializer* serializer,
   fprintf(fh, " <%s> ", (const char*)s->predicate);
 
   if(s->object_type == RAPTOR_IDENTIFIER_TYPE_LITERAL) {
-    fprintf(fh, "\"%s\"", (const char*)s->object);
+    const char *p;
+    char c;
+    
+    fputc('"', fh);
+    for(p=(const char*)s->object; (c=*p); p++) {
+      if(c == '\n') {
+        fputs("\\\n", fh);
+        continue;
+      } else if(c == '\t') {
+        fputs("\\\t", fh);
+        continue;
+      } if(c == '\r') {
+        fputs("\\\r", fh);
+        continue;
+      } else if(c == '"' || c == '\\')
+        fputc('\\', fh);
+      fputc(c, fh);
+    }
+    fputc('"', fh);
     if(s->object_literal_datatype)  {
       fputs("^^<", fh);
       fputs((const char*)s->object_literal_datatype, fh);
