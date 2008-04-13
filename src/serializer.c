@@ -16,10 +16,6 @@
  * complete terms and further detail along with the license texts for
  * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
  * 
- *
- * USAGE: flickrdf [OPTIONS] FLICKR-PHOTO-URI
- *
- *
  */
 
 #include <stdio.h>
