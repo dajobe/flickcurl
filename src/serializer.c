@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * serializer.c - Triples from photos
+ * serializer.c - Triples from photo metadata
  *
  * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
  * 
@@ -132,12 +132,31 @@ flickcurl_serializer_terminate(void)
 }
 
 
+/**
+ * flickcurl_new_serializer:
+ * @fc: flickcurl object
+ * @data: user data for factory methods
+ * @factory: triples serializer factory
+ *
+ * Create a new triples serializer for generating a RDF triples
+ * representation of a Flickr photo.
+ *
+ * The factory must contain the methods and the correct factory API
+ * version as described in #flickcurl_serializer_factory
+ *
+ * Return value: a new serializer object or NULL on failure
+ *
+*/
 
 flickcurl_serializer*
 flickcurl_new_serializer(flickcurl* fc, 
                          void* data, flickcurl_serializer_factory* factory)
 {
   flickcurl_serializer* serializer;
+
+  if(!factory || factory && factory->version !=1)
+    return NULL;
+  
   serializer=(flickcurl_serializer*)malloc(sizeof(flickcurl_serializer));
   if(!serializer)
     return NULL;
@@ -148,6 +167,13 @@ flickcurl_new_serializer(flickcurl* fc,
   return serializer;
 }
 
+
+/**
+ * flickcurl_free_serializer:
+ * @serializer: serializer object
+ *
+ * Destructor for triples serializer object
+ */
 void
 flickcurl_free_serializer(flickcurl_serializer* serializer)
 {
@@ -257,6 +283,15 @@ free_nspaces(flickrdf_nspace* list)
 }
     
 
+/**
+ * flickcurl_free_serializer:
+ * @fc: flickcurl object
+ * @photo: photo object
+ *
+ * Serialize photo description to RDF triples
+ *
+ * Return value: non-0 on failure
+ */
 int
 flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 {
