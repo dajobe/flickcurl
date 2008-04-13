@@ -1052,8 +1052,21 @@ typedef enum {
   FLICKCURL_TERM_TYPE_LITERAL  = 5
 } flickcurl_term_type;
 
+
+/**
+ * flickcurl_serialzier_factory:
+ * @version: API version
+ * @emit_namespace: (V1) emit namespace callback
+ * @emit_triple: (V1) emit a triple
+ * @emit_finish: (V1) finish emitting
+ *
+ * Triples serializer factory
+ *
+ * API version 1 is all that is supported.
+ */
 typedef struct
 {
+  int version;
   void (*emit_namespace)(void* user_data, const char* prefix, size_t prefix_len, const char* uri, size_t uri_len);
   void (*emit_triple)(void* user_data,
                       const char* subject, int subject_type,
