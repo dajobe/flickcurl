@@ -1,4 +1,54 @@
+2008-04-12  Dave Beckett <dave@dajobe.org>
+
+	* src/serializer.c: autodocs
+
+	* src/flickcurl.h: autodoc flickcurl_serialzier_factory
+
+2008-04-11  Dave Beckett <dave@dajobe.org>
+
+	* src/serializer.c: debug > 1
+
+	* src/serializer.c: Do not flickcurl_free_photo inside serializer
+
+	* src/serializer.c: one more user data
+
+	* src/serializer.c: (flickcurl_serialize_photo): Ignore tags with no ':'
+
+	* src/serializer.c: use BLANK not ANONYMOUS
+
+	* src/flickcurl.h: flickcurl_term_type
+
+	* src/flickcurl.h, src/serializer.c: Pass user data in to
+	serializer.  Remove emit_start unused
+
+	* utils/flickrdf.c: error checking
+
+	* utils/flickrdf.c: v(raptor_serialize_start_to_file_handle): Only
+	write @base for Turtle
+
+	* utils/flickrdf.c: Use new flickcurl_serializer API to generate
+	triples. Raptor specific code still lives here.
+
+	* src/Makefile.am, src/common.c, src/flickcurl.h,
+	src/flickcurl_internal.h, src/serializer.c: Added serializer API.
+	(flickcurl_new_serializer, flickcurl_free_serializer,
+	flickcurl_serialize_photo): Added.  Added new object
+	flickcurl_serializer and new open factory
+	flickcurl_serializer_factory
+
+	* src/serializer.c (from /trunk/utils/flickrdf.c:609): copy rdf
+	serializer
+
+	* utils/flickrdf.c: refactor - introduce a flickcurl_serializer
+	and flickcurl_serializer_factory
+
 2008-04-10  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickrdf.c: N-Triples escape strings when !HAVE_RAPTOR
+
+	* utils/flickrdf.c: default ntriples when ! HAVE_RAPTOR
+
+	* utils/flickrdf.c: Use fake static raptor when not HAVE_RAPTOR
 
 	* src/photo.c: (flickcurl_build_photos): Ensure media_type is set
 	to default "photo" if nothing was found
