@@ -13,7 +13,7 @@
 
 <h2 id="D2008-XX-YY">2008-XX-YY Flickcurl 1.4</h2>
 
-<p>Added video support.</p
+<p>Added video support.</p>
 
 <p>Updated <code>flickcurl(1)</code> utility to report video
 information when found.  Document that <em>photos.search</em> can now
@@ -30,6 +30,21 @@ video information in another new field <code>flickcurl_video* video</code>.
 video-specific information such as duration and 
 <code>flickcurl_free_video()</code> to free it.
 </p>
+
+<p>Added an API for turning photo description/metadata into RDF
+triples.  Added new clas <code>flickcurl_serializer</code> and
+factory <code>flickcurl_serializer_factory</code> for called to
+handle the results of serializing.  Added new functions:</p>
+<pre>
+  flickcurl_serializer* flickcurl_new_serializer(flickcurl* fc,
+    void* data, flickcurl_serializer_factory* factory);
+  void flickcurl_free_serializer(flickcurl_serializer* serializer);
+  int flickcurl_serialize_photo(flickcurl_serializer* frc,
+    flickcurl_photo* photo);
+</pre>
+
+<p>Updated <code>flickrdf(1)</code> to use new serialization
+API and to have less conditional code.</p>
 
 <p>Fixed argument parsing bugs for the <code>flickcurl(1)</code>
 utility commands <em>photos.search</em> and <em>photos.upload</em> -
