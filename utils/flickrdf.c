@@ -162,6 +162,7 @@ raptor_uri* raptor_new_uri(const unsigned char* uri)
   return u;
 }
 
+
 static
 raptor_uri* raptor_new_uri_from_uri_local_name(raptor_uri* u,
                                                const unsigned char* name)
@@ -187,6 +188,7 @@ void raptor_free_uri(raptor_uri* u)
   free(u);
 }
 
+
 #define NSERIALIZERS 2
 static struct 
 {
@@ -196,6 +198,7 @@ static struct
   { "ntriples",  "N-Triples" },
   { "turtle",    "Turtle" }
 };
+
 
 static int
 raptor_serializer_syntax_name_check(const char* name)
@@ -208,6 +211,7 @@ raptor_serializer_syntax_name_check(const char* name)
   }
   return 0;
 }
+
 
 static int
 raptor_serializers_enumerate(const unsigned int counter,
@@ -234,11 +238,13 @@ raptor_new_serializer(const char* serializer_name)
   return s;
 }
 
+
 static void
 raptor_free_serializer(raptor_serializer* s)
 {
   free(s);
 }
+
 
 static void
 raptor_serialize_set_namespace(raptor_serializer* serializer,
@@ -259,10 +265,9 @@ raptor_serialize_start_to_file_handle(raptor_serializer* serializer,
     fprintf(fh, "@base <%s>\n", (char*)base_uri);
 }
 
-/* subject/object type: 0 literal, 1 uri, 2 blank */
+
 static void
-raptor_serialize_statement(raptor_serializer* serializer,
-                           raptor_statement* s)
+raptor_serialize_statement(raptor_serializer* serializer, raptor_statement* s)
 {
   FILE *fh=serializer->fh;
 
@@ -306,6 +311,7 @@ raptor_serialize_statement(raptor_serializer* serializer,
   fputs(" . \n", fh);
 }
 
+
 static void
 raptor_serialize_end(raptor_serializer* serializer)
 {
@@ -329,7 +335,7 @@ ser_emit_namespace(void* user_data,
   raptor_free_uri(ns_uri);
 }
 
-/* subject/object type: 0 literal, 1 uri, 2 blank */
+
 static void
 ser_emit_triple(void* user_data,
                 const char* subject, int subject_type,
@@ -374,6 +380,7 @@ ser_emit_triple(void* user_data,
   if(datatype_uri)
     raptor_free_uri(s.object_literal_datatype);
 }
+
 
 static void
 ser_emit_finish(void* user_data)
