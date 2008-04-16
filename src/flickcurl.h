@@ -1054,7 +1054,7 @@ typedef enum {
 
 
 /**
- * flickcurl_serialzier_factory:
+ * flickcurl_serializer_factory:
  * @version: API version
  * @emit_namespace: (V1) emit namespace callback
  * @emit_triple: (V1) emit a triple
