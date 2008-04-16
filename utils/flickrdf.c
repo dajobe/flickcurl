@@ -384,7 +384,7 @@ ser_emit_finish(void* user_data)
 
 
 static flickcurl_serializer_factory flickrdf_serializer_factory={
-  NULL, ser_emit_namespace, ser_emit_triple, ser_emit_finish
+  1, ser_emit_namespace, ser_emit_triple, ser_emit_finish
 };
 
 
