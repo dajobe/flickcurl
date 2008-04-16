@@ -150,7 +150,7 @@ flickcurl_new_serializer(flickcurl* fc,
 {
   flickcurl_serializer* serializer;
 
-  if(!factory || factory && factory->version !=1)
+  if(!factory || (factory && factory->version != 1))
     return NULL;
   
   serializer=(flickcurl_serializer*)malloc(sizeof(flickcurl_serializer));
@@ -250,6 +250,7 @@ nspace_get_by_prefix(flickrdf_nspace* list, const char *prefix)
 }
 
 
+#if FLICKCURL_DEBUG > 1
 static void
 print_nspaces(FILE* fh, const char* label, flickrdf_nspace* list)
 {
@@ -262,7 +263,7 @@ print_nspaces(FILE* fh, const char* label, flickrdf_nspace* list)
 
   }
 }
-    
+#endif    
 
 static void
 free_nspaces(flickrdf_nspace* list)
