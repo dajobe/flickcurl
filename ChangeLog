@@ -1,3 +1,9 @@
+2008-04-15  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: autodocs
+
+	* utils/flickrdf.c: Fix flickcurl_serializer_factory calling convention
+
 2008-04-12  Dave Beckett <dave@dajobe.org>
 
 	* src/serializer.c: autodocs
@@ -23,7 +29,7 @@
 
 	* utils/flickrdf.c: error checking
 
-	* utils/flickrdf.c: v(raptor_serialize_start_to_file_handle): Only
+	* utils/flickrdf.c: (raptor_serialize_start_to_file_handle): Only
 	write @base for Turtle
 
 	* utils/flickrdf.c: Use new flickcurl_serializer API to generate
