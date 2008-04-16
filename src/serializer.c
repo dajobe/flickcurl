@@ -143,7 +143,6 @@ flickcurl_serializer_terminate(void)
  * Return value: a new serializer object or NULL on failure
  *
 */
-
 flickcurl_serializer*
 flickcurl_new_serializer(flickcurl* fc, 
                          void* data, flickcurl_serializer_factory* factory)
