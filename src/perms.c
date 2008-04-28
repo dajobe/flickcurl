@@ -43,6 +43,8 @@
 void
 flickcurl_free_perms(flickcurl_perms *perms)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(perms, flickcurl_perms);
+
   free(perms);
 }
 

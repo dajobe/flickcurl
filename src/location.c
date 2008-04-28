@@ -43,6 +43,8 @@
 void
 flickcurl_free_location(flickcurl_location *location)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(location, flickcurl_location);
+
   free(location);
 }
 

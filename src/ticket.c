@@ -43,6 +43,8 @@
 void
 flickcurl_free_ticket(flickcurl_ticket *ticket)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(ticket, flickcurl_ticket);
+
   free(ticket);
 }
 
@@ -58,6 +60,8 @@ flickcurl_free_tickets(flickcurl_ticket **tickets_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tickets_object, flickcurl_ticket_array);
+
   for(i=0; tickets_object[i]; i++)
     flickcurl_free_ticket(tickets_object[i]);
   

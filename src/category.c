@@ -43,6 +43,8 @@
 void
 flickcurl_free_category(flickcurl_category *category)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(category, flickcurl_category);
+
   if(category->id)
     free(category->id);
   
@@ -70,6 +72,8 @@ flickcurl_free_categories(flickcurl_category **categories_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(categories_object, flickcurl_category);
+
   for(i=0; categories_object[i]; i++)
     flickcurl_free_category(categories_object[i]);
   

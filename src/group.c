@@ -43,6 +43,8 @@
 void
 flickcurl_free_group(flickcurl_group *group)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(group, flickcurl_group);
+
   if(group->nsid)
     free(group->nsid);
   
@@ -73,6 +75,8 @@ flickcurl_free_groups(flickcurl_group **groups_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(groups_object, flickcurl_group_array);
+
   for(i=0; groups_object[i]; i++)
     flickcurl_free_group(groups_object[i]);
   

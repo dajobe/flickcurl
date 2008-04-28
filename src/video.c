@@ -51,6 +51,8 @@
 void
 flickcurl_free_video(flickcurl_video *video)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(video, flickcurl_video);
+
   free(video);
 }
 

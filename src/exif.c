@@ -43,6 +43,8 @@
 void
 flickcurl_free_exif(flickcurl_exif *exif)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(exif, flickcurl_exif);
+
   if(exif->tagspace)
     free(exif->tagspace);
   
@@ -68,6 +70,8 @@ flickcurl_free_exifs(flickcurl_exif **exifs_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(exifs_object, flickcurl_exif_array);
+
   for(i=0; exifs_object[i]; i++)
     flickcurl_free_exif(exifs_object[i]);
   

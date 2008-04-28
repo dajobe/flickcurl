@@ -43,6 +43,8 @@
 void
 flickcurl_free_user_upload_status(flickcurl_user_upload_status *u)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(u, flickcurl_user_upload_status);
+
   if(u->username)
     free(u->username);
   

@@ -43,6 +43,8 @@
 void
 flickcurl_free_size(flickcurl_size *size)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(size, flickcurl_size);
+
   if(size->label)
     free(size->label);
   
@@ -67,6 +69,8 @@ flickcurl_free_sizes(flickcurl_size **sizes_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(sizes_object, flickcurl_size_array);
+
   for(i=0; sizes_object[i]; i++)
     flickcurl_free_size(sizes_object[i]);
   

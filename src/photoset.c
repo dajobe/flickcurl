@@ -43,6 +43,8 @@
 void
 flickcurl_free_photoset(flickcurl_photoset *photoset)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photoset, flickcurl_photoset);
+
   if(photoset->id)
     free(photoset->id);
   
@@ -73,6 +75,8 @@ flickcurl_free_photosets(flickcurl_photoset **photosets_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photosets_object, flickcurl_photoset_array);
+
   for(i=0; photosets_object[i]; i++)
     flickcurl_free_photoset(photosets_object[i]);
   

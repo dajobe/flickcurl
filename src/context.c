@@ -71,6 +71,8 @@ flickcurl_get_context_type_field_label(flickcurl_context_type type)
 void
 flickcurl_free_context(flickcurl_context *context)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(context, flickcurl_context);
+
   if(context->id)
     free(context->id);
   if(context->secret)
@@ -95,6 +97,9 @@ void
 flickcurl_free_contexts(flickcurl_context** contexts)
 {
   int i;
+
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(contexts, flickcurl_context_array);
+
   for(i=0; contexts[i]; i++)
     flickcurl_free_context(contexts[i]);
   free(contexts);

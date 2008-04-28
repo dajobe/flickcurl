@@ -43,6 +43,8 @@
 void
 flickcurl_free_tag(flickcurl_tag *t)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(t, flickcurl_tag);
+
   if(t->id)
     free(t->id);
   if(t->author)

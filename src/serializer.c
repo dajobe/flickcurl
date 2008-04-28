@@ -172,6 +172,8 @@ flickcurl_new_serializer(flickcurl* fc,
 void
 flickcurl_free_serializer(flickcurl_serializer* serializer)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(serializer, flickcurl_serializer);
+
   free(serializer);
 }
 

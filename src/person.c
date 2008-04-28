@@ -90,6 +90,9 @@ void
 flickcurl_free_person(flickcurl_person *person)
 {
   int i;
+
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(person, flickcurl_person);
+
   for(i=0; i <= PERSON_FIELD_LAST; i++) {
     if(person->fields[i].string)
       free(person->fields[i].string);
@@ -404,6 +407,8 @@ flickcurl_free_persons(flickcurl_person** persons)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(persons, flickcurl_person_array);
+
   for(i=0; persons[i]; i++)
     flickcurl_free_person(persons[i]);
   free(persons);

@@ -45,6 +45,8 @@ flickcurl_free_method(flickcurl_method *method)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(method, flickcurl_method);
+
   if(method->name)
     free(method->name);
   if(method->description)

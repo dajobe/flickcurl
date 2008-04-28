@@ -46,6 +46,8 @@
 void
 flickcurl_free_contact(flickcurl_contact *contact_object)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(contact_object, flickcurl_contact);
+
   if(contact_object->nsid)
     free(contact_object->nsid);
   if(contact_object->username)
@@ -68,6 +70,8 @@ flickcurl_free_contacts(flickcurl_contact **contacts_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(contacts_object, flickcurl_contact);
+
   for(i=0; contacts_object[i]; i++)
     flickcurl_free_contact(contacts_object[i]);
   

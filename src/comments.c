@@ -43,6 +43,8 @@
 void
 flickcurl_free_comment(flickcurl_comment *comment_object)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(comment_object, flickcurl_comment);
+
   if(comment_object->id)
     free(comment_object->id);
   if(comment_object->author)
@@ -69,6 +71,8 @@ flickcurl_free_comments(flickcurl_comment **comments_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(comments_object, flickcurl_comment_array);
+
   for(i=0; comments_object[i]; i++)
     flickcurl_free_comment(comments_object[i]);
   

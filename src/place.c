@@ -100,6 +100,9 @@ void
 flickcurl_free_place(flickcurl_place *place)
 {
   int i;
+
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(place, flickcurl_place);
+
   for(i=0; i <= FLICKCURL_PLACE_LAST; i++) {
     if(place->names[i])
       free(place->names[i]);
@@ -126,6 +129,8 @@ flickcurl_free_places(flickcurl_place **places_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(places_object, flickcurl_place_array);
+
   for(i=0; places_object[i]; i++)
     flickcurl_free_place(places_object[i]);
   

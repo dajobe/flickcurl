@@ -37,6 +37,8 @@
 static void
 flickcurl_free_blog(flickcurl_blog *blog)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(blog, flickcurl_blog);
+
   if(blog->id)
     free(blog->id);
   
@@ -58,6 +60,8 @@ flickcurl_free_blogs(flickcurl_blog **blogs_object)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(blogs_object, flickcurl_blog_array);
+
   for(i=0; blogs_object[i]; i++)
     flickcurl_free_blog(blogs_object[i]);
   

@@ -37,6 +37,8 @@
 void
 flickcurl_free_arg(flickcurl_arg *arg)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(arg, flickcurl_arg);
+
   if(arg->name)
     free(arg->name);
   if(arg->description)

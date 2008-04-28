@@ -292,6 +292,8 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
 void
 flickcurl_free_upload_status(flickcurl_upload_status* status)
 {
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(status, flickcurl_upload_status);
+
   if(status->photoid)
     free(status->photoid);
   if(status->secret)

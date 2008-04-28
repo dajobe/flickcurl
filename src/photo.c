@@ -117,6 +117,9 @@ void
 flickcurl_free_photo(flickcurl_photo *photo)
 {
   int i;
+
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photo, flickcurl_photo);
+
   for(i=0; i <= PHOTO_FIELD_LAST; i++) {
     if(photo->fields[i].string)
       free(photo->fields[i].string);
@@ -770,6 +773,8 @@ flickcurl_free_photos(flickcurl_photo** photos)
 {
   int i;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photos, flickcurl_photo_array);
+
   for(i=0; photos[i]; i++)
     flickcurl_free_photo(photos[i]);
   free(photos);
