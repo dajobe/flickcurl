@@ -314,8 +314,13 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   if(!photo)
     return 1;
   
-  /* Always add XSD */
+  /* Always add XSD and RDF namespaces */
   nspaces=nspace_add_if_not_declared(nspaces, NULL, XSD_NS);
+  nspaces=nspace_add_if_not_declared(nspaces, "rdf", RDF_NS);
+
+  if(photo->place)
+    nspaces=nspace_add_if_not_declared(nspaces, "places", PLACES_NS);
+
 
   /* mark namespaces used in fields */
   for(i=PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
@@ -381,11 +386,18 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   print_nspaces(fh, label, nspaces);
 #endif
 
+  if(need_person) {
+    nspaces=nspace_add_if_not_declared(nspaces, "dc", DC_NS);
+    nspaces=nspace_add_if_not_declared(nspaces, "foaf", FOAF_NS);
+  }
+
+
   /* generate seen namespace declarations */
   for(ns=nspaces; ns; ns=ns->next)
     fsf->emit_namespace(fcs->data,
                         ns->prefix, ns->prefix_len, ns->uri, ns->uri_len);
   
+
   if(need_person) {
     fsf->emit_triple(fcs->data,
                      photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
@@ -402,6 +414,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
                      FOAF_NS, "maker",
                      photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
                      NULL);
+
   }
   
 
