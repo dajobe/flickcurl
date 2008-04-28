@@ -289,8 +289,8 @@ free_nspaces(flickrdf_nspace* list)
     
 
 /**
- * flickcurl_free_serializer:
- * @fc: flickcurl object
+ * flickcurl_serialize_photo:
+ * @fcs: flickcurl serializer object
  * @photo: photo object
  *
  * Serialize photo description to RDF triples
