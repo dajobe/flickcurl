@@ -1083,7 +1083,7 @@ flickcurl_serializer* flickcurl_new_serializer(flickcurl* fc, void* data, flickc
 FLICKCURL_API
 void flickcurl_free_serializer(flickcurl_serializer* serializer);
 FLICKCURL_API
-int flickcurl_serialize_photo(flickcurl_serializer* frc, flickcurl_photo* photo);
+int flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo);
 
 
 
