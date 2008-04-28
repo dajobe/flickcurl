@@ -47,6 +47,10 @@
 #define FOAF_NS "http://xmlns.com/foaf/0.1/#"
 #define XSD_NS "http://www.w3.org/2001/XMLSchema#"
 #define RDF_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define DOPPLR_NS "http://machinetags.org/wiki/Dopplr#"
+#define FLICKR_NS "http://machinetags.org/wiki/Flickr#"
+#define PLACES_NS "http://machinetags.org/wiki/Places#"
+#define GEONAMES_NS "http://machinetags.org/wiki/Geonames#"
 
 struct flickrdf_nspace_s
 {
@@ -65,14 +69,17 @@ flickrdf_nspace namespace_table[]={
   { (char*)"blue",     (char*)"http://machinetags.org/wiki/Blue#", },
   { (char*)"cell",     (char*)"http://machinetags.org/wiki/Cell#", },
   { (char*)"dc",       (char*)DC_NS },
+  { (char*)"dopplr",   (char*)DOPPLR_NS },
   { (char*)"exif",     (char*)"http://nwalsh.com/rdf/exif#" },
   { (char*)"exifi",    (char*)"http://nwalsh.com/rdf/exif-intrinsic#" },
-  { (char*)"flickr",   (char*)"http://machinetags.org/wiki/Flickr#" },
+  { (char*)"flickr",   (char*)FLICKR_NS },
   { (char*)"filtr",    (char*)"http://machinetags.org/wiki/Filtr#", },
   { (char*)"foaf",     (char*)FOAF_NS },
   { (char*)"geo",      (char*)GEO_NS, },
+  { (char*)"geonames", (char*)GEONAMES_NS, },
   { (char*)"i",        (char*)"http://www.w3.org/2004/02/image-regions#" },
-  { (char*)"ph"      , (char*)"http://machinetags.org/wiki/Ph#" },
+  { (char*)"ph",       (char*)"http://machinetags.org/wiki/Ph#" },
+  { (char*)"places",   (char*)PLACES_NS, },
   { (char*)"rdf",      (char*)RDF_NS },
   { (char*)"rdfs",     (char*)"http://www.w3.org/2000/01/rdf-schema#" },
   { (char*)"skos",     (char*)"http://www.w3.org/2004/02/skos/core" },
@@ -371,7 +378,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
 
 #if FLICKCURL_DEBUG > 1
-    print_nspaces(fh, label , nspaces);
+  print_nspaces(fh, label, nspaces);
 #endif
 
   /* generate seen namespace declarations */
@@ -536,13 +543,15 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
     }
         
     ns=nspace_get_by_prefix(nspaces, prefix);
-
+    
 #if FLICKCURL_DEBUG > 1
       fprintf(fh,
-              "%s: prefix '%s' field '%s' value '%s' namespace uri %s\n",
-              label, p, f, v, 
-              ns->uri);
+              "%s: tag with prefix '%s' field '%s' value '%s' namespace uri %s\n",
+              label, prefix, f, v, 
+              ns ? ns->uri : "(No namespace)");
 #endif
+    if(!ns)
+      continue;
     
     fsf->emit_triple(fcs->data,
                      photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
@@ -550,6 +559,68 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
                      v, FLICKCURL_TERM_TYPE_LITERAL, 
                      NULL);
     
+  }
+
+
+  /* generate triples from places */
+  if(photo->place) {
+    char place_bnode[7]={'p', 'l', 'a', 'c', 'e', 'X', '\0'};
+    flickcurl_place* place=photo->place;
+    
+    for(i=(int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
+      char* name=place->names[i];
+      char* id=place->ids[i];
+      char* url=place->urls[i];
+      char* woe_id=place->woe_ids[i];
+      
+      if(!name && !id && !url && !woe_id)
+        continue;
+      
+      place_bnode[5]='0'+i;
+      
+      fsf->emit_triple(fcs->data,
+                       photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
+                       PLACES_NS, "place",
+                       place_bnode, FLICKCURL_TERM_TYPE_BLANK,
+                       NULL);
+      fsf->emit_triple(fcs->data,
+                       place_bnode, FLICKCURL_TERM_TYPE_BLANK,
+                       RDF_NS, "type",
+                       PLACES_NS "Place", FLICKCURL_TERM_TYPE_RESOURCE,
+                       NULL);
+      
+      fsf->emit_triple(fcs->data,
+                       place_bnode, FLICKCURL_TERM_TYPE_BLANK,
+                       PLACES_NS, "type",
+                       flickcurl_get_place_type_label(i),
+                       FLICKCURL_TERM_TYPE_LITERAL,
+                       NULL);
+
+      if(name)
+        fsf->emit_triple(fcs->data,
+                         place_bnode, FLICKCURL_TERM_TYPE_BLANK,
+                         PLACES_NS, "name",
+                         name, FLICKCURL_TERM_TYPE_LITERAL,
+                         NULL);
+      if(id)
+        fsf->emit_triple(fcs->data,
+                         place_bnode, FLICKCURL_TERM_TYPE_BLANK,
+                         PLACES_NS, "id",
+                         id, FLICKCURL_TERM_TYPE_LITERAL,
+                         NULL);
+      if(woe_id)
+        fsf->emit_triple(fcs->data,
+                         place_bnode, FLICKCURL_TERM_TYPE_BLANK,
+                         PLACES_NS, "placeid",
+                         woe_id, FLICKCURL_TERM_TYPE_LITERAL,
+                         NULL);
+      if(url)
+        fsf->emit_triple(fcs->data,
+                         place_bnode, FLICKCURL_TERM_TYPE_BLANK,
+                         PLACES_NS, "url",
+                         url, FLICKCURL_TERM_TYPE_RESOURCE,
+                         NULL);
+    }
   }
   
   if(nspaces)
