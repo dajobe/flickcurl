@@ -188,7 +188,55 @@ blocks (sets of triples) hung off a <code>places:place</code>
 predicate.</p>
 
 <pre>
-$ flickrdf http://www.flickr.com/photos/dajobe/196308964/
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/creator&gt; _:person .
+_:person &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Person&gt; .
+_:person &lt;http://xmlns.com/foaf/0.1/#maker&gt; &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/dateSubmitted&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/rights&gt; &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/modified&gt; "2007-02-25T07:45:46Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/issued&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/created&gt; "2006-07-22 22:28:50" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#lat&gt; "36.620487" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#long&gt; "-121.904468" .
+_:person &lt;http://xmlns.com/foaf/0.1/#name&gt; "Dave Beckett" .
+_:person &lt;http://xmlns.com/foaf/0.1/#nick&gt; "dajobe" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/title&gt; "Jellyfish at Monterey Aquarium" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/subject&gt; "jellyfish" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place0 .
+_:place0 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
+_:place0 &lt;http://machinetags.org/wiki/Places#type&gt; "location" .
+_:place0 &lt;http://machinetags.org/wiki/Places#id&gt; "WM3JEXSbBZqqRtGA" .
+_:place0 &lt;http://machinetags.org/wiki/Places#placeid&gt; "2467327" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place2 .
+_:place2 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
+_:place2 &lt;http://machinetags.org/wiki/Places#type&gt; "locality" .
+_:place2 &lt;http://machinetags.org/wiki/Places#name&gt; "Pacific Grove" .
+_:place2 &lt;http://machinetags.org/wiki/Places#id&gt; "WM3JEXSbBZqqRtGA" .
+_:place2 &lt;http://machinetags.org/wiki/Places#placeid&gt; "2467327" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place3 .
+_:place3 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
+_:place3 &lt;http://machinetags.org/wiki/Places#type&gt; "county" .
+_:place3 &lt;http://machinetags.org/wiki/Places#name&gt; "Monterey" .
+_:place3 &lt;http://machinetags.org/wiki/Places#id&gt; "AQ4UpRqYA5l0BiyF.A" .
+_:place3 &lt;http://machinetags.org/wiki/Places#placeid&gt; "12587696" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place4 .
+_:place4 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
+_:place4 &lt;http://machinetags.org/wiki/Places#type&gt; "region" .
+_:place4 &lt;http://machinetags.org/wiki/Places#name&gt; "California" .
+_:place4 &lt;http://machinetags.org/wiki/Places#id&gt; "SVrAMtCbAphCLAtP" .
+_:place4 &lt;http://machinetags.org/wiki/Places#placeid&gt; "2347563" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place5 .
+_:place5 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
+_:place5 &lt;http://machinetags.org/wiki/Places#type&gt; "country" .
+_:place5 &lt;http://machinetags.org/wiki/Places#name&gt; "United States" .
+_:place5 &lt;http://machinetags.org/wiki/Places#id&gt; "4KO02SibApitvSBieQ" .
+_:place5 &lt;http://machinetags.org/wiki/Places#placeid&gt; "23424977" .
+</pre>
+
+<p>If you have raptor installed, you can get nicer RDF triples out
+and with <code>rapper</code> 1.4.14+, pretty-printed turtle:</p>
+<pre>
+$ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
 @prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
 @prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .
 @prefix foaf: &lt;http://xmlns.com/foaf/0.1/#&gt; .
@@ -242,35 +290,6 @@ $ flickrdf http://www.flickr.com/photos/dajobe/196308964/
     dc:title "Jellyfish at Monterey Aquarium" ;
     geo:lat "36.620487" ;
     geo:long "-121.904468" .
-</pre>
-
-<p>If you have raptor installed, you can get nicer RDF triples out
-and with <code>rapper</code> 1.4.14+, pretty-printed turtle:</p>
-<pre>
-$ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/ 
-@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
-@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .
-@prefix foaf: &lt;http://xmlns.com/foaf/0.1/#&gt; .
-@prefix geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt; .
-@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
-
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
-    dc:creator [
-        a foaf:Person ;
-        foaf:maker &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; ;
-        foaf:name "Dave Beckett" ;
-        foaf:nick "dajobe"
-    ] ;
-    dc:dateSubmitted "2006-07-23T18:16:13Z"^^xsd:dateTime ;
-    dc:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; ;
-    dc:modified "2007-02-25T07:45:46Z"^^xsd:dateTime ;
-    dc:issued "2006-07-23T18:16:13Z"^^xsd:dateTime ;
-    dc:created "2006-07-23T05:28:50Z"^^xsd:dateTime ;
-    geo:lat "36.620487" ;
-    geo:long "-121.904468" ;
-    dc:title "Jellyfish at Monterey Aquarium" ;
-    dc:subject "jellyfish" .
-
 </pre>
 
 
