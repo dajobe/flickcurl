@@ -19,6 +19,8 @@ bin_PROGRAMS = flickcurl flickrdf
 
 EXTRA_PROGRAMS = codegen list-methods
 
+CLEANFILES=$(EXTRA_PROGRAMS)
+
 AM_CPPFLAGS= -I$(top_srcdir)/src 
 
 flickcurl_SOURCES = flickcurl.c
