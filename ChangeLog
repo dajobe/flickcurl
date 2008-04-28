@@ -1,4 +1,31 @@
+2008-04-28  Dave Beckett <dave@dajobe.org>
+
+	* src/serializer.c: Declare namespaces needed for places triples
+
+2008-04-27  Dave Beckett <dave@dajobe.org>
+
+	* src/serializer.c: Added dopplr, flickr, places, geonames
+	namespaces pointing to machinetags.org
+	(flickcurl_serialize_photo): Generate triples from places
+
+	* utils/Makefile.am: clean up internal programs
+
+	* src/activity.c, src/args.c, src/blog.c, src/category.c,
+	src/comments.c, src/contacts.c, src/context.c, src/exif.c,
+	src/group.c, src/location.c, src/method.c, src/perms.c,
+	src/person.c, src/photo.c, src/photoset.c, src/place.c,
+	src/serializer.c, src/size.c, src/tags.c, src/ticket.c,
+	src/upload-api.c, src/user_upload_status.c, src/video.c: Use
+	FLICKCURL_ASSERT_OBJECT_POINTER_RETURN to check and protect NULL
+	pointers in destructors.
+
+	* src/flickcurl_internal.h: Added asset macros
+
 2008-04-15  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickrdf.c: code style
+
+	* src/serializer.c: gcc warning
 
 	* src/flickcurl.h: autodocs
 
