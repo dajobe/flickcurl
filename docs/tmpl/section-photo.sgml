@@ -28,6 +28,8 @@ Photo.
 @tags_count: 
 @fields: 
 @place: 
+@video: 
+@media_type: 
 
 <!-- ##### FUNCTION flickcurl_free_photo ##### -->
 <para>
@@ -127,6 +129,9 @@ Photo.
 @PHOTO_FIELD_county_woeid: 
 @PHOTO_FIELD_region_woeid: 
 @PHOTO_FIELD_country_woeid: 
+@PHOTO_FIELD_usage_candownload: 
+@PHOTO_FIELD_usage_canblog: 
+@PHOTO_FIELD_usage_canprint: 
 @PHOTO_FIELD_FIRST: 
 @PHOTO_FIELD_LAST: 
 
@@ -146,6 +151,7 @@ Photo.
 @VALUE_TYPE_STRING: 
 @VALUE_TYPE_URI: 
 @VALUE_TYPE_PERSON_ID: 
+@VALUE_TYPE_MEDIA_TYPE: 
 @VALUE_TYPE_LAST: 
 
 <!-- ##### FUNCTION flickcurl_photos_addTags ##### -->
@@ -598,6 +604,7 @@ Photo.
 @per_page: 
 @page: 
 @place_id: 
+@media: 
 
 <!-- ##### FUNCTION flickcurl_photos_setContentType ##### -->
 <para>

@@ -252,6 +252,15 @@ flickcurl_reflection_getMethods
 </SECTION>
 
 <SECTION>
+<FILE>section-serializer</FILE>
+flickcurl_serializer
+flickcurl_new_serializer
+flickcurl_free_serializer
+flickcurl_serialize_photo
+flickcurl_term_type
+</SECTION>
+
+<SECTION>
 <FILE>section-tag</FILE>
 flickcurl_tag
 flickcurl_free_tag
@@ -322,6 +331,7 @@ FLICKCURL_API
 flickcurl_s
 flickcurl_category_s
 flickcurl_photo_s
+flickcurl_serializer_s
 read_ini_config
 set_config_var_handler
 </SECTION>
