@@ -20,13 +20,13 @@ It uses
 <a href="http://www.flickr.com/services/api/request.rest.html">REST web service</a>
 and <a href="http://xmlsoft.org/">libxml2</a>
 to manipulate the XML responses.
-Flickcurl 1.0 or later supports 100% of the 2008-01-23 version of the API
+Flickcurl 1.0 or later supports 100% of the 2008-04-07 version of the API
 (see <a href="coverage.html">Flickcurl API coverage</a>)
-including the functions for photo uploading, browsing, searching,
+including the functions for photo/video uploading, browsing, searching,
 adding and editing comments, groups, notes, photosets, categories,
-activity, blogs, favorites, places, tags and photo metadata.  It also
-includes a program <code>flickrdf</code> to turn photo metadata, tags
-and machine tags into RDF descriptions of photos and tags.
+activity, blogs, favorites, places, tags and photo, video metadata.  It also
+includes a program <code>flickrdf</code> to turn photo metadata, tags,
+machine tags and places into an RDF triples description.
 </p>
 
 <p>License: LGPL 2.1 / GPL 2  / Apache 2.0</p>
@@ -72,6 +72,12 @@ auth_token=1234567-8901234567890123
 api_key=0123456789abcdef0123456789abcdef
 secret=fedcba9876543210
 </pre>
+
+<p>See
+<a href="http://librdf.org/flickcurl/api/flickcurl-auth.html">Authenticating Flickcurl</a>
+in the manual for full details of how to build flickcurl,
+authenticate and set up the configuration file above.
+</p>
 
 
 <h2>Utility programs</h2>
@@ -161,7 +167,7 @@ field country_woeid (48) with string value: '23424977' / -1
 <h3><code>flickrdf</code> - generate RDF triples from a Flickr photo</h3>
 
 <p>This utility uses the photos.getInfo API to interpret the
-description fields and the tags for a photo URI into RDF triples.
+description fields, tags and places for a photo URI into RDF triples.
 If <a href="http://librdf.org/raptor/">raptor</a> is present,
 it will be used to provide proper serializing to RDF rather than
 the built in and hacky ntriples/turtle output.
@@ -177,22 +183,65 @@ as <code>blue:</code>, <code>cell:</code>,
 are not yet interpreted.
 </p>
 
+<p>Places attached to photos are turned into extra information
+blocks (sets of triples) hung off a <code>places:place</code>
+predicate.</p>
+
 <pre>
 $ flickrdf http://www.flickr.com/photos/dajobe/196308964/
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/creator&gt; _:person .
-_:person &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Person&gt; .
-_:person &lt;http://xmlns.com/foaf/0.1/#maker&gt; &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/dateSubmitted&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/rights&gt; &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/modified&gt; "2007-02-25T07:45:46Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/issued&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/created&gt; "2006-07-23T05:28:50Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#lat&gt; "36.620487" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#long&gt; "-121.904468" .
-_:person &lt;http://xmlns.com/foaf/0.1/#name&gt; "Dave Beckett" .
-_:person &lt;http://xmlns.com/foaf/0.1/#nick&gt; "dajobe" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/title&gt; "Jellyfish at Monterey Aquarium" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/subject&gt; "jellyfish" .
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .
+@prefix foaf: &lt;http://xmlns.com/foaf/0.1/#&gt; .
+@prefix geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt; .
+@prefix places: &lt;http://machinetags.org/wiki/Places#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
+    places:place [
+        places:id "WM3JEXSbBZqqRtGA" ;
+        places:placeid "2467327" ;
+        places:type "location" ;
+        a places:Place
+    ], [
+        places:id "WM3JEXSbBZqqRtGA" ;
+        places:name "Pacific Grove" ;
+        places:placeid "2467327" ;
+        places:type "locality" ;
+        a places:Place
+    ], [
+        places:id "AQ4UpRqYA5l0BiyF.A" ;
+        places:name "Monterey" ;
+        places:placeid "12587696" ;
+        places:type "county" ;
+        a places:Place
+    ], [
+        places:id "SVrAMtCbAphCLAtP" ;
+        places:name "California" ;
+        places:placeid "2347563" ;
+        places:type "region" ;
+        a places:Place
+    ], [
+        places:id "4KO02SibApitvSBieQ" ;
+        places:name "United States" ;
+        places:placeid "23424977" ;
+        places:type "country" ;
+        a places:Place
+    ] ;
+    dc:created "2006-07-22 22:28:50" ;
+    dc:creator [
+        a foaf:Person ;
+        foaf:maker &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; ;
+        foaf:name "Dave Beckett" ;
+        foaf:nick "dajobe"
+    ] ;
+    dc:dateSubmitted "2006-07-23T18:16:13Z"^^xsd:dateTime ;
+    dc:issued "2006-07-23T18:16:13Z"^^xsd:dateTime ;
+    dc:modified "2007-02-25T07:45:46Z"^^xsd:dateTime ;
+    dc:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; ;
+    dc:subject "jellyfish" ;
+    dc:title "Jellyfish at Monterey Aquarium" ;
+    geo:lat "36.620487" ;
+    geo:long "-121.904468" .
 </pre>
 
 <p>If you have raptor installed, you can get nicer RDF triples out
