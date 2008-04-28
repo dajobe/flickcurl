@@ -32,6 +32,75 @@
 #error "Cannot define both OFFLINE and CAPTURE"
 #endif
 
+
+#ifdef FLICKCURL_DEBUG
+
+#ifndef FLICKCURL_ASSERT_DIE
+#define FLICKCURL_ASSERT_DIE abort();
+#endif
+
+#else
+/* No debugging messages */
+#ifndef FLICKCURL_ASSERT_DIE
+#define FLICKCURL_ASSERT_DIE
+#endif
+
+#endif
+
+
+#ifdef FLICKCURL_DISABLE_ASSERT_MESSAGES
+#define FLICKCURL_ASSERT_REPORT(line)
+#else
+#define FLICKCURL_ASSERT_REPORT(msg) fprintf(stderr, "%s:%d: (%s) assertion failed: " msg "\n", __FILE__, __LINE__, __func__);
+#endif
+
+
+#ifdef FLICKCURL_DISABLE_ASSERT
+
+#define FLICKCURL_ASSERT(condition, msg) 
+#define FLICKCURL_ASSERT_RETURN(condition, msg, ret) 
+#define FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(pointer, type) do { \
+  if(!pointer) \
+    return; \
+} while(0)
+#define FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(pointer, type, ret)
+
+#else
+
+#define FLICKCURL_ASSERT(condition, msg) do { \
+  if(condition) { \
+    FLICKCURL_ASSERT_REPORT(msg) \
+    FLICKCURL_ASSERT_DIE \
+  } \
+} while(0)
+
+#define FLICKCURL_ASSERT_RETURN(condition, msg, ret) do { \
+  if(condition) { \
+    FLICKCURL_ASSERT_REPORT(msg) \
+    FLICKCURL_ASSERT_DIE \
+    return ret; \
+  } \
+} while(0)
+
+#define FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(pointer, type) do { \
+  if(!pointer) { \
+    FLICKCURL_ASSERT_REPORT("object pointer of type " #type " is NULL.") \
+    FLICKCURL_ASSERT_DIE \
+    return; \
+  } \
+} while(0)
+
+#define FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(pointer, type, ret) do { \
+  if(!pointer) { \
+    FLICKCURL_ASSERT_REPORT("object pointer of type " #type " is NULL.") \
+    FLICKCURL_ASSERT_DIE \
+    return ret; \
+  } \
+} while(0)
+
+#endif
+
+
 /* flickcurl.c */
 /* Prepare Flickr API request - GET or POST with URI parameters with auth */
 int flickcurl_prepare(flickcurl *fc, const char* method, const char* parameters[][2], int count);
