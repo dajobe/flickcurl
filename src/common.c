@@ -52,6 +52,12 @@
 # endif
 #endif
 
+#ifdef OFFLINE
+#ifdef HAVE_RAPTOR
+#include <raptor.h>
+#endif
+#endif
+
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 
@@ -923,12 +929,22 @@ flickcurl_invoke(flickcurl *fc)
 
 #ifdef OFFLINE
   if(1) {
+#ifdef HAVE_RAPTOR
+    char* uri_string;
+#endif
+    
     if(access(filename, R_OK)) {
       fprintf(stderr, "Method %s cannot run offline - no %s XML result available\n",
               fc->method, filename);
       return NULL;
     }
+#ifdef HAVE_RAPTOR
+    uri_string=raptor_uri_filename_to_uri_string(filename);
+    strcpy(fc->uri, uri_string);
+    raptor_free_memory(uri_string);
+#else
     sprintf(fc->uri, "file:%s", filename);
+#endif
     fprintf(stderr, "Method %s: running offline using result from %s\n", 
             fc->method, filename);
   }
