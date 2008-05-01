@@ -223,6 +223,7 @@ AC_MSG_RESULT($offline);
 if test $offline = yes; then
   AC_DEFINE(OFFLINE, 1, [Offline mode])
 fi
+AM_CONDITIONAL(OFFLINE, test $offline = yes)
 
 
 AC_ARG_ENABLE(capture, [  --enable-capture        Turn on capturing web service responses (default disabled).  ], capture="yes", capture="no")	
