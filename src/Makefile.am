@@ -72,3 +72,13 @@ test-api.c \
 upload-api.c \
 urls-api.c \
 flickcurl_internal.h
+
+AM_CFLAGS=
+libflickcurl_la_LIBADD=
+
+if OFFLINE
+if RAPTOR
+AM_CFLAGS += @RAPTOR_CFLAGS@
+libflickcurl_la_LIBADD += @RAPTOR_LIBS@
+endif
+endif
