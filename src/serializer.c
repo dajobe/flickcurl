@@ -302,6 +302,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 {
   int i;
   int need_person=0;
+  int need_foaf=0;
   flickrdf_nspace* nspaces=NULL;
   flickrdf_nspace* ns;
   flickcurl_serializer_factory* fsf=fcs->factory;
@@ -310,17 +311,22 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   FILE* fh=stderr;
   const char* label="libflickcurl";
 #endif
+  flickcurl_size** sizes=NULL;
 
   if(!photo)
     return 1;
-  
-  /* Always add XSD and RDF namespaces */
+
+  /* Always add XSD, RDF and Flickr namespaces */
   nspaces=nspace_add_if_not_declared(nspaces, NULL, XSD_NS);
   nspaces=nspace_add_if_not_declared(nspaces, "rdf", RDF_NS);
+  nspaces=nspace_add_if_not_declared(nspaces, "flickr", FLICKR_NS);
 
   if(photo->place)
     nspaces=nspace_add_if_not_declared(nspaces, "places", PLACES_NS);
 
+  sizes=flickcurl_photos_getSizes(fc, photo->id);
+  if(sizes)
+    need_foaf=1;
 
   /* mark namespaces used in fields */
   for(i=PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
@@ -387,7 +393,11 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 #endif
 
   if(need_person) {
+    need_foaf=1;
     nspaces=nspace_add_if_not_declared(nspaces, "dc", DC_NS);
+  }
+  
+  if(need_foaf) {
     nspaces=nspace_add_if_not_declared(nspaces, "foaf", FOAF_NS);
   }
 
@@ -635,7 +645,50 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
                          NULL);
     }
   }
-  
+
+
+  /* generate triples from sizes */
+  if(sizes) {
+    for(i=0; sizes[i]; i++) {
+      flickcurl_size* size=sizes[i];
+      char hbuf[10];
+      char wbuf[10];
+      
+      fsf->emit_triple(fcs->data,
+                       photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
+                       FLICKR_NS, "image",
+                       size->source, FLICKCURL_TERM_TYPE_RESOURCE,
+                       NULL);
+      fsf->emit_triple(fcs->data,
+                       size->source, FLICKCURL_TERM_TYPE_RESOURCE,
+                       RDF_NS, "type",
+                       FOAF_NS "Image", FLICKCURL_TERM_TYPE_RESOURCE,
+                       NULL);
+      
+      if(size->label)
+        fsf->emit_triple(fcs->data,
+                         size->source, FLICKCURL_TERM_TYPE_RESOURCE,
+                         RDF_NS, "label",
+                         size->label, FLICKCURL_TERM_TYPE_LITERAL,
+                         NULL);
+      sprintf(wbuf, "%d", size->width);
+      fsf->emit_triple(fcs->data,
+                       size->source, FLICKCURL_TERM_TYPE_RESOURCE,
+                       FLICKR_NS, "imageWidth",
+                       wbuf, FLICKCURL_TERM_TYPE_LITERAL,
+                       XSD_NS "integer");
+      sprintf(hbuf, "%d", size->height);
+      fsf->emit_triple(fcs->data,
+                       size->source, FLICKCURL_TERM_TYPE_RESOURCE,
+                       FLICKR_NS, "imageHeight",
+                       hbuf, FLICKCURL_TERM_TYPE_LITERAL,
+                       XSD_NS "integer");
+
+    }
+    flickcurl_free_sizes(sizes);
+  }
+
+
   if(nspaces)
     free_nspaces(nspaces);
   
