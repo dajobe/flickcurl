@@ -47,6 +47,7 @@
 #define FOAF_NS "http://xmlns.com/foaf/0.1/#"
 #define XSD_NS "http://www.w3.org/2001/XMLSchema#"
 #define RDF_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define RDFS_NS "http://www.w3.org/2000/01/rdf-schema#"
 #define DOPPLR_NS "http://machinetags.org/wiki/Dopplr#"
 #define FLICKR_NS "http://machinetags.org/wiki/Flickr#"
 #define PLACES_NS "http://machinetags.org/wiki/Places#"
@@ -667,7 +668,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
       if(size->label)
         fsf->emit_triple(fcs->data,
                          size->source, FLICKCURL_TERM_TYPE_RESOURCE,
-                         RDF_NS, "label",
+                         RDFS_NS, "label",
                          size->label, FLICKCURL_TERM_TYPE_LITERAL,
                          NULL);
       sprintf(buf, "%d", size->width);
