@@ -391,10 +391,6 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   }
 
 
-#if FLICKCURL_DEBUG > 1
-  print_nspaces(fh, label, nspaces);
-#endif
-
   if(need_person) {
     need_foaf=1;
     nspaces=nspace_add_if_not_declared(nspaces, "dc", DC_NS);
@@ -406,6 +402,10 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   if(need_rdfs)
     nspaces=nspace_add_if_not_declared(nspaces, "rdfs", RDFS_NS);
 
+
+#if FLICKCURL_DEBUG > 1
+  print_nspaces(fh, label, nspaces);
+#endif
 
   /* generate seen namespace declarations */
   for(ns=nspaces; ns; ns=ns->next)
