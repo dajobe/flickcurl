@@ -41,17 +41,16 @@
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 
-
-#define DC_NS "http://purl.org/dc/elements/1.1/"
-#define GEO_NS "http://www.w3.org/2003/01/geo/wgs84_pos#"
-#define FOAF_NS "http://xmlns.com/foaf/0.1/#"
-#define XSD_NS "http://www.w3.org/2001/XMLSchema#"
-#define RDF_NS "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-#define RDFS_NS "http://www.w3.org/2000/01/rdf-schema#"
-#define DOPPLR_NS "http://machinetags.org/wiki/Dopplr#"
-#define FLICKR_NS "http://machinetags.org/wiki/Flickr#"
-#define PLACES_NS "http://machinetags.org/wiki/Places#"
+#define DC_NS       "http://purl.org/dc/elements/1.1/"
+#define DOPPLR_NS   "http://machinetags.org/wiki/Dopplr#"
+#define FLICKR_NS   "http://machinetags.org/wiki/Flickr#"
+#define FOAF_NS     "http://xmlns.com/foaf/0.1/#"
 #define GEONAMES_NS "http://machinetags.org/wiki/Geonames#"
+#define GEO_NS      "http://www.w3.org/2003/01/geo/wgs84_pos#"
+#define PLACES_NS   "http://machinetags.org/wiki/Places#"
+#define RDFS_NS     "http://www.w3.org/2000/01/rdf-schema#"
+#define RDF_NS      "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+#define XSD_NS      "http://www.w3.org/2001/XMLSchema#"
 
 struct flickrdf_nspace_s
 {
