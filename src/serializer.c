@@ -81,7 +81,7 @@ flickrdf_nspace namespace_table[]={
   { (char*)"ph",       (char*)"http://machinetags.org/wiki/Ph#" },
   { (char*)"places",   (char*)PLACES_NS, },
   { (char*)"rdf",      (char*)RDF_NS },
-  { (char*)"rdfs",     (char*)"http://www.w3.org/2000/01/rdf-schema#" },
+  { (char*)"rdfs",     (char*)RDFS_NS },
   { (char*)"skos",     (char*)"http://www.w3.org/2004/02/skos/core" },
   { (char*)"upcoming", (char*)"http://machinetags.org/wiki/Upcoming#" },
   { (char*)"xsd",      (char*)XSD_NS, },
