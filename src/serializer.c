@@ -303,6 +303,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   int i;
   int need_person=0;
   int need_foaf=0;
+  int need_rdfs=0;
   flickrdf_nspace* nspaces=NULL;
   flickrdf_nspace* ns;
   flickcurl_serializer_factory* fsf=fcs->factory;
@@ -325,8 +326,10 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
     nspaces=nspace_add_if_not_declared(nspaces, "places", PLACES_NS);
 
   sizes=flickcurl_photos_getSizes(fc, photo->id);
-  if(sizes)
+  if(sizes) {
     need_foaf=1;
+    need_rdfs=1;
+  }
 
   /* mark namespaces used in fields */
   for(i=PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
@@ -397,9 +400,11 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
     nspaces=nspace_add_if_not_declared(nspaces, "dc", DC_NS);
   }
   
-  if(need_foaf) {
+  if(need_foaf)
     nspaces=nspace_add_if_not_declared(nspaces, "foaf", FOAF_NS);
-  }
+
+  if(need_rdfs)
+    nspaces=nspace_add_if_not_declared(nspaces, "rdfs", RDFS_NS);
 
 
   /* generate seen namespace declarations */
