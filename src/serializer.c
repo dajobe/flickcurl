@@ -651,8 +651,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   if(sizes) {
     for(i=0; sizes[i]; i++) {
       flickcurl_size* size=sizes[i];
-      char hbuf[10];
-      char wbuf[10];
+      char buf[10];
       
       fsf->emit_triple(fcs->data,
                        photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
@@ -671,17 +670,17 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
                          RDF_NS, "label",
                          size->label, FLICKCURL_TERM_TYPE_LITERAL,
                          NULL);
-      sprintf(wbuf, "%d", size->width);
+      sprintf(buf, "%d", size->width);
       fsf->emit_triple(fcs->data,
                        size->source, FLICKCURL_TERM_TYPE_RESOURCE,
                        FLICKR_NS, "imageWidth",
-                       wbuf, FLICKCURL_TERM_TYPE_LITERAL,
+                       buf, FLICKCURL_TERM_TYPE_LITERAL,
                        XSD_NS "integer");
-      sprintf(hbuf, "%d", size->height);
+      sprintf(buf, "%d", size->height);
       fsf->emit_triple(fcs->data,
                        size->source, FLICKCURL_TERM_TYPE_RESOURCE,
                        FLICKR_NS, "imageHeight",
-                       hbuf, FLICKCURL_TERM_TYPE_LITERAL,
+                       buf, FLICKCURL_TERM_TYPE_LITERAL,
                        XSD_NS "integer");
 
     }
