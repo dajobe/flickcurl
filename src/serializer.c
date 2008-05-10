@@ -657,16 +657,23 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
     for(i=0; sizes[i]; i++) {
       flickcurl_size* size=sizes[i];
       char buf[10];
-      
+      int is_photo;
+      const char* sizePredicate;
+      const char* sizeClass;
+
+      is_photo=(!strcmp(size->media, "photo"));
+      sizePredicate=is_photo ? "photo" : "video";
+      sizeClass=is_photo ? FOAF_NS "Image" : FLICKR_NS "Video";
+
       fsf->emit_triple(fcs->data,
                        photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
-                       FLICKR_NS, "image",
+                       FLICKR_NS, sizePredicate,
                        size->source, FLICKCURL_TERM_TYPE_RESOURCE,
                        NULL);
       fsf->emit_triple(fcs->data,
                        size->source, FLICKCURL_TERM_TYPE_RESOURCE,
                        RDF_NS, "type",
-                       FOAF_NS "Image", FLICKCURL_TERM_TYPE_RESOURCE,
+                       sizeClass, FLICKCURL_TERM_TYPE_RESOURCE,
                        NULL);
       
       if(size->label)
@@ -678,13 +685,13 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
       sprintf(buf, "%d", size->width);
       fsf->emit_triple(fcs->data,
                        size->source, FLICKCURL_TERM_TYPE_RESOURCE,
-                       FLICKR_NS, "imageWidth",
+                       FLICKR_NS, "width",
                        buf, FLICKCURL_TERM_TYPE_LITERAL,
                        XSD_NS "integer");
       sprintf(buf, "%d", size->height);
       fsf->emit_triple(fcs->data,
                        size->source, FLICKCURL_TERM_TYPE_RESOURCE,
-                       FLICKR_NS, "imageHeight",
+                       FLICKR_NS, "height",
                        buf, FLICKCURL_TERM_TYPE_LITERAL,
                        XSD_NS "integer");
 
