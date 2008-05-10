@@ -54,6 +54,9 @@ flickcurl_free_size(flickcurl_size *size)
   if(size->url)
     free(size->url);
   
+  if(size->media)
+    free(size->media);
+  
   free(size);
 }
 
@@ -134,6 +137,8 @@ flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         s->source=attr_value;
       } else if(!strcmp(attr_name, "url")) {
         s->url=attr_value;
+      } else if(!strcmp(attr_name, "media")) {
+        s->media=attr_value;
       }
     }
 
