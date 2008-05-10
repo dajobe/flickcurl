@@ -1907,10 +1907,12 @@ command_photos_getSizes(flickcurl* fc, int argc, char *argv[])
   if(!sizes)
     return 1;
 
-  fprintf(stderr, "%s: Photo sizes for photo %s\n", program, photo_id);
+  fprintf(stderr, "%s: Sizes for photo/video %s\n", program, photo_id);
   for(i=0; sizes[i]; i++) {
-    fprintf(stderr, "%d: label '%s' width %d height %d\n  source %s\n  url %s\n",
-            i, sizes[i]->label, sizes[i]->width, sizes[i]->height,
+    fprintf(stderr,
+            "%d: type '%s' label '%s' width %d height %d\n  source %s\n  url %s\n",
+            i, sizes[i]->media,
+            sizes[i]->label, sizes[i]->width, sizes[i]->height,
             sizes[i]->source, sizes[i]->url);
   }
   
