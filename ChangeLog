@@ -1,3 +1,33 @@
+2008-05-10  Dave Beckett <dave@dajobe.org>
+
+	* src/serializer.c: Add dc: for old dc namespace, new stuff to
+	dcterms:
+
+	* src/serializer.c: make geo:lat and geo:long into floats
+
+	* src/serializer.c: Use flickcurl_sqltimestamp_to_isotime to
+	convert dc:created from SQL form to XSD.
+
+	* src/common.c: (flickcurl_sqltimestamp_to_isotime): Fix end of
+	string
+
+	* src/common.c, src/flickcurl_internal.h: Added
+	flickcurl_sqltimestamp_to_isotime for convertion sql timestamp to
+	iso time format
+
+	* src/serializer.c: Namespace notes. Update DC to new 2008
+	http://purl.org/dc/dcterms/ namespace from old
+	http://purl.org/dc/elements/1.1/
+
+	* utils/flickcurl.c: Update sizes
+
+	* src/serializer.c: Add photo/video size info to serializing
+
+	* src/size.c: (flickcurl_free_size): free media param
+	(flickcurl_build_sizes): decode media
+
+	* src/flickcurl.h: Add media field to flickcurl_size
+
 2008-05-09  Dave Beckett <dave@dajobe.org>
 
 	* src/serializer.c: move debug
