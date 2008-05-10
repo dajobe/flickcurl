@@ -41,16 +41,41 @@
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 
-#define DC_NS       "http://purl.org/dc/elements/1.1/"
-#define DOPPLR_NS   "http://machinetags.org/wiki/Dopplr#"
-#define FLICKR_NS   "http://machinetags.org/wiki/Flickr#"
+/* Public namespaces */
+#define DCTERMS_NS  "http://purl.org/dc/terms/"
+/* predicates dc:creator dc:dateSubmitted dc:rights dc:modified dc:issued
+ * dc:created dc:description dc:title */
 #define FOAF_NS     "http://xmlns.com/foaf/0.1/#"
-#define GEONAMES_NS "http://machinetags.org/wiki/Geonames#"
+/* predicates foaf:maker foaf:name foaf:nick
+ * classes foaf:Person foaf:Image */
 #define GEO_NS      "http://www.w3.org/2003/01/geo/wgs84_pos#"
-#define PLACES_NS   "http://machinetags.org/wiki/Places#"
+/* predicates geo:lat geo:long */
 #define RDFS_NS     "http://www.w3.org/2000/01/rdf-schema#"
+/* predicates rdfs:label */
 #define RDF_NS      "http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+/* predicates rdf:type */
 #define XSD_NS      "http://www.w3.org/2001/XMLSchema#"
+/* XSD datatypes xsd:boolean xsd:dateTime xsd:double xsd:integer */
+
+/* Flickr terminology namespaces */
+#define FLICKR_NS   "http://machinetags.org/ns/Flickr#"
+/* predicates flickr:image flickr:video flickr:width flickr:height
+ * classes flickr:Video */
+#define PLACES_NS   "http://machinetags.org/ns/Places#"
+/* predicates places:place places:type places:name places:id places:placeid
+ * places:url
+ * class places:Place
+ */
+
+/* Machine tag namespaces */
+#define BLUE_NS     "http://machinetags.org/ns/Blue#"
+#define CELL_NS     "http://machinetags.org/ns/Cell#"
+#define DOPPLR_NS   "http://machinetags.org/ns/Dopplr#"
+#define FILTR_NS    "http://machinetags.org/ns/Filtr#"
+#define GEONAMES_NS "http://machinetags.org/ns/Geonames#"
+#define PH_NS       "http://machinetags.org/ns/Ph#"
+#define UPCOMING_NS "http://machinetags.org/ns/Upcoming#"
+
 
 struct flickrdf_nspace_s
 {
@@ -66,24 +91,24 @@ typedef struct flickrdf_nspace_s flickrdf_nspace;
 flickrdf_nspace namespace_table[]={
   { (char*)"a",        (char*)"http://www.w3.org/2000/10/annotation-ns" },
   { (char*)"acl",      (char*)"http://www.w3.org/2001/02/acls#" },
-  { (char*)"blue",     (char*)"http://machinetags.org/wiki/Blue#", },
-  { (char*)"cell",     (char*)"http://machinetags.org/wiki/Cell#", },
-  { (char*)"dc",       (char*)DC_NS },
+  { (char*)"blue",     (char*)BLUE_NS, },
+  { (char*)"cell",     (char*)CELL_NS, },
+  { (char*)"dc",       (char*)DCTERMS_NS },
   { (char*)"dopplr",   (char*)DOPPLR_NS },
   { (char*)"exif",     (char*)"http://nwalsh.com/rdf/exif#" },
   { (char*)"exifi",    (char*)"http://nwalsh.com/rdf/exif-intrinsic#" },
   { (char*)"flickr",   (char*)FLICKR_NS },
-  { (char*)"filtr",    (char*)"http://machinetags.org/wiki/Filtr#", },
+  { (char*)"filtr",    (char*)FILTR_NS, },
   { (char*)"foaf",     (char*)FOAF_NS },
   { (char*)"geo",      (char*)GEO_NS, },
   { (char*)"geonames", (char*)GEONAMES_NS, },
   { (char*)"i",        (char*)"http://www.w3.org/2004/02/image-regions#" },
-  { (char*)"ph",       (char*)"http://machinetags.org/wiki/Ph#" },
+  { (char*)"ph",       (char*)PH_NS },
   { (char*)"places",   (char*)PLACES_NS, },
   { (char*)"rdf",      (char*)RDF_NS },
   { (char*)"rdfs",     (char*)RDFS_NS },
   { (char*)"skos",     (char*)"http://www.w3.org/2004/02/skos/core" },
-  { (char*)"upcoming", (char*)"http://machinetags.org/wiki/Upcoming#" },
+  { (char*)"upcoming", (char*)UPCOMING_NS },
   { (char*)"xsd",      (char*)XSD_NS, },
   { NULL, NULL }
 };
@@ -99,20 +124,20 @@ static struct {
 } field_table[]={
   /* dc:available -- date that the resource will become/did become available.*/
   /* dc:dateSubmitted - Date of submission of resource (e.g. thesis, articles)*/
-  { PHOTO_FIELD_dateuploaded,       DC_NS,   "dateSubmitted" },
-  { PHOTO_FIELD_license,            DC_NS,   "rights" },
+  { PHOTO_FIELD_dateuploaded,       DCTERMS_NS, "dateSubmitted" },
+  { PHOTO_FIELD_license,            DCTERMS_NS, "rights" },
   /* dc:modified - date on which the resource was changed. */
-  { PHOTO_FIELD_dates_lastupdate,   DC_NS,   "modified" },
+  { PHOTO_FIELD_dates_lastupdate,   DCTERMS_NS, "modified" },
   /* dc:issued - date of formal issuance (e.g. publication of the resource */
-  { PHOTO_FIELD_dates_posted,       DC_NS,   "issued" },
+  { PHOTO_FIELD_dates_posted,       DCTERMS_NS, "issued" },
   /* dc:created - date of creation of the resource */
-  { PHOTO_FIELD_dates_taken,        DC_NS,   "created" },
-  { PHOTO_FIELD_description,        DC_NS,   "description" },
-  { PHOTO_FIELD_location_latitude,  GEO_NS,  "lat", FIELD_FLAGS_STRING },
-  { PHOTO_FIELD_location_longitude, GEO_NS,  "long", FIELD_FLAGS_STRING },
-  { PHOTO_FIELD_owner_realname,     FOAF_NS, "name", FIELD_FLAGS_PERSON },
-  { PHOTO_FIELD_owner_username,     FOAF_NS, "nick", FIELD_FLAGS_PERSON },
-  { PHOTO_FIELD_title,              DC_NS,   "title" },
+  { PHOTO_FIELD_dates_taken,        DCTERMS_NS, "created" },
+  { PHOTO_FIELD_description,        DCTERMS_NS, "description" },
+  { PHOTO_FIELD_location_latitude,  GEO_NS,     "lat",  FIELD_FLAGS_STRING },
+  { PHOTO_FIELD_location_longitude, GEO_NS,     "long", FIELD_FLAGS_STRING },
+  { PHOTO_FIELD_owner_realname,     FOAF_NS,    "name", FIELD_FLAGS_PERSON },
+  { PHOTO_FIELD_owner_username,     FOAF_NS,    "nick", FIELD_FLAGS_PERSON },
+  { PHOTO_FIELD_title,              DCTERMS_NS, "title" },
   { PHOTO_FIELD_none, NULL, NULL }
 };
 
@@ -393,7 +418,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
   if(need_person) {
     need_foaf=1;
-    nspaces=nspace_add_if_not_declared(nspaces, "dc", DC_NS);
+    nspaces=nspace_add_if_not_declared(nspaces, "dc", DCTERMS_NS);
   }
   
   if(need_foaf)
@@ -416,7 +441,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   if(need_person) {
     fsf->emit_triple(fcs->data,
                      photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
-                     DC_NS, "creator",
+                     DCTERMS_NS, "creator",
                      "person", FLICKCURL_TERM_TYPE_BLANK,
                      NULL);
     fsf->emit_triple(fcs->data,
