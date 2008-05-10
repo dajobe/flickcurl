@@ -42,6 +42,7 @@
 #include <flickcurl_internal.h>
 
 /* Public namespaces */
+#define DC_NS       "http://purl.org/dc/elements/1.1/"
 #define DCTERMS_NS  "http://purl.org/dc/terms/"
 /* predicates dc:creator dc:dateSubmitted dc:rights dc:modified dc:issued
  * dc:created dc:description dc:title */
@@ -93,7 +94,8 @@ flickrdf_nspace namespace_table[]={
   { (char*)"acl",      (char*)"http://www.w3.org/2001/02/acls#" },
   { (char*)"blue",     (char*)BLUE_NS, },
   { (char*)"cell",     (char*)CELL_NS, },
-  { (char*)"dc",       (char*)DCTERMS_NS },
+  { (char*)"dc",       (char*)DC_NS },
+  { (char*)"dcterms",  (char*)DCTERMS_NS },
   { (char*)"dopplr",   (char*)DOPPLR_NS },
   { (char*)"exif",     (char*)"http://nwalsh.com/rdf/exif#" },
   { (char*)"exifi",    (char*)"http://nwalsh.com/rdf/exif-intrinsic#" },
