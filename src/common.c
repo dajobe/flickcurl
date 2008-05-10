@@ -1235,9 +1235,8 @@ flickcurl_unixtime_to_sqltimestamp(time_t unix_time)
 char*
 flickcurl_sqltimestamp_to_isotime(const char* timestamp)
 {
-#define SQL_DATETIME_FORMAT "%Y %m %d %H:%M:%S"
-#define SQL_DATETIME_LEN 19
-#define ISO_DATE_FORMAT "%Y-%m-%dT%H:%M:%SZ"
+/* SQL DATETIME FORMAT "%Y %m %d %H:%M:%S"  (19 chars) */
+/* ISO DATE FORMAT     "%Y-%m-%dT%H:%M:%SZ" (20 chars) */
 #define ISO_DATE_LEN 20
   size_t len=ISO_DATE_LEN;
   char *value=NULL;
@@ -1249,7 +1248,8 @@ flickcurl_sqltimestamp_to_isotime(const char* timestamp)
   value[10]='T';
   value[13]=':';
   value[16]=':';
-  value[19]=':';
+  value[19]='Z';
+  value[20]='\0';
   
   return value;
 }
