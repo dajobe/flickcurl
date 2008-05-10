@@ -115,6 +115,7 @@ flickrdf_nspace namespace_table[]={
 
 #define FIELD_FLAGS_PERSON 1
 #define FIELD_FLAGS_STRING 2
+#define FIELD_FLAGS_SQL_DATE 4
 
 static struct {
   flickcurl_photo_field_type field;
@@ -131,7 +132,7 @@ static struct {
   /* dc:issued - date of formal issuance (e.g. publication of the resource */
   { PHOTO_FIELD_dates_posted,       DCTERMS_NS, "issued" },
   /* dc:created - date of creation of the resource */
-  { PHOTO_FIELD_dates_taken,        DCTERMS_NS, "created" },
+  { PHOTO_FIELD_dates_taken,        DCTERMS_NS, "created", FIELD_FLAGS_SQL_DATE },
   { PHOTO_FIELD_description,        DCTERMS_NS, "description" },
   { PHOTO_FIELD_location_latitude,  GEO_NS,     "lat",  FIELD_FLAGS_STRING },
   { PHOTO_FIELD_location_longitude, GEO_NS,     "long", FIELD_FLAGS_STRING },
@@ -470,6 +471,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
     for(f=0; field_table[f].field != PHOTO_FIELD_none; f++) {
       const char* datatype_uri=NULL;
       char* object=NULL;
+      char* new_object=NULL;
       int type= FLICKCURL_TERM_TYPE_LITERAL;
       
       if(field_table[f].field != field) 
@@ -487,8 +489,13 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
       object=photo->fields[field].string;
 
-      if(field_table[f].flags & FIELD_FLAGS_STRING)
+      if(field_table[f].flags & FIELD_FLAGS_STRING) {
         datatype=VALUE_TYPE_STRING;
+      } else if(field_table[f].flags & FIELD_FLAGS_SQL_DATE) {
+        new_object=flickcurl_sqltimestamp_to_isotime(object);
+        object=new_object;
+        datatype=VALUE_TYPE_DATETIME;
+      }
 
       if(field == PHOTO_FIELD_license) {
         flickcurl_license* license;
@@ -552,6 +559,10 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
                          field_table[f].nspace_uri, field_table[f].name,
                          object, type,
                          datatype_uri);
+
+      if(new_object)
+        free(new_object);
+      
       break;
     }
   }
