@@ -113,9 +113,10 @@ flickrdf_nspace namespace_table[]={
   { NULL, NULL }
 };
 
-#define FIELD_FLAGS_PERSON 1
-#define FIELD_FLAGS_STRING 2
+#define FIELD_FLAGS_PERSON   1
+#define FIELD_FLAGS_STRING   2
 #define FIELD_FLAGS_SQL_DATE 4
+#define FIELD_FLAGS_FLOAT    8
 
 static struct {
   flickcurl_photo_field_type field;
@@ -134,8 +135,8 @@ static struct {
   /* dc:created - date of creation of the resource */
   { PHOTO_FIELD_dates_taken,        DCTERMS_NS, "created", FIELD_FLAGS_SQL_DATE },
   { PHOTO_FIELD_description,        DCTERMS_NS, "description" },
-  { PHOTO_FIELD_location_latitude,  GEO_NS,     "lat",  FIELD_FLAGS_STRING },
-  { PHOTO_FIELD_location_longitude, GEO_NS,     "long", FIELD_FLAGS_STRING },
+  { PHOTO_FIELD_location_latitude,  GEO_NS,     "lat",  FIELD_FLAGS_FLOAT },
+  { PHOTO_FIELD_location_longitude, GEO_NS,     "long", FIELD_FLAGS_FLOAT },
   { PHOTO_FIELD_owner_realname,     FOAF_NS,    "name", FIELD_FLAGS_PERSON },
   { PHOTO_FIELD_owner_username,     FOAF_NS,    "nick", FIELD_FLAGS_PERSON },
   { PHOTO_FIELD_title,              DCTERMS_NS, "title" },
@@ -491,6 +492,8 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
       if(field_table[f].flags & FIELD_FLAGS_STRING) {
         datatype=VALUE_TYPE_STRING;
+      } else if(field_table[f].flags & FIELD_FLAGS_FLOAT) {
+        datatype=VALUE_TYPE_FLOAT;
       } else if(field_table[f].flags & FIELD_FLAGS_SQL_DATE) {
         new_object=flickcurl_sqltimestamp_to_isotime(object);
         object=new_object;
