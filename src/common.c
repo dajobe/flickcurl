@@ -1233,6 +1233,29 @@ flickcurl_unixtime_to_sqltimestamp(time_t unix_time)
 
 
 char*
+flickcurl_sqltimestamp_to_isotime(const char* timestamp)
+{
+#define SQL_DATETIME_FORMAT "%Y %m %d %H:%M:%S"
+#define SQL_DATETIME_LEN 19
+#define ISO_DATE_FORMAT "%Y-%m-%dT%H:%M:%SZ"
+#define ISO_DATE_LEN 20
+  size_t len=ISO_DATE_LEN;
+  char *value=NULL;
+  
+  value=(char*)malloc(len + 1);
+  strncpy((char*)value, timestamp, len);
+  value[4]='-';
+  value[7]='-';
+  value[10]='T';
+  value[13]=':';
+  value[16]=':';
+  value[19]=':';
+  
+  return value;
+}
+
+
+char*
 flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
                      const xmlChar* xpathExpr) 
 {

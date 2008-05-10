@@ -123,11 +123,14 @@ flickcurl_blog** flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCt
 /* invoke an error */
 void flickcurl_error(flickcurl* fc, const char *message, ...);
 
-/* Convert a unix timestamp into an ISO string */
+/* Convert a unix timestamp into an ISO dateTime string */
 char* flickcurl_unixtime_to_isotime(time_t unix_time);
 
 /* Convert a unix timestamp into an SQL timestamp string */
 char* flickcurl_unixtime_to_sqltimestamp(time_t unix_time);
+
+/* Convert a SQL timestamp to an ISO dateTime string */
+char* flickcurl_sqltimestamp_to_isotime(const char* timestamp);
 
 /* Evaluate an XPath to get the string value */
 char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
