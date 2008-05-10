@@ -969,6 +969,7 @@ typedef struct {
  * @height: height in pixels
  * @source: raw image source URL
  * @url: url of photo page
+ * @media: 'photo' or 'video'
  *
  * A photo at a size.
  *
@@ -979,6 +980,7 @@ typedef struct {
   int height;
   char *source;
   char *url;
+  char* media;
 } flickcurl_size;
 
 
