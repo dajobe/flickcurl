@@ -1,4 +1,38 @@
+2008-05-09  Dave Beckett <dave@dajobe.org>
+
+	* src/serializer.c: move debug
+
+	* src/serializer.c: Declare rdfs for sizes
+
+	* src/serializer.c: XSD_NS
+
+	* src/serializer.c: namespace sort
+
+	* src/serializer.c: RDFS
+
+	* src/serializer.c: just 1 buf
+
+	* src/serializer.c: Added image sizes to serializatin
+
+2008-05-01  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: (flickcurl_invoke): Use raptor file: URI decoding
+	when it is available - for -DOFFLINE only
+
+	* src/Makefile.am: Use conditional OFFLINE to enable raptor for
+	library
+
+	* configure.ac: Add conditional OFFLINE
+
 2008-04-28  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: docs
+
+	* src/serializer.c: autodocs
+
+	* docs/flickcurl-docs.xml, docs/flickcurl-sections.txt,
+	docs/tmpl/section-photo.sgml, docs/tmpl/section-unused.sgml,
+	docs/tmpl/section-video.sgml: add serializer to docs
 
 	* src/serializer.c: Declare namespaces needed for places triples
 
