@@ -56,3 +56,6 @@ if GETOPT
 list_methods_SOURCES += getopt.c flickcurl_getopt.h
 endif
 list_methods_LDADD= $(top_builddir)/src/libflickcurl.la
+
+$(top_builddir)/src/libflickcurl.la:
+        cd $(top_builddir)/src && $(MAKE) libflickcurl.la
