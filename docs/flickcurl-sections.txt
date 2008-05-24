@@ -334,4 +334,7 @@ flickcurl_photo_s
 flickcurl_serializer_s
 read_ini_config
 set_config_var_handler
+emit_finish
+emit_namespace
+emit_triple
 </SECTION>
