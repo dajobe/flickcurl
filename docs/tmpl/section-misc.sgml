@@ -27,6 +27,7 @@ Miscellaneous functions.
 @height: 
 @source: 
 @url: 
+@media: 
 
 <!-- ##### FUNCTION flickcurl_free_size ##### -->
 <para>
