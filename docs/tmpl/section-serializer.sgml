@@ -1,0 +1,63 @@
+<!-- ##### SECTION Title ##### -->
+Serializer
+
+<!-- ##### SECTION Short_Description ##### -->
+Serialize a photo to RDF Triples.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Serialize a photo to RDF Triples.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF flickcurl_serializer ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION flickcurl_new_serializer ##### -->
+<para>
+
+</para>
+
+@fc: 
+@data: 
+@factory: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_free_serializer ##### -->
+<para>
+
+</para>
+
+@serializer: 
+
+
+<!-- ##### FUNCTION flickcurl_serialize_photo ##### -->
+<para>
+
+</para>
+
+@fcs: 
+@photo: 
+@Returns: 
+
+
+<!-- ##### ENUM flickcurl_term_type ##### -->
+<para>
+
+</para>
+
+@FLICKCURL_TERM_TYPE_RESOURCE: 
+@FLICKCURL_TERM_TYPE_BLANK: 
+@FLICKCURL_TERM_TYPE_LITERAL: 
+
