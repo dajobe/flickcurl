@@ -1,3 +1,9 @@
+2008-05-15  Dave Beckett <dave@dajobe.org>
+
+	* utils/Makefile.am: tab
+
+	* utils/Makefile.am: Add rule for building libflickcurl.la
+
 2008-05-10  Dave Beckett <dave@dajobe.org>
 
 	* src/serializer.c: Add dc: for old dc namespace, new stuff to
