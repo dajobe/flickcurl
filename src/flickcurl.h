@@ -1594,6 +1594,7 @@ void flickcurl_array_free(char *array[]);
  *
  * deprecated
  */
+
 /**
  * flickcurl_category_s:
  * @id: ignore
@@ -1607,20 +1608,23 @@ void flickcurl_array_free(char *array[]);
  *
  * category_s
  */
+
 /**
  * flickcurl_photo_s:
  *
  * photo_s
  */
+
 /**
  * flickcurl_s:
  *
- * flickcurl
+ * flickcurl_s
  */
+
 /**
  * flickcurl_serializer_s:
  *
- * flickcurl
+ * flickcurl_serializer_s
  */
 
 #ifdef __cplusplus
