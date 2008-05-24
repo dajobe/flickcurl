@@ -1036,7 +1036,13 @@ typedef struct {
 } flickcurl_user_upload_status;
 
 
+/**
+ * flickcurl_serializer:
+ *
+ * Serializer from Photo and metadata to RDF triples
+ */
 struct flickcurl_serializer_s;
+
 
 /**
  * flickcurl_term_type:
@@ -1608,6 +1614,11 @@ void flickcurl_array_free(char *array[]);
  */
 /**
  * flickcurl_s:
+ *
+ * flickcurl
+ */
+/**
+ * flickcurl_serializer_s:
  *
  * flickcurl
  */
