@@ -527,7 +527,7 @@ typedef struct {
  * @ready: video is ready flag
  * @failed: video failed
  * @pending: video pending
- * @duration: video duratuion in seconds
+ * @duration: video duration in seconds
  * @width: video width
  * @height: video height
  *
