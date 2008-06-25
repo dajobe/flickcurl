@@ -17,6 +17,17 @@ Places in the real world.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### STRUCT flickcurl_place ##### -->
+<para>
+
+</para>
+
+@names: 
+@ids: 
+@urls: 
+@type: 
+@woe_ids: 
+
 <!-- ##### FUNCTION flickcurl_free_place ##### -->
 <para>
 

@@ -64,38 +64,3 @@ Unused.
 @value: 
 
 
-<!-- ##### FUNCTION emit_finish ##### -->
-<para>
-
-</para>
-
-@user_data: 
-
-
-<!-- ##### FUNCTION emit_namespace ##### -->
-<para>
-
-</para>
-
-@user_data: 
-@prefix: 
-@prefix_len: 
-@uri: 
-@uri_len: 
-
-
-<!-- ##### FUNCTION emit_triple ##### -->
-<para>
-
-</para>
-
-@user_data: 
-@subject: 
-@subject_type: 
-@predicate_nspace: 
-@predicate_name: 
-@object: 
-@object_type: 
-@datatype_uri: 
-
-
