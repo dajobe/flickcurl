@@ -400,8 +400,7 @@ typedef struct flickcurl_comment_s {
  *
  * A Photo permission.
  */
-typedef struct 
-{
+typedef struct {
   int is_public;
   int is_contact;
   int is_friend;
@@ -421,8 +420,7 @@ typedef struct
  *
  * A Photo Location.
  */
-typedef struct 
-{
+typedef struct {
   double latitude;
   double longitude;
   int accuracy;
@@ -467,8 +465,7 @@ typedef enum {
  * can give labels for the array indexes of type #flickcurl_place_type.
  *
  */
-typedef struct 
-{
+typedef struct {
   char* names[FLICKCURL_PLACE_LAST+1];
   char* ids[FLICKCURL_PLACE_LAST+1];
   char* urls[FLICKCURL_PLACE_LAST+1];
@@ -1072,8 +1069,7 @@ typedef enum {
  *
  * API version 1 is all that is supported.
  */
-typedef struct
-{
+typedef struct {
   int version;
   void (*emit_namespace)(void* user_data, const char* prefix, size_t prefix_len, const char* uri, size_t uri_len);
   void (*emit_triple)(void* user_data,
