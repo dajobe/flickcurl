@@ -150,6 +150,9 @@ field locality_woeid (45) with string value: '2467327' / -1
 field county_woeid (46) with string value: '12587696' / -1
 field region_woeid (47) with string value: '2347563' / -1
 field country_woeid (48) with string value: '23424977' / -1
+field usage_candownload (49) with boolean value: '1' / 1
+field usage_canblog (50) with boolean value: '1' / 1
+field usage_canprint (51) with boolean value: '1' / 1
 0) regular tag: id 94493-196308964-3362 author ID 13355580@N00 name (Unknown) raw 'jellyfish' cooked 'jellyfish' count 0
 1) regular tag: id 94493-196308964-119180 author ID 13355580@N00 name (Unknown) raw 'montereyaquarium' cooked 'montereyaquarium' count 0
 2) regular tag: id 94493-196308964-2443 author ID 13355580@N00 name (Unknown) raw 'monterey' cooked 'monterey' count 0
@@ -188,63 +191,91 @@ blocks (sets of triples) hung off a <code>places:place</code>
 predicate.</p>
 
 <pre>
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/creator&gt; _:person .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/terms/creator&gt; _:person .
 _:person &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Person&gt; .
 _:person &lt;http://xmlns.com/foaf/0.1/#maker&gt; &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/dateSubmitted&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/rights&gt; &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/modified&gt; "2007-02-25T07:45:46Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/issued&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/created&gt; "2006-07-22 22:28:50" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#lat&gt; "36.620487" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#long&gt; "-121.904468" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/terms/dateSubmitted&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/terms/rights&gt; &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/terms/modified&gt; "2007-02-25T07:45:46Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/terms/issued&gt; "2006-07-23T18:16:13Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/terms/created&gt; "2006-07-22T22:28:50Z"^^&lt;http://www.w3.org/2001/XMLSchema#dateTime&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#lat&gt; "36.620487"^^&lt;http://www.w3.org/2001/XMLSchema#double&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://www.w3.org/2003/01/geo/wgs84_pos#long&gt; "-121.904468"^^&lt;http://www.w3.org/2001/XMLSchema#double&gt; .
 _:person &lt;http://xmlns.com/foaf/0.1/#name&gt; "Dave Beckett" .
 _:person &lt;http://xmlns.com/foaf/0.1/#nick&gt; "dajobe" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/title&gt; "Jellyfish at Monterey Aquarium" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/terms/title&gt; "Jellyfish at Monterey Aquarium" .
 &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://purl.org/dc/elements/1.1/subject&gt; "jellyfish" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place0 .
-_:place0 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
-_:place0 &lt;http://machinetags.org/wiki/Places#type&gt; "location" .
-_:place0 &lt;http://machinetags.org/wiki/Places#id&gt; "WM3JEXSbBZqqRtGA" .
-_:place0 &lt;http://machinetags.org/wiki/Places#placeid&gt; "2467327" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place2 .
-_:place2 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
-_:place2 &lt;http://machinetags.org/wiki/Places#type&gt; "locality" .
-_:place2 &lt;http://machinetags.org/wiki/Places#name&gt; "Pacific Grove" .
-_:place2 &lt;http://machinetags.org/wiki/Places#id&gt; "WM3JEXSbBZqqRtGA" .
-_:place2 &lt;http://machinetags.org/wiki/Places#placeid&gt; "2467327" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place3 .
-_:place3 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
-_:place3 &lt;http://machinetags.org/wiki/Places#type&gt; "county" .
-_:place3 &lt;http://machinetags.org/wiki/Places#name&gt; "Monterey" .
-_:place3 &lt;http://machinetags.org/wiki/Places#id&gt; "AQ4UpRqYA5l0BiyF.A" .
-_:place3 &lt;http://machinetags.org/wiki/Places#placeid&gt; "12587696" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place4 .
-_:place4 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
-_:place4 &lt;http://machinetags.org/wiki/Places#type&gt; "region" .
-_:place4 &lt;http://machinetags.org/wiki/Places#name&gt; "California" .
-_:place4 &lt;http://machinetags.org/wiki/Places#id&gt; "SVrAMtCbAphCLAtP" .
-_:place4 &lt;http://machinetags.org/wiki/Places#placeid&gt; "2347563" .
-&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/wiki/Places#place&gt; _:place5 .
-_:place5 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/wiki/Places#Place&gt; .
-_:place5 &lt;http://machinetags.org/wiki/Places#type&gt; "country" .
-_:place5 &lt;http://machinetags.org/wiki/Places#name&gt; "United States" .
-_:place5 &lt;http://machinetags.org/wiki/Places#id&gt; "4KO02SibApitvSBieQ" .
-_:place5 &lt;http://machinetags.org/wiki/Places#placeid&gt; "23424977" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Places#place&gt; _:place0 .
+_:place0 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/ns/Places#Place&gt; .
+_:place0 &lt;http://machinetags.org/ns/Places#type&gt; "location" .
+_:place0 &lt;http://machinetags.org/ns/Places#id&gt; "WM3JEXSbBZqqRtGA" .
+_:place0 &lt;http://machinetags.org/ns/Places#placeid&gt; "2467327" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Places#place&gt; _:place2 .
+_:place2 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/ns/Places#Place&gt; .
+_:place2 &lt;http://machinetags.org/ns/Places#type&gt; "locality" .
+_:place2 &lt;http://machinetags.org/ns/Places#name&gt; "Pacific Grove" .
+_:place2 &lt;http://machinetags.org/ns/Places#id&gt; "WM3JEXSbBZqqRtGA" .
+_:place2 &lt;http://machinetags.org/ns/Places#placeid&gt; "2467327" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Places#place&gt; _:place3 .
+_:place3 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/ns/Places#Place&gt; .
+_:place3 &lt;http://machinetags.org/ns/Places#type&gt; "county" .
+_:place3 &lt;http://machinetags.org/ns/Places#name&gt; "Monterey" .
+_:place3 &lt;http://machinetags.org/ns/Places#id&gt; "AQ4UpRqYA5l0BiyF.A" .
+_:place3 &lt;http://machinetags.org/ns/Places#placeid&gt; "12587696" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Places#place&gt; _:place4 .
+_:place4 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/ns/Places#Place&gt; .
+_:place4 &lt;http://machinetags.org/ns/Places#type&gt; "region" .
+_:place4 &lt;http://machinetags.org/ns/Places#name&gt; "California" .
+_:place4 &lt;http://machinetags.org/ns/Places#id&gt; "SVrAMtCbAphCLAtP" .
+_:place4 &lt;http://machinetags.org/ns/Places#placeid&gt; "2347563" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Places#place&gt; _:place5 .
+_:place5 &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://machinetags.org/ns/Places#Place&gt; .
+_:place5 &lt;http://machinetags.org/ns/Places#type&gt; "country" .
+_:place5 &lt;http://machinetags.org/ns/Places#name&gt; "United States" .
+_:place5 &lt;http://machinetags.org/ns/Places#id&gt; "4KO02SibApitvSBieQ" .
+_:place5 &lt;http://machinetags.org/ns/Places#placeid&gt; "23424977" .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Flickr#photo&gt; &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_s.jpg&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_s.jpg&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Image&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_s.jpg&gt; &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; "Square" .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_s.jpg&gt; &lt;http://machinetags.org/ns/Flickr#width&gt; "75"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_s.jpg&gt; &lt;http://machinetags.org/ns/Flickr#height&gt; "75"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Flickr#photo&gt; &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_t.jpg&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_t.jpg&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Image&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_t.jpg&gt; &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; "Thumbnail" .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_t.jpg&gt; &lt;http://machinetags.org/ns/Flickr#width&gt; "75"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_t.jpg&gt; &lt;http://machinetags.org/ns/Flickr#height&gt; "100"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Flickr#photo&gt; &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_m.jpg&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_m.jpg&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Image&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_m.jpg&gt; &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; "Small" .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_m.jpg&gt; &lt;http://machinetags.org/ns/Flickr#width&gt; "180"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_m.jpg&gt; &lt;http://machinetags.org/ns/Flickr#height&gt; "240"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Flickr#photo&gt; &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68.jpg&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68.jpg&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Image&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68.jpg&gt; &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; "Medium" .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68.jpg&gt; &lt;http://machinetags.org/ns/Flickr#width&gt; "375"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68.jpg&gt; &lt;http://machinetags.org/ns/Flickr#height&gt; "500"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://www.flickr.com/photos/dajobe/196308964/&gt; &lt;http://machinetags.org/ns/Flickr#photo&gt; &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_o.jpg&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_o.jpg&gt; &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#type&gt; &lt;http://xmlns.com/foaf/0.1/#Image&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_o.jpg&gt; &lt;http://www.w3.org/2000/01/rdf-schema#label&gt; "Original" .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_o.jpg&gt; &lt;http://machinetags.org/ns/Flickr#width&gt; "600"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_o.jpg&gt; &lt;http://machinetags.org/ns/Flickr#height&gt; "800"^^&lt;http://www.w3.org/2001/XMLSchema#integer&gt; .
 </pre>
 
 <p>If you have raptor installed, you can get nicer RDF triples out
 and with <code>rapper</code> 1.4.14+, pretty-printed turtle:</p>
 <pre>
-$ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
 @prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
 @prefix dc: &lt;http://purl.org/dc/elements/1.1/&gt; .
 @prefix foaf: &lt;http://xmlns.com/foaf/0.1/#&gt; .
 @prefix geo: &lt;http://www.w3.org/2003/01/geo/wgs84_pos#&gt; .
-@prefix places: &lt;http://machinetags.org/wiki/Places#&gt; .
+@prefix dcterms: &lt;http://purl.org/dc/terms/&gt; .
+@prefix places: &lt;http://machinetags.org/ns/Places#&gt; .
+@prefix flickr: &lt;http://machinetags.org/ns/Flickr#&gt; .
 @prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
 
 &lt;http://www.flickr.com/photos/dajobe/196308964/&gt;
+    flickr:photo &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68.jpg&gt;, &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_m.jpg&gt;, &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_o.jpg&gt;, &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_s.jpg&gt;, &lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_t.jpg&gt; ;
     places:place [
         places:id "WM3JEXSbBZqqRtGA" ;
         places:placeid "2467327" ;
@@ -275,21 +306,51 @@ $ flickrdf -o turtle http://www.flickr.com/photos/dajobe/196308964/
         places:type "country" ;
         a places:Place
     ] ;
-    dc:created "2006-07-22 22:28:50" ;
-    dc:creator [
+    dc:subject "jellyfish" ;
+    dcterms:created "2006-07-22T22:28:50Z"^^xsd:dateTime ;
+    dcterms:creator [
         a foaf:Person ;
         foaf:maker &lt;http://www.flickr.com/photos/dajobe/196308964/&gt; ;
         foaf:name "Dave Beckett" ;
         foaf:nick "dajobe"
     ] ;
-    dc:dateSubmitted "2006-07-23T18:16:13Z"^^xsd:dateTime ;
-    dc:issued "2006-07-23T18:16:13Z"^^xsd:dateTime ;
-    dc:modified "2007-02-25T07:45:46Z"^^xsd:dateTime ;
-    dc:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; ;
-    dc:subject "jellyfish" ;
-    dc:title "Jellyfish at Monterey Aquarium" ;
-    geo:lat "36.620487" ;
-    geo:long "-121.904468" .
+    dcterms:dateSubmitted "2006-07-23T18:16:13Z"^^xsd:dateTime ;
+    dcterms:issued "2006-07-23T18:16:13Z"^^xsd:dateTime ;
+    dcterms:modified "2007-02-25T07:45:46Z"^^xsd:dateTime ;
+    dcterms:rights &lt;http://creativecommons.org/licenses/by-nc-sa/2.0/&gt; ;
+    dcterms:title "Jellyfish at Monterey Aquarium" ;
+    geo:lat 36.620487 ;
+    geo:long -121.904468 .
+
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_s.jpg&gt;
+    flickr:height 75 ;
+    flickr:width 75 ;
+    a foaf:Image ;
+    rdfs:label "Square" .
+
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_t.jpg&gt;
+    flickr:height 100 ;
+    flickr:width 75 ;
+    a foaf:Image ;
+    rdfs:label "Thumbnail" .
+
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_m.jpg&gt;
+    flickr:height 240 ;
+    flickr:width 180 ;
+    a foaf:Image ;
+    rdfs:label "Small" .
+
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68.jpg&gt;
+    flickr:height 500 ;
+    flickr:width 375 ;
+    a foaf:Image ;
+    rdfs:label "Medium" .
+
+&lt;http://farm1.static.flickr.com/57/196308964_b34cb0af68_o.jpg&gt;
+    flickr:height 800 ;
+    flickr:width 600 ;
+    a foaf:Image ;
+    rdfs:label "Original" .
 </pre>
 
 
