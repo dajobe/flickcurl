@@ -2,6 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+  <meta http-equiv="content-type" content="application/xhtml+xml; charset=utf-8"/>
   <title>Flickcurl News</title>
   <link rel="stylesheet" type="text/css" href="stylesheet.css" />
 </head>
@@ -11,7 +12,7 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-05-XX">2008-05-XX Flickcurl 1.4</h2>
+<h2 id="D2008-06-24">2008-06-24 Flickcurl 1.4</h2>
 
 <p>Added video support.</p>
 
@@ -42,6 +43,53 @@ handle the results of serializing.  Added new functions:</p>
   int flickcurl_serialize_photo(flickcurl_serializer* frc,
     flickcurl_photo* photo);
 </pre>
+
+<div>Updated all the namespaces used by the RDF serializer to
+use a different use of machinetags.org as follows:
+<ol class="namespace-list">
+<li><strong>Public namespaces</strong> (existing schemas):
+  <ul>
+  <li class="namespace"><a href="http://dublincore.org/" class="label">Dublin Core</a>: Prefix: <em class="prefix">dc</em> URI: <code class="uri">http://purl.org/dc/elements/1.1/</code><br />
+  legacy namespace</li>
+  <li class="namespace"><a href="http://dublincore.org/" class="label">Dublin Core Terms</a>: Prefix: <em class="prefix">dcterms</em> URI: <code class="uri">http://purl.org/dc/terms/</code><br />
+  new namespace
+  with predicates <span class="predicate">dc:creator</span> <span class="predicate">dc:dateSubmitted</span> <span class="predicate">dc:rights</span> <span class="predicate">dc:modified</span> <span class="predicate">dc:issued</span> <span class="predicate">dc:created</span> <span class="predicate">dc:description</span> <span class="predicate">dc:title</span></li>
+  <li class="namespace"><a href="http://www.foaf-project.org/" class="label">FOAF</a>: Prefix: <em class="prefix">foaf</em> URI: <code class="uri">http://xmlns.com/foaf/0.1/#</code><br />
+  with predicates <span class="predicate">foaf:maker</span> <span class="predicate">foaf:name</span> <span class="predicate">foaf:nick</span>
+  and classes <span class="class">foaf:Person</span> <span class="class">foaf:Image</span></li>
+  <li class="namespace"><a href="http://www.w3.org/2003/01/geo/" class="label">Geo by W3C SWIG</a>: Prefix: <em class="prefix">geo</em> URI: <code class="uri">http://www.w3.org/2003/01/geo/wgs84_pos#</code><br />
+  with predicates <span class="predicate">geo:lat</span> <span class="predicate">geo:long</span></li>
+  <li class="namespace"><a href="http://www.w3.org/TR/rdf-schema/" class="label">RDF Schema</a>: Prefix: <em class="prefix">rdfs</em> URI: <code class="uri">http://www.w3.org/2000/01/rdf-schema#</code><br />
+  with predicates <span class="predicate">rdfs:label</span></li>
+  <li class="namespace"><a href="http://www.w3.org/TR/rdf-concepts/" class="label">RDF</a>: Prefix: <em class="prefix">rdf</em> URI: <code class="uri">http://www.w3.org/1999/02/22-rdf-syntax-ns#</code><br />
+  with predicates <span class="predicate">rdf:type</span></li>
+  <li class="namespace"><a href="http://www.w3.org/TR/xmlschema-1/" class="label">XML Schema Datatypes</a>: Prefix: <em class="prefix">xsd</em> URI: <code class="uri">http://www.w3.org/2001/XMLSchema#</code><br />
+  with XSD datatypes <span class="datatype">xsd:boolean</span> <span class="datatype">xsd:dateTime</span> <span class="datatype">xsd:double</span> <span class="datatype">xsd:integer</span></li>
+  </ul>
+</li>
+<li><strong>Flickr terminology namespaces</strong> (no schema yet):
+  <ul>
+  <li class="namespace"><a href="http://www.flickr.com/services/api/" class="label">Flickr API</a> initially for video terms: Prefix: <em class="prefix">flickr</em> URI: <code class="uri">http://machinetags.org/ns/Flickr#</code><br />
+  with predicates <span class="predicate">flickr:image</span> <span class="predicate">flickr:video</span> <span class="predicate">flickr:width</span> <span class="predicate">flickr:height</span>
+  and classes <span class="class">flickr:Video</span></li>
+  <li class="namespace"><a href="http://www.flickr.com/services/api/" class="label">Places API</a>: Prefix: <em class="prefix">places</em> URI: <code class="uri">http://machinetags.org/ns/Places#</code><br />
+  with predicates <span class="predicate">places:place</span> <span class="predicate">places:type</span> <span class="predicate">places:name</span> <span class="predicate">places:id</span> <span class="predicate">places:placeid</span> <span class="predicate">places:url</span>
+  and class <span class="class">places:Place</span>
+  </li>
+  </ul>
+</li>
+<li><strong>Machine Tag namespaces</strong> (no schema yet; prefix is the same as the machine tag prefix):
+  <ul>
+  <li class="namespace"><span class="label">Bluetagging</span>: Prefix: <em class="prefix">blue</em> URI: <code class="uri">http://machinetags.org/ns/Blue#</code></li>
+  <li class="namespace"><span class="label">Celltagging</span>: Prefix: <em class="prefix">cell</em> URI: <code class="uri">http://machinetags.org/ns/Cell#</code></li>
+  <li class="namespace"><a href="http://www.dopplr.com/" class="label">Dopplr</a>: Prefix: <em class="prefix">dopplr</em> URI: <code class="uri">http://machinetags.org/ns/Dopplr#</code></li>
+  <li class="namespace"><a href="http://www.aaronland.info/bin/filtr/" class="label">Filtr</a>: Prefix: <em class="prefix">filtr</em> URI: <code class="uri">http://machinetags.org/ns/Filtr#</code></li>
+  <li class="namespace"><a href="http://www.geonames.org/" class="label">Geonames</a>: Prefix: <em class="prefix">geonames</em> URI: <code class="uri">http://machinetags.org/ns/Geonames#</code></li>
+  <li class="namespace"><span class="label">Ph</span>: Prefix: <em class="prefix">ph</em> URI: <code class="uri">http://machinetags.org/ns/Ph#</code></li>
+  <li class="namespace"><a href="http://upcoming.yahoo.com/" class="label">Upcoming</a>: Prefix: <em class="prefix">upcoming</em> URI: <code class="uri">http://machinetags.org/ns/Upcoming#</code></li>
+  </ul>
+</li>
+</ol>
 
 <p>Updated <code>flickrdf(1)</code> to use new serialization
 API and to have less conditional code.</p>
@@ -78,6 +126,10 @@ added to the public API around 2008-03-24.
 
 <p>Protect destructors from NULL args.  In maintainer mode, a warning
 message and an abort happen.</p>
+
+<p>Note that the woeids can be used with the new
+<a href="http://developer.yahoo.com/geo/">Yahoo! Geo API</a>
+</p>
 
 
 <h2 id="D2008-03-08">2008-03-08 Flickcurl 1.3</h2>
