@@ -1332,13 +1332,23 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * Optional parameter "media" that defaults to "all" but can also be
  * set to "photos" or "videos" to filter results by media type.
  * API addition 2008-04-07.
+ *
+ * Optional parameter "has_geo" for any photo that has been geotagged.
+ * As announced 2008-06-27
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4146
+ *
+ * Optional parameters "lat", "lon", "radius" and "radius_units" added
+ * for doing radial geo queries from point (lat, lon) within
+ * radius/radius_units.  radius_units default is "km".
+ * As announced 2008-06-27
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4146
  * 
  * Return value: an array of #flickcurl_photo or NULL
  **/
 flickcurl_photo**
 flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
 {
-  const char* parameters[30][2];
+  const char* parameters[35][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -1350,6 +1360,9 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
   char content_type_s[2];
   char per_page_s[4];
   char page_s[4];
+  char lat_s[32];
+  char lon_s[32];
+  char radius_s[32];
   
   if(params->user_id) {
     parameters[count][0]  = "user_id";
@@ -1459,6 +1472,33 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
   if(params->media) {
     parameters[count][0]  = "media";
     parameters[count++][1]= params->media;
+  }
+  if(params->has_geo) {
+    parameters[count][0]  = "has_geo";
+    parameters[count++][1]= "1";
+  }
+  if(params->radius) {
+    if(params->lat) {
+      sprintf(lat_s, "%f", params->lat);
+      parameters[count][0]  = "lat";
+      parameters[count++][1]= lat_s;
+    }
+    if(params->lon) {
+      sprintf(lon_s, "%f", params->lon);
+      parameters[count][0]  = "lon";
+      parameters[count++][1]= lon_s;
+    }
+
+    if(params->radius) {
+      sprintf(radius_s, "%f", params->radius);
+      parameters[count][0]  = "radius";
+      parameters[count++][1]= radius_s;
+    
+      if(params->radius_units) {
+        parameters[count][0]  = "radius_units";
+        parameters[count++][1]= params->radius_units;
+      }
+    }
   }
   parameters[count][0]  = NULL;
 
