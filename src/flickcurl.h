@@ -903,6 +903,11 @@ typedef struct {
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
  * @place_id: A Flickr place id. (only used if bbox argument isn't present). Experimental.  Geo queries require some sort of limiting agent in order to prevent the database from crying. This is basically like the check against "parameterless searches" for queries without a geo component.   A tag, for instance, is considered a limiting agent as are user defined min_date_taken and min_date_upload parameters - If no limiting factor is passed we return only photos added in the last 12 hours (though we may extend the limit in the future) (or NULL)
  * @media: "photos" or "videos" (or NULL)
+ * @has_geo: non-0 if a photo has been geotagged (or 0)
+ * @lat: A valid latitude, in decimal format, for doing radial geo queries (or ignored if radius is 0.0)
+ * @lon: A valid longitude, in decimal format, for doing radial geo queries (or ignored if radius is 0.0)
+ * @radius: A valid radius used for geo queries, greater than zero and less than 20 miles (or 32 kilometers), for use with point-based geo queries. The default value is 5 (km) (or 0.0 for not used)
+ * @radius_units: The unit of measure when doing radial geo queries. Valid options are "mi" (miles) and "km" (kilometers). The default is "km" (or NULL)
  *
  * Search parameters for flickcurl_photos_search()
  */
@@ -930,6 +935,11 @@ typedef struct {
   int page;
   char* place_id;
   char* media;
+  int has_geo;
+  double lat;
+  double lon;
+  double radius;
+  char* radius_units;
 } flickcurl_search_params;
   
 
