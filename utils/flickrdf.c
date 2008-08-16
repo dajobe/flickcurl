@@ -130,6 +130,15 @@ static struct option long_options[] =
 
 
 #ifndef HAVE_RAPTOR
+typedef enum {
+  RAPTOR_IDENTIFIER_TYPE_UNKNOWN,
+  RAPTOR_IDENTIFIER_TYPE_RESOURCE,
+  RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
+  RAPTOR_IDENTIFIER_TYPE_PREDICATE,
+  RAPTOR_IDENTIFIER_TYPE_ORDINAL,
+  RAPTOR_IDENTIFIER_TYPE_LITERAL,
+  RAPTOR_IDENTIFIER_TYPE_XML_LITERAL
+} raptor_identifier_type;
 typedef char raptor_uri;
 typedef struct {
   const void *subject;
