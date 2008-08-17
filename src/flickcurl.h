@@ -387,7 +387,7 @@ typedef struct flickcurl_comment_s {
 /**
  * flickcurl_perms:
  * @is_public: non-0 to set the photo to public else private
- * @is_contact: 
+ * @is_contact: non-0 to make the photo visible to contacts when private
  * @is_friend: non-0 to make the photo visible to friends when private
  * @is_family: non-0 to make the photo visible to family when private
  * @perm_comment: who can add comments to the photo and it's notes. one of: 0 nobody,  1 friends & family, 2 contacts, 3 everybody
