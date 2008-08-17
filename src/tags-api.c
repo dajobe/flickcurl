@@ -71,7 +71,7 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
   void* result=NULL;
   
   if(!tag)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "tag";
   parameters[count++][1]= tag;
@@ -93,7 +93,8 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
     goto tidy;
   }
 
-  result=flickcurl_build_tag_clusters(fc, xpathCtx, "/rsp/clusters/cluster");
+  result=flickcurl_build_tag_clusters(fc, xpathCtx,
+                                      (const xmlChar*)"/rsp/clusters/cluster");
 
   tidy:
   if(xpathCtx)
