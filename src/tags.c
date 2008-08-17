@@ -173,7 +173,7 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
 }
 
 
-/**
+/*
  * flickcurl_free_tag_cluster:
  * @tc: tag cluster object
  *
