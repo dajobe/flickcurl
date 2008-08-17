@@ -506,8 +506,8 @@ typedef struct flickcurl_tag_s {
 
 /**
  * flickcurl_tag_cluster: 
- * @count:
- * @tags:
+ * @count: number of tags
+ * @tags: tags in this cluster
  *
  * A cluster (set) of tag names
  */
@@ -519,14 +519,13 @@ typedef struct {
 
 /**
  * flickcurl_tag_clusters:
- * @count:
- * @tags:
+ * @count: number of tag clusters
+ * @tags: tag clusters
  *
  * A set of clusters of tag names
  */
 typedef struct {
   int count;
-  char* source;
   flickcurl_tag_cluster** clusters;
 } flickcurl_tag_clusters;
 
