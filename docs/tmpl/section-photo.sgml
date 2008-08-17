@@ -605,6 +605,12 @@ Photo.
 @page: 
 @place_id: 
 @media: 
+@has_geo: 
+@lat: 
+@lon: 
+@radius: 
+@radius_units: 
+@contacts: 
 
 <!-- ##### FUNCTION flickcurl_photos_setContentType ##### -->
 <para>

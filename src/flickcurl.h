@@ -908,6 +908,7 @@ typedef struct {
  * @lon: A valid longitude, in decimal format, for doing radial geo queries (or ignored if radius is 0.0)
  * @radius: A valid radius used for geo queries, greater than zero and less than 20 miles (or 32 kilometers), for use with point-based geo queries. The default value is 5 (km) (or 0.0 for not used)
  * @radius_units: The unit of measure when doing radial geo queries. Valid options are "mi" (miles) and "km" (kilometers). The default is "km" (or NULL)
+ * @contacts: (Experimental) Requires @user_id field be set and limits queries to photos beloing to that user's photos.  Valid arguments are 'all' or 'ff' for just friends and family.
  *
  * Search parameters for flickcurl_photos_search()
  */
@@ -940,6 +941,7 @@ typedef struct {
   double lon;
   double radius;
   char* radius_units;
+  char* contacts;
 } flickcurl_search_params;
   
 

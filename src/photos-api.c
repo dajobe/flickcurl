@@ -1342,13 +1342,19 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * radius/radius_units.  radius_units default is "km".
  * As announced 2008-06-27
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4146
+ *
+ * (Experimental) Optional parameter "contacts" requires requires
+ * that the "user_id" field also is set.  Valid values are "all" or
+ * "ff" for just friends and family.
+ * As announced 2008-06-30
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4162
  * 
  * Return value: an array of #flickcurl_photo or NULL
  **/
 flickcurl_photo**
 flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
 {
-  const char* parameters[35][2];
+  const char* parameters[36][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
@@ -1499,6 +1505,10 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
         parameters[count++][1]= params->radius_units;
       }
     }
+  }
+  if(params->contacts && params->user_id) {
+    parameters[count][0]  = "contacts";
+    parameters[count++][1]= params->contacts;
   }
   parameters[count][0]  = NULL;
 
