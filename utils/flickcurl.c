@@ -2807,7 +2807,7 @@ command_tags_getClusters(flickcurl* fc, int argc, char *argv[])
       fprintf(stderr, "  %s\n", tag_name);
   }
 
-  free(clusters);
+  flickcurl_free_tag_clusters(clusters);
   return 0;
 }
 
