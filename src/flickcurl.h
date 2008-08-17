@@ -1219,8 +1219,6 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 FLICKCURL_API
 void flickcurl_free_tag(flickcurl_tag *t);
 FLICKCURL_API
-void flickcurl_free_tag_cluster(flickcurl_tag_cluster *tc);
-FLICKCURL_API
 void flickcurl_free_tag_clusters(flickcurl_tag_clusters *tcs);
 FLICKCURL_API
 void flickcurl_free_photo(flickcurl_photo *photo);
