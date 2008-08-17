@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (114/114)</span>
+<span class="coverage">100.0% (115/115)</span>
 </p>
 
 
@@ -264,6 +264,7 @@ or <span class="unsupported">unsupported</span>.
 <h3>tags</h3>
 
 <ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getClusters.html">flickr.tags.getClusters</a> (1.5)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getHotList.html">flickr.tags.getHotList</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getListPhoto.html">flickr.tags.getListPhoto</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getListUser.html">flickr.tags.getListUser</a> (0.9)</li>
@@ -294,6 +295,12 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.5</strong>: flickr.tags.getClusters (1 new)</p>
+<pre>
+flickcurl_tag_clusters* flickcurl_tags_getClusters(flickcurl* fc, const char* tag);
+</pre>
+
 
 <p><strong>1.4</strong>: flickr.prefs.getGeoPerms (1 new)</p>
 <pre>
