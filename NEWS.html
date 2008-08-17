@@ -17,6 +17,39 @@
 <p>Not yet released.
 </p>
 
+<p>Added <code>flickcurl_tags_getClusters()</code> function for new
+API call <em>flickr.tags.getClusters</em> as
+<a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4218">announced 2008-07-17</a>
+</p>
+
+<p>Added tag clusters API support including new typedefs
+flickcurl_tag_cluster and flickcurl_tag_clusters and destructor
+functions for them:</p>
+<pre>
+  void flickcurl_free_tag_cluster(flickcurl_tag_cluster *tc);
+  void flickcurl_free_tag_clusters(flickcurl_tag_clusters *tcs);
+</pre>
+
+<p>Updated <code>flickcurl(1)</code> utility command to add new
+command <em>tags.getClusters</em> for
+<code>flickcurl_tags_getClusters()</code>
+</p>
+
+<p>Updated photo search API structure flickcurl_search_params to add
+contacts, has_geo, lat, lon, radius and radius_units fields.</p>
+
+<p>Updated <code>flickcurl_photos_search()</code> to add support for
+new <em>photos.search</em> contacts, has_geo, lat, lon, radius and
+radius_units parameters.  The lat, lon, radius and radius_units
+parameters were
+<a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4146">announced 2008-06-27</a>
+</p>
+
+<p>Updated <code>flickrdf</code> utility to make it build without
+raptor available.
+</p>
+
+
 <h2 id="D2008-06-24">2008-06-24 Flickcurl 1.4</h2>
 
 <p>Added video support.</p>
