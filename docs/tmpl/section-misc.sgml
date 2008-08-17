@@ -17,6 +17,27 @@ Miscellaneous functions.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### STRUCT flickcurl_location ##### -->
+<para>
+
+</para>
+
+@latitude: 
+@longitude: 
+@accuracy: 
+
+<!-- ##### STRUCT flickcurl_perms ##### -->
+<para>
+
+</para>
+
+@is_public: 
+@is_contact: 
+@is_friend: 
+@is_family: 
+@perm_comment: 
+@perm_addmeta: 
+
 <!-- ##### STRUCT flickcurl_size ##### -->
 <para>
 

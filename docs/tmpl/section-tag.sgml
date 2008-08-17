@@ -31,12 +31,36 @@ Photo tagging.
 @machine_tag: 
 @count: 
 
+<!-- ##### STRUCT flickcurl_tag_cluster ##### -->
+<para>
+
+</para>
+
+@count: 
+@tags: 
+
+<!-- ##### STRUCT flickcurl_tag_clusters ##### -->
+<para>
+
+</para>
+
+@count: 
+@clusters: 
+
 <!-- ##### FUNCTION flickcurl_free_tag ##### -->
 <para>
 
 </para>
 
 @t: 
+
+
+<!-- ##### FUNCTION flickcurl_free_tag_clusters ##### -->
+<para>
+
+</para>
+
+@tcs: 
 
 
 <!-- ##### USER_FUNCTION flickcurl_tag_handler ##### -->
@@ -46,6 +70,16 @@ Photo tagging.
 
 @user_data: 
 @tag: 
+
+
+<!-- ##### FUNCTION flickcurl_tags_getClusters ##### -->
+<para>
+
+</para>
+
+@fc: 
+@tag: 
+@Returns: 
 
 
 <!-- ##### FUNCTION flickcurl_tags_getHotList ##### -->

@@ -263,8 +263,12 @@ flickcurl_term_type
 <SECTION>
 <FILE>section-tag</FILE>
 flickcurl_tag
+flickcurl_tag_cluster
+flickcurl_tag_clusters
 flickcurl_free_tag
+flickcurl_free_tag_clusters
 flickcurl_tag_handler
+flickcurl_tags_getClusters
 flickcurl_tags_getHotList
 flickcurl_tags_getListPhoto
 flickcurl_tags_getListUser
@@ -309,6 +313,8 @@ flickcurl_free_video
 
 <SECTION>
 <FILE>section-misc</FILE>
+flickcurl_location
+flickcurl_perms
 flickcurl_size
 flickcurl_free_size
 flickcurl_free_sizes
