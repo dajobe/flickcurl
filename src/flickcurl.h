@@ -505,6 +505,32 @@ typedef struct flickcurl_tag_s {
 
 
 /**
+ * flickcurl_tag_cluster: 
+ * @count:
+ * @tags:
+ *
+ * A cluster (set) of tag names
+ */
+typedef struct {
+  int count;
+  char** tags;
+} flickcurl_tag_cluster;
+
+
+/**
+ * flickcurl_tag_clusters:
+ * @count:
+ * @tags:
+ *
+ * A set of clusters of tag names
+ */
+typedef struct {
+  int count;
+  char* source;
+  flickcurl_tag_cluster** clusters;
+} flickcurl_tag_clusters;
+
+/**
  * flickcurl_photo_field:
  * @string: string field value
  * @integer: integer field value
@@ -1193,6 +1219,10 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 FLICKCURL_API
 void flickcurl_free_tag(flickcurl_tag *t);
 FLICKCURL_API
+void flickcurl_free_tag_cluster(flickcurl_tag_cluster *tc);
+FLICKCURL_API
+void flickcurl_free_tag_clusters(flickcurl_tag_clusters *tcs);
+FLICKCURL_API
 void flickcurl_free_photo(flickcurl_photo *photo);
 FLICKCURL_API
 void flickcurl_free_photos(flickcurl_photo** photos);
@@ -1544,6 +1574,8 @@ FLICKCURL_API
 flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name);
 
 /* flickr.tag */
+FLICKCURL_API
+flickcurl_tag_clusters* flickcurl_tags_getClusters(flickcurl* fc, const char* tag);
 FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count);
 FLICKCURL_API
