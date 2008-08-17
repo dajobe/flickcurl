@@ -1,4 +1,23 @@
-2008-06-24  Dave Beckett <dave@dajobe.org>
+2008-08-15  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickrdf.c: Make flickrdf build without raptor
+
+2008-06-27  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: flickcurl_search_params gains fields: has_geo,
+	lat, lon, radius, radius_units
+
+	* src/photos-api.c: (flickcurl_photos_search): Add has_geo,
+	lat/lon/radius/radius_units as announced 2008-06-27
+	http://tech.groups.yahoo.com/group/yws-flickr/message/4146
+
+2008-06-26  Dave Beckett <dave@dajobe.org>
+
+	* utils/Makefile.am: Added check-api target for maintainer
+
+2008-06-25  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 1.5
 
 	* Snapshotted flickcurl_1_4 for 1.4 release (SVN 685)
 	
