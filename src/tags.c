@@ -171,3 +171,140 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
 
   return tags;
 }
+
+
+/**
+ * flickcurl_free_tag_cluster:
+ * @tc: tag cluster object
+ *
+ * Destructor for tag cluster object
+ */
+void
+flickcurl_free_tag_cluster(flickcurl_tag_cluster *tc)
+{
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tc, flickcurl_tag_cluster);
+
+  if(tc->tags) {
+    int i;
+    for(i=0; tc->tags[i]; i++)
+      free(tc->tags[i]);
+    free(tc->tags);
+  }
+  free(tc);
+}
+
+
+/**
+ * flickcurl_free_tag_clusters:
+ * @tcs: tag clusters object
+ *
+ * Destructor for tag clusters object
+ */
+void
+flickcurl_free_tag_clusters(flickcurl_tag_clusters *tcs)
+{
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tcs, flickcurl_tag_clusters);
+
+  if(tcs->clusters) {
+    int i;
+    for(i=0; tcs->clusters[i]; i++)
+      flickcurl_free_tag_cluster(tcs->clusters[i]);
+    free(tcs->clusters);
+  }
+  free(tcs);
+}
+
+
+flickcurl_tag_clusters*
+flickcurl_build_tag_clusters(flickcurl* fc, 
+                             xmlXPathContextPtr xpathCtx,
+                             const xmlChar* xpathExpr)
+{
+  flickcurl_tag_clusters* tcs=NULL;
+  int nodes_count;
+  int cluster_count;
+  int i;
+  xmlXPathObjectPtr xpathObj=NULL;
+  xmlNodeSetPtr nodes;
+  
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed=1;
+    goto tidy;
+  }
+  
+  tcs=(flickcurl_tag_clusters*)calloc(sizeof(flickcurl_tag_clusters), 1);
+
+  /* <cluster> XML element nodes */
+  nodes=xpathObj->nodesetval;
+  /* This is a max size - it can include nodes that are CDATA */
+  nodes_count=xmlXPathNodeSetGetLength(nodes);
+
+  tcs->clusters=(flickcurl_tag_cluster**)calloc(sizeof(flickcurl_tag_cluster*), nodes_count+1);
+  
+  for(i=0, cluster_count=0; i < nodes_count; i++) {
+    xmlNodePtr node=nodes->nodeTab[i];
+    xmlAttr* attr;
+    xmlNodePtr chnode;
+    flickcurl_tag_cluster* tc=NULL;
+    int tags_count= -1;
+    
+    if(node->type != XML_ELEMENT_NODE) {
+      flickcurl_error(fc, "Got unexpected node type %d", node->type);
+      fc->failed=1;
+      break;
+    }
+
+    tc=(flickcurl_tag_cluster*)calloc(sizeof(flickcurl_tag_cluster), 1);
+    if(!tc) {
+      fc->failed=1;
+      break;
+    }
+
+    /* get <cluster @total> */
+    for(attr=node->properties; attr; attr=attr->next) {
+      const char *attr_name=(const char*)attr->name;
+      const char *attr_value=(const char*)attr->children->content;
+      
+      if(!strcmp(attr_name, "total"))
+        tags_count=atoi(attr_value);
+    }
+
+    if(tags_count <=0)
+      continue;
+    
+    tc->tags=(char**)calloc(sizeof(char*), tags_count+1);
+
+    /* Walk children nodes of <cluster> for <tag> elements */
+    for(chnode=node->children; chnode; chnode=chnode->next) {
+      const char *chnode_name=(const char*)chnode->name;
+      if(chnode->type == XML_ELEMENT_NODE && !strcmp(chnode_name, "tag")) {
+        size_t len=strlen((const char*)chnode->children->content);
+        char *tag_name=(char*)malloc(len+1);
+        strcpy(tag_name, (const char*)chnode->children->content);
+        tc->tags[tc->count++]=tag_name;
+
+#if FLICKCURL_DEBUG > 1
+        fprintf(stderr, "cluster #%d tag #%d: %s\n", tcs->count, tc->count,
+                tag_name);
+#endif
+    
+      }
+    }
+    tc->tags[tc->count]=NULL;
+    
+    tcs->clusters[tcs->count++]=tc;
+  } /* for <cluster> nodes */
+
+  tcs->clusters[tcs->count]=NULL;
+
+ tidy:
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
+
+  return tcs;
+}
+
+
