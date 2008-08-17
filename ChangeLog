@@ -1,3 +1,16 @@
+2008-08-17  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: (command_tags_getClusters): Call
+	flickcurl_free_tag_clusters to do proper cleanup
+
+	* src/tags-api.c: (flickcurl_tags_getClusters): Casts and fix
+	error return
+
+	* src/tags.c: (flickcurl_free_tag_cluster): Remove from public
+	api, make static
+
+	* src/flickcurl.h: Remove flickcurl_free_tag_cluster from public api
+
 2008-08-16  Dave Beckett <dave@dajobe.org>
 
 	* utils/flickcurl.c: Added new command tags.getClusters for
