@@ -2783,6 +2783,36 @@ command_prefs_getGeoPerms(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_tags_getClusters(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag_clusters* clusters;
+  flickcurl_tag_cluster* cluster;
+  const char *tag=argv[1];
+  int clusteri;
+  
+  clusters=flickcurl_tags_getClusters(fc, tag);
+  if(!clusters)
+    return 1;
+
+  fprintf(stderr, "%s: Tag %s returned %d clusters\n", program, tag,
+          clusters->count);
+
+  for(clusteri=0; (cluster=clusters->clusters[clusteri]); clusteri++) {
+    const char* tag_name;
+    int tagi;
+    fprintf(stderr, "%s: Cluster #%d - %d tags\n", program, clusteri,
+            cluster->count);
+    for(tagi=0; (tag_name=cluster->tags[tagi]); tagi++)
+      fprintf(stderr, "  %s\n", tag_name);
+  }
+
+  free(clusters);
+  return 0;
+}
+
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3113,6 +3143,9 @@ static flickcurl_cmd commands[] = {
    "NAME", "Get information about an API method NAME",
    command_reflection_getMethodInfo, 1, 1},
 
+  {"tags.getClusters",
+   "TAG", "Get list of tag clusters for TAG",
+   command_tags_getClusters, 1, 1},
   {"tags.getHotList",
    "[PERIOD [COUNT]]", "Get the list of hot tags for the given PERIOD (day, week)",
    command_tags_getHotList, 0, 2},
