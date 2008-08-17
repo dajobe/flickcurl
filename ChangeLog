@@ -1,3 +1,29 @@
+2008-08-16  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Added new command tags.getClusters for
+	flickcurl_tags_getClusters
+
+	* src/tags-api.c: (flickcurl_tags_getClusters): Added for new API
+	call flickr.tags.getClusters
+
+	* src/tags.c: (flickcurl_free_tag_cluster,
+	flickcurl_free_tag_clusters, flickcurl_build_tag_clusters): Added
+	for tag clusters
+
+	* src/flickcurl_internal.h: Added flickcurl_build_tag_clusters for
+	building clusters of tags for new API call flickr.tags.getClusters
+
+	* src/flickcurl.h: Added typedefs flickcurl_tag_cluster,
+	flickcurl_tag_clusters Added prototypes for
+	flickcurl_free_tag_cluster and flickcurl_free_tag_clusters
+	Added flickcurl_tags_getClusters prototype for new API call
+	flickr.tags.getClusters
+
+	* docs/tmpl/section-photo.sgml, src/flickcurl.h, src/photos-api.c,
+	utils/flickcurl.c: flickcurl_search_params gains contacts field.
+	(flickcurl_photos_search): Added support for photos.search
+	contacts parameter.
+
 2008-08-15  Dave Beckett <dave@dajobe.org>
 
 	* utils/flickrdf.c: Make flickrdf build without raptor
