@@ -177,9 +177,9 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
  * flickcurl_free_tag_cluster:
  * @tc: tag cluster object
  *
- * Destructor for tag cluster object
+ * INTERNAL - Destructor for tag cluster object
  */
-void
+static void
 flickcurl_free_tag_cluster(flickcurl_tag_cluster *tc)
 {
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tc, flickcurl_tag_cluster);
