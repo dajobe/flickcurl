@@ -44,6 +44,69 @@
 
 
 /**
+ * flickcurl_tags_getClusters:
+ * @fc: flickcurl context
+ * @tag: The tag to fetch clusters for.
+ * 
+ * Gives you a list of tag clusters for the given tag.
+ *
+ * Implements flickr.tags.getClusters (1.5)
+ *
+ * "There is no pagination for this method as the number of clusters
+ * for a single tag is capped at 5 and each cluster may contain
+ * between 1 - 50 tags (give or take)."
+ *
+ * As announced 2008-07-17
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4218
+ * 
+ * Return value: NULL on failure
+ **/
+flickcurl_tag_clusters*
+flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
+{
+  const char* parameters[8][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  void* result=NULL;
+  
+  if(!tag)
+    return 1;
+
+  parameters[count][0]  = "tag";
+  parameters[count++][1]= tag;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.tags.getClusters", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  result=flickcurl_build_tag_clusters(fc, xpathCtx, "/rsp/clusters/cluster");
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    result=NULL;
+
+  return result;
+}
+
+
+/**
  * flickcurl_tags_getHotList:
  * @fc: flickcurl context
  * @period: The period for which to fetch hot tags. Valid values are day and
