@@ -520,7 +520,7 @@ typedef struct {
 /**
  * flickcurl_tag_clusters:
  * @count: number of tag clusters
- * @tags: tag clusters
+ * @clusters: tag clusters
  *
  * A set of clusters of tag names
  */
