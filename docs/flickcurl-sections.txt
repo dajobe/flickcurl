@@ -254,6 +254,7 @@ flickcurl_reflection_getMethods
 <SECTION>
 <FILE>section-serializer</FILE>
 flickcurl_serializer
+flickcurl_serializer_factory
 flickcurl_new_serializer
 flickcurl_free_serializer
 flickcurl_serialize_photo

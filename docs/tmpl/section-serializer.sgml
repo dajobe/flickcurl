@@ -23,6 +23,16 @@ Serialize a photo to RDF Triples.
 </para>
 
 
+<!-- ##### STRUCT flickcurl_serializer_factory ##### -->
+<para>
+
+</para>
+
+@version: 
+@emit_namespace: 
+@emit_triple: 
+@emit_finish: 
+
 <!-- ##### FUNCTION flickcurl_new_serializer ##### -->
 <para>
 
