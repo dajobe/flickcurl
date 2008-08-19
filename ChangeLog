@@ -1,8 +1,18 @@
 2008-08-18  Dave Beckett <dave@dajobe.org>
 
+	* src/flickcurl.h, src/photo.c, src/place.c: Support neighbourhood
+	in location despite expecting it to be spelled neighborhood in
+	American.  As announced 2008-08-19 at
+	http://geobloggers.com/2008/08/19/correcting-location-data-the-flickr-way/
+
+2008-08-17  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 1.6
+
 	* Snapshotted flickcurl_1_5 for 1.5 release (SVN 720)
 	
-2008-08-17  Dave Beckett <dave@dajobe.org>
+	* docs/flickcurl-sections.txt, docs/tmpl/section-serializer.sgml:
+	Add flickcurl_serializer_factory
 
 	* utils/flickcurl.c: (command_tags_getClusters): Call
 	flickcurl_free_tag_clusters to do proper cleanup
