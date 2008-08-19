@@ -46,7 +46,7 @@
 #define DCTERMS_NS  "http://purl.org/dc/terms/"
 /* predicates dc:creator dc:dateSubmitted dc:rights dc:modified dc:issued
  * dc:created dc:description dc:title */
-#define FOAF_NS     "http://xmlns.com/foaf/0.1/#"
+#define FOAF_NS     "http://xmlns.com/foaf/0.1/"
 /* predicates foaf:maker foaf:name foaf:nick
  * classes foaf:Person foaf:Image */
 #define GEO_NS      "http://www.w3.org/2003/01/geo/wgs84_pos#"
