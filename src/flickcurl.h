@@ -140,19 +140,22 @@ typedef enum {
  * @PHOTO_FIELD_visibility_ispublic: visibility is for public
  * @PHOTO_FIELD_secret: photo secret
  * @PHOTO_FIELD_originalsecret: photo original secret
- * @PHOTO_FIELD_location_neighborhood: location neighborhood
+ * @PHOTO_FIELD_location_neighbourhood: location neighbourhood
+ * @PHOTO_FIELD_location_neighborhood: deprecated
  * @PHOTO_FIELD_location_locality: location locality
  * @PHOTO_FIELD_location_county: location county
  * @PHOTO_FIELD_location_region: location region
  * @PHOTO_FIELD_location_country: location country
  * @PHOTO_FIELD_location_placeid: location place ID
- * @PHOTO_FIELD_neighborhood_placeid: neighborhood place ID
+ * @PHOTO_FIELD_neighbourhood_placeid: neighborhood place ID
+ * @PHOTO_FIELD_neighborhood_placeid: dprecated
  * @PHOTO_FIELD_locality_placeid: locality place ID
  * @PHOTO_FIELD_county_placeid: county place ID
  * @PHOTO_FIELD_region_placeid: region place ID
  * @PHOTO_FIELD_country_placeid: country place ID
  * @PHOTO_FIELD_location_woeid: location WOE ID
- * @PHOTO_FIELD_neighborhood_woeid: neighborhood WOE ID
+ * @PHOTO_FIELD_neighbourhood_woeid: neighborhood WOE ID
+ * @PHOTO_FIELD_neighborhood_woeid: deprecated
  * @PHOTO_FIELD_locality_woeid: locality WOE ID
  * @PHOTO_FIELD_county_woeid: county WOE ID
  * @PHOTO_FIELD_region_woeid: region WOE ID
@@ -199,19 +202,22 @@ typedef enum {
   PHOTO_FIELD_visibility_ispublic,
   PHOTO_FIELD_secret,
   PHOTO_FIELD_originalsecret,
-  PHOTO_FIELD_location_neighborhood,
+  PHOTO_FIELD_location_neighbourhood,
+  PHOTO_FIELD_location_neighborhood = PHOTO_FIELD_location_neighbourhood,
   PHOTO_FIELD_location_locality,
   PHOTO_FIELD_location_county,
   PHOTO_FIELD_location_region,
   PHOTO_FIELD_location_country,
   PHOTO_FIELD_location_placeid,
-  PHOTO_FIELD_neighborhood_placeid,
+  PHOTO_FIELD_neighbourhood_placeid,
+  PHOTO_FIELD_neighborhood_placeid = PHOTO_FIELD_neighbourhood_placeid,
   PHOTO_FIELD_locality_placeid,
   PHOTO_FIELD_county_placeid,
   PHOTO_FIELD_region_placeid,
   PHOTO_FIELD_country_placeid,
   PHOTO_FIELD_location_woeid,
-  PHOTO_FIELD_neighborhood_woeid,
+  PHOTO_FIELD_neighbourhood_woeid,
+  PHOTO_FIELD_neighborhood_woeid  = PHOTO_FIELD_neighbourhood_woeid,
   PHOTO_FIELD_locality_woeid,
   PHOTO_FIELD_county_woeid,
   PHOTO_FIELD_region_woeid,
@@ -430,7 +436,8 @@ typedef struct {
 /**
  * flickcurl_place_type:
  * @FLICKCURL_PLACE_LOCATION: a general location
- * @FLICKCURL_PLACE_NEIGHBORHOOD: neighborhood (narrowest place)
+ * @FLICKCURL_PLACE_NEIGHBOURHOOD: neighborhood (narrowest place)
+ * @FLICKCURL_PLACE_NEIGHBORHOOD: deprecated
  * @FLICKCURL_PLACE_LOCALITY: locality
  * @FLICKCURL_PLACE_COUNTY: county
  * @FLICKCURL_PLACE_REGION: region
@@ -441,7 +448,8 @@ typedef struct {
 */
 typedef enum {
   FLICKCURL_PLACE_LOCATION,
-  FLICKCURL_PLACE_NEIGHBORHOOD,
+  FLICKCURL_PLACE_NEIGHBOURHOOD,
+  FLICKCURL_PLACE_NEIGHBORHOOD = FLICKCURL_PLACE_NEIGHBOURHOOD,
   FLICKCURL_PLACE_LOCALITY,
   FLICKCURL_PLACE_COUNTY,
   FLICKCURL_PLACE_REGION,

@@ -44,7 +44,7 @@
 
 static const char* flickcurl_place_type_label[FLICKCURL_PLACE_LAST+1]={
   "location",
-  "neighborhood",
+  "neighbourhood",
   "locality",
   "county",
   "region",
@@ -180,6 +180,24 @@ static struct {
     (const xmlChar*)"./@woeid",
     FLICKCURL_PLACE_LOCATION,
     PLACE_WOE_ID
+  }
+  ,
+  {
+    (const xmlChar*)"./neighbourhood/@place_id",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"./neighbourhood/@woeid",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_WOE_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"./neighbourhood",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_NAME,
   }
   ,
   {
