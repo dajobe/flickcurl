@@ -3,18 +3,21 @@
 flickcurl \- call Flickr API
 .SH SYNOPSIS
 .B flickcurl
-[\fB\-d \fIDELAY\fP\fR] [\fB\-a \fIFROB\fP\fR] [\fB\-h\fR] [\fB\-v\fR] [\fIcommands\fR] ...
+\fB\-a \fIFROB\fP\fR
+.br
+.B flickcurl
+[\fB\-d \fIDELAY\fP\fR] [\fB\-h\fR] [\fB\-v\fR] [\fIcommands\fR] ...
 .br
 .SH DESCRIPTION
-\fBflickcurl\fP is a program that can call some of the Flickr APIs,
-plus help with authentication by turning mobile authentication method
-frobs into full auth_tokens with \fI-a NNN-NNN-NNN\fP and writing the
-\fI~/.flickcurl.conf\fP file. Use \fIflickcurl \-h\fP to get a list of
+\fBflickcurl\fP is a utility program to call the Flickr APIs via the
+flickcurl library.  Run \fIflickcurl \-h\fP to get a list of
 the supported commands and their arguments.
 .LP
-Run \fBflickcurl\fP without any options to get the instructions for
-registering the application and creating the initial configuration
-file from the Flickr information.
+The program requires configuring before use to work with the Flickr
+APIs.  Run \fBflickcurl\fP without any options to get the instructions
+for registering the application and creating the initial
+configuration file \fI~/.flickcurl.conf\fP from the registration
+information.
 .SH OPTIONS
 These programs follow the usual GNU command line syntax, with long
 options starting with two dashes (`-').
