@@ -11,14 +11,18 @@ plus help with authentication by turning mobile authentication method
 frobs into full auth_tokens with \fI-a NNN-NNN-NNN\fP and writing the
 \fI~/.flickcurl.conf\fP file. Use \fIflickcurl \-h\fP to get a list of
 the supported commands and their arguments.
-
+.LP
+Run \fBflickcurl\fP without any options to get the instructions for
+registering the application and creating the initial configuration
+file from the Flickr information.
 .SH OPTIONS
 These programs follow the usual GNU command line syntax, with long
 options starting with two dashes (`-').
 A summary of options is included below.
 .TP
 .B \-a \fIFROB\fP, \-\-auth \fIFROB\fP
-Authenticate with a \fIFROB\fP and write auth config.
+Authenticate with a \fIFROB\fP and update the authentication file.
+The program will exit after updating the file.
 .TP
 .B \-d \fIDELAY\fP, \-\-delay \fIDELAY\fP
 Set delay between requests to \fIDELAY\fP milliseconds.
