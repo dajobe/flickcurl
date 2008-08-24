@@ -3245,13 +3245,33 @@ main(int argc, char *argv[])
 
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
-  if(read_auth && !access((const char*)config_path, R_OK)) {
-    if(read_ini_config(config_path, config_section, fc,
-                       my_set_config_var_handler)) {
-      fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
-              program, config_path, strerror(errno));
-      rc=1;
-      goto tidy;
+  if(read_auth) {
+    if(!access((const char*)config_path, R_OK)) {
+      if(read_ini_config(config_path, config_section, fc,
+                         my_set_config_var_handler)) {
+        fprintf(stderr, "%s: Failed to read configuration filename %s: %s\n",
+                program, config_path, strerror(errno));
+        rc=1;
+        goto tidy;
+      }
+    } else {
+        fprintf(stderr, "%s: Configuration file %s not found.\n\n"
+"1. Visit http://www.flickr.com/services/api/keys/ and obtain a\n"
+"mobile application <API Key>, <Shared Secret> and <Authentication URL>.\n"
+"\n"
+"2. Create %s in this format:\n"
+"[flickr]\n"
+"api_key=<API Key>\n"
+"secret=<Shared Secret>\n"
+"\n"
+"3. Visit the <Auhentication URL> in a browser to get a <FROB>\n"
+"\n"
+"4. Call this program with the frob:\n"
+"  %s -a <FROB>\n"
+"to update the configuration file with the authentication token.\n",
+                program, config_path, config_path, program);
+        rc=1;
+        goto tidy;
     }
   }
 
@@ -3278,21 +3298,28 @@ main(int argc, char *argv[])
         break;
 
       case 'a':
-        /* Exchange the mini-token for a full token */
+        /* Exchange the frob for a full token */
         auth_token=flickcurl_auth_getFullToken(fc, optarg);
         if(!auth_token) {
           fprintf(stderr, 
                   "%s: Could not find auth_token in getFullToken response\n",
                   program);
+          rc=1;
         } else {
           FILE* fh;
-
+          
+          fprintf(stdout, 
+                  "%s: Successfully exchanged frob %s for authentication token\n",
+                  program, optarg);
+          
           flickcurl_set_auth_token(fc, auth_token);
           
           fh=fopen(config_path, "w");
           if(!fh) {
-            fprintf(stderr, "%s: Failed to write to config filename %s: %s\n",
+            fprintf(stderr,
+                    "%s: Failed to write to configuration file %s: %s\n",
                     program, config_path, strerror(errno));
+            rc=1;
           } else {
             fputs("[flickr]\nauth_token=", fh);
             fputs(flickcurl_get_auth_token(fc), fh);
@@ -3303,10 +3330,13 @@ main(int argc, char *argv[])
             fputs("\n", fh);
             fclose(fh);
             read_auth=0;
+            fprintf(stdout, 
+                  "%s: Updated configuration file %s with authentication token",
+                    program, config_path);
+            rc=0;
           }
         }
-        
-        break;
+        goto tidy;
 
       case 'd':
         if(optarg)
