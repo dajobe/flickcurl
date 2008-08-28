@@ -1342,10 +1342,13 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
 {
   char *tags_string=NULL;
   int usage=0;
+  flickcurl_photos_list_params list_params;
   flickcurl_search_params params;
-  flickcurl_photo** photos=NULL;
+  flickcurl_photos_list* photos_list=NULL;
   int i;
   
+  memset(&list_params, '\0', sizeof(list_params));
+
   memset(&params, '\0', sizeof(flickcurl_search_params));
   
   argv++; argc--;
@@ -1420,15 +1423,15 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
       params.group_id=argv[0];
       argv++; argc--;
     } else if(!strcmp(field, "extras")) {
-      params.extras=argv[0];
+      list_params.extras=argv[0];
       argv++; argc--;
     } else if(!strcmp(field, "per-page")) {
       /* int: default 100, max 500 */
-      params.per_page=atoi(argv[0]);
+      list_params.per_page=atoi(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "page")) {
       /* int: default 1 */
-      params.page=atoi(argv[0]);
+      list_params.page=atoi(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "place-id")) {
       params.place_id=argv[0];
@@ -1457,6 +1460,9 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
     } else if(!strcmp(field, "contacts")) {
       params.contacts=argv[0];
       argv++; argc--;
+    } else if(!strcmp(field, "format")) {
+      list_params.format=argv[0];
+      argv++; argc--;
     } else if(!strcmp(field, "tags")) {
       size_t tags_len=0;
       int j;
@@ -1484,28 +1490,45 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
   }
 
   if(usage) {
-    photos=NULL;
+    photos_list=NULL;
     goto tidy;
   }
   
-  photos=flickcurl_photos_search(fc, &params);
-  if(!photos) {
+  photos_list=flickcurl_photos_search_params(fc, &params, &list_params);
+  if(!photos_list) {
     fprintf(stderr, "%s: Searching failed\n", program);
     goto tidy;
   }
 
-  for(i=0; photos[i]; i++) {
-    fprintf(stderr, "%s: Search result photo %d\n", program, i);
-    command_print_photo(photos[i]);
+  if(photos_list->photos) {
+    fprintf(stderr, "%s: Search result returned %d photos\n", program,
+            photos_list->photos_count);
+    for(i=0; photos_list->photos[i]; i++) {
+      fprintf(stderr, "%s: Search result photo %d\n", program, i);
+      command_print_photo(photos_list->photos[i]);
+    }
+  } else if(photos_list->content) {
+    fprintf(stderr, "%s: Search result returned %d bytes of %s content\n", 
+            program, (int)photos_list->content_length, photos_list->format);
+    fwrite(photos_list->content, 1, photos_list->content_length, 
+           stdout);
+  } else {
+    fprintf(stderr,
+            "%s: Search result returned neither photos nor raw content\n", 
+            program);
+    flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+    goto tidy;
   }
   
-  flickcurl_free_photos(photos);
+  
+  flickcurl_free_photos_list(photos_list);
 
   tidy:
   if(params.tags)
     free((char*)params.tags);
   
-  return (photos == NULL);
+  return (photos_list == NULL);
 }
 
 
