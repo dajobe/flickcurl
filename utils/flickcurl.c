@@ -3524,6 +3524,17 @@ main(int argc, char *argv[])
              commands[i].description);
     fputs("  A prefix of `flickr.' may be optionally given\n", stdout);
 
+
+    fputs("\nFeed FORMATs are:\n", stdout);
+    for(i=0; 1; i++) {
+      const char* name;
+      const char* label;
+
+      if(flickcurl_get_feed_format_info(i, &name, &label, NULL))
+        break;
+      printf("    %-15s %s\n", name, label);
+    }
+
     rc=0;
     goto tidy;
   }
