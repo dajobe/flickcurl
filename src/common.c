@@ -1755,3 +1755,58 @@ flickcurl_get_safety_level_from_string(const char* safety_level_string)
 
   return safety_level;
 }
+
+
+#define FEED_FORMAT_COUNT 8
+static struct {
+  const char* name;
+  const char* label;
+  const char* mime_type;
+}
+flickcurl_feed_format_info[FEED_FORMAT_COUNT+1]={
+  { "feed-rss_100", "RSS 1.0", "application/rdf+xml" },
+  { "feed-rss_200", "RSS 2.0", "application/rss+xml" },
+  { "feed-atom_10", "Atom 1.0", "application/atom+xml" },
+  { "feed-georss",  "RSS 2.0 with GeoRSS and W3C Geo for geotagged photos", "application/rss+xml" },
+  { "feed-geoatom", "Atom 1.0 with GeoRSS and W3C Geo for geotagged photos", "application/atom+xml" },
+  { "feed-geordf",  "RSS 1.0 with GeoRSS and W3C Geo for geotagged photos", "application/rdf+xml" },
+  { "feed-kml",     "KML 2.1", "application/vnd.google-earth.kml+xml" },
+  { "feed-kml_nl",  "KML 2.1 network link", "application/vnd.google-earth.kml+xml" },
+  { NULL, NULL, NULL }
+};
+
+
+/**
+ * flickcurl_get_feed_format_info:
+ * @feed_format: input param - feed format index
+ * @name_p: output param - pointer to store feed format name
+ * @label_p: output param - pointer to store feed format label
+ * @mime_type_p: output param - pointer to store feed format mime type
+ * 
+ * Get feed format parameter value information
+ *
+ * As announced 2008-08-25 in
+ * http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/
+ *
+ * Return value: non-0 if feed_format is out of range
+ **/
+int
+flickcurl_get_feed_format_info(int feed_format,
+                               const char** name_p,
+                               const char** label_p,
+                               const char** mime_type_p)
+{
+  if(feed_format < 0 || feed_format >= FEED_FORMAT_COUNT)
+    return 1;
+
+  if(name_p)
+    *name_p=flickcurl_feed_format_info[feed_format].name;
+
+  if(label_p)
+    *label_p=flickcurl_feed_format_info[feed_format].label;
+
+  if(mime_type_p)
+    *mime_type_p=flickcurl_feed_format_info[feed_format].mime_type;
+
+  return 0;
+}
