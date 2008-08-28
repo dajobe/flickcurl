@@ -1377,6 +1377,8 @@ int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
 FLICKCURL_API
 flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id, flickcurl_photos_list_params* params);
+FLICKCURL_API
 flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
 FLICKCURL_API
 int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
