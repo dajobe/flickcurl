@@ -63,7 +63,10 @@
   if(!pointer) \
     return; \
 } while(0)
-#define FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(pointer, type, ret)
+#define FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(pointer, type, ret) do { \
+  if(!pointer) \
+    return ret; \
+} while(0)
 
 #else
 
