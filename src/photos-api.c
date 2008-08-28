@@ -1313,11 +1313,12 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
 
 
 /**
- * flickcurl_photos_search:
+ * flickcurl_photos_search_params:
  * @fc: flickcurl context
  * @params: #flickcurl_search_params search parameters
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
- * Return a list of photos matching some criteria.
+ * Return a photos list or raw content matching some criteria.
  * 
  * Only photos visible to the calling user will be returned. To
  * return private or semi-private photos, the caller must be
@@ -1325,6 +1326,14 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * the photos. Unauthenticated calls will only return public photos.
  *
  * Implements flickr.photos.search (0.11)
+ *
+ * Flickcurl 1.6: Added @list_params beyond flickcurl_photos_search()
+ * to allow returning raw content if @list_params is present and
+ * field @format is not NULL as announced 2008-08-25
+ * http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/
+ *
+ * NOTE: The @params fields: extras, per_page and page are ignored -
+ * the values are taken from the @list_params fields.
  *
  * Flickcurl 1.0: Added place_id for places API as announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
@@ -1349,16 +1358,17 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * As announced 2008-06-30
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4162
  * 
- * Return value: an array of #flickcurl_photo or NULL
+ * Return value: a photos list or NULL
  **/
-flickcurl_photo**
-flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
+flickcurl_photos_list*
+flickcurl_photos_search_params(flickcurl* fc,
+                               flickcurl_search_params* params,
+                               flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[36][2];
+  const char* parameters[37][2];
   int count=0;
-  xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
+  flickcurl_photos_list* photos_list=NULL;
   char min_upload_date_s[15];
   char max_upload_date_s[15];
   char accuracy_s[3];
@@ -1369,7 +1379,11 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
   char lat_s[32];
   char lon_s[32];
   char radius_s[32];
+  const char* format=NULL;
   
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(params, flickcurl_search_params, NULL);
+  
+  /* Search parameters */
   if(params->user_id) {
     parameters[count][0]  = "user_id";
     parameters[count++][1]= params->user_id;
@@ -1453,24 +1467,6 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
     parameters[count][0]  = "group_id";
     parameters[count++][1]= params->group_id;
   }
-  if(params->extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= params->extras;
-  }
-  if(params->per_page) {
-    if(params->per_page >=0 && params->per_page <=999) {
-      sprintf(per_page_s, "%d", params->per_page);
-      parameters[count][0]  = "per_page";
-      parameters[count++][1]= per_page_s;
-    }
-  }
-  if(params->page) {
-    if(params->page >=0 && params->page <=999) {
-      sprintf(page_s, "%d", params->page);
-      parameters[count][0]  = "page";
-      parameters[count++][1]= page_s;
-    }
-  }
   if(params->place_id) {
     parameters[count][0]  = "place_id";
     parameters[count++][1]= params->place_id;
@@ -1510,32 +1506,117 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
     parameters[count][0]  = "contacts";
     parameters[count++][1]= params->contacts;
   }
+
+  /* Photos List parameters */
+  if(list_params) {
+    if(list_params->extras) {
+      parameters[count][0]  = "extras";
+      parameters[count++][1]= list_params->extras;
+    }
+    if(list_params->per_page) {
+      if(list_params->per_page >=0 && list_params->per_page <=999) {
+        sprintf(per_page_s, "%d", list_params->per_page);
+        parameters[count][0]  = "per_page";
+        parameters[count++][1]= per_page_s;
+      }
+    }
+    if(list_params->page) {
+      if(list_params->page >=0 && list_params->page <=999) {
+        sprintf(page_s, "%d", list_params->page);
+        parameters[count][0]  = "page";
+        parameters[count++][1]= page_s;
+      }
+    }
+    if(list_params->format) {
+      format=list_params->format;
+      parameters[count][0]  = "format";
+      parameters[count++][1]= format;
+    }
+  }
+  
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.photos.search", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
+  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
-    photos=NULL;
+  if(fc->failed) {
+    if(photos_list)
+      free(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+/**
+ * flickcurl_photos_search:
+ * @fc: flickcurl context
+ * @params: #flickcurl_search_params search parameters
+ * 
+ * Return a list of photos matching some criteria.
+ * 
+ * Only photos visible to the calling user will be returned. To
+ * return private or semi-private photos, the caller must be
+ * authenticated with 'read' permissions, and have permission to view
+ * the photos. Unauthenticated calls will only return public photos.
+ *
+ * Implements flickr.photos.search (0.11)
+ *
+ * Flickcurl 1.0: Added place_id for places API as announced 2008-01-11
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
+ *
+ * Optional parameter "media" that defaults to "all" but can also be
+ * set to "photos" or "videos" to filter results by media type.
+ * API addition 2008-04-07.
+ *
+ * Optional parameter "has_geo" for any photo that has been geotagged.
+ * As announced 2008-06-27
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4146
+ *
+ * Optional parameters "lat", "lon", "radius" and "radius_units" added
+ * for doing radial geo queries from point (lat, lon) within
+ * radius/radius_units.  radius_units default is "km".
+ * As announced 2008-06-27
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4146
+ *
+ * (Experimental) Optional parameter "contacts" requires requires
+ * that the "user_id" field also is set.  Valid values are "all" or
+ * "ff" for just friends and family.
+ * As announced 2008-06-30
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4162
+ * 
+ * Return value: an array of #flickcurl_photo or NULL
+ **/
+flickcurl_photo**
+flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
+{
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = params->extras;
+  list_params.per_page = params->per_page;
+  list_params.page     = params->page;
+
+  photos_list=flickcurl_photos_search_params(fc, params, &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }

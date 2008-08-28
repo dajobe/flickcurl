@@ -1475,6 +1475,8 @@ int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
 FLICKCURL_API
 flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_search_params(flickcurl* fc, flickcurl_search_params* params, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);
 FLICKCURL_API
 int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id, int date_posted, int date_taken, int date_taken_granularity);
