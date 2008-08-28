@@ -896,8 +896,8 @@ typedef struct {
  * a #flickcurl_photos_list
  */
 typedef struct {
-  char* format;
-  char* extras;
+  const char* format;
+  const char* extras;
   int per_page;
   int page;
 } flickcurl_photos_list_params;
