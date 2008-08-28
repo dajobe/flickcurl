@@ -1337,6 +1337,32 @@ command_photos_getContactsPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_photos_list(flickcurl* fc, flickcurl_photos_list* photos_list,
+                          FILE* fh, const char* label)
+{
+  int i;
+  
+  if(photos_list->photos) {
+    fprintf(stderr, "%s: %s returned %d photos\n", program, label,
+            photos_list->photos_count);
+    for(i=0; photos_list->photos[i]; i++) {
+      fprintf(stderr, "%s: %s photo %d\n", program, label, i);
+      command_print_photo(photos_list->photos[i]);
+    }
+  } else if(photos_list->content) {
+    fprintf(stderr, "%s: %s returned %d bytes of %s content\n", 
+            program, label,
+            (int)photos_list->content_length, photos_list->format);
+    fwrite(photos_list->content, 1, photos_list->content_length, 
+           fh);
+  } else {
+    fprintf(stderr, "%s: %s returned neither photos nor raw content\n", 
+            program, label);
+  }
+}
+
+
 static int
 command_photos_search(flickcurl* fc, int argc, char *argv[])
 {
@@ -1345,7 +1371,6 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list_params list_params;
   flickcurl_search_params params;
   flickcurl_photos_list* photos_list=NULL;
-  int i;
   
   memset(&list_params, '\0', sizeof(list_params));
 
@@ -1497,32 +1522,10 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
   photos_list=flickcurl_photos_search_params(fc, &params, &list_params);
   if(!photos_list) {
     fprintf(stderr, "%s: Searching failed\n", program);
-    goto tidy;
-  }
-
-  if(photos_list->photos) {
-    fprintf(stderr, "%s: Search result returned %d photos\n", program,
-            photos_list->photos_count);
-    for(i=0; photos_list->photos[i]; i++) {
-      fprintf(stderr, "%s: Search result photo %d\n", program, i);
-      command_print_photo(photos_list->photos[i]);
-    }
-  } else if(photos_list->content) {
-    fprintf(stderr, "%s: Search result returned %d bytes of %s content\n", 
-            program, (int)photos_list->content_length, photos_list->format);
-    fwrite(photos_list->content, 1, photos_list->content_length, 
-           stdout);
   } else {
-    fprintf(stderr,
-            "%s: Search result returned neither photos nor raw content\n", 
-            program);
+    command_print_photos_list(fc, photos_list, stdout, "Search result");
     flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
-    goto tidy;
   }
-  
-  
-  flickcurl_free_photos_list(photos_list);
 
   tidy:
   if(params.tags)
@@ -2491,32 +2494,34 @@ static int
 command_favorites_getList(flickcurl* fc, int argc, char *argv[])
 {
   char *user_id=argv[1];
-  int per_page=10;
-  int page=0;
-  const char* extras=NULL;
-  flickcurl_photo** photos=NULL;
-  int i;
+  flickcurl_photos_list* photos_list=NULL;
+  flickcurl_photos_list_params list_params;
+
+  memset(&list_params, '\0', sizeof(list_params));
 
   if(argc >2) {
-    per_page=atoi(argv[2]);
-    if(argc >3)
-      page=atoi(argv[3]);
+    list_params.per_page=atoi(argv[2]);
+    if(argc >3) {
+      list_params.page=atoi(argv[3]);
+      if(argc >4)
+        list_params.format=argv[4];
+    }
   }
   
-  photos=flickcurl_favorites_getList(fc, user_id, extras, per_page, page);
-  if(!photos)
-    return 1;
+  photos_list=flickcurl_favorites_getList_params(fc, user_id, &list_params);
+  if(!photos_list) {
+    fprintf(stderr, "%s: Getting favorites failed\n", program);
+  } else {
+    fprintf(stderr,
+            "%s: User %s has %d favorite photos (per_page %d  page %d):\n",
+            program, user_id, photos_list->photos_count,
+            list_params.per_page, list_params.page);
+    command_print_photos_list(fc, photos_list, stdout, "Favorite photos");
 
-  fprintf(stderr, "%s: User %s favorite photos (per_page %d  page %d):\n",
-          program, user_id, per_page, page);
-  for(i=0; photos[i]; i++) {
-    fprintf(stderr, "%s: Photo %d\n", program, i);
-    command_print_photo(photos[i]);
+    flickcurl_free_photos_list(photos_list);
   }
-  
-  flickcurl_free_photos(photos);
 
-  return 0;
+  return (photos_list == NULL);
 }
 
 
@@ -2892,8 +2897,8 @@ static flickcurl_cmd commands[] = {
    "PHOTO-ID", "Adds PHOTO-ID to the current user's favorites.",
    command_favorites_add, 1, 1},
   {"favorites.getList",
-   "USER-NSID [[PER-PAGE] [PAGE]]", "Get a list of USER-NSID's favorite photos.",
-   command_favorites_getList, 1, 3},
+   "USER-NSID [[PER-PAGE] [PAGE [FORMAT]]]", "Get a list of USER-NSID's favorite photos.",
+   command_favorites_getList, 1, 4},
   {"favorites.getPublicList",
    "USER-NSID [[PER-PAGE] [PAGE]]", "Get a list of USER-NSID's favorite public photos.",
    command_favorites_getPublicList, 1, 3},
