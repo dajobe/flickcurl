@@ -867,6 +867,43 @@ typedef struct {
 
 
 /**
+ * flickcurl_photos_list:
+ * @format: requested content format or NULL if a list of photos was wanted
+ * @photos: list of photos if @format is NULL.  Also may be NULL on failure.
+ * @photos_count: number of photos in @photos array if @format is NULL. Undefined on failure
+ * @content: raw content if @format is not NULL.  Also may be NULL on failure.
+ * @content_length: size of @content if @format is not NULL. Undefined on failure
+ *
+ * Photos List result.
+ */
+typedef struct {
+  char *format;
+  flickcurl_photo** photos;
+  int photos_count;
+  char* content;
+  size_t content_length;
+} flickcurl_photos_list;
+
+
+/**
+ * flickcurl_photos_list_params:
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or < 0)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or < 0)
+ * @format: Feed format.  If given, the photos list result will return raw content.  This paramter is EXPERIMENTAL as annouced 2008-08-25 http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/  The current formats are  <code>feed-rss_100</code> for RSS 1.0, <code>feed-rss_200</code> for RSS 2.0, <code>feed-atom_10</code> for Atom 1.0, <code>feed-georss</code> for RSS 2.0 with GeoRSS and W3C Geo for geotagged photos, <code>feed-geoatom</code> for Atom 1.0 with GeoRSS and W3C Geo for geotagged photos, <code>feed-geordf</code> for RSS 1.0 with GeoRSS and W3C Geo for geotagged photos, <code>feed-kml</code> for KML 2.1, <code>feed-kml_nl</code> for KML 2.1 network link (or NULL)
+ *
+ * Photos List API parameters for multiple functions that return
+ * a #flickcurl_photos_list
+ */
+typedef struct {
+  char* format;
+  char* extras;
+  int per_page;
+  int page;
+} flickcurl_photos_list_params;
+
+
+/**
  * flickcurl_upload_params:
  * @photo_file: photo filename
  * @title: title or NULL
@@ -1231,6 +1268,8 @@ FLICKCURL_API
 void flickcurl_free_photo(flickcurl_photo *photo);
 FLICKCURL_API
 void flickcurl_free_photos(flickcurl_photo** photos);
+FLICKCURL_API
+void flickcurl_free_photos_list(flickcurl_photos_list* photos_list);
 FLICKCURL_API
 void flickcurl_free_photoset(flickcurl_photoset *photoset);
 FLICKCURL_API

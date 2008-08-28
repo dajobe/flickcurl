@@ -779,3 +779,94 @@ flickcurl_free_photos(flickcurl_photo** photos)
     flickcurl_free_photo(photos[i]);
   free(photos);
 }
+
+
+flickcurl_photos_list*
+flickcurl_invoke_photos_list(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                             const xmlChar* xpathExpr, const char* format)
+{
+  flickcurl_photos_list* photos_list=NULL;
+  const char *nformat;
+  size_t format_len;
+
+  photos_list=(flickcurl_photos_list*)calloc(1, sizeof(flickcurl_photos_list));
+  if(!photos_list) {
+    fc->failed=1;
+    goto tidy;
+  }
+
+  if(format) {
+    nformat=format;
+    format_len=strlen(format);
+  
+    photos_list->content=flickcurl_invoke_get_content(fc,
+                                                      &photos_list->content_length);
+    if(!photos_list->content) {
+      fc->failed=1;
+      goto tidy;
+    }
+
+  } else {
+    xmlDocPtr doc=NULL;
+
+    nformat="xml";
+    format_len=3;
+    
+    doc=flickcurl_invoke(fc);
+    if(!doc)
+      goto tidy;
+
+    xpathCtx = xmlXPathNewContext(doc);
+    if(!xpathCtx) {
+      flickcurl_error(fc, "Failed to create XPath context for document");
+      fc->failed=1;
+      goto tidy;
+    }
+
+    photos_list->photos=flickcurl_build_photos(fc, xpathCtx, xpathExpr,
+                                               &photos_list->photos_count);
+    if(!photos_list->photos) {
+      fc->failed=1;
+      goto tidy;
+    }
+
+  }
+
+
+  photos_list->format=(char*)malloc(format_len+1);
+  if(!photos_list->format) {
+    fc->failed=1;
+    goto tidy;
+  }
+  memcpy(photos_list->format, format, format_len+1);
+
+  tidy:
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+/**
+ * flickcurl_free_photos_list:
+ * @photos_list: photos list object
+ *
+ * Destructor for photos list
+ */
+void
+flickcurl_free_photos_list(flickcurl_photos_list* photos_list)
+{
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photos_list, flickcurl_photos_list);
+
+  if(photos_list->format)
+    free(photos_list->format);
+  if(photos_list->photos)
+    flickcurl_free_photos(photos_list->photos);
+  if(photos_list->content)
+    free(photos_list->content);
+  free(photos_list);
+}
