@@ -116,29 +116,56 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
     return 0;
 
   fc->total_bytes += len;
-  
-  if(!fc->xc) {
-    xmlParserCtxtPtr xc;
 
-    xc = xmlCreatePushParserCtxt(NULL, NULL,
-                                 (const char*)ptr, len,
-                                 (const char*)fc->uri);
-    if(!xc)
-      rc=1;
-    else {
-      xc->replaceEntities = 1;
-      xc->loadsubset = 1;
+  if(fc->save_content) {
+    char *b;
+    flickcurl_chunk *chunk;
+    
+    b=(char*)malloc(len);
+    chunk=(flickcurl_chunk*)malloc(sizeof(*chunk));
+    if(b && chunk) {
+      fc->chunks_count++;
+
+      memcpy(b, ptr, len);
+      chunk->content=b;
+      chunk->size=len;
+      chunk->prev= fc->chunks;
+
+      fc->chunks=chunk;
+    } else {
+      if(b)
+        free(b);
+      if(chunk)
+        free(chunk);
+      flickcurl_error(fc, "Out of memory");
     }
-    fc->xc=xc;
-  } else
-    rc=xmlParseChunk(fc->xc, (const char*)ptr, len, 0);
+      
+  }
+  
+  if(fc->xml_parse_content) {
+    if(!fc->xc) {
+      xmlParserCtxtPtr xc;
+
+      xc = xmlCreatePushParserCtxt(NULL, NULL,
+                                   (const char*)ptr, len,
+                                   (const char*)fc->uri);
+      if(!xc)
+        rc=1;
+      else {
+        xc->replaceEntities = 1;
+        xc->loadsubset = 1;
+      }
+      fc->xc=xc;
+    } else
+      rc=xmlParseChunk(fc->xc, (const char*)ptr, len, 0);
 
 #if FLICKCURL_DEBUG > 2
-  fprintf(stderr, "Got >>%s<< (%d bytes)\n", (const char*)ptr, len);
+    fprintf(stderr, "Got >>%s<< (%d bytes)\n", (const char*)ptr, len);
 #endif
 
-  if(rc)
-    flickcurl_error(fc, "XML Parsing failed");
+    if(rc)
+      flickcurl_error(fc, "XML Parsing failed");
+  }
 
 #ifdef CAPTURE
   if(fc->fh)
@@ -907,8 +934,9 @@ nanosleep(const struct timespec *rqtp, struct timespec *rmtp)
 /* end HAVE_NANOSLEEP */
 
 
-xmlDocPtr
-flickcurl_invoke(flickcurl *fc)
+static int
+flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
+                        xmlDocPtr* docptr_p)
 {
   struct curl_slist *slist=NULL;
   xmlDocPtr doc=NULL;
@@ -916,7 +944,8 @@ flickcurl_invoke(flickcurl *fc)
 #if defined(OFFLINE) || defined(CAPTURE)
   char filename[200];
 #endif
-
+  int rc=0;
+  
 #if defined(OFFLINE) || defined(CAPTURE)
 
   if(1) {
@@ -936,7 +965,7 @@ flickcurl_invoke(flickcurl *fc)
     if(access(filename, R_OK)) {
       fprintf(stderr, "Method %s cannot run offline - no %s XML result available\n",
               fc->method, filename);
-      return NULL;
+      return 1;
     }
 #ifdef HAVE_RAPTOR
     uri_string=raptor_uri_filename_to_uri_string(filename);
@@ -952,8 +981,13 @@ flickcurl_invoke(flickcurl *fc)
 
   if(!fc->uri) {
     flickcurl_error(fc, "No Flickr URI prepared to invoke");
-    return NULL;
+    return 1;
   }
+
+  if(content_p)
+    fc->save_content=1;
+  else
+    fc->xml_parse_content=1;
   
   gettimeofday(&now, NULL);
 #ifndef OFFLINE
@@ -1116,7 +1150,60 @@ flickcurl_invoke(flickcurl *fc)
   if(slist)
     curl_slist_free_all(slist);
 
-  if(!fc->failed) {
+  if(fc->failed)
+    goto tidy;
+  
+  if(fc->save_content) {
+    char* c;
+    flickcurl_chunk** chunks;
+
+    c=(char*)malloc(fc->total_bytes+1); /* +1 for NUL */
+    chunks=(flickcurl_chunk**)malloc(sizeof(flickcurl_chunk*) * fc->chunks_count);
+    if(c && chunks) {
+      flickcurl_chunk* chunk=fc->chunks;
+      int i;
+      char *p;
+
+      /* create the ordered list of chunks */
+      for(i=fc->chunks_count-1; i >= 0; i--) {
+        chunks[i]=chunk;
+        chunk=chunk->prev;
+      }
+
+      p=c;
+      for(i=0; i < fc->chunks_count; i++) {
+        memcpy(p, chunks[i]->content, chunks[i]->size);
+        p += chunks[i]->size;
+
+        /* free saved chunk once it has been copied */
+        free(chunks[i]->content);
+        free(chunks[i]);
+      }
+      free(chunks);
+
+      /* saved chunks list is now freed */
+      fc->chunks=NULL; 
+      fc->chunks_count=0;
+
+      *p='\0';
+      
+      if(content_p)
+        *content_p=c;
+      else
+        free(c);
+      if(size_p)
+        *size_p=fc->total_bytes;
+      
+    } else {
+      if(c)
+        free(c);
+      if(chunks)
+        free(chunks);
+      flickcurl_error(fc, "Out of memory");
+    }
+  }
+
+  if(fc->xml_parse_content) {
     xmlNodePtr xnp;
     xmlAttr* attr;
     int failed=0;
@@ -1171,12 +1258,16 @@ flickcurl_invoke(flickcurl *fc)
         flickcurl_error(fc, "Call failed with error %d - %s", 
                         fc->error_code, fc->error_msg);
       fc->failed=1;
+    } else {
+      /* pass DOM as an output parameter */
+      if(docptr_p)
+        *docptr_p=doc;
     }
   }
 
   tidy:
   if(fc->failed)
-    doc=NULL;
+    rc=1;
   
 #ifdef CAPTURE
   if(1) {
@@ -1188,7 +1279,27 @@ flickcurl_invoke(flickcurl *fc)
   /* reset special flags */
   fc->sign=0;
   
-  return doc;
+  return rc;
+}
+
+
+xmlDocPtr
+flickcurl_invoke(flickcurl *fc)
+{
+  xmlDocPtr docptr=NULL;
+  if(!flickcurl_invoke_common(fc, NULL, NULL, &docptr))
+    return docptr;
+  return NULL;
+}
+
+
+char*
+flickcurl_invoke_get_content(flickcurl *fc, size_t* size_p)
+{
+  char* content=NULL;
+  if(!flickcurl_invoke_common(fc, &content, size_p, NULL))
+    return content;
+  return NULL;
 }
 
 

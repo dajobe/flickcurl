@@ -112,8 +112,10 @@ int flickcurl_prepare_noauth(flickcurl *fc, const char* method, const char* para
 /* Prepare Flickr API request - POST with form-data parameters */
 int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_field, const char* upload_value, const char* parameters[][2], int count);
 
-/* Invoke Flickr API at URi prepared above and get back an XML document */
+/* Invoke Flickr API at URi prepared above and get back an XML document DOM */
 xmlDocPtr flickcurl_invoke(flickcurl *fc);
+/* Invoke Flickr API at URi prepared above and get back raw content */
+char* flickcurl_invoke_get_content(flickcurl *fc, size_t* size_p);
 
 /* args.c */
 void flickcurl_free_arg(flickcurl_arg *arg);
@@ -209,6 +211,15 @@ extern char* my_vsnprintf(const char *message, va_list arguments);
 /* video.c */
 flickcurl_video* flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
+struct flickcurl_chunk_s {
+  char* content;
+  size_t size;
+  struct flickcurl_chunk_s *prev;
+};
+
+typedef struct flickcurl_chunk_s flickcurl_chunk;
+
+
 struct flickcurl_s {
   int total_bytes;
 
@@ -293,6 +304,18 @@ struct flickcurl_s {
 #ifdef CAPTURE
   FILE* fh;
 #endif
+
+  /* if non-0 then run content through an XML parser and make a DOM in @xc */
+  int xml_parse_content;
+  
+  /* if non-0 then save content */
+  int save_content;
+
+  /* saved content */
+  /* reverse-ordered list of chunks of data read */
+  flickcurl_chunk* chunks;
+  /* count of chunks */
+  int chunks_count;
 };
 
 struct flickcurl_serializer_s
