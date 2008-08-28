@@ -1574,25 +1574,8 @@ flickcurl_photos_search_params(flickcurl* fc,
  * Flickcurl 1.0: Added place_id for places API as announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
  *
- * Optional parameter "media" that defaults to "all" but can also be
- * set to "photos" or "videos" to filter results by media type.
- * API addition 2008-04-07.
- *
- * Optional parameter "has_geo" for any photo that has been geotagged.
- * As announced 2008-06-27
- * http://tech.groups.yahoo.com/group/yws-flickr/message/4146
- *
- * Optional parameters "lat", "lon", "radius" and "radius_units" added
- * for doing radial geo queries from point (lat, lon) within
- * radius/radius_units.  radius_units default is "km".
- * As announced 2008-06-27
- * http://tech.groups.yahoo.com/group/yws-flickr/message/4146
- *
- * (Experimental) Optional parameter "contacts" requires requires
- * that the "user_id" field also is set.  Valid values are "all" or
- * "ff" for just friends and family.
- * As announced 2008-06-30
- * http://tech.groups.yahoo.com/group/yws-flickr/message/4162
+ * See flickcurl_photos_search_params() for notes on the optional
+ * search parameters.
  * 
  * Return value: an array of #flickcurl_photo or NULL
  **/
