@@ -1549,7 +1549,7 @@ flickcurl_photos_search_params(flickcurl* fc,
 
   if(fc->failed) {
     if(photos_list)
-      free(photos_list);
+      flickcurl_free_photos_list(photos_list);
     photos_list=NULL;
   }
 
