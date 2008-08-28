@@ -179,7 +179,7 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
 
 
 /**
- * flickcurl_favorites_getList_params:
+ * flickcurl_favorites_getList:
  * @fc: flickcurl context
  * @user_id: The NSID of the user to fetch the favorites list for. If this argument is omitted, the favorites list for the calling user is returned. (or NULL)
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
@@ -222,12 +222,10 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
 
 
 /**
- * flickcurl_favorites_getPublicList:
+ * flickcurl_favorites_getPublicList_params:
  * @fc: flickcurl context
  * @user_id: The user to fetch the favorites list for.
- * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
  * Returns a list of favorite public photos for the given user.
  *
@@ -238,37 +236,46 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
  * 
  * Return value: non-0 on failure
  **/
-flickcurl_photo**
-flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id,
-                                  const char* extras,
-                                  int per_page, int page)
+flickcurl_photos_list*
+flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
+                                         flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[11][2];
+  const char* parameters[12][2];
   int count=0;
-  xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
+  flickcurl_photos_list* photos_list=NULL;
   char page_str[10];
   char per_page_str[10];
+  const char* format=NULL;
   
   if(!user_id)
     return NULL;
 
+  /* API parameters */
   parameters[count][0]  = "user_id";
   parameters[count++][1]= user_id;
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
-  if(page >= 0) {
-    sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
-  }
-  if(per_page >= 0) {
-    sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+
+  /* Photos List parameters */
+  if(list_params) {
+    if(list_params->extras) {
+      parameters[count][0]  = "extras";
+      parameters[count++][1]= list_params->extras;
+    }
+    if(list_params->page >= 0) {
+      sprintf(page_str, "%d", list_params->page);
+      parameters[count][0]  = "page";
+      parameters[count++][1]= page_str;
+    }
+    if(list_params->per_page >= 0) {
+      sprintf(per_page_str, "%d", list_params->per_page);
+      parameters[count][0]  = "per_page";
+      parameters[count++][1]= per_page_str;
+    }
+    if(list_params->format) {
+      format=list_params->format;
+      parameters[count][0]  = "format";
+      parameters[count++][1]= format;
+    }
   }
 
   parameters[count][0]  = NULL;
@@ -276,27 +283,64 @@ flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.favorites.getPublicList", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
+  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
-    photos=NULL;
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+/**
+ * flickcurl_favorites_getPublicList:
+ * @fc: flickcurl context
+ * @user_id: The user to fetch the favorites list for.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * 
+ * Returns a list of favorite public photos for the given user.
+ *
+ * See flickcurl_favorites_getPublicList_params() for details of parameters.
+ *
+ * Implements flickr.favorites.getPublicList (1.0)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id,
+                                  const char* extras,
+                                  int per_page, int page)
+{
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list=flickcurl_favorites_getPublicList_params(fc, user_id,
+                                                       &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }
