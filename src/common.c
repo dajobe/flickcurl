@@ -1810,3 +1810,63 @@ flickcurl_get_feed_format_info(int feed_format,
 
   return 0;
 }
+
+
+/*
+ * flickcurl_append_photos_list_params:
+ * @list_params: in parameter - photos list paramater
+ * @parameters: in/out parameter - array of name/value parameters
+ * @count_p: in/out parameter - updated as new parameters added
+ * @format_p: out parameter - result format requested or NULL
+ *
+ * INTERNAL - append #flickcurl_photos_list_params to parameter list for API call
+ *
+ * Return value: number of parameters added
+ */
+int
+flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
+                                    const char* parameters[][2], int* count_p,
+                                    const char** format_p)
+{
+  char per_page_s[4];
+  char page_s[4];
+  int this_count=0;
+  
+  if(format_p)
+    *format_p=NULL;
+
+  if(!list_params)
+    return 0;
+  
+  if(list_params->extras) {
+    parameters[*count_p][0]  = "extras";
+    parameters[*count_p++][1]= list_params->extras;
+    this_count++;
+  }
+  if(list_params->per_page) {
+    if(list_params->per_page >= 0 && list_params->per_page <= 999) {
+      sprintf(per_page_s, "%d", list_params->per_page);
+      parameters[*count_p][0]  = "per_page";
+      parameters[*count_p++][1]= per_page_s;
+      this_count++;
+    }
+  }
+  if(list_params->page) {
+    if(list_params->page >= 0 && list_params->page <= 999) {
+      sprintf(page_s, "%d", list_params->page);
+      parameters[*count_p][0]  = "page";
+      parameters[*count_p++][1]= page_s;
+      this_count++;
+    }
+  }
+  if(list_params->format) {
+    parameters[*count_p][0]  = "format";
+    parameters[*count_p++][1]= list_params->format;
+    this_count++;
+
+    if(format_p)
+      *format_p=list_params->format;
+  }
+
+  return this_count;
+}

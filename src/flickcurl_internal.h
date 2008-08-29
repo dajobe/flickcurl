@@ -142,6 +142,7 @@ char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xml
 
 char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const char* value, const char* method, const xmlChar* xpathExpr);
 
+int flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params, const char* parameters[][2], int* count_p, const char** format_p);
 
 /* activity.c */
 flickcurl_activity** flickcurl_build_activities(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* activity_count_p);
