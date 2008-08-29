@@ -1,3 +1,86 @@
+2008-08-27  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Use flickcurl_get_feed_format_info to print
+	feed formats into the generated man page.
+
+	* utils/flickcurl.c: Use flickcurl_get_feed_format_info to
+	enumerate feed FORMATS in help message.
+
+	* src/common.c, src/flickcurl.h:
+	(flickcurl_get_feed_format_info): Added to enumerate possible feed
+	format parameter values.
+
+	* src/favorites-api.c, src/flickcurl.h:
+	(flickcurl_favorites_getPublicList_params): Added.
+	(flickcurl_favorites_getPublicList): Refactored to use it
+
+	* utils/flickcurl.c:
+	(command_print_photos_list): Added to print a flickcurl_photos_list
+	(command_photos_search): Use it.
+	(command_favorites_getList): Alter to use
+	flickcurl_favorites_getList_params to return a
+	flickcurl_photos_list and use flickcurl_photos_list to print the
+	result.
+	(main): Add an optional 4th parameter to favorites.getList for
+	FORMAT
+
+	* utils/flickcurl.c: (command_photos_search): Use
+	flickcurl_photos_search_params for photos.search command with a
+	flickcurl_photos_list result and accept the format parameter.  If
+	the result is raw content, print it.
+
+	* docs/tmpl/section-photo.sgml, docs/tmpl/section-place.sgml,
+	src/favorites-api.c, src/flickcurl.h:
+	(flickcurl_favorites_getList_params): Added.
+	(flickcurl_favorites_getList): Refactored to use it
+
+	* src/photos-api.c:
+	(flickcurl_photos_search_params): Free photos list with
+	flickcurl_free_photos_list on error
+
+	* src/flickcurl.h: (typedef flickcurl_photos_list_params): const chars
+
+	* src/photos-api.c: autodocs
+
+	* src/flickcurl.h, src/photos-api.c:
+	(flickcurl_photos_search_params): Added with
+	flickcurl_photos_list_params.
+	(flickcurl_photos_search): Refactored to use
+	flickcurl_photos_search_params
+
+	* src/flickcurl_internal.h: Added flickcurl_invoke_photos_list
+	prototype
+
+	* src/flickcurl.h, src/photo.c: Added typedef flickcurl_photos_list.
+	Added flickcurl_photos_list_params for new API calls to pass in
+	list result parameters.
+	(flickcurl_invoke_photos_list): Added to construct it.
+	(flickcurl_free_photos_list): Added to delete it - public
+
+
+	* src/common.c, src/flickcurl_internal.h:
+	(flickcurl_invoke_get_content): Added to return the raw content of
+	the web service call as a block of bytes.  Added struct
+	flickcurl_chunk_s to support this.  struct flickcurl_s gains extra
+	content fields and chunks fields.
+
+	* src/flickcurl_internal.h:
+	(FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE):	Define with a test
+
+2008-08-23  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl.1.in: words
+
+	* docs/flickcurl.1.in: Note -a change and how to make a config file
+
+	* utils/flickcurl.c: Print a help message when no config file is
+	present.
+	Make -a FROB exit with success after it
+
+2008-08-19  Dave Beckett <dave@dajobe.org>
+
+	* src/serializer.c: Fix FOAF NS - no trailing #
+
 2008-08-18  Dave Beckett <dave@dajobe.org>
 
 	* src/flickcurl.h, src/photo.c, src/place.c: Support neighbourhood
