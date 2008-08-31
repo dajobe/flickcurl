@@ -205,7 +205,7 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
 
 
 /**
- * flickcurl_groups_pools_getPhotos:
+ * flickcurl_groups_pools_getPhotos_params:
  * @fc: flickcurl context
  * @group_id: The id of the group who's pool you which to get the photo list for.
  * @tags: A tag to filter the pool with. At the moment only one tag at a time is supported. (or NULL)
@@ -223,8 +223,6 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
  * Optional extra type 'media' that will return an extra media=VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
- * Implements flickr.groups.pools.getPhotos (0.12)
- * 
  * Return value: non-0 on failure
  **/
 flickcurl_photos_list*

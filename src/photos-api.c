@@ -323,8 +323,6 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
  * Optional extra type 'media' that will return an extra media=VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
- * Implements flickr.photos.getContactsPublicPhotos (0.12)
- * 
  * Return value: a list of photos or NULL on failure
  **/
 flickcurl_photos_list*
@@ -1644,8 +1642,6 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * return private or semi-private photos, the caller must be
  * authenticated with 'read' permissions, and have permission to view
  * the photos. Unauthenticated calls will only return public photos.
- *
- * Implements flickr.photos.search (0.11)
  *
  * Flickcurl 1.6: Added @list_params beyond flickcurl_photos_search()
  * to allow returning raw content if @list_params is present and

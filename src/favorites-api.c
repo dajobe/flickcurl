@@ -206,8 +206,6 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
  * Optional extra type 'media' that will return an extra media=VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
- * Implements flickr.favorites.getPublicList (1.0)
- * 
  * Return value: non-0 on failure
  **/
 flickcurl_photos_list*
