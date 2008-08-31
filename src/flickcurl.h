@@ -1613,6 +1613,8 @@ flickcurl_photoset** flickcurl_photosets_getList(flickcurl* fc, const char* user
 FLICKCURL_API
 flickcurl_photo** flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id, const char* extras, int privacy_filter, int per_page, int page);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_photosets_getPhotos_params(flickcurl* fc, const char* photoset_id, int privacy_filter, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 int flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array);
 FLICKCURL_API
 int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);

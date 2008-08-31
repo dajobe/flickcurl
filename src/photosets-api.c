@@ -491,13 +491,11 @@ flickcurl_photosets_getList(flickcurl* fc, const char* user_id)
 
 
 /**
- * flickcurl_photosets_getPhotos:
+ * flickcurl_photosets_getPhotos_params:
  * @fc: flickcurl context
  * @photoset_id: The id of the photoset to return the photos for.
- * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
  * @privacy_filter: Return photos only matching a certain privacy level 1-5 (or <0)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 500. The maximum allowed value is 500. (or <0)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or <0)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
  * Get the list of photos in a set.
  *
@@ -508,6 +506,67 @@ flickcurl_photosets_getList(flickcurl* fc, const char* user_id)
  * Optional extra type 'media' that will return an extra media=VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
+ * Return value: list of photos or NULL on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photosets_getPhotos_params(flickcurl* fc, const char* photoset_id,
+                                     int privacy_filter,
+                                     flickcurl_photos_list_params* list_params)
+{
+  const char* parameters[13][2];
+  int count=0;
+  flickcurl_photos_list* photos_list=NULL;
+  char privacy_filter_str[2];
+  const char* format=NULL;
+  
+  if(!photoset_id)
+    return NULL;
+
+  /* API parameters */
+  parameters[count][0]  = "photoset_id";
+  parameters[count++][1]= photoset_id;
+  if(privacy_filter >=1 && privacy_filter <= 5) {
+    parameters[count][0]  = "privacy_filter";
+    sprintf(privacy_filter_str, "%d", privacy_filter);
+    parameters[count++][1]= privacy_filter_str;
+  }
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photosets.getPhotos", parameters, count))
+    goto tidy;
+
+  photos_list=flickcurl_invoke_photos_list(fc,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
+
+  tidy:
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+/**
+ * flickcurl_photosets_getPhotos:
+ * @fc: flickcurl context
+ * @photoset_id: The id of the photoset to return the photos for.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level 1-5 (or <0)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 500. The maximum allowed value is 500. (or <0)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or <0)
+ * 
+ * Get the list of photos in a set.
+ *
+ * See flickcurl_photosets_getPhotos_params() for details of parameters.
+ *
  * Implements flickr.photosets.getPhotos (0.13)
  * 
  * Return value: list of photos or NULL on failure
@@ -517,65 +576,26 @@ flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id,
                               const char* extras, int privacy_filter,
                               int per_page, int page)
 {
-  const char* parameters[12][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
-  char privacy_filter_str[2];
-  char page_str[10];
-  char per_page_str[10];
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
   
-  if(!photoset_id)
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list=flickcurl_photosets_getPhotos_params(fc, photoset_id,
+                                                   privacy_filter,
+                                                   &list_params);
+  if(!photos_list)
     return NULL;
 
-  parameters[count][0]  = "photoset_id";
-  parameters[count++][1]= photoset_id;
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
-  if(privacy_filter >=1 && privacy_filter <= 5) {
-    parameters[count][0]  = "privacy_filter";
-    sprintf(privacy_filter_str, "%d", privacy_filter);
-    parameters[count++][1]= privacy_filter_str;
-  }
-  if(per_page >= 0) {
-    sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
-  }
-  if(page >=0) {
-    sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
-  }
-  parameters[count][0]  = NULL;
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
 
-  if(flickcurl_prepare(fc, "flickr.photosets.getPhotos", parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photoset/photo", NULL);
-
-  tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
-  if(fc->failed)
-    photos=NULL;
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }
