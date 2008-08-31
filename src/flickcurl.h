@@ -1455,6 +1455,8 @@ flickcurl_context** flickcurl_photos_getAllContexts(flickcurl* fc, const char* p
 FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_getContactsPhotos_params(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int photo_count, int just_friends,  int single_photo, int include_self, const char* extras);
 FLICKCURL_API
 flickcurl_context** flickcurl_photos_getContext(flickcurl* fc, const char* photo_id);
