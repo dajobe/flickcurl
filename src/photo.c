@@ -782,10 +782,11 @@ flickcurl_free_photos(flickcurl_photo** photos)
 
 
 flickcurl_photos_list*
-flickcurl_invoke_photos_list(flickcurl* fc, xmlXPathContextPtr xpathCtx,
-                             const xmlChar* xpathExpr, const char* format)
+flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
+                             const char* format)
 {
   flickcurl_photos_list* photos_list=NULL;
+  xmlXPathContextPtr xpathCtx=NULL;
   const char *nformat;
   size_t format_len;
 
@@ -841,6 +842,9 @@ flickcurl_invoke_photos_list(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   memcpy(photos_list->format, format, format_len+1);
 
   tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
