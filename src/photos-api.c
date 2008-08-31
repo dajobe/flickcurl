@@ -190,6 +190,9 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
  * 
  * Fetch a list of recent photos from the calling users' contacts.
  *
+ * Currently supported extras fields are: license, date_upload,
+ * date_taken, owner_name, icon_server, original_format, last_update
+ *
  * Optional extra type 'media' that will return an extra media=VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
@@ -258,15 +261,11 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
  * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts).
  * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
  * @include_self: Set to non-0 to include photos from the calling user.
- * @extras: A comma-delimited list of extra information to fetch for
- * each returned record. Currently supported fields are: license,
- * date_upload, date_taken, owner_name, icon_server, original_format,
- * last_update (or NULL for no extras)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
  * 
  * Fetch a list of recent photos from the calling users' contacts.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
- * for VALUE "photo" or "video".  API addition 2008-04-07.
+ * See flickcurl_photos_getContactsPhotos() for details of parameters.
  *
  * Implements flickr.photos.getContactsPhotos (0.11)
  * 
@@ -316,6 +315,10 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
  * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
  * Fetch a list of recent public photos from a users' contacts.
+ *
+ * Currently supported extras fields are: license,
+ * date_upload, date_taken, owner_name, icon_server, original_format,
+ * last_update.
  *
  * Optional extra type 'media' that will return an extra media=VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
@@ -394,10 +397,7 @@ flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
  * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts)
  * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
  * @include_self: Set to non-0 to include photos from the user specified by user_id.
- * @extras: A comma-delimited list of extra information to fetch for
- * each returned record. Currently supported fields are: license,
- * date_upload, date_taken, owner_name, icon_server, original_format,
- * last_update. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
  * 
  * Fetch a list of recent public photos from a users' contacts.
  *
@@ -836,26 +836,24 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
 }
 
 
-static flickcurl_photo**
-flickcurl_get_photoslist(flickcurl* fc, 
-                         const char* method,
-                         int min_upload_date, int max_upload_date,
-                         const char* min_taken_date,
-                         const char* max_taken_date,
-                         int privacy_filter, const char* extras,
-                         int per_page, int page)
+static flickcurl_photos_list*
+flickcurl_get_photoslist_params(flickcurl* fc, 
+                                const char* method,
+                                int min_upload_date, int max_upload_date,
+                                const char* min_taken_date,
+                                const char* max_taken_date,
+                                int privacy_filter, 
+                                flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[15][2];
+  const char* parameters[16][2];
   int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
+  flickcurl_photos_list* photos_list=NULL;
   char min_upload_date_s[20];
   char max_upload_date_s[20];
   char privacy_filter_s[20];
-  char per_page_s[4];
-  char page_s[4];
+  const char* format=NULL;
 
+  /* API parameters */
   if(min_upload_date > 0) {
     parameters[count][0]  = "min_upload_date";
     sprintf(min_upload_date_s, "%d", min_upload_date);
@@ -879,35 +877,59 @@ flickcurl_get_photoslist(flickcurl* fc,
     sprintf(privacy_filter_s, "%d", privacy_filter);
     parameters[count++][1]= privacy_filter_s;
   }
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
-  parameters[count][0]  = "per_page";
-  sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
-  sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
 
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, method, parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
+  photos_list=flickcurl_invoke_photos_list(fc,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
 
   tidy:
-  if(fc->failed)
-    photos=NULL;
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
 
-  return photos;
+  return photos_list;
+}
+
+
+/**
+ * flickcurl_photos_getNotInSet_params:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date.
+ * @max_upload_date: Maximum upload date.
+ * @min_taken_date: Minimum taken date (or NULL).
+ * @max_taken_date: Maximum taken date (or NULL).
+ * @privacy_filter: Return photos only matching a certain privacy level.
+ * 
+ * Returns a list of your photos that are not part of any sets.
+ *
+ * Currently supported extras fields are: license, date_upload, date_taken,
+ *  owner_name, icon_server, original_format, last_update, geo, tags,
+ *  machine_tags.
+ *
+ * Return value: a list of photos or NULL on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photos_getNotInSet_params(flickcurl* fc, 
+                                    int min_upload_date, int max_upload_date,
+                                    const char* min_taken_date,
+                                    const char* max_taken_date,
+                                    int privacy_filter,
+                                    flickcurl_photos_list_params* list_params)
+{
+  return flickcurl_get_photoslist_params(fc, "flickr.photos.getNotInSet",
+                                         min_upload_date, max_upload_date,
+                                         min_taken_date, max_taken_date,
+                                         privacy_filter, list_params);
 }
 
 
@@ -922,13 +944,12 @@ flickcurl_get_photoslist(flickcurl* fc,
  * Valid privacy values are: 1 public, 2 friends, 3 family, 4 friends and
  * family, 5 private
  * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
- *  Currently supported fields are: license, date_upload, date_taken,
- *  owner_name, icon_server, original_format, last_update, geo, tags,
- *  machine_tags.
  * @per_page: Number of photos to return per page (default 100, max 500).
  * @page: The page of results to return (default 1).
  * 
  * Returns a list of your photos that are not part of any sets.
+ *
+ * See flickcurl_photos_getNotInSet_params() for details of parameters.
  *
  * Implements flickr.photos.getNotInSet (0.12)
  * 
@@ -942,10 +963,30 @@ flickcurl_photos_getNotInSet(flickcurl* fc,
                              int privacy_filter, const char* extras,
                              int per_page, int page)
 {
-  return flickcurl_get_photoslist(fc, "flickr.photos.getNotInSet",
-                                  min_upload_date, max_upload_date,
-                                  min_taken_date, max_taken_date,
-                                  privacy_filter, extras, per_page,page);
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+
+  photos_list=flickcurl_get_photoslist_params(fc, "flickr.photos.getNotInSet",
+                                              min_upload_date, max_upload_date,
+                                              min_taken_date, max_taken_date,
+                                              privacy_filter, &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
+
+  return photos;
 }
 
 
@@ -1006,19 +1047,65 @@ flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
 
 
 /**
+ * flickcurl_photos_getRecent_params:
+ * @fc: flickcurl context
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Returns a list of the latest public photos uploaded to flickr.
+ *
+ * Currently supported extras fields are: license, date_upload, date_taken,
+ * owner_name, icon_server, original_format, last_update, geo, tags,
+ * machine_tags.
+ *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photos_getRecent_params(flickcurl* fc,
+                                  flickcurl_photos_list_params* list_params)
+{
+  const char* parameters[11][2];
+  int count=0;
+  flickcurl_photos_list* photos_list=NULL;
+  const char* format=NULL;
+
+  /* No API parameters */
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.getRecent", parameters, count))
+    goto tidy;
+
+  photos_list=flickcurl_invoke_photos_list(fc,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
+
+  tidy:
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+/**
  * flickcurl_photos_getRecent:
  * @fc: flickcurl context
  * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
- * Currently supported fields are: license, date_upload, date_taken,
- * owner_name, icon_server, original_format, last_update, geo, tags,
- * machine_tags.
  * @per_page: Number of photos to return per page (default 100, max 500)
  * @page: The page of results to return (default 1)
  * 
  * Returns a list of the latest public photos uploaded to flickr.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
- * for VALUE "photo" or "video".  API addition 2008-04-07.
+ * See flickcurl_photos_getRecent_params() for details of parameters.
  *
  * Implements flickr.photos.getRecent (0.12)
  * 
@@ -1028,51 +1115,24 @@ flickcurl_photo**
 flickcurl_photos_getRecent(flickcurl* fc, const char* extras,
                            int per_page, int page)
 {
-  const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
-  char per_page_s[4];
-  char page_s[4];
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
 
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
-  parameters[count][0]  = "per_page";
-  sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
-  sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  photos_list=flickcurl_photos_getRecent_params(fc, &list_params);
+  if(!photos_list)
+    return NULL;
 
-  parameters[count][0]  = NULL;
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
 
-  if(flickcurl_prepare(fc, "flickr.photos.getRecent", parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
-
-  tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
-  if(fc->failed)
-    photos=NULL;
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }
@@ -1136,6 +1196,41 @@ flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
 
 
 /**
+ * flickcurl_photos_getUntagged_params:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date.
+ * @max_upload_date: Maximum upload date.
+ * @min_taken_date: Minimum taken date (or NULL)
+ * @max_taken_date: Maximum taken date (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level.
+ * Valid privacy values are: 1 public, 2 friends, 3 family, 4 friends and
+ * family, 5 private
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Returns a list of your photos with no tags.
+ *
+ * Currently supported extras fields are: license, date_upload, date_taken,
+ * owner_name, icon_server, original_format, last_update, geo, tags,
+ * machine_tags.
+ *
+ * Return value: a list of photos or NULL on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photos_getUntagged_params(flickcurl* fc,
+                                    int min_upload_date, int max_upload_date,
+                                    const char* min_taken_date,
+                                    const char* max_taken_date,
+                                    int privacy_filter,
+                                    flickcurl_photos_list_params* list_params)
+{
+  return flickcurl_get_photoslist_params(fc, "flickr.photos.getUntagged",
+                                         min_upload_date, max_upload_date,
+                                         min_taken_date, max_taken_date,
+                                         privacy_filter, list_params);
+}
+
+
+/**
  * flickcurl_photos_getUntagged:
  * @fc: flickcurl context
  * @min_upload_date: Minimum upload date.
@@ -1146,13 +1241,12 @@ flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
  * Valid privacy values are: 1 public, 2 friends, 3 family, 4 friends and
  * family, 5 private
  * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
- *  Currently supported fields are: license, date_upload, date_taken,
- *  owner_name, icon_server, original_format, last_update, geo, tags,
- *  machine_tags.
  * @per_page: Number of photos to return per page (default 100, max 500).
  * @page: The page of results to return (default 1).
  * 
  * Returns a list of your photos with no tags.
+ *
+ * See flickcurl_photos_getUntagged_params() for details of parameters.
  *
  * Implements flickr.photos.getUntagged (0.12)
  * 
@@ -1166,10 +1260,64 @@ flickcurl_photos_getUntagged(flickcurl* fc,
                              int privacy_filter, const char* extras,
                              int per_page, int page)
 {
-  return flickcurl_get_photoslist(fc, "flickr.photos.getUntagged",
-                                  min_upload_date, max_upload_date,
-                                  min_taken_date, max_taken_date,
-                                  privacy_filter, extras, per_page,page);
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+
+  photos_list=flickcurl_get_photoslist_params(fc, "flickr.photos.getUntagged",
+                                              min_upload_date, max_upload_date,
+                                              min_taken_date, max_taken_date,
+                                              privacy_filter, &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
+
+  return photos;
+}
+
+
+/**
+ * flickcurl_photos_getWithGeoData_params:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level. Valid values are:
+1 public photos;
+2 private photos visible to friends;
+3 private photos visible to family;
+4 private photos visible to friends and family;
+5 completely private photos. (or NULL)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Returns a list of your geo-tagged photos.
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photos_getWithGeoData_params(flickcurl* fc,
+                                       int min_upload_date, int max_upload_date,
+                                       const char* min_taken_date,
+                                       const char* max_taken_date,
+                                       int privacy_filter,
+                                       flickcurl_photos_list_params* list_params)
+{
+  return flickcurl_get_photoslist_params(fc, "flickr.photos.getWithGeoData",
+                                         min_upload_date, max_upload_date,
+                                         min_taken_date, max_taken_date,
+                                         privacy_filter, list_params);
 }
 
 
@@ -1186,11 +1334,13 @@ flickcurl_photos_getUntagged(flickcurl* fc,
 3 private photos visible to family;
 4 private photos visible to friends and family;
 5 completely private photos. (or NULL)
- * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record.
+ * @per_page: Number of photos to return per page.
+ * @page: The page of results to return.
  * 
  * Returns a list of your geo-tagged photos.
+ *
+ * See flickcurl_photos_getWithGeoData_params() for details of parameters.
  *
  * Implements flickr.photos.getWithGeoData (0.12)
  * 
@@ -1204,10 +1354,66 @@ flickcurl_photos_getWithGeoData(flickcurl* fc,
                                 int privacy_filter, const char* extras,
                                 int per_page, int page)
 {
-  return flickcurl_get_photoslist(fc, "flickr.photos.getWithGeoData",
-                                  min_upload_date, max_upload_date,
-                                  min_taken_date, max_taken_date,
-                                  privacy_filter, extras, per_page,page);
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list=flickcurl_photos_getWithGeoData_params(fc, min_upload_date,
+                                                     max_upload_date,
+                                                     min_taken_date,
+                                                     max_taken_date,
+                                                     privacy_filter,
+                                                     &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
+
+  return photos;
+}
+
+
+/**
+ * flickcurl_photos_getWithoutGeoData_params:
+ * @fc: flickcurl context
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @privacy_filter: Return photos only matching a certain privacy level. Valid values are:
+1 public photos;
+2 private photos visible to friends;
+3 private photos visible to family;
+4 private photos visible to friends and family;
+5 completely private photos.
+ (or NULL)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Returns a list of your photos which haven't been geo-tagged.
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photos_getWithoutGeoData_params(flickcurl* fc,
+                                          int min_upload_date, int max_upload_date,
+                                          const char* min_taken_date,
+                                          const char* max_taken_date,
+                                          int privacy_filter,
+                                          flickcurl_photos_list_params* list_params)
+{
+  return flickcurl_get_photoslist_params(fc, "flickr.photos.getWithoutGeoData",
+                                         min_upload_date, max_upload_date,
+                                         min_taken_date, max_taken_date,
+                                         privacy_filter, list_params);
 }
 
 
@@ -1225,11 +1431,13 @@ flickcurl_photos_getWithGeoData(flickcurl* fc,
 4 private photos visible to friends and family;
 5 completely private photos.
  (or NULL)
- * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record.
+ * @per_page: Number of photos to return per page.
+ * @page: The page of results to return.
  * 
  * Returns a list of your photos which haven't been geo-tagged.
+ *
+ * See flickcurl_photos_getWithoutGeoData_params() for details of parameters.
  *
  * Implements flickr.photos.getWithoutGeoData (0.12)
  * 
@@ -1243,10 +1451,95 @@ flickcurl_photos_getWithoutGeoData(flickcurl* fc,
                                    int privacy_filter, const char* extras,
                                    int per_page, int page)
 {
-  return flickcurl_get_photoslist(fc, "flickr.photos.getWithoutGeoData",
-                                  min_upload_date, max_upload_date,
-                                  min_taken_date, max_taken_date,
-                                  privacy_filter, extras, per_page,page);
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list=flickcurl_photos_getWithoutGeoData_params(fc, min_upload_date,
+                                                        max_upload_date,
+                                                        min_taken_date,
+                                                        max_taken_date,
+                                                        privacy_filter,
+                                                        &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
+
+  return photos;
+}
+
+
+/**
+ * flickcurl_photos_recentlyUpdated:
+ * @fc: flickcurl context
+ * @min_date: A Unix timestamp indicating the date from which modifications should be compared.
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Return a list of your photos that have been recently created or which have been recently modified
+ * 
+ * Recently modified may mean that the photo's metadata (title,
+ * description, tags) may have been changed or a comment has been
+ * added (or just modified somehow :-)
+ *
+ * Currently supported extra fields are: license, date_upload, date_taken,
+ * owner_name, icon_server, original_format, last_update, geo, tags,
+ * machine_tags.
+ *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
+                                         flickcurl_photos_list_params* list_params)
+{
+  const char* parameters[12][2];
+  int count=0;
+  flickcurl_photos_list* photos_list=NULL;
+  char min_date_s[20];
+  const char* format=NULL;
+  
+  if(min_date <=0)
+    return NULL;
+
+  /* API parameters */
+  if(min_date >0) {
+    parameters[count][0]  = "min_date";
+    sprintf(min_date_s, "%d", min_date);
+    parameters[count++][1]= min_date_s;
+  }
+  
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.recentlyUpdated", parameters, count))
+    goto tidy;
+
+  photos_list=flickcurl_invoke_photos_list(fc,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
+
+  tidy:
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
 }
 
 
@@ -1255,20 +1548,12 @@ flickcurl_photos_getWithoutGeoData(flickcurl* fc,
  * @fc: flickcurl context
  * @min_date: A Unix timestamp indicating the date from which modifications should be compared.
  * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
- * Currently supported fields are: license, date_upload, date_taken,
- * owner_name, icon_server, original_format, last_update, geo, tags,
- * machine_tags.
  * @per_page: Number of photos to return per page (default 100, max 500)
  * @page: The page of results to return (default 1)
  * 
  * Return a list of your photos that have been recently created or which have been recently modified
  * 
- * Recently modified may mean that the photo's metadata (title,
- * description, tags) may have been changed or a comment has been
- * added (or just modified somehow :-)
- *
- * Optional extra type 'media' that will return an extra media=VALUE
- * for VALUE "photo" or "video".  API addition 2008-04-07.
+ * See flickcurl_photos_recentlyUpdated() for details of parameters.
  *
  * Implements flickr.photos.recentlyUpdated (0.12)
  * 
@@ -1279,61 +1564,25 @@ flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date,
                                  const char* extras,
                                  int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
-  char min_date_s[20];
-  char per_page_s[4];
-  char page_s[4];
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
   
-  if(min_date <=0)
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list=flickcurl_photos_recentlyUpdated_params(fc, min_date,
+                                                      &list_params);
+  if(!photos_list)
     return NULL;
 
-  if(min_date >0) {
-    parameters[count][0]  = "min_date";
-    sprintf(min_date_s, "%d", min_date);
-    parameters[count++][1]= min_date_s;
-  }
-  
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
-  parameters[count][0]  = "per_page";
-  sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
-  sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
 
-  parameters[count][0]  = NULL;
-
-  if(flickcurl_prepare(fc, "flickr.photos.recentlyUpdated", parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
-
-  tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
-  if(fc->failed)
-    photos=NULL;
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }
@@ -1615,7 +1864,7 @@ flickcurl_photos_search_params(flickcurl* fc,
  * Flickcurl 1.0: Added place_id for places API as announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
  *
- * See flickcurl_photos_search_params() for notes on the optional
+ * See flickcurl_photos_search_params() for details on the the
  * search parameters.
  * 
  * Return value: an array of #flickcurl_photo or NULL

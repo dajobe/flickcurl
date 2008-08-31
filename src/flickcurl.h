@@ -1473,19 +1473,31 @@ flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_getNotInSet_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
 FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getRecent(flickcurl* fc, const char* extras, int per_page, int page);
+FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_getRecent_params(flickcurl* fc, flickcurl_photos_list_params* list_params);
 FLICKCURL_API
 flickcurl_size** flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id);
 FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getUntagged(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_getUntagged_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getWithGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
+FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_getWithGeoData_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
 FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getWithoutGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_getWithoutGeoData_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 flickcurl_photo** flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date, const char* extras, int per_page, int page);
+FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date, flickcurl_photos_list_params* list_params);
 FLICKCURL_API
 int flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id);
 FLICKCURL_API
