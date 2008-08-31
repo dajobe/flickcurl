@@ -1374,8 +1374,6 @@ flickcurl_photos_search_params(flickcurl* fc,
   char accuracy_s[3];
   char safe_search_s[2];
   char content_type_s[2];
-  char per_page_s[4];
-  char page_s[4];
   char lat_s[32];
   char lon_s[32];
   char radius_s[32];
@@ -1508,32 +1506,8 @@ flickcurl_photos_search_params(flickcurl* fc,
   }
 
   /* Photos List parameters */
-  if(list_params) {
-    if(list_params->extras) {
-      parameters[count][0]  = "extras";
-      parameters[count++][1]= list_params->extras;
-    }
-    if(list_params->per_page) {
-      if(list_params->per_page >=0 && list_params->per_page <=999) {
-        sprintf(per_page_s, "%d", list_params->per_page);
-        parameters[count][0]  = "per_page";
-        parameters[count++][1]= per_page_s;
-      }
-    }
-    if(list_params->page) {
-      if(list_params->page >=0 && list_params->page <=999) {
-        sprintf(page_s, "%d", list_params->page);
-        parameters[count][0]  = "page";
-        parameters[count++][1]= page_s;
-      }
-    }
-    if(list_params->format) {
-      format=list_params->format;
-      parameters[count][0]  = "format";
-      parameters[count++][1]= format;
-    }
-  }
-  
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.photos.search", parameters, count))
