@@ -203,7 +203,6 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
 {
   const char* parameters[13][2];
   int count=0;
-  xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
   char true_s[2]="1";
   const char* format=NULL;
@@ -237,14 +236,11 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
                        count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+  photos_list=flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
@@ -310,17 +306,14 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
 
 
 /**
- * flickcurl_photos_getContactsPublicPhotos:
+ * flickcurl_photos_getContactsPublicPhotos_params:
  * @fc: flickcurl context
  * @user_id: The NSID of the user to fetch photos for.
  * @photo_count: Number of photos to return (Default 10, maximum 50)
  * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts)
  * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
  * @include_self: Set to non-0 to include photos from the user specified by user_id.
- * @extras: A comma-delimited list of extra information to fetch for
- * each returned record. Currently supported fields are: license,
- * date_upload, date_taken, owner_name, icon_server, original_format,
- * last_update. (or NULL)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
  * Fetch a list of recent public photos from a users' contacts.
  *
@@ -331,23 +324,26 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
  * 
  * Return value: a list of photos or NULL on failure
  **/
-flickcurl_photo** 
-flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
-                                         int photo_count, int just_friends, 
-                                         int single_photo, int include_self,
-                                         const char* extras)
+flickcurl_photos_list*
+flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
+                                                const char* user_id,
+                                                int photo_count,
+                                                int just_friends, 
+                                                int single_photo,
+                                                int include_self,
+                                                flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[13][2];
+  const char* parameters[14][2];
   int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
+  flickcurl_photos_list* photos_list=NULL;
   char true_s[2]="1";
   char photo_count_s[10];
+  const char* format=NULL;
   
   if(!user_id)
     return NULL;
 
+  /* API parameters */
   parameters[count][0]  = "user_id";
   parameters[count++][1]= user_id;
   parameters[count][0]  = "count";
@@ -365,10 +361,9 @@ flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
     parameters[count][0]  = "include_self";
     parameters[count++][1]= true_s;
   }
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
   
   parameters[count][0]  = NULL;
 
@@ -376,27 +371,72 @@ flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
                        count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
+  photos_list=flickcurl_invoke_photos_list(fc,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
 
-  if(fc->failed)
-    photos=NULL;
+  return photos_list;
+}
+
+
+/**
+ * flickcurl_photos_getContactsPublicPhotos:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user to fetch photos for.
+ * @photo_count: Number of photos to return (Default 10, maximum 50)
+ * @just_friends: Set to non-0 to only show photos from friends and family (excluding regular contacts)
+ * @single_photo: Set to non-0 to only fetch one photo (the latest) per contact, instead of all photos in chronological order.
+ * @include_self: Set to non-0 to include photos from the user specified by user_id.
+ * @extras: A comma-delimited list of extra information to fetch for
+ * each returned record. Currently supported fields are: license,
+ * date_upload, date_taken, owner_name, icon_server, original_format,
+ * last_update. (or NULL)
+ * 
+ * Fetch a list of recent public photos from a users' contacts.
+ *
+ * See flickcurl_photos_getContactsPublicPhotos() for details of
+ * parameters.
+ *
+ * Implements flickr.photos.getContactsPublicPhotos (0.12)
+ * 
+ * Return value: a list of photos or NULL on failure
+ **/
+flickcurl_photo** 
+flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
+                                         int photo_count, int just_friends, 
+                                         int single_photo, int include_self,
+                                         const char* extras)
+{
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = -1;
+  list_params.page     = -1;
+
+  photos_list=flickcurl_photos_getContactsPublicPhotos_params(fc, user_id,
+                                                              photo_count,
+                                                              just_friends, 
+                                                              single_photo,
+                                                              include_self,
+                                                              &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }
@@ -860,20 +900,10 @@ flickcurl_get_photoslist(flickcurl* fc,
     goto tidy;
 
 
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
   photos=flickcurl_build_photos(fc, xpathCtx,
                                 (const xmlChar*)"/rsp/photos/photo", NULL);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed)
     photos=NULL;
 
@@ -1408,7 +1438,6 @@ flickcurl_photos_search_params(flickcurl* fc,
 {
   const char* parameters[37][2];
   int count=0;
-  xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
   char min_upload_date_s[15];
   char max_upload_date_s[15];
@@ -1554,14 +1583,11 @@ flickcurl_photos_search_params(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.photos.search", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+  photos_list=flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
