@@ -2,6 +2,30 @@
 
 
 
+<!-- ##### SECTION ./tmpl/section-photoslists.sgml:Long_Description ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/section-photoslists.sgml:See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION ./tmpl/section-photoslists.sgml:Short_Description ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/section-photoslists.sgml:Stability_Level ##### -->
+
+
+
+<!-- ##### SECTION ./tmpl/section-photoslists.sgml:Title ##### -->
+section-photoslists
+
+
 <!-- ##### FUNCTION emit_finish ##### -->
 <para>
 

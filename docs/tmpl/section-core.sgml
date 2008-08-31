@@ -81,6 +81,18 @@ Core library functions
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_get_feed_format_info ##### -->
+<para>
+
+</para>
+
+@feed_format: 
+@name_p: 
+@label_p: 
+@mime_type_p: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_set_api_key ##### -->
 <para>
 
