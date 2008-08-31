@@ -17,6 +17,115 @@
 <p>Not yet released.
 </p>
 
+<p>"It's a beautiful day in the neighborhood or the neighbourhood".
+Added <code>PHOTO_FIELD_location_neighbourhood</code>,
+<code>PHOTO_FIELD_neighbourhood_placeid</code>,
+<code>PHOTO_FIELD_neighbourhood_woeid</code>,
+<code>PHOTO_FIELD_location_neighbourhood</code> 
+and <code>FLICKCURL_PLACE_NEIGHBOURHOOD</code> enum values.
+The American spelling versions are now aliases for them.
+</p>
+
+<p>Added support for photos list feed <code>format</code> parameter
+by a new mechanism of calling any function that returns a "Photos
+Lists", using a new <code>flickcurl_photos_list_params</code>
+structure that allows for existing (page, per_page, extras) as well
+as new parameters (format) to be given optionally and a new
+<code>flickcurl_photos_list</code> result structure from them.</p>
+
+<p>Added functions to get photos lists with list results parameters
+based on existing functions without the <code>_params</code> suffix.
+The functions all take a <code>flickcurl_photos_list_params</code>
+to replace any existing extras, page and/or per_page parameters
+and return a new <code>flickcurl_photos_list</code> object on success.
+</p>
+<pre>
+  flickcurl_photos_list*
+  flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
+    flickcurl_photos_list_params* params);
+
+  flickcurl_photos_list*
+  flickcurl_favorites_getPublicList_params(flickcurl* fc,
+    const char* user_id, flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_groups_pools_getPhotos_params(flickcurl* fc,
+    const char* group_id, const char* tags, const char* user_id,
+    flickcurl_photos_list_params* list_params);
+  flickcurl_photos_list*
+  flickcurl_interestingness_getList_params(flickcurl* fc,
+    const char* date, flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_people_getPublicPhotos_params(flickcurl* fc,
+    const char* user_id,  flickcurl_photos_list_params* params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
+    int contact_count, int just_friends, int single_photo,
+    int include_self, flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
+    const char* user_id, int photo_count, int just_friends,
+    int single_photo, int include_self,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_getNotInSet_params(flickcurl* fc,
+    int min_upload_date, int max_upload_date, const char* min_taken_date,
+    const char* max_taken_date, int privacy_filter,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_getRecent_params(flickcurl* fc,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_getUntagged_params(flickcurl* fc,
+    int min_upload_date, int max_upload_date, const char* min_taken_date,
+    const char* max_taken_date, int privacy_filter,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_getWithGeoData_params(flickcurl* fc,
+    int min_upload_date, int max_upload_date, const char* min_taken_date,
+    const char* max_taken_date, int privacy_filter,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_getWithoutGeoData_params(flickcurl* fc,
+    int min_upload_date, int max_upload_date, const char* min_taken_date,
+    const char* max_taken_date, int privacy_filter,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photos_search_params(flickcurl* fc,
+    flickcurl_search_params* params,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photos_list*
+  flickcurl_photosets_getPhotos_params(flickcurl* fc,
+   const char* photoset_id, int privacy_filter,
+   flickcurl_photos_list_params* list_params);
+</pre>
+
+
+<p>Added flickcurl_free_photos_list</p>
+
+<p>Added <code>flickcurl_get_feed_format_info</code> to get the
+names and descriptions of the current known feed 'format' parameter
+values, as usable by the '_params' functions mentioned above.</p>
+<pre>
+  int flickcurl_get_feed_format_info(int feed_format,
+    const char** name_p, const char** label_p, const char** mime_type_p);
+</pre>
+
+
 
 <h2 id="D2008-08-17">2008-08-17 Flickcurl 1.5</h2>
 
