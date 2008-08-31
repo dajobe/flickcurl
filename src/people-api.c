@@ -216,7 +216,6 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
 {
   const char* parameters[12][2];
   int count=0;
-  xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
   const char* format=NULL;
   
@@ -235,14 +234,11 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.people.getPublicPhotos", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+  photos_list=flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);

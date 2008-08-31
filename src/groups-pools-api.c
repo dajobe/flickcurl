@@ -234,7 +234,6 @@ flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id,
 {
   const char* parameters[14][2];
   int count=0;
-  xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
   const char* format=NULL;
   
@@ -261,14 +260,11 @@ flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id,
   if(flickcurl_prepare(fc, "flickr.groups.pools.getPhotos", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+  photos_list=flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);

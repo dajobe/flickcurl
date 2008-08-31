@@ -121,7 +121,6 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
 {
   const char* parameters[12][2];
   int count=0;
-  xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
   const char* format=NULL;
    
@@ -138,14 +137,11 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.favorites.getList", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+  photos_list=flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
@@ -220,7 +216,6 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
 {
   const char* parameters[13][2];
   int count=0;
-  xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
   const char* format=NULL;
   
@@ -239,14 +234,11 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.favorites.getPublicList", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+  photos_list=flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
