@@ -1409,6 +1409,8 @@ flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int 
 FLICKCURL_API
 flickcurl_photo** flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, const char* extras, int per_page, int page);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const char* group_id);
 FLICKCURL_API
 void flickcurl_free_group(flickcurl_group *group);

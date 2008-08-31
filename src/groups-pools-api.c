@@ -216,9 +216,9 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
  * 
  * Returns a list of pool photos for a given group.
  *
- *  Currently supported extra fields are: license, date_upload,
- *  date_taken, owner_name, icon_server, original_format,
- *  last_update, geo, tags, machine_tags.
+ * Currently supported extra fields are: license, date_upload,
+ * date_taken, owner_name, icon_server, original_format,
+ * last_update, geo, tags, machine_tags.
  *
  * Optional extra type 'media' that will return an extra media=VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
@@ -227,22 +227,21 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
  * 
  * Return value: non-0 on failure
  **/
-flickcurl_photo**
-flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id,
-                                 const char* tags, const char* user_id,
-                                 const char* extras, int per_page, int page)
+flickcurl_photos_list*
+flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id,
+                                        const char* tags, const char* user_id,
+                                        flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[13][2];
+  const char* parameters[14][2];
   int count=0;
-  xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
-  char per_page_s[10];
-  char page_s[10];
+  flickcurl_photos_list* photos_list=NULL;
+  const char* format=NULL;
   
   if(!group_id)
     return NULL;
 
+  /* API parameters */
   parameters[count][0]  = "group_id";
   parameters[count++][1]= group_id;
   if(tags) {
@@ -253,43 +252,76 @@ flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id,
     parameters[count][0]  = "user_id";
     parameters[count++][1]= user_id;
   }
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
-  parameters[count][0]  = "per_page";
-  sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
-  sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
 
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.groups.pools.getPhotos", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
+  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
-    photos=NULL;
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+/**
+ * flickcurl_groups_pools_getPhotos:
+ * @fc: flickcurl context
+ * @group_id: The id of the group who's pool you which to get the photo list for.
+ * @tags: A tag to filter the pool with. At the moment only one tag at a time is supported. (or NULL)
+ * @user_id: The nsid of a user (or NULL).  If given, retrieves only photos that the user has contributed to the group pool.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ * @per_page: Number of photos to return per page (default 100, max 500)
+ * @page: The page of results to return (default 1)
+ * 
+ * Returns a list of pool photos for a given group.
+ *
+ * See flickcurl_groups_pools_getPhotos_params() for details
+ * of the fields.
+ *
+ * Implements flickr.groups.pools.getPhotos (0.12)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id,
+                                 const char* tags, const char* user_id,
+                                 const char* extras, int per_page, int page)
+{
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list=flickcurl_groups_pools_getPhotos_params(fc, group_id, tags,
+                                                      user_id, &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }
