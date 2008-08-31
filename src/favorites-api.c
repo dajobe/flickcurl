@@ -123,8 +123,6 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
   int count=0;
   xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
-  char page_str[10];
-  char per_page_str[10];
   const char* format=NULL;
    
   /* API parameters */
@@ -133,27 +131,7 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
     parameters[count++][1]= user_id;
   }
   /* Photos List parameters */
-  if(list_params) {
-    if(list_params->extras) {
-      parameters[count][0]  = "extras";
-      parameters[count++][1]= list_params->extras;
-    }
-    if(list_params->page >= 0) {
-      sprintf(page_str, "%d", list_params->page);
-      parameters[count][0]  = "page";
-      parameters[count++][1]= page_str;
-    }
-    if(list_params->per_page >= 0) {
-      sprintf(per_page_str, "%d", list_params->per_page);
-      parameters[count][0]  = "per_page";
-      parameters[count++][1]= per_page_str;
-    }
-    if(list_params->format) {
-      format=list_params->format;
-      parameters[count][0]  = "format";
-      parameters[count++][1]= format;
-    }
-  }
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
   
   parameters[count][0]  = NULL;
 
@@ -240,12 +218,10 @@ flickcurl_photos_list*
 flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
                                          flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[12][2];
+  const char* parameters[13][2];
   int count=0;
   xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_photos_list* photos_list=NULL;
-  char page_str[10];
-  char per_page_str[10];
   const char* format=NULL;
   
   if(!user_id)
@@ -256,27 +232,7 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
   parameters[count++][1]= user_id;
 
   /* Photos List parameters */
-  if(list_params) {
-    if(list_params->extras) {
-      parameters[count][0]  = "extras";
-      parameters[count++][1]= list_params->extras;
-    }
-    if(list_params->page >= 0) {
-      sprintf(page_str, "%d", list_params->page);
-      parameters[count][0]  = "page";
-      parameters[count++][1]= page_str;
-    }
-    if(list_params->per_page >= 0) {
-      sprintf(per_page_str, "%d", list_params->per_page);
-      parameters[count][0]  = "per_page";
-      parameters[count++][1]= per_page_str;
-    }
-    if(list_params->format) {
-      format=list_params->format;
-      parameters[count][0]  = "format";
-      parameters[count++][1]= format;
-    }
-  }
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
 
   parameters[count][0]  = NULL;
 
