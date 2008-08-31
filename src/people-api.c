@@ -194,6 +194,66 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
 
 
 /**
+ * flickcurl_people_getPublicPhotos_params:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user who's photos to return.
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Get a list of public photos for the given user.
+ *
+ * Currently supported extras fields are: license, date_upload,
+ * date_taken, owner_name, icon_server, original_format,
+ * last_update, geo, tags, machine_tags.
+ *
+ * Optional extra type 'media' that will return an extra media=VALUE
+ * for VALUE "photo" or "video".  API addition 2008-04-07.
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_photos_list*
+flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id, 
+                                        flickcurl_photos_list_params* list_params)
+{
+  const char* parameters[12][2];
+  int count=0;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_photos_list* photos_list=NULL;
+  const char* format=NULL;
+  
+  if(!user_id)
+    return NULL;
+
+  /* API parameters */
+  parameters[count][0]  = "user_id";
+  parameters[count++][1]= user_id;
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.people.getPublicPhotos", parameters, count))
+    goto tidy;
+
+  photos_list=flickcurl_invoke_photos_list(fc, xpathCtx,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+/**
  * flickcurl_people_getPublicPhotos:
  * @fc: flickcurl context
  * @user_id: The NSID of the user who's photos to return.
@@ -203,12 +263,7 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
  * 
  * Get a list of public photos for the given user.
  *
- *  Currently supported extras fields are: license, date_upload,
- *  date_taken, owner_name, icon_server, original_format,
- *  last_update, geo, tags, machine_tags.
- *
- * Optional extra type 'media' that will return an extra media=VALUE
- * for VALUE "photo" or "video".  API addition 2008-04-07.
+ * See flickcurl_people_getPublicPhotos_params() for details of extras.
  *
  * Implements flickr.people.getPublicPhotos (0.12)
  * 
@@ -219,56 +274,24 @@ flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,
                                  const char* extras, 
                                  int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo** photos=NULL;
-  char per_page_s[10];
-  char page_s[10];
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
   
-  if(!user_id)
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list=flickcurl_people_getPublicPhotos_params(fc, user_id, &list_params);
+  if(!photos_list)
     return NULL;
 
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
-  parameters[count][0]  = "per_page";
-  sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
-  sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  photos=photos_list->photos; photos_list->photos=NULL;  
+  /* photos array is now owned by this function */
 
-  parameters[count][0]  = NULL;
-
-  if(flickcurl_prepare(fc, "flickr.people.getPublicPhotos", parameters, count))
-    goto tidy;
-
-  doc=flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
-    goto tidy;
-  }
-
-  photos=flickcurl_build_photos(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/photos/photo", NULL);
-
-  tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
-  if(fc->failed)
-    photos=NULL;
+  flickcurl_free_photos_list(photos_list);
 
   return photos;
 }
