@@ -1420,6 +1420,8 @@ void flickcurl_free_groups(flickcurl_group **groups_object);
 /* flickr.interestingness */
 FLICKCURL_API
 flickcurl_photo** flickcurl_interestingness_getList(flickcurl* fc, const char* date, const char* extras, int per_page, int page);
+FLICKCURL_API
+flickcurl_photos_list* flickcurl_interestingness_getList_params(flickcurl* fc, const char* date, flickcurl_photos_list_params* list_params);
 
 /* flickr.photo.getSizes */
 FLICKCURL_API
