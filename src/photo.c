@@ -348,6 +348,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./location/neighborhood",
+    PHOTO_FIELD_location_neighbourhood,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./location/neighbourhood",
     PHOTO_FIELD_location_neighbourhood,
     VALUE_TYPE_STRING
@@ -356,6 +362,12 @@ static struct {
   {
     (const xmlChar*)"./location/locality",
     PHOTO_FIELD_location_locality,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./location/neighborhood",
+    PHOTO_FIELD_location_neighbourhood,
     VALUE_TYPE_STRING
   }
   ,
@@ -476,8 +488,20 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./location/neighborhood/@place_id",
+    PHOTO_FIELD_neighbourhood_placeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./location/neighbourhood/@place_id",
     PHOTO_FIELD_neighbourhood_placeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./location/neighborhood/@woeid",
+    PHOTO_FIELD_neighbourhood_woeid,
     VALUE_TYPE_STRING
   }
   ,
