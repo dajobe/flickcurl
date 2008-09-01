@@ -183,15 +183,33 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./neighborhood/@place_id",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_ID,
+  }
+  ,
+  {
     (const xmlChar*)"./neighbourhood/@place_id",
     FLICKCURL_PLACE_NEIGHBOURHOOD,
     PLACE_ID,
   }
   ,
   {
+    (const xmlChar*)"./neighborhood/@woeid",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_WOE_ID,
+  }
+  ,
+  {
     (const xmlChar*)"./neighbourhood/@woeid",
     FLICKCURL_PLACE_NEIGHBOURHOOD,
     PLACE_WOE_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"./neighborhood",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_NAME,
   }
   ,
   {
