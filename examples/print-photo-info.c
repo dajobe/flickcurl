@@ -8,7 +8,7 @@
  * This file is in the Public Domain
  *
  * Compile it like this:
- *   gcc -o example example.c `flickcurl-config --cflags` `flickcurl-config --libs`
+ *   gcc -o print-photo-info print-photo-info.c `flickcurl-config --cflags` `flickcurl-config --libs`
  * or use
  *   make print-photo-info
  *
