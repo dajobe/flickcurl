@@ -894,6 +894,10 @@ typedef struct {
  *
  * Photos List API parameters for multiple functions that return
  * a #flickcurl_photos_list
+ *
+ * Use flickcurl_get_extras_format_info() to enumerate the list of
+ * known extra values and flickcurl_get_feed_format_info() to
+ * enumerate the list of known format values.
  */
 typedef struct {
   const char* format;
