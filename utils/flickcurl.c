@@ -82,8 +82,10 @@ extern char *optarg;
 #endif
 
 
-static int verbose=0;
+static int verbose=1;
 static const char* program;
+static FILE* output_fh;
+static const char *output_filename="<stdout>";
 
 
 static const char*
@@ -135,9 +137,9 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 
 #ifdef HAVE_GETOPT_LONG
 /* + makes GNU getopt_long() never permute the arguments */
-#define GETOPT_STRING "+a:d:hvV"
+#define GETOPT_STRING "+a:d:ho:qvV"
 #else
-#define GETOPT_STRING "a:d:hvV"
+#define GETOPT_STRING "a:d:ho:qvV"
 #endif
 
 #ifdef FLICKCURL_MANPAGE
@@ -156,6 +158,8 @@ static struct option long_options[] =
 #ifdef FLICKCURL_MANPAGE
   {"manpage", 0, 0, 'm'},
 #endif
+  {"output",  0, 0, 'o'},
+  {"quiet",   0, 0, 'q'},
   {"version", 0, 0, 'v'},
   {"verbose", 0, 0, 'V'},
   {NULL,      0, 0, 0}
@@ -391,7 +395,8 @@ command_photos_licenses_getInfo(flickcurl* fc, int argc, char *argv[])
   licenses=flickcurl_photos_licenses_getInfo(fc);
   if(licenses) {
 
-    fprintf(stderr, "%s: Found licenses\n", program);
+    if(verbose)
+      fprintf(stderr, "%s: Found licenses\n", program);
 
     for(i=0; licenses[i]; i++) {
       flickcurl_license* license=licenses[i];
@@ -451,8 +456,9 @@ command_groups_pools_getContext(flickcurl* fc, int argc, char *argv[])
   contexts=flickcurl_groups_pools_getContext(fc, argv[1], argv[2]);
   if(!contexts)
     return 1;
-  fprintf(stderr, "%s: Pool context of photo %s in pool %s:\n", program,
-          argv[1], argv[2]);
+  if(verbose)
+    fprintf(stderr, "%s: Pool context of photo %s in pool %s:\n", program,
+            argv[1], argv[2]);
   command_contexts_print(stderr, contexts);
   
   flickcurl_free_contexts(contexts);
@@ -468,7 +474,8 @@ command_photos_getAllContexts(flickcurl* fc, int argc, char *argv[])
   contexts=flickcurl_photos_getAllContexts(fc, argv[1]);
   if(!contexts)
     return 1;
-  fprintf(stderr, "%s: Photos %s all contexts:\n", program, argv[1]);
+  if(verbose)
+    fprintf(stderr, "%s: Photos %s all contexts:\n", program, argv[1]);
   command_contexts_print(stderr, contexts);
   
   flickcurl_free_contexts(contexts);
@@ -484,7 +491,8 @@ command_photos_getContext(flickcurl* fc, int argc, char *argv[])
   contexts=flickcurl_photos_getContext(fc, argv[1]);
   if(!contexts)
     return 1;
-  fprintf(stderr, "%s: Photos %s context:\n", program, argv[1]);
+  if(verbose)
+    fprintf(stderr, "%s: Photos %s context:\n", program, argv[1]);
   command_contexts_print(stderr, contexts);
   
   flickcurl_free_contexts(contexts);
@@ -533,8 +541,9 @@ command_photosets_getContext(flickcurl* fc, int argc, char *argv[])
   contexts=flickcurl_photosets_getContext(fc, argv[1], argv[2]);
   if(!contexts)
     return 1;
-  fprintf(stderr, "%s: Photo %s in photoset %s context:\n", program,
-          argv[1], argv[2]);
+  if(verbose)
+    fprintf(stderr, "%s: Photo %s in photoset %s context:\n", program,
+            argv[1], argv[2]);
   command_contexts_print(stderr, contexts);
   
   flickcurl_free_contexts(contexts);
@@ -1131,9 +1140,9 @@ command_upload(flickcurl* fc, int argc, char *argv[])
     goto tidy;
   }
 
-  if(!verbose)
+  if(verbose == 1)
     fprintf(stderr, "%s: Uploading file %s\n", program, params.photo_file);
-  else
+  else if (verbose > 1)
     print_upload_params(stderr, &params, "Photo upload");
 
   status=flickcurl_photos_upload_params(fc, &params);
@@ -1196,8 +1205,9 @@ command_photos_setContentType(flickcurl* fc, int argc, char *argv[])
   }
 
   content_type_str=flickcurl_get_content_type_label(content_type);
-  fprintf(stderr, "%s: Setting photo %s to content type %d (%s)\n",
-          program, photo_id, content_type, content_type_str);
+  if(verbose)
+    fprintf(stderr, "%s: Setting photo %s to content type %d (%s)\n",
+            program, photo_id, content_type, content_type_str);
   
   return flickcurl_photos_setContentType(fc, photo_id, content_type);
 }
@@ -1290,8 +1300,9 @@ command_photos_setSafetyLevel(flickcurl* fc, int argc, char *argv[])
   }
 
   safety_level_str=flickcurl_get_safety_level_label(safety_level);
-  fprintf(stderr, "%s: Setting photo %s safety level to %d (%s), hidden %d\n",
-          program, photo_id, safety_level, safety_level_str, hidden);
+  if(verbose)
+    fprintf(stderr, "%s: Setting photo %s safety level to %d (%s), hidden %d\n",
+            program, photo_id, safety_level, safety_level_str, hidden);
   
   return flickcurl_photos_setSafetyLevel(fc, photo_id, safety_level, hidden);
 }
@@ -1333,10 +1344,11 @@ command_photos_getPerms(flickcurl* fc, int argc, char *argv[])
 }
 
 
-static void
+static int
 command_print_photos_list(flickcurl* fc, flickcurl_photos_list* photos_list,
                           FILE* fh, const char* label)
 {
+  int rc=0;
   int i;
   
   if(photos_list->photos) {
@@ -1347,15 +1359,24 @@ command_print_photos_list(flickcurl* fc, flickcurl_photos_list* photos_list,
       command_print_photo(photos_list->photos[i]);
     }
   } else if(photos_list->content) {
-    fprintf(stderr, "%s: %s returned %d bytes of %s content\n", 
-            program, label,
-            (int)photos_list->content_length, photos_list->format);
-    fwrite(photos_list->content, 1, photos_list->content_length, 
-           fh);
+    size_t write_count;
+
+    if(verbose)
+      fprintf(stderr, "%s: %s returned %d bytes of %s content\n", 
+              program, label,
+              (int)photos_list->content_length, photos_list->format);
+    write_count=fwrite(photos_list->content, 1, photos_list->content_length, fh);
+    if(write_count < photos_list->content_length) {
+      fprintf(stderr, "%s: writing to %s failed\n", program, output_filename);
+      rc=1;
+    }
   } else {
     fprintf(stderr, "%s: %s returned neither photos nor raw content\n", 
             program, label);
+    rc=1;
   }
+
+  return rc;
 }
 
 
@@ -1368,6 +1389,7 @@ command_photos_getContactsPhotos(flickcurl* fc, int argc, char *argv[])
   int include_self=0;
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -1385,10 +1407,10 @@ command_photos_getContactsPhotos(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  command_print_photos_list(fc, photos_list, stdout, "Contact photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Contact photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 
@@ -1568,8 +1590,12 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
   if(!photos_list) {
     fprintf(stderr, "%s: Searching failed\n", program);
   } else {
-    command_print_photos_list(fc, photos_list, stdout, "Search result");
+    int rc;
+    
+    rc=command_print_photos_list(fc, photos_list, output_fh, "Search result");
     flickcurl_free_photos_list(photos_list);
+    if(rc)
+      photos_list=NULL;
   }
 
   tidy:
@@ -1681,9 +1707,10 @@ command_photos_notes_add(flickcurl* fc, int argc, char *argv[])
   id=flickcurl_photos_notes_add(fc, photo_id,
                                 note_x, note_y, note_w, note_h, note_text);
   if(id) {
-    fprintf(stderr,
-            "%s: Added note '%s' (x:%d y:%d w:%d h:%d) to photo ID %s giving note ID %s\n",
-            program, note_text, note_x, note_y, note_w, note_h, photo_id, id);
+    if(verbose)
+      fprintf(stderr,
+              "%s: Added note '%s' (x:%d y:%d w:%d h:%d) to photo ID %s giving note ID %s\n",
+              program, note_text, note_x, note_y, note_w, note_h, photo_id, id);
     free(id);
   }
   
@@ -1730,7 +1757,8 @@ command_people_getPublicPhotos(flickcurl* fc, int argc, char *argv[])
   char *user_id=argv[1];
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
-
+  int rc;
+  
   flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
@@ -1748,13 +1776,14 @@ command_people_getPublicPhotos(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  fprintf(stderr, "%s: User %s photos (per_page %d  page %d):\n",
-          program, user_id, list_params.per_page, list_params.page);
+  if(verbose)
+    fprintf(stderr, "%s: User %s photos (per_page %d  page %d):\n",
+            program, user_id, list_params.per_page, list_params.page);
 
-  command_print_photos_list(fc, photos_list, stdout, "Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 
@@ -1801,9 +1830,10 @@ command_groups_pools_getGroups(flickcurl* fc, int argc, char *argv[])
   groups=flickcurl_groups_pools_getGroups(fc, page, per_page);
   if(groups) {
     int i;
-    
-    fprintf(stderr, "%s: Groups (page %d, per page %d)\n", program,
-            page, per_page);
+
+    if(verbose)
+      fprintf(stderr, "%s: Groups (page %d, per page %d)\n", program,
+              page, per_page);
     for(i=0; groups[i]; i++)
       command_print_group(groups[i]);
     flickcurl_free_groups(groups);
@@ -1820,6 +1850,7 @@ command_groups_pools_getPhotos(flickcurl* fc, int argc, char *argv[])
   char *user_id=NULL;
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -1838,13 +1869,14 @@ command_groups_pools_getPhotos(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  fprintf(stderr, "%s: Group %s photos (per_page %d  page %d):\n",
-          program, group_id, list_params.per_page, list_params.page);
+  if(verbose)
+    fprintf(stderr, "%s: Group %s photos (per_page %d  page %d):\n",
+            program, group_id, list_params.per_page, list_params.page);
 
-  command_print_photos_list(fc, photos_list, stdout, "Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 static int
@@ -1867,6 +1899,7 @@ command_photos_getContactsPublicPhotos(flickcurl* fc, int argc, char *argv[])
   int include_self=0;
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -1883,10 +1916,10 @@ command_photos_getContactsPublicPhotos(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  command_print_photos_list(fc, photos_list, stdout, "Contact Public Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Contact Public Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 
@@ -1960,6 +1993,7 @@ command_photoslist(flickcurl* fc, int argc, char *argv[],
   int privacy_filter= -1;
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -1978,10 +2012,10 @@ command_photoslist(flickcurl* fc, int argc, char *argv[],
   if(!photos_list)
     return 1;
 
-  command_print_photos_list(fc, photos_list, stdout, "Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 static int
@@ -2004,7 +2038,8 @@ command_photos_getSizes(flickcurl* fc, int argc, char *argv[])
   if(!sizes)
     return 1;
 
-  fprintf(stderr, "%s: Sizes for photo/video %s\n", program, photo_id);
+  if(verbose)
+    fprintf(stderr, "%s: Sizes for photo/video %s\n", program, photo_id);
   for(i=0; sizes[i]; i++) {
     fprintf(stderr,
             "%d: type '%s' label '%s' width %d height %d\n  source %s\n  url %s\n",
@@ -2024,6 +2059,7 @@ command_photos_getRecent(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -2041,10 +2077,10 @@ command_photos_getRecent(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  command_print_photos_list(fc, photos_list, stdout, "Recent Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Recent Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 static int
@@ -2077,6 +2113,7 @@ command_photos_recentlyUpdated(flickcurl* fc, int argc, char *argv[])
   int min_date= -1;
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -2097,10 +2134,10 @@ command_photos_recentlyUpdated(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  command_print_photos_list(fc, photos_list, stdout, "Recently Updated Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Recently Updated Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 
@@ -2163,6 +2200,7 @@ command_photosets_getPhotos(flickcurl* fc, int argc, char *argv[])
   int privacy_filter= -1;
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -2188,13 +2226,14 @@ command_photosets_getPhotos(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  fprintf(stderr, "%s: Photoset %s photos (per_page %d  page %d):\n",
-          program, photoset_id, list_params.per_page, list_params.page);
+  if(verbose)
+    fprintf(stderr, "%s: Photoset %s photos (per_page %d  page %d):\n",
+            program, photoset_id, list_params.per_page, list_params.page);
 
-  command_print_photos_list(fc, photos_list, stdout, "Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 
@@ -2451,6 +2490,7 @@ command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
   char* date=NULL;
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
+  int rc;
   
   flickcurl_photos_list_params_init(&list_params);
 
@@ -2492,8 +2532,10 @@ command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  command_print_photos_list(fc, photos_list, stdout, "Photo");
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Photo");
   flickcurl_free_photos_list(photos_list);
+  if(rc)
+    photos_list=NULL;  
 
   tidy:
   
@@ -2563,13 +2605,17 @@ command_favorites_getList(flickcurl* fc, int argc, char *argv[])
   if(!photos_list) {
     fprintf(stderr, "%s: Getting favorites failed\n", program);
   } else {
-    fprintf(stderr,
-            "%s: User %s has %d favorite photos (per_page %d  page %d):\n",
-            program, user_id, photos_list->photos_count,
-            list_params.per_page, list_params.page);
-    command_print_photos_list(fc, photos_list, stdout, "Favorite photos");
+    int rc;
+    if(verbose)
+      fprintf(stderr,
+              "%s: User %s has %d favorite photos (per_page %d  page %d):\n",
+              program, user_id, photos_list->photos_count,
+              list_params.per_page, list_params.page);
+    rc=command_print_photos_list(fc, photos_list, output_fh, "Favorite photos");
 
     flickcurl_free_photos_list(photos_list);
+    if(rc)
+      photos_list=NULL;
   }
 
   return (photos_list == NULL);
@@ -2582,7 +2628,8 @@ command_favorites_getPublicList(flickcurl* fc, int argc, char *argv[])
   char *user_id=argv[1];
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
-
+  int rc;
+  
   flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
@@ -2600,12 +2647,14 @@ command_favorites_getPublicList(flickcurl* fc, int argc, char *argv[])
   if(!photos_list)
     return 1;
 
-  fprintf(stderr, "%s: User %s public favorite photos (per_page %d  page %d):\n",
-          program, user_id, list_params.per_page, list_params.page);
-  command_print_photos_list(fc, photos_list, stdout, "Photo");
+  if(verbose)
+    fprintf(stderr,
+            "%s: User %s public favorite photos (per_page %d  page %d):\n",
+            program, user_id, list_params.per_page, list_params.page);
+  rc=command_print_photos_list(fc, photos_list, output_fh, "Photo");
   flickcurl_free_photos_list(photos_list);
 
-  return 0;
+  return rc;
 }
 
 
@@ -2707,9 +2756,10 @@ command_activity_userComments(flickcurl* fc, int argc, char *argv[])
   if(!activities)
     return 1;
 
-  fprintf(stderr, 
-          "%s: Comments on the caller's photos (per_page %d  page %d):\n",
-          program, per_page, page);
+  if(verbose)
+    fprintf(stderr, 
+            "%s: Comments on the caller's photos (per_page %d  page %d):\n",
+            program, per_page, page);
   for(i=0; activities[i]; i++) {
     fprintf(stderr, "%s: Activity %d\n", program, i);
     command_print_activity(activities[i]);
@@ -2741,9 +2791,10 @@ command_activity_userPhotos(flickcurl* fc, int argc, char *argv[])
   if(!activities)
     return 1;
 
-  fprintf(stderr, 
-          "%s: Recent activity on the caller's photos (timeframe %s  per_page %d  page %d):\n",
-          program, timeframe, per_page, page);
+  if(verbose)
+    fprintf(stderr, 
+            "%s: Recent activity on the caller's photos (timeframe %s  per_page %d  page %d):\n",
+            program, timeframe, per_page, page);
   for(i=0; activities[i]; i++) {
     fprintf(stderr, "%s: Activity %d\n", program, i);
     command_print_activity(activities[i]);
@@ -3305,6 +3356,8 @@ main(int argc, char *argv[])
   char config_path[1024];
   int request_delay= -1;
   char *command=NULL;
+
+  output_fh=stdout;
   
   flickcurl_init();
   
@@ -3478,6 +3531,23 @@ main(int argc, char *argv[])
         goto tidy;
 #endif
 
+      case 'o':
+        if(optarg) {
+          output_filename=optarg;
+          output_fh=fopen(output_filename, "w");
+          if(!output_fh) {
+            fprintf(stderr, "%s: Failed to write to output file %s: %s\n",
+                    program, output_filename, strerror(errno));
+            rc=1;
+            goto tidy;
+          }
+        }
+        break;
+
+      case 'q':
+        verbose=0;
+        break;
+
       case 'v':
         fputs(flickcurl_version_string, stdout);
         fputc('\n', stdout);
@@ -3485,7 +3555,7 @@ main(int argc, char *argv[])
         exit(0);
 
       case 'V':
-        verbose++;
+        verbose=2;
         break;
     }
     
@@ -3580,6 +3650,8 @@ main(int argc, char *argv[])
 #ifdef FLICKCURL_MANPAGE
     puts(HELP_TEXT("m", "manpage         ", "Print a manpage fragment for commands, then exit"));
 #endif
+    puts(HELP_TEXT("o", "output FILE     ", "Write format=FORMAT results to FILE"));
+    puts(HELP_TEXT("q", "quiet           ", "Print less information while running"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
     puts(HELP_TEXT("V", "verbose         ", "Print more information while running"));
 
@@ -3626,6 +3698,11 @@ main(int argc, char *argv[])
     fprintf(stderr, "%s: Command %s failed\n", program, argv[0]);
   
  tidy:
+  if(output_fh) {
+    fclose(output_fh);
+    output_fh=NULL;
+  }
+  
   if(fc)
     flickcurl_free(fc);
 
