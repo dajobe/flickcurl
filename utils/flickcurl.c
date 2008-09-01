@@ -2080,12 +2080,14 @@ command_photos_recentlyUpdated(flickcurl* fc, int argc, char *argv[])
   
   flickcurl_photos_list_params_init(&list_params);
 
-  if(argc >1) {
-    list_params.per_page=parse_page_param(argv[1]);
-    if(argc >2) {
-      list_params.page=parse_page_param(argv[2]);
-      if(argc >3) {
-        list_params.format=argv[3];
+  min_date=atoi(argv[1]);
+
+  if(argc >2) {
+    list_params.per_page=parse_page_param(argv[2]);
+    if(argc >3) {
+      list_params.page=parse_page_param(argv[3]);
+      if(argc >4) {
+        list_params.format=argv[4];
       }
     }
   }
@@ -3058,8 +3060,8 @@ static flickcurl_cmd commands[] = {
    "[PER-PAGE [PAGE [FORMAT]]]", "Get list of photos that do not have geo data", 
    command_photos_getWithoutGeoData, 0, 3},
   {"photos.recentlyUpdated",
-   "[PER-PAGE [PAGE [FORMAT]]]", "Get list of photos that were recently updated", 
-   command_photos_recentlyUpdated, 0, 3},
+   "MIN-DATE [PER-PAGE [PAGE [FORMAT]]]", "Get list of photos that were recently updated", 
+   command_photos_recentlyUpdated, 1, 4},
   {"photos.removeTag",
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
