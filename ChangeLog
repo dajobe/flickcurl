@@ -1,5 +1,28 @@
 2008-09-01  Dave Beckett <dave@dajobe.org>
 
+	* docs/flickcurl.1.in: Added -o FILE, -q and -V
+
+
+	* utils/flickcurl.c: Added -o FILE option to set format=feed*
+	output file.
+	Added -q option for less verbose
+	Added more output conditional to if(verbose)
+	(command_print_photos_list): May fail if fwrite fails, returns
+	error state to caller.
+
+	* src/common.c: (flickcurl_append_photos_list_params): Keep
+	per_page & page param memory around.
+
+	* utils/flickcurl.c: (command_photos_recentlyUpdated): Make
+	photos.recentlyUpdated take 1-4 params, first one is mandator
+	min-date in unixtime
+
+	* src/common.c: (flickcurl_append_photos_list_params): Fix counting
+
+	* docs/flickcurl-sections.txt: Added flickcurl_photos_list_params_init
+
+	* examples/print-photo-info.c: compile line
+
 	* utils/flickcurl.c: Use flickcurl_photos_list_params_init to
 	replace photos_list_params_init
 
