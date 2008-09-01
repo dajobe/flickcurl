@@ -3,7 +3,7 @@
  *
  * This is example code and not complete because the API Key, Shared
  * Secret and Auth Token are not configured.  The flickcurl utility
- * in utils/flickcurl.c contains more complete example.
+ * in utils/flickcurl.c contains code that fully uses the API.
  *
  * This file is in the Public Domain
  *
