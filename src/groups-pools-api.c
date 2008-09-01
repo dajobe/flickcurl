@@ -210,9 +210,7 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
  * @group_id: The id of the group who's pool you which to get the photo list for.
  * @tags: A tag to filter the pool with. At the moment only one tag at a time is supported. (or NULL)
  * @user_id: The nsid of a user (or NULL).  If given, retrieves only photos that the user has contributed to the group pool.
- * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
- * @per_page: Number of photos to return per page (default 100, max 500)
- * @page: The page of results to return (default 1)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
  * Returns a list of pool photos for a given group.
  *
