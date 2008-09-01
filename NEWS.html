@@ -24,16 +24,18 @@ Added <code>PHOTO_FIELD_location_neighbourhood</code>,
 <code>PHOTO_FIELD_location_neighbourhood</code> 
 and <code>FLICKCURL_PLACE_NEIGHBOURHOOD</code> enum values.
 The American spelling versions are now aliases for them.
-(<a href="http://geobloggers.com/2008/08/19/correcting-location-data-the-flickr-way/">announcement of neighbourhood/neighborhood</a>)
+The neighbourhood/neighborhood addtion was
+<a href="http://geobloggers.com/2008/08/19/correcting-location-data-the-flickr-way/">announced 2008-08-19</a>.
 </p>
 
-<p>Added support for <em>Photos List</em> feed <code>format</code>
-parameter by a new mechanism of calling any function that returns a
-photos list, using a new <code>flickcurl_photos_list_params</code>
-structure that allows for existing (page, per_page, extras) as well
-as new parameters (format) to be given optionally and a new
-<code>flickcurl_photos_list</code> result structure from them.
-(<a href="http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/">Announcement of feed format</a>)
+<p>Added support for the (experimental) <em>Photos List</em> feed
+<code>format</code> parameter by a new mechanism of calling any
+function that returns a photos list, using a new
+<code>flickcurl_photos_list_params</code> structure that allows for
+existing (page, per_page, extras) as well as new parameters (format)
+to be given optionally and a new <code>flickcurl_photos_list</code>
+result structure from them.  The experimental feeds format feature was
+<a href="http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/">announced 2008-08-25 format</a>.
 </p>
 
 <p>Added functions to get photos lists with list results parameters
@@ -134,7 +136,7 @@ values, as usable by the '_params' functions mentioned above.</p>
 
 <p>Fixed typo in the FOAF namespace - no trailing #</p>
 
-<p><code>flickcurl</code> utility updated to help with authentication
+<p>Updated <code>flickcurl(1)</code> utility to help with authentication
 configuration.  It now prints a help message on how to get
 authentication tokens set up, when there is no configuration file
 present and now accepts <code>-a FROB</code> as an entire command
