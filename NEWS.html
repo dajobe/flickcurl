@@ -17,7 +17,8 @@
 <p>Not yet released.
 </p>
 
-<p>"It's a beautiful day in the neighborhood or the neighbourhood".
+<p><a href="http://en.wikipedia.org/wiki/Mister_Rogers%27_Neighborhood">"It's a beautiful day in the neighborhood"</a>
+and also in the the neighbourhood.
 Added <code>PHOTO_FIELD_location_neighbourhood</code>,
 <code>PHOTO_FIELD_neighbourhood_placeid</code>,
 <code>PHOTO_FIELD_neighbourhood_woeid</code>,
@@ -29,16 +30,21 @@ The neighbourhood/neighborhood addtion was
 </p>
 
 <p>Added support for the (experimental) <em>Photos List</em> feed
-<code>format</code> parameter by a new mechanism of calling any
-function that returns a photos list, using a new
-<code>flickcurl_photos_list_params</code> structure that allows for
-existing (page, per_page, extras) as well as new parameters (format)
-to be given optionally and a new <code>flickcurl_photos_list</code>
-result structure from them.  The experimental feeds format feature was
-<a href="http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/">announced 2008-08-25 format</a>.
+<code>format</code> parameter by the new feature of allowing any
+function that returns a <em>Standard Photos Response</em> to send the
+same optional result parameters, including format.  This is done by
+adding new typedefs <code>flickcurl_photos_list</code> for the
+standard photos response and
+<code>flickcurl_photos_list_params</code> for the parameters.
+This allows for existing result parameters (page, per_page, extras)
+as well as the new new format parameter to be given optionally.
+The standard photos response format was
+<a href="http://code.flickr.com/blog/2008/08/19/standard-photos-response-apis-for-civilized-age/">described 2008-08-19"</a> and
+the experimental feeds format feature was
+<a href="http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/">announced 2008-08-25</a>.
 </p>
 
-<p>Added functions to get photos lists with list results parameters
+<p>Added functions to return lists of photos with list results parameters
 based on existing functions without the <code>_params</code> suffix.
 The functions all take a <code>flickcurl_photos_list_params</code>
 to replace any existing extras, page and/or per_page parameters
