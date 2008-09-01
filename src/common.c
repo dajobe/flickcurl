@@ -1925,3 +1925,31 @@ flickcurl_get_extras_format_info(int extras_format,
 
   return 0;
 }
+
+
+/**
+ * flickcurl_photos_list_params_init:
+ * @list_params: photos list params to init
+ *
+ * Initialise an existing photos list parameter structure
+ *
+ * Return value: non-0 on failure
+ */
+int
+flickcurl_photos_list_params_init(flickcurl_photos_list_params* list_params)
+{
+  if(!list_params)
+    return 1;
+  
+  memset(list_params, '\0', sizeof(list_params));
+  list_params->version=1;
+
+  list_params->extras=NULL;
+  list_params->format=NULL;
+  list_params->page= -1;
+  list_params->per_page= -1;
+
+  return 0;
+}
+
+

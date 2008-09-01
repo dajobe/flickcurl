@@ -887,6 +887,7 @@ typedef struct {
 
 /**
  * flickcurl_photos_list_params:
+ * @version: structure version (currently 1)
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>. <code>'media</code> will return an extra media=VALUE for VALUE "photo" or "video".  API addition 2008-04-07. (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or < 0)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or < 0)
@@ -900,6 +901,10 @@ typedef struct {
  * enumerate the list of known format values.
  */
 typedef struct {
+  /* NOTE: Bump @version and update
+   * flickcurl_photos_list_params_init() when adding fields 
+   */
+  int version; /* 1 */
   const char* format;
   const char* extras;
   int per_page;
@@ -1335,6 +1340,8 @@ FLICKCURL_API
 int flickcurl_get_feed_format_info(int feed_format, const char** name_p, const char** label_p, const char** mime_type_p);
 FLICKCURL_API
 int flickcurl_get_extras_format_info(int extras_format, const char** name_p, const char** label_p);
+FLICKCURL_API
+int flickcurl_photos_list_params_init(flickcurl_photos_list_params* list_params);
 
 
 /**
