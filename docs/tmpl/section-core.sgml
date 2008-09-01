@@ -81,6 +81,17 @@ Core library functions
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_get_extras_format_info ##### -->
+<para>
+
+</para>
+
+@extras_format: 
+@name_p: 
+@label_p: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_get_feed_format_info ##### -->
 <para>
 

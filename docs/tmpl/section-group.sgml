@@ -122,6 +122,19 @@ Groups of users.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_groups_pools_getPhotos_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@group_id: 
+@tags: 
+@user_id: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_groups_pools_remove ##### -->
 <para>
 

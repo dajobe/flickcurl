@@ -192,6 +192,18 @@ Set of Photos.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photosets_getPhotos_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@privacy_filter: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photosets_orderSets ##### -->
 <para>
 

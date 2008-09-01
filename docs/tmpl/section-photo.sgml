@@ -296,6 +296,20 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_getContactsPhotos_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@contact_count: 
+@just_friends: 
+@single_photo: 
+@include_self: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_getContactsPublicPhotos ##### -->
 <para>
 
@@ -308,6 +322,21 @@ Photo.
 @single_photo: 
 @include_self: 
 @extras: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_getContactsPublicPhotos_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@photo_count: 
+@just_friends: 
+@single_photo: 
+@include_self: 
+@list_params: 
 @Returns: 
 
 
@@ -382,6 +411,21 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_getNotInSet_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
+@privacy_filter: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_getPerms ##### -->
 <para>
 
@@ -401,6 +445,16 @@ Photo.
 @extras: 
 @per_page: 
 @page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_getRecent_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@list_params: 
 @Returns: 
 
 
@@ -431,6 +485,21 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_getUntagged_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
+@privacy_filter: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_getWithGeoData ##### -->
 <para>
 
@@ -448,6 +517,21 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_getWithGeoData_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
+@privacy_filter: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_getWithoutGeoData ##### -->
 <para>
 
@@ -462,6 +546,21 @@ Photo.
 @extras: 
 @per_page: 
 @page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_getWithoutGeoData_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
+@privacy_filter: 
+@list_params: 
 @Returns: 
 
 
@@ -548,6 +647,17 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_recentlyUpdated_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@min_date: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_removeTag ##### -->
 <para>
 
@@ -577,6 +687,17 @@ Photo.
 
 @fc: 
 @params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_search_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@params: 
+@list_params: 
 @Returns: 
 
 

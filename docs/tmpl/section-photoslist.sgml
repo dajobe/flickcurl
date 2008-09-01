@@ -9,12 +9,10 @@ Photos List.
 Photos List.
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
-
 
 <!-- ##### SECTION Stability_Level ##### -->
 
@@ -35,10 +33,20 @@ Photos List.
 
 </para>
 
+@version: 
 @format: 
 @extras: 
 @per_page: 
 @page: 
+
+<!-- ##### FUNCTION flickcurl_photos_list_params_init ##### -->
+<para>
+
+</para>
+
+@list_params: 
+@Returns: 
+
 
 <!-- ##### FUNCTION flickcurl_free_photos_list ##### -->
 <para>

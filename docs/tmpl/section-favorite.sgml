@@ -40,6 +40,17 @@ Favorite photos.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_favorites_getList_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_favorites_getPublicList ##### -->
 <para>
 
@@ -50,6 +61,17 @@ Favorite photos.
 @extras: 
 @per_page: 
 @page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_favorites_getPublicList_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@list_params: 
 @Returns: 
 
 

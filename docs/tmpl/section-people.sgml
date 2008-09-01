@@ -70,6 +70,17 @@ People.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_people_getPublicPhotos_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_people_getUploadStatus ##### -->
 <para>
 
