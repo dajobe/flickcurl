@@ -140,6 +140,14 @@ values, as usable by the '_params' functions mentioned above.</p>
     const char** name_p, const char** label_p, const char** mime_type_p);
 </pre>
 
+<p>Added <code>flickcurl_get_extras_format_info()</code> to get the
+names and descriptions of the current known 'extras' parameter
+values, as usable by the '_params' functions mentioned above.</p>
+<pre>
+  int flickcurl_get_extras_format_info(int extras_format,
+    const char** name_p, const char** label_p);
+</pre>
+
 <p>Fixed typo in the FOAF namespace - no trailing #</p>
 
 <p>Updated <code>flickcurl(1)</code> utility to help with authentication
