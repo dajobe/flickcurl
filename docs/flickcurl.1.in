@@ -33,7 +33,7 @@ Set delay between requests to \fIDELAY\fP milliseconds.
 .B \-h, \-\-help
 Show summary of options and exit.
 .TP
-.B \-o \fIFILE\fP, \-\-ouutput \fIFILE\fP
+.B \-o \fIFILE\fP, \-\-output \fIFILE\fP
 Write the results of format feed API calls to \fIFILE\fP
 .TP
 .B \-q, \-\-quiet
