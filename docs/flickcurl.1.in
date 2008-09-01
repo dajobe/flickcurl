@@ -1,4 +1,4 @@
-.TH FLICKCURL 1 "23 August 2008"
+.TH FLICKCURL 1 "1 September 2008"
 .SH NAME
 flickcurl \- call Flickr API
 .SH SYNOPSIS
@@ -6,7 +6,7 @@ flickcurl \- call Flickr API
 \fB\-a \fIFROB\fP\fR
 .br
 .B flickcurl
-[\fB\-d \fIDELAY\fP\fR] [\fB\-h\fR] [\fB\-v\fR] [\fIcommands\fR] ...
+[\fB\-d \fIDELAY\fP\fR] [\fB\-h\fR] [\fB\-o FILE\fR] [\fB\-q\fR] [\fB\-v\fR] [\fB\-V\fR] [\fIcommands\fR] ...
 .br
 .SH DESCRIPTION
 \fBflickcurl\fP is a utility program to call the Flickr APIs via the
@@ -32,6 +32,12 @@ Set delay between requests to \fIDELAY\fP milliseconds.
 .TP
 .B \-h, \-\-help
 Show summary of options and exit.
+.TP
+.B \-o \fIFILE\fP, \-\-ouutput \fIFILE\fP
+Write the results of format feed API calls to \fIFILE\fP
+.TP
+.B \-q, \-\-quiet
+Display less information while the program runs.
 .TP
 .B \-v, \-\-version
 Display the version of the program and exit.
