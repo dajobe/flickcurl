@@ -1359,17 +1359,6 @@ command_print_photos_list(flickcurl* fc, flickcurl_photos_list* photos_list,
 }
 
 
-static
-void photos_list_params_init(flickcurl_photos_list_params* list_params)
-{
-  memset(list_params, '\0', sizeof(list_params));
-  list_params->extras=NULL;
-  list_params->format=NULL;
-  list_params->page= -1;
-  list_params->per_page= -1;
-}
-
-
 static int
 command_photos_getContactsPhotos(flickcurl* fc, int argc, char *argv[])
 {
@@ -1380,7 +1369,7 @@ command_photos_getContactsPhotos(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >1) {
     list_params.extras=argv[1];
@@ -1430,7 +1419,7 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
   flickcurl_search_params params;
   flickcurl_photos_list* photos_list=NULL;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
   
   argv++; argc--;
   while(!usage && argc) {
@@ -1742,7 +1731,7 @@ command_people_getPublicPhotos(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
 
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
     list_params.per_page=parse_page_param(argv[2]);
@@ -1832,7 +1821,7 @@ command_groups_pools_getPhotos(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
     list_params.per_page=parse_page_param(argv[2]);
@@ -1879,7 +1868,7 @@ command_photos_getContactsPublicPhotos(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
     list_params.format=argv[2];
@@ -1972,7 +1961,7 @@ command_photoslist(flickcurl* fc, int argc, char *argv[],
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >1) {
     list_params.per_page=parse_page_param(argv[1]);
@@ -2036,7 +2025,7 @@ command_photos_getRecent(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >1) {
     list_params.per_page=parse_page_param(argv[1]);
@@ -2089,7 +2078,7 @@ command_photos_recentlyUpdated(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >1) {
     list_params.per_page=parse_page_param(argv[1]);
@@ -2173,7 +2162,7 @@ command_photosets_getPhotos(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc > 2) {
     list_params.extras=argv[2];
@@ -2461,7 +2450,7 @@ command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
   
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   argv++; argc--;
   
@@ -2557,7 +2546,7 @@ command_favorites_getList(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
 
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
     list_params.per_page=parse_page_param(argv[2]);
@@ -2592,7 +2581,7 @@ command_favorites_getPublicList(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   flickcurl_photos_list_params list_params;
 
-  photos_list_params_init(&list_params);
+  flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
     list_params.per_page=parse_page_param(argv[2]);
