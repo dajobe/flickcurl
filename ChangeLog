@@ -1,3 +1,51 @@
+2008-09-01  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Use flickcurl_photos_list_params_init to
+	replace photos_list_params_init
+
+	* src/common.c,
+	src/flickcurl.h: (flickcurl_photos_list_params_init): Added.
+	flickcurl_photos_list_params gains a version field currently set
+	to 1
+
+	* utils/flickcurl.c: (command_photos_setPerms): perm_comment and
+	perm_addmeta are not booleans.
+
+	* utils/flickcurl.c: Added parse_bool_param to parse is_FOO values
+	and strings false/no, true/yes as well as integers: non-0 is true
+
+	* utils/flickcurl.c: Added parse_page_param to parse page/per_page
+	values and accept '-' for default
+
+	* docs/flickcurl-sections.txt: Added
+	flickcurl_favorites_getList_params,
+	flickcurl_favorites_getPublicList_params,
+	flickcurl_groups_pools_getPhotos_params,
+	flickcurl_interestingness_getList_params,
+	flickcurl_people_getPublicPhotos_params,
+	flickcurl_photos_getContactsPhotos_params,
+	flickcurl_photos_getContactsPublicPhotos_params,
+	flickcurl_photos_getNotInSet_params,
+	flickcurl_photos_getRecent_params,
+	flickcurl_photos_getUntagged_params,
+	flickcurl_photos_getWithGeoData_params,
+	flickcurl_photos_getWithoutGeoData_params,
+	flickcurl_photos_recentlyUpdated_params,
+	flickcurl_photos_search_params,
+	flickcurl_photosets_getPhotos_params
+
+	* docs/flickcurl-sections.txt: Added flickcurl_get_extras_format_info
+
+	* utils/flickcurl.c: Use flickcurl_get_extras_format_info
+
+	* utils/flickcurl.c: Add FORMAT to all photos lists results.
+	(photos_list_params_init): Added.
+	Explain list params in help message
+
+	* src/common.c,
+	src/flickcurl.h: (flickcurl_get_extras_format_info): Added to
+	enumerate values of 'extras'
+
 2008-08-30  Dave Beckett <dave@dajobe.org>
 
 	* src/favorites-api.c, src/groups-pools-api.c, src/photos-api.c:
