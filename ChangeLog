@@ -105,10 +105,11 @@
 	(main): Add an optional 4th parameter to favorites.getList for
 	FORMAT
 
-	* utils/flickcurl.c: (command_photos_search): Use
-	flickcurl_photos_search_params for photos.search command with a
-	flickcurl_photos_list result and accept the format parameter.  If
-	the result is raw content, print it.
+	* utils/flickcurl.c:
+	(command_photos_search): Use flickcurl_photos_search_params for
+	photos.search command with a flickcurl_photos_list result and
+	accept the format parameter.  If the result is raw content, print
+	it.
 
 	* docs/tmpl/section-photo.sgml, docs/tmpl/section-place.sgml,
 	src/favorites-api.c, src/flickcurl.h:
@@ -119,7 +120,8 @@
 	(flickcurl_photos_search_params): Free photos list with
 	flickcurl_free_photos_list on error
 
-	* src/flickcurl.h: (typedef flickcurl_photos_list_params): const chars
+	* src/flickcurl.h:
+	(typedef flickcurl_photos_list_params): const chars
 
 	* src/photos-api.c: autodocs
 
@@ -137,7 +139,6 @@
 	list result parameters.
 	(flickcurl_invoke_photos_list): Added to construct it.
 	(flickcurl_free_photos_list): Added to delete it - public
-
 
 	* src/common.c, src/flickcurl_internal.h:
 	(flickcurl_invoke_get_content): Added to return the raw content of
