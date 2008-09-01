@@ -1382,6 +1382,24 @@ command_photos_getContactsPhotos(flickcurl* fc, int argc, char *argv[])
 
 
 static int
+parse_page_param(const char* param) 
+{
+  char *eptr;
+  int i;
+  
+  if(!param || *param == '-')
+    return -1;
+  
+  eptr=NULL;
+  i=(int)strtol(param, &eptr, 10);
+  if(*eptr)
+    return -1;
+
+  return i;
+}
+
+
+static int
 command_photos_search(flickcurl* fc, int argc, char *argv[])
 {
   char *tags_string=NULL;
@@ -1468,11 +1486,11 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
       argv++; argc--;
     } else if(!strcmp(field, "per-page")) {
       /* int: default 100, max 500 */
-      list_params.per_page=atoi(argv[0]);
+      list_params.per_page=parse_page_param(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "page")) {
       /* int: default 1 */
-      list_params.page=atoi(argv[0]);
+      list_params.page=parse_page_param(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "place-id")) {
       params.place_id=argv[0];
@@ -1705,9 +1723,9 @@ command_people_getPublicPhotos(flickcurl* fc, int argc, char *argv[])
   photos_list_params_init(&list_params);
 
   if(argc >2) {
-    list_params.per_page=atoi(argv[2]);
+    list_params.per_page=parse_page_param(argv[2]);
     if(argc >3) {
-      list_params.page=atoi(argv[3]);
+      list_params.page=parse_page_param(argv[3]);
       if(argc >4) {
         list_params.format=argv[4];
       }
@@ -1763,9 +1781,9 @@ command_groups_pools_getGroups(flickcurl* fc, int argc, char *argv[])
   flickcurl_group** groups=NULL;
 
   if(argc >1) {
-    per_page=atoi(argv[1]);
+    per_page=parse_page_param(argv[1]);
     if(argc >2){
-      page=atoi(argv[2]);
+      page=parse_page_param(argv[2]);
     }
   }
 
@@ -1795,9 +1813,9 @@ command_groups_pools_getPhotos(flickcurl* fc, int argc, char *argv[])
   photos_list_params_init(&list_params);
 
   if(argc >2) {
-    list_params.per_page=atoi(argv[2]);
+    list_params.per_page=parse_page_param(argv[2]);
     if(argc >3) {
-      list_params.page=atoi(argv[3]);
+      list_params.page=parse_page_param(argv[3]);
       if(argc >4) {
         list_params.format=argv[4];
       }
@@ -1899,9 +1917,9 @@ command_photos_getFavorites(flickcurl* fc, int argc, char *argv[])
   flickcurl_person** persons;
   
   if(argc >2) {
-    per_page=atoi(argv[2]);
+    per_page=parse_page_param(argv[2]);
     if(argc >3) {
-      page=atoi(argv[3]);
+      page=parse_page_param(argv[3]);
     }
   }
   
@@ -1935,9 +1953,9 @@ command_photoslist(flickcurl* fc, int argc, char *argv[],
   photos_list_params_init(&list_params);
 
   if(argc >1) {
-    list_params.per_page=atoi(argv[1]);
+    list_params.per_page=parse_page_param(argv[1]);
     if(argc >2) {
-      list_params.page=atoi(argv[2]);
+      list_params.page=parse_page_param(argv[2]);
       if(argc >3) {
         list_params.format=argv[3];
       }
@@ -1999,9 +2017,9 @@ command_photos_getRecent(flickcurl* fc, int argc, char *argv[])
   photos_list_params_init(&list_params);
 
   if(argc >1) {
-    list_params.per_page=atoi(argv[1]);
+    list_params.per_page=parse_page_param(argv[1]);
     if(argc >2) {
-      list_params.page=atoi(argv[2]);
+      list_params.page=parse_page_param(argv[2]);
       if(argc >3) {
         list_params.format=argv[3];
       }
@@ -2052,9 +2070,9 @@ command_photos_recentlyUpdated(flickcurl* fc, int argc, char *argv[])
   photos_list_params_init(&list_params);
 
   if(argc >1) {
-    list_params.per_page=atoi(argv[1]);
+    list_params.per_page=parse_page_param(argv[1]);
     if(argc >2) {
-      list_params.page=atoi(argv[2]);
+      list_params.page=parse_page_param(argv[2]);
       if(argc >3) {
         list_params.format=argv[3];
       }
@@ -2140,9 +2158,9 @@ command_photosets_getPhotos(flickcurl* fc, int argc, char *argv[])
     if(argc > 3) {
       privacy_filter=atoi(argv[3]);
       if(argc >4) {
-        list_params.per_page=atoi(argv[4]);
+        list_params.per_page=parse_page_param(argv[4]);
         if(argc >5) {
-          list_params.page=atoi(argv[5]);
+          list_params.page=parse_page_param(argv[5]);
           if(argc >6) {
             list_params.format=argv[6];
           }
@@ -2336,9 +2354,9 @@ command_groups_search(flickcurl* fc, int argc, char *argv[])
   int i;
   
   if(argc >2) {
-    per_page=atoi(argv[2]);
+    per_page=parse_page_param(argv[2]);
     if(argc >3) {
-      page=atoi(argv[3]);
+      page=parse_page_param(argv[3]);
     }
   }
   
@@ -2437,11 +2455,11 @@ command_interestingness_getList(flickcurl* fc, int argc, char *argv[])
       argv++; argc--;
     } else if(!strcmp(field, "per-page")) {
       /* int: default 100, max 500 */
-      list_params.per_page=atoi(argv[0]);
+      list_params.per_page=parse_page_param(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "page")) {
       /* int: default 1 */
-      list_params.page=atoi(argv[0]);
+      list_params.page=parse_page_param(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "format")) {
       list_params.format=argv[0];
@@ -2520,9 +2538,9 @@ command_favorites_getList(flickcurl* fc, int argc, char *argv[])
   photos_list_params_init(&list_params);
 
   if(argc >2) {
-    list_params.per_page=atoi(argv[2]);
+    list_params.per_page=parse_page_param(argv[2]);
     if(argc >3) {
-      list_params.page=atoi(argv[3]);
+      list_params.page=parse_page_param(argv[3]);
       if(argc >4)
         list_params.format=argv[4];
     }
@@ -2555,9 +2573,9 @@ command_favorites_getPublicList(flickcurl* fc, int argc, char *argv[])
   photos_list_params_init(&list_params);
 
   if(argc >2) {
-    list_params.per_page=atoi(argv[2]);
+    list_params.per_page=parse_page_param(argv[2]);
     if(argc >3) {
-      list_params.page=atoi(argv[3]);
+      list_params.page=parse_page_param(argv[3]);
       if(argc >4) {
         list_params.format=argv[4];
       }
@@ -2666,9 +2684,9 @@ command_activity_userComments(flickcurl* fc, int argc, char *argv[])
   int i;
 
   if(argc >1) {
-    per_page=atoi(argv[1]);
+    per_page=parse_page_param(argv[1]);
     if(argc >2) {
-      page=atoi(argv[2]);
+      page=parse_page_param(argv[2]);
     }
   }
 
@@ -2700,9 +2718,9 @@ command_activity_userPhotos(flickcurl* fc, int argc, char *argv[])
   int i;
 
   if(argc >2) {
-    per_page=atoi(argv[2]);
+    per_page=parse_page_param(argv[2]);
     if(argc >3) {
-      page=atoi(argv[3]);
+      page=parse_page_param(argv[3]);
     }
   }
 
@@ -3579,8 +3597,8 @@ main(int argc, char *argv[])
         break;
       printf("    %-16s %s\n", name, label);
     }
-    fputs("  PAGE is which page in the list results (default 1 = first page)\n"
-          "  PER-PAGE is number of photos/page to return (default 10)\n",
+    fputs("  PAGE is result page number or '-' for default (1 = first page)\n"
+          "  PER-PAGE is photos per result page or '-' for default (10)\n",
           stdout
           );
 
