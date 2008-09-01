@@ -24,14 +24,17 @@ Added <code>PHOTO_FIELD_location_neighbourhood</code>,
 <code>PHOTO_FIELD_location_neighbourhood</code> 
 and <code>FLICKCURL_PLACE_NEIGHBOURHOOD</code> enum values.
 The American spelling versions are now aliases for them.
+(<a href="http://geobloggers.com/2008/08/19/correcting-location-data-the-flickr-way/">announcement of neighbourhood/neighborhood</a>)
 </p>
 
-<p>Added support for photos list feed <code>format</code> parameter
-by a new mechanism of calling any function that returns a "Photos
-Lists", using a new <code>flickcurl_photos_list_params</code>
+<p>Added support for <em>Photos List</em> feed <code>format</code>
+parameter by a new mechanism of calling any function that returns a
+photos list, using a new <code>flickcurl_photos_list_params</code>
 structure that allows for existing (page, per_page, extras) as well
 as new parameters (format) to be given optionally and a new
-<code>flickcurl_photos_list</code> result structure from them.</p>
+<code>flickcurl_photos_list</code> result structure from them.
+(<a href="http://code.flickr.com/blog/2008/08/25/api-responses-as-feeds/">Announcement of feed format</a>)
+</p>
 
 <p>Added functions to get photos lists with list results parameters
 based on existing functions without the <code>_params</code> suffix.
@@ -115,9 +118,13 @@ and return a new <code>flickcurl_photos_list</code> object on success.
 </pre>
 
 
-<p>Added flickcurl_free_photos_list</p>
+<p>Added flickcurl_free_photos_list() to destroy a photos list
+object.</p>
+<pre>
+  void flickcurl_free_photos_list(flickcurl_photos_list* photos_list);
+</pre>
 
-<p>Added <code>flickcurl_get_feed_format_info</code> to get the
+<p>Added <code>flickcurl_get_feed_format_info()</code> to get the
 names and descriptions of the current known feed 'format' parameter
 values, as usable by the '_params' functions mentioned above.</p>
 <pre>
@@ -125,6 +132,14 @@ values, as usable by the '_params' functions mentioned above.</p>
     const char** name_p, const char** label_p, const char** mime_type_p);
 </pre>
 
+<p>Fixed typo in the FOAF namespace - no trailing #</p>
+
+<p><code>flickcurl</code> utility updated to help with authentication
+configuration.  It now prints a help message on how to get
+authentication tokens set up, when there is no configuration file
+present and now accepts <code>-a FROB</code> as an entire command
+line to get the auth token from the web service via the mobile frob.
+</p>
 
 
 <h2 id="D2008-08-17">2008-08-17 Flickcurl 1.5</h2>
