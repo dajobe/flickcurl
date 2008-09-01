@@ -3560,9 +3560,15 @@ main(int argc, char *argv[])
 
     fputs("\nParameters for API calls that return lists of photos:\n", stdout);
     
-    fputs("  EXTRAS is a comma-separated list of optional fields to return from:\n"
-          "    date_taken, date_upload, geo, icon_server, last_update, license,\n"
-          "    machine_tags, media, o_dims, original_format, owner_name, tags, views\n", stdout);
+    fputs("  EXTRAS is a comma-separated list of optional fields to return from:\n", stdout);
+    for(i=0; 1; i++) {
+      const char* name;
+      const char* label;
+
+      if(flickcurl_get_extras_format_info(i, &name, &label))
+        break;
+      printf("    %-16s %s\n", name, label);
+    }
 
     fputs("  FORMAT is result syntax format:\n", stdout);
     for(i=0; 1; i++) {
@@ -3571,10 +3577,10 @@ main(int argc, char *argv[])
 
       if(flickcurl_get_feed_format_info(i, &name, &label, NULL))
         break;
-      printf("    %-15s %s\n", name, label);
+      printf("    %-16s %s\n", name, label);
     }
-    fputs("  PER-PAGE is number of photos/page to return (default 10)\n"
-          "  PAGE is which page in the list results (default 1 = first page)\n",
+    fputs("  PAGE is which page in the list results (default 1 = first page)\n"
+          "  PER-PAGE is number of photos/page to return (default 10)\n",
           stdout
           );
 
