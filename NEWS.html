@@ -126,9 +126,12 @@ and return a new <code>flickcurl_photos_list</code> object on success.
 </pre>
 
 
-<p>Added <code>flickcurl_free_photos_list()</code> to destroy a
-photos list object.</p>
+<p>Added int <code>flickcurl_photos_list_params_init()</code> to
+initialize a photos list parameter object and
+<code>flickcurl_free_photos_list()</code> destroy a photos list
+object.</p>
 <pre>
+  int flickcurl_photos_list_params_init(flickcurl_photos_list_params* list_params);
   void flickcurl_free_photos_list(flickcurl_photos_list* photos_list);
 </pre>
 
