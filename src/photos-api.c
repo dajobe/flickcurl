@@ -907,6 +907,7 @@ flickcurl_get_photoslist_params(flickcurl* fc,
  * @min_taken_date: Minimum taken date (or NULL).
  * @max_taken_date: Maximum taken date (or NULL).
  * @privacy_filter: Return photos only matching a certain privacy level.
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
  * Returns a list of your photos that are not part of any sets.
  *
@@ -1478,7 +1479,7 @@ flickcurl_photos_getWithoutGeoData(flickcurl* fc,
 
 
 /**
- * flickcurl_photos_recentlyUpdated:
+ * flickcurl_photos_recentlyUpdated_params:
  * @fc: flickcurl context
  * @min_date: A Unix timestamp indicating the date from which modifications should be compared.
  * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
