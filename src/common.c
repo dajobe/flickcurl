@@ -1828,8 +1828,10 @@ flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
                                     const char* parameters[][2], int* count_p,
                                     const char** format_p)
 {
-  char per_page_s[4];
-  char page_s[4];
+  /* NOTE: These are SHARED and pointed to by flickcurl_prepare() to
+   * build the URL */
+  static char per_page_s[4];
+  static char page_s[4];
   int this_count=0;
   
   if(format_p)
