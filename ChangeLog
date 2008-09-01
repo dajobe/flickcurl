@@ -1,3 +1,84 @@
+2008-08-30  Dave Beckett <dave@dajobe.org>
+
+	* src/favorites-api.c, src/groups-pools-api.c, src/photos-api.c:
+	Fix 'implements function (vers)' dups for _params calls
+
+	* docs/tmpl/flickcurl-unused.sgml, docs/tmpl/section-core.sgml,
+	docs/tmpl/section-photoslist.sgml: docs
+
+	* docs/flickcurl-sections.txt: section typo
+
+	* docs/flickcurl-docs.xml, docs/flickcurl-sections.txt: Add
+	section-photoslist and functions/typedefs
+
+	* src/flickcurl.h, src/photosets-api.c:
+	(flickcurl_photosets_getPhotos_params): Added
+	(flickcurl_photosets_getPhotos): Use above.
+
+	* src/flickcurl.h,
+	src/photos-api.c: (flickcurl_get_photoslist_params): Renamed from
+	flickcurl_get_photoslist and takes a list_params.
+	(flickcurl_photos_getNotInSet_params,
+	flickcurl_photos_getRecent_params,
+	flickcurl_photos_getUntagged_params,
+	flickcurl_photos_getWithGeoData_params,
+	flickcurl_photos_getWithoutGeoData_params,
+	flickcurl_photos_recentlyUpdated_params): Added, using
+	flickcurl_get_photoslist_params instead of
+	flickcurl_get_photoslist.  Rewrote old non-_params functions to
+	use call _params version.
+
+	* src/favorites-api.c, src/groups-pools-api.c,
+	src/interestingness-api.c, src/people-api.c: Update to use
+	flickcurl_invoke_photos_list without xpathCtx arg
+
+	* src/flickcurl.h, src/photos-api.c:
+	(flickcurl_photos_getContactsPublicPhotos_params): Added with
+	list_params and using flickcurl_append_photos_list_params.
+	(flickcurl_photos_getContactsPublicPhotos): Use
+	flickcurl_photos_getContactsPublicPhotos_params
+
+	* src/flickcurl_internal.h,
+	src/photo.c: (flickcurl_invoke_photos_list): Remove xpathCtx arg
+
+	* src/flickcurl.h, src/photos-api.c:
+	(flickcurl_photos_getContactsPhotos_params): Added with
+	list_params and using flickcurl_append_photos_list_params.
+	(flickcurl_photos_getContactsPhotos): Use
+	flickcurl_photos_getContactsPhotos_params
+
+	* src/flickcurl.h, src/people-api.c:
+	(flickcurl_people_getPublicPhotos_params): Added with list_params
+	and using flickcurl_append_photos_list_params.
+	(flickcurl_people_getPublicPhotos): Use
+	flickcurl_people_getPublicPhotos_params
+
+	* src/flickcurl.h, src/interestingness-api.c:
+	(flickcurl_interestingness_getList_params): Added with list_params
+	and using flickcurl_append_photos_list_params.
+	(flickcurl_interestingness_getlist): Use
+	flickcurl_interestingness_getList_params
+
+	* src/flickcurl.h, src/groups-pools-api.c:
+	(flickcurl_groups_pools_getPhotos_params): Added with list_params
+	and using flickcurl_append_photos_list_params.
+	(flickcurl_groups_pools_getPhotos): Use
+	flickcurl_groups_pools_getPhotos_params
+
+	* src/photos-api.c: (flickcurl_photos_search_params): Use
+	flickcurl_append_photos_list_params.
+
+	* src/favorites-api.c: (flickcurl_favorites_getList_params,
+	flickcurl_favorites_getPublicList_params): Use
+	flickcurl_append_photos_list_params.
+
+	* src/flickcurl.h: autodocs for extras
+
+2008-08-29  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c, src/flickcurl_internal.h:
+	(flickcurl_append_photos_list_params): Added
+
 2008-08-27  Dave Beckett <dave@dajobe.org>
 
 	* utils/flickcurl.c: Use flickcurl_get_feed_format_info to print
