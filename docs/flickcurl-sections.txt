@@ -216,6 +216,7 @@ flickcurl_photos_upload_params
 <FILE>section-photoslist</FILE>
 flickcurl_photos_list
 flickcurl_photos_list_params
+flickcurl_photos_list_params_init
 flickcurl_free_photos_list
 </SECTION>
 
