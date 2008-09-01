@@ -1329,6 +1329,8 @@ FLICKCURL_API
 int flickcurl_get_safety_level_from_string(const char* safety_level_string);
 FLICKCURL_API
 int flickcurl_get_feed_format_info(int feed_format, const char** name_p, const char** label_p, const char** mime_type_p);
+FLICKCURL_API
+int flickcurl_get_extras_format_info(int extras_format, const char** name_p, const char** label_p);
 
 
 /**

@@ -1870,3 +1870,58 @@ flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
 
   return this_count;
 }
+
+
+
+#define EXTRAS_FORMAT_COUNT 13
+static struct {
+  const char* name;
+  const char* label;
+}
+flickcurl_extras_format_info[EXTRAS_FORMAT_COUNT+1]={
+  { "date_taken", "Date item was taken"},
+  { "date_upload", "Date item was uploaded"},
+  { "geo", "Geotagging latitude, longitude and accuracy"},
+  { "icon_server", "Item owner icon fields"},
+  { "last_update", "Date item was last updated"},
+  { "license", "Item License "},
+  { "machine_tags", "Machine tags"},
+  { "media", "Item Format: photo or video"},
+  { "o_dims", "Original item dimensions"},
+  { "original_format", "Original item secret and format"},
+  { "owner_name", "Item owner ID"},
+  { "tags", "Item clean tags (safe for HTML, URLs)"},
+  { "views", "Number of times item has been viewed"},
+  { NULL, NULL }
+};
+
+
+/**
+ * flickcurl_get_extras_format_info:
+ * @extras_format: input param - extras format index
+ * @name_p: output param - pointer to store feed format name
+ * @label_p: output param - pointer to store feed format label
+ * 
+ * Get APi extras format parameter value information
+ *
+ * As described 2008-08-19 in
+ * http://code.flickr.com/blog/2008/08/19/standard-photos-response-apis-for-civilized-age/
+ *
+ * Return value: non-0 if extras_format is out of range
+ **/
+int
+flickcurl_get_extras_format_info(int extras_format,
+                                 const char** name_p,
+                                 const char** label_p)
+{
+  if(extras_format < 0 || extras_format >= EXTRAS_FORMAT_COUNT)
+    return 1;
+
+  if(name_p)
+    *name_p=flickcurl_extras_format_info[extras_format].name;
+
+  if(label_p)
+    *label_p=flickcurl_extras_format_info[extras_format].label;
+
+  return 0;
+}
