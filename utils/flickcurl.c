@@ -1260,8 +1260,8 @@ command_photos_setPerms(flickcurl* fc, int argc, char *argv[])
   int is_public=parse_bool_param(argv[2]);
   int is_friend=parse_bool_param(argv[3]);
   int is_family=parse_bool_param(argv[4]);
-  int perm_comment=parse_bool_param(argv[5]);
-  int perm_addmeta=parse_bool_param(argv[6]);
+  int perm_comment=atoi(argv[5]);
+  int perm_addmeta=atoi(argv[6]);
   flickcurl_perms perms;
 
   memset(&perms, '\0', sizeof(flickcurl_perms));
