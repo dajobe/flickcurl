@@ -1232,14 +1232,36 @@ command_photos_setMeta(flickcurl* fc, int argc, char *argv[])
 
 
 static int
+parse_bool_param(const char* param) 
+{
+  char *eptr;
+  int b;
+  
+  if(!param ||
+     (!strcmp(param, "false") || !strcmp(param, "no")))
+    return 0;
+
+  if(!strcmp(param, "true") || !strcmp(param, "yes"))
+    return 1;
+
+  eptr=NULL;
+  b=(int)strtol(param, &eptr, 10);
+  if(*eptr)
+    return 0;
+
+  return (b != 0);
+}
+
+
+static int
 command_photos_setPerms(flickcurl* fc, int argc, char *argv[])
 {
   const char *photo_id=argv[1];
-  int is_public=atoi(argv[2]);
-  int is_friend=atoi(argv[3]);
-  int is_family=atoi(argv[4]);
-  int perm_comment=atoi(argv[5]);
-  int perm_addmeta=atoi(argv[6]);
+  int is_public=parse_bool_param(argv[2]);
+  int is_friend=parse_bool_param(argv[3]);
+  int is_family=parse_bool_param(argv[4]);
+  int perm_comment=parse_bool_param(argv[5]);
+  int perm_addmeta=parse_bool_param(argv[6]);
   flickcurl_perms perms;
 
   memset(&perms, '\0', sizeof(flickcurl_perms));
@@ -1258,7 +1280,7 @@ command_photos_setSafetyLevel(flickcurl* fc, int argc, char *argv[])
 {
   const char *photo_id=argv[1];
   const char* safety_level_str=argv[2];
-  int hidden=atoi(argv[3]);
+  int hidden=parse_bool_param(argv[3]);
   int safety_level;
 
   safety_level=flickcurl_get_safety_level_from_string(safety_level_str);
@@ -1640,10 +1662,10 @@ static int
 command_photos_geo_setPerms(flickcurl* fc, int argc, char *argv[])
 {
   const char *photo_id=argv[1];
-  int is_public=atoi(argv[2]);
-  int is_contact=atoi(argv[3]);
-  int is_friend=atoi(argv[4]);
-  int is_family=atoi(argv[5]);
+  int is_public=parse_bool_param(argv[2]);
+  int is_contact=parse_bool_param(argv[3]);
+  int is_friend=parse_bool_param(argv[4]);
+  int is_family=parse_bool_param(argv[5]);
   flickcurl_perms perms;
 
   memset(&perms, '\0', sizeof(flickcurl_perms));
