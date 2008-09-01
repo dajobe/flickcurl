@@ -1840,14 +1840,16 @@ flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
   
   if(list_params->extras) {
     parameters[*count_p][0]  = "extras";
-    parameters[*count_p++][1]= list_params->extras;
+    parameters[*count_p][1]= list_params->extras;
+    (*count_p)++;
     this_count++;
   }
   if(list_params->per_page) {
     if(list_params->per_page >= 0 && list_params->per_page <= 999) {
       sprintf(per_page_s, "%d", list_params->per_page);
       parameters[*count_p][0]  = "per_page";
-      parameters[*count_p++][1]= per_page_s;
+      parameters[*count_p][1]= per_page_s;
+      (*count_p)++;
       this_count++;
     }
   }
@@ -1855,13 +1857,15 @@ flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
     if(list_params->page >= 0 && list_params->page <= 999) {
       sprintf(page_s, "%d", list_params->page);
       parameters[*count_p][0]  = "page";
-      parameters[*count_p++][1]= page_s;
+      parameters[*count_p][1]= page_s;
+      (*count_p)++;
       this_count++;
     }
   }
   if(list_params->format) {
     parameters[*count_p][0]  = "format";
-    parameters[*count_p++][1]= list_params->format;
+    parameters[*count_p][1]= list_params->format;
+    (*count_p)++;
     this_count++;
 
     if(format_p)
