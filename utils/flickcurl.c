@@ -2970,7 +2970,8 @@ static int flickcurl_cmd_compare(const void *a, const void *b)
 
 static flickcurl_cmd commands[] = {
   /* {fn name, 
-   *  args desc, fn description, handler, min args, max args },
+   *  args desc, fn description
+   *  handler, min args, max args },
    */
   {"auth.checkToken",
    "TOKEN", "Get the credentials attached to an authentication TOKEN.",
@@ -3333,7 +3334,9 @@ static flickcurl_cmd commands[] = {
    "FILE PHOTO-ID [async]", "Replace a photo PHOTO-ID with a new FILE (async)", 
    command_replace,  2, 3},
 
-  {NULL, NULL, NULL, 0, 0}
+  {NULL, 
+   NULL, NULL,
+   NULL, 0, 0}
 };  
   
 
