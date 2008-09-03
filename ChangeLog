@@ -1,5 +1,14 @@
 2008-09-02  Dave Beckett <dave@dajobe.org>
 
+	* utils/flickcurl.c: Add EXTRAS info to manpage (-m)
+
+	* utils/flickcurl.c: commands: make final NULL sentinal entry have
+	correct number of fields.
+
+	* docs/tmpl/section-photo.sgml: Added flickcurl_search_params_init
+
+	* docs/flickcurl-sections.txt: Added flickcurl_search_params_init
+
 	* src/flickcurl.h: autodocs
 
 	* src/photo.c: (flickcurl_invoke_photos_list): Copy correct format
