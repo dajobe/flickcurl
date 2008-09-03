@@ -1442,7 +1442,9 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
   flickcurl_photos_list* photos_list=NULL;
   
   flickcurl_photos_list_params_init(&list_params);
-  
+
+  flickcurl_search_params_init(&params);
+
   argv++; argc--;
   while(!usage && argc) {
     char* field=argv[0];
