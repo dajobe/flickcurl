@@ -736,6 +736,15 @@ Photo.
 @radius_units: 
 @contacts: 
 
+<!-- ##### FUNCTION flickcurl_search_params_init ##### -->
+<para>
+
+</para>
+
+@params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_setContentType ##### -->
 <para>
 
