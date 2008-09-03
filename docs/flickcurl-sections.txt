@@ -201,6 +201,7 @@ flickcurl_photos_replace
 flickcurl_photos_search
 flickcurl_photos_search_params
 flickcurl_search_params
+flickcurl_search_params_init
 flickcurl_photos_setContentType
 flickcurl_photos_setDates
 flickcurl_photos_setMeta
