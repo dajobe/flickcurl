@@ -1,3 +1,20 @@
+2008-09-02  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: autodocs
+
+	* src/photo.c: (flickcurl_invoke_photos_list): Copy correct format
+	for regular XML result
+
+	* utils/flickcurl.c: (command_photos_search): Use
+	flickcurl_search_params_init to ensure params structure is not
+	junk.
+
+	* src/common.c, src/flickcurl.h: (flickcurl_search_params_init): Added
+
+	* src/context.c: (flickcurl_build_contexts): Do not expect the
+	number of contexts to be 3 (!!) but allocate it based on the
+	returned XML.   Bug reported by Francis Gastellu.
+
 2008-09-01  Dave Beckett <dave@dajobe.org>
 
 	* src/place.c: place_fields_table: Add XPaths for both spellings
