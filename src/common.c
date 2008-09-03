@@ -1959,3 +1959,18 @@ flickcurl_photos_list_params_init(flickcurl_photos_list_params* list_params)
 }
 
 
+/**
+ * flickcurl_search_params_init:
+ * @params: search params to init
+ *
+ * Initialise an existing search parameters structure
+ *
+ * Return value: non-0 on failure
+ */
+int
+flickcurl_search_params_init(flickcurl_search_params* params)
+{
+  memset(params, '\0', sizeof(flickcurl_search_params));
+
+  return 0;
+}

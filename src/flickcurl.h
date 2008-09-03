@@ -1342,6 +1342,8 @@ FLICKCURL_API
 int flickcurl_get_extras_format_info(int extras_format, const char** name_p, const char** label_p);
 FLICKCURL_API
 int flickcurl_photos_list_params_init(flickcurl_photos_list_params* list_params);
+FLICKCURL_API
+int flickcurl_search_params_init(flickcurl_search_params* params);
 
 
 /**
