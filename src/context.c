@@ -114,8 +114,18 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
   xmlNodePtr node;
   int i;
   int count=0;
+  int nodes_count=0;
   
-  contexts=(flickcurl_context**)calloc(sizeof(flickcurl_context**), 3);
+  xnp = xmlDocGetRootElement(doc);
+
+  /* count root element children */
+  for(i=0, node=xnp->children; node; node=node->next) {
+    if(node->type == XML_ELEMENT_NODE)
+      nodes_count++;
+  }
+
+  contexts=(flickcurl_context**)calloc(sizeof(flickcurl_context**),
+                                       nodes_count+1);
 
   /* walk children elements of root element */
   xnp = xmlDocGetRootElement(doc);
