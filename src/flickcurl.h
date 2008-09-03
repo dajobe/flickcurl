@@ -868,7 +868,7 @@ typedef struct {
 
 /**
  * flickcurl_photos_list:
- * @format: requested content format or NULL if a list of photos was wanted
+ * @format: requested content format or NULL if a list of photos was wanted.  On the result from API calls this is set to the requested feed format or "xml" if none was given.
  * @photos: list of photos if @format is NULL.  Also may be NULL on failure.
  * @photos_count: number of photos in @photos array if @format is NULL. Undefined on failure
  * @content: raw content if @format is not NULL.  Also may be NULL on failure.
