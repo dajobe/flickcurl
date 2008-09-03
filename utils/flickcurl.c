@@ -3521,8 +3521,19 @@ main(int argc, char *argv[])
           putchar('\n');
         }
 
+        puts(".SH Extras Fields");
+        puts("The \\fBEXTRAS\\fP parameter can take a comma-separated set of the following values");
+        for(i=0; 1; i++) {
+          const char* name;
+          const char* label;
+          
+          if(flickcurl_get_extras_format_info(i, &name, &label))
+            break;
+          printf(".TP\n\\fB%s\\fP\n%s\n", name, label);
+        }
+
         puts(".SH Photos List Feed Formats");
-        puts("The FORMAT parameter can take any of the following values");
+        puts("The \\fBFORMAT\\fP parameter can take any of the following values");
         for(i=0; 1; i++) {
           const char* name;
           const char* label;
