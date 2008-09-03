@@ -1644,6 +1644,9 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * authenticated with 'read' permissions, and have permission to view
  * the photos. Unauthenticated calls will only return public photos.
  *
+ * Ensure the @params object is propertly initialized to zeros/NULLs
+ * or use flickcurl_search_params_init() to initialize this.
+ *
  * Flickcurl 1.6: Added @list_params beyond flickcurl_photos_search()
  * to allow returning raw content if @list_params is present and
  * field @format is not NULL as announced 2008-08-25
@@ -1861,10 +1864,13 @@ flickcurl_photos_search_params(flickcurl* fc,
  * Flickcurl 1.0: Added place_id for places API as announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
  *
- * See flickcurl_photos_search_params() for details on the the
- * search parameters.
+ * See flickcurl_photos_search_params() for details on the the search
+ * parameters.
+ *
+ * Ensure the @params object is propertly initialized to zeros/NULLs
+ * or use flickcurl_search_params_init() to initialize this.
  * 
- * Return value: an array of #flickcurl_photo or NULL
+ * Return value: an array of #flickcurl_photo pointers (may be length 0) or NULL on failure
  **/
 flickcurl_photo**
 flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
