@@ -12,10 +12,7 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-XX-XX">2008-XX-XX Flickcurl 1.6</h2>
-
-<p>Not yet released.
-</p>
+<h2 id="D2008-09-02">2008-09-02 Flickcurl 1.6</h2>
 
 <p><a href="http://en.wikipedia.org/wiki/Mister_Rogers%27_Neighborhood">"It's a beautiful day in the neighborhood"</a>
 and also
@@ -27,7 +24,8 @@ Added <code>PHOTO_FIELD_location_neighbourhood</code>,
 <code>PHOTO_FIELD_location_neighbourhood</code> 
 and <code>FLICKCURL_PLACE_NEIGHBOURHOOD</code> enum values
 making the American English spelling versions aliases for the
-British/Commonwealth English.
+British / Commonwealth English.  Adjusted the XPaths to accept
+both spellings just in case Flickr changes this.
 The neighbourhood / neighborhood feature was
 <a href="http://geobloggers.com/2008/08/19/correcting-location-data-the-flickr-way/">announced 2008-08-19</a>.
 </p>
@@ -153,6 +151,16 @@ values, as usable by the '_params' functions mentioned above.</p>
   int flickcurl_get_extras_format_info(int extras_format,
     const char** name_p, const char** label_p);
 </pre>
+
+<p>Added <code>flickcurl_search_params_init()</code> to
+initialize a search parameter object</p>
+<pre>
+  int flickcurl_search_params_init(flickcurl_search_params* params);
+</pre>
+
+<p>Fixed building contexts to not expect the number of contexts to be
+3 (!!) but allocate it based on the returned XML.  Bug reported by
+Francis Gastellu.</p>
 
 <p>Fixed typo in the FOAF namespace - no trailing #</p>
 
