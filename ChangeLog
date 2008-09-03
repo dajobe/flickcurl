@@ -1,7 +1,18 @@
 2008-09-01  Dave Beckett <dave@dajobe.org>
 
-	* docs/flickcurl.1.in: Added -o FILE, -q and -V
+	* src/place.c: place_fields_table: Add XPaths for both spellings
+	of neighbourhood just in case
 
+	* src/photo.c: photo_fields_table: Add XPaths for both spellings
+	of neighbourhood just in case
+
+	* docs/tmpl/section-core.sgml, docs/tmpl/section-favorite.sgml,
+	docs/tmpl/section-group.sgml, docs/tmpl/section-misc.sgml,
+	docs/tmpl/section-people.sgml, docs/tmpl/section-photo.sgml,
+	docs/tmpl/section-photoset.sgml,
+	docs/tmpl/section-photoslist.sgml: update tmpls
+
+	* docs/flickcurl.1.in: Added -o FILE, -q and -V
 
 	* utils/flickcurl.c: Added -o FILE option to set format=feed*
 	output file.
