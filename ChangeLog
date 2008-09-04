@@ -1,6 +1,26 @@
-2008-09-02  Dave Beckett <dave@dajobe.org>
+2008-09-04  Dave Beckett <dave@dajobe.org>
 
-	* utils/flickcurl.c: Add EXTRAS info to manpage (-m)
+	* NEWS.html, docs/flickcurl-sections.txt, src/flickcurl.h,
+	src/place.c, src/places-api.c, utils/flickcurl.c:
+	(flickcurl_places_forUser): Added for flickr.places.forUser
+	announced about 25mins ago
+
+	* src/common.c: (flickcurl_invoke_common): Report HTTP code on an
+	error
+
+	* src/common.c: (flickcurl_invoke_common): late night code idiocy,
+	put {}s around an if in an if.
+
+2008-09-03  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: (flickcurl_curl_header_callback): Ensure capturing
+	of feed format failure error messages by saving HTTP headers
+	X-FlickrErrCode/Message
+	(flickcurl_invoke_common): Set callback for headers using above
+	and if status code is not 200, fail with error.  This might cause
+	other things to fail that previously were silent about it.
+
+2008-09-02  Dave Beckett <dave@dajobe.org>
 
 	* utils/flickcurl.c: commands: make final NULL sentinal entry have
 	correct number of fields.
