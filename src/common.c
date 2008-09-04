@@ -1188,11 +1188,13 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
       fc->status_code=lstatus;
       if(fc->status_code != 200) {
         if(fc->method)
-          flickcurl_error(fc, "Method %s failed with error %d - %s", 
-                          fc->method, fc->error_code, fc->error_msg);
+          flickcurl_error(fc, "Method %s failed with error %d - %s (HTTP %d)", 
+                          fc->method, fc->error_code, fc->error_msg,
+                          fc->status_code);
         else
-          flickcurl_error(fc, "Call failed with error %d - %s", 
-                          fc->error_code, fc->error_msg);
+          flickcurl_error(fc, "Call failed with error %d - %s (HTTP %d)", 
+                          fc->error_code, fc->error_msg,
+                          fc->status_code);
         fc->failed=1;
       }
     }
