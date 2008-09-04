@@ -934,6 +934,41 @@ nanosleep(const struct timespec *rqtp, struct timespec *rmtp)
 /* end HAVE_NANOSLEEP */
 
 
+static size_t 
+flickcurl_curl_header_callback(void* ptr,  size_t  size, size_t nmemb,
+                               void *userdata) 
+{
+  flickcurl* fc=(flickcurl*)userdata;
+  int bytes=size*nmemb;
+
+  /* If flickcurl has already failed, return nothing so that
+   * libcurl will abort the transfer
+   */
+  if(fc->failed)
+    return 0;
+  
+#define EC_HEADER_LEN 17
+#define EM_HEADER_LEN 20
+
+  if(!strncmp((char*)ptr, "X-FlickrErrCode: ", EC_HEADER_LEN)) {
+    fc->error_code=atoi((char*)ptr+EC_HEADER_LEN);
+  } else if(!strncmp((char*)ptr, "X-FlickrErrMessage: ", EM_HEADER_LEN)) {
+    int len=bytes-EM_HEADER_LEN;
+    if(fc->error_msg)
+      free(fc->error_msg);
+    fc->error_msg=(char*)malloc(len+1);
+    strncpy(fc->error_msg, (char*)ptr+EM_HEADER_LEN, len);
+    fc->error_msg[len]='\0';
+    while(fc->error_msg[len-1]=='\r' || fc->error_msg[len-1]=='\n') {
+      fc->error_msg[len-1]='\0';
+      len--;
+    }
+  }
+  
+  return bytes;
+}
+
+
 static int
 flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
                         xmlDocPtr* docptr_p)
@@ -1103,6 +1138,13 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   if(slist)
     curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
 
+  /* send all headers to this function */
+  curl_easy_setopt(fc->curl_handle, CURLOPT_HEADERFUNCTION, 
+                   flickcurl_curl_header_callback);
+  /* ... using this data pointer */
+  curl_easy_setopt(fc->curl_handle, CURLOPT_WRITEHEADER, fc);
+
+
   if(fc->upload_field) {
     struct curl_httppost* post = NULL;
     struct curl_httppost* last = NULL;
@@ -1142,8 +1184,17 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 
     /* Requires pointer to a long */
     if(CURLE_OK == 
-       curl_easy_getinfo(fc->curl_handle, CURLINFO_RESPONSE_CODE, &lstatus) )
+       curl_easy_getinfo(fc->curl_handle, CURLINFO_RESPONSE_CODE, &lstatus) ) {
       fc->status_code=lstatus;
+      if(fc->status_code != 200)
+        if(fc->method)
+          flickcurl_error(fc, "Method %s failed with error %d - %s", 
+                          fc->method, fc->error_code, fc->error_msg);
+        else
+          flickcurl_error(fc, "Call failed with error %d - %s", 
+                          fc->error_code, fc->error_msg);
+        fc->failed=1;
+    }
 
   }
 
