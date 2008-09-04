@@ -1186,7 +1186,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     if(CURLE_OK == 
        curl_easy_getinfo(fc->curl_handle, CURLINFO_RESPONSE_CODE, &lstatus) ) {
       fc->status_code=lstatus;
-      if(fc->status_code != 200)
+      if(fc->status_code != 200) {
         if(fc->method)
           flickcurl_error(fc, "Method %s failed with error %d - %s", 
                           fc->method, fc->error_code, fc->error_msg);
@@ -1194,6 +1194,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
           flickcurl_error(fc, "Call failed with error %d - %s", 
                           fc->error_code, fc->error_msg);
         fc->failed=1;
+      }
     }
 
   }
