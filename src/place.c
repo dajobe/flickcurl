@@ -138,17 +138,28 @@ flickcurl_free_places(flickcurl_place **places_object)
 }
 
 
-/* flickcurl_place arrays */
-/* place->names[x] */
-#define PLACE_NAME 0
-/* place->ids[x] */
-#define PLACE_ID   1
-/* place->urls[x] */
-#define PLACE_URL  2
-/* place->woe_ids[x] */
-#define PLACE_WOE_ID  3
+/* flickcurl_place fields */
+typedef enum {
+  /* place->names[place_type] */
+  PLACE_NAME,
+  /* place->ids[place_type] */
+  PLACE_ID,
+  /* place->urls[place_type] */
+  PLACE_URL,
+  /* place->woe_ids[place_type] */
+  PLACE_WOE_ID,
+  /* place->type */
+  PLACE_TYPE,
+  /* place->latitude */
+  PLACE_LATITUDE,
+  /* place->longitude */
+  PLACE_LONGITUDE,
+  /* place->count */
+  PLACE_PHOTO_COUNT,
+} place_field_type;
 
-#define PLACE_TYPE 4
+
+#define PLACE_FIELDS_TABLE_SIZE 26
 
 /*
  * The XPaths here are relative, such as prefixed by /rsp/place
@@ -156,8 +167,8 @@ flickcurl_free_places(flickcurl_place **places_object)
 static struct {
   const xmlChar* xpath;
   flickcurl_place_type place_type;
-  unsigned short place_array;
-} place_fields_table[PHOTO_FIELD_LAST + 4]={
+  place_field_type place_field;
+} place_fields_table[PLACE_FIELDS_TABLE_SIZE+1]={
   {
     (const xmlChar*)"./@name",
     FLICKCURL_PLACE_LOCATION,
@@ -291,9 +302,27 @@ static struct {
   }
   ,
   {
-    (const xmlChar*)"./@place_type",
+    (const xmlChar*)"./@place_type", /* special */
     (flickcurl_place_type)0,
     PLACE_TYPE,
+  }
+  ,
+  {
+    (const xmlChar*)"./@latitude", /* special */
+    (flickcurl_place_type)0,
+    PLACE_LATITUDE,
+  }
+  ,
+  {
+    (const xmlChar*)"./@longitude", /* special */
+    (flickcurl_place_type)0,
+    PLACE_LONGITUDE,
+  }
+  ,
+  {
+    (const xmlChar*)"./@photo_count", /* special */
+    (flickcurl_place_type)0,
+    PLACE_PHOTO_COUNT,
   }
   ,
   { 
@@ -370,7 +399,7 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
     for(expri=0; place_fields_table[expri].xpath; expri++) {
       flickcurl_place_type place_type=place_fields_table[expri].place_type;
-      unsigned short place_array=place_fields_table[expri].place_array;
+      place_field_type place_field=place_fields_table[expri].place_field;
       char *value;
       
       value=flickcurl_xpath_eval(fc, xpathNodeCtx,
@@ -378,12 +407,7 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(!value)
         continue;
 
-      if(place_array == PLACE_TYPE) {
-        place->type=flickcurl_get_place_type_by_label(value);
-        continue;
-      }
-      
-      switch(place_array) {
+      switch(place_field) {
         case PLACE_NAME:
           place->names[(int)place_type]=value;
           break;
@@ -399,11 +423,29 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case PLACE_URL:
           place->urls[(int)place_type]=value;
           break;
+
+        case PLACE_TYPE:
+          place->type=flickcurl_get_place_type_by_label(value);
+          break;
+
+        case PLACE_LATITUDE:
+          place->location.accuracy= -1;
+          place->location.latitude=atof(value);
+          break;
+
+        case PLACE_LONGITUDE:
+          place->location.accuracy= -1;
+          place->location.longitude=atof(value);
+          break;
+
+        case PLACE_PHOTO_COUNT:
+          place->count=atoi(value);
+          break;
       }
       
 #if FLICKCURL_DEBUG > 1
       fprintf(stderr, "field %d array #%d with value: '%s'\n",
-              place_type, place_array, value);
+              place_type, (int)place_field, value);
 #endif
       
       if(fc->failed)

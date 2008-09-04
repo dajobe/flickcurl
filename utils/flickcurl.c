@@ -291,18 +291,45 @@ command_print_tags(flickcurl_tag** tags, const char* label, const char* value)
 }
 
 
+static int
+command_print_location(flickcurl_location* location)
+{
+  const char* accuracy_label;
+  accuracy_label=flickcurl_get_location_accuracy_label(location->accuracy);
+  
+  if(accuracy_label)
+    fprintf(stderr, "latitude %f  longitude %f  accuracy %s(%d)\n",
+            location->latitude, location->longitude, 
+            accuracy_label, location->accuracy);
+  else
+    fprintf(stderr, "latitude %f  longitude %f  accuracy unknown\n",
+            location->latitude, location->longitude);
+
+  return 0;
+}
+
+
 static void
 command_print_place(flickcurl_place* place,
-                    const char* label, const char* value)
+                    const char* label, const char* value,
+                    int print_locality)
 {
   int i;
   if(label)
     fprintf(stderr, "%s: %s %s places\n", program, label,
             (value ? value : "(none)"));
 
-  if(place->type != FLICKCURL_PLACE_LOCATION)
-    fprintf(stderr, "Location is type %s (%d)\n",
+  if(print_locality && place->type != FLICKCURL_PLACE_LOCATION)
+    fprintf(stderr, "  Type %s (%d)\n",
             flickcurl_get_place_type_label(place->type), (int)place->type);
+  
+  if(place->location.accuracy != 0) {
+    fputs("  Location: ", stderr);
+    command_print_location(&place->location);
+  }
+  
+  if(place->count >0)
+    fprintf(stderr, "  Photos at Place: %d\n", place->count);
   
   for(i=(int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
     char* name=place->names[i];
@@ -313,7 +340,7 @@ command_print_place(flickcurl_place* place,
     if(!name && !id && !url && !woe_id)
       continue;
     
-    fprintf(stderr, "%d) place %s:", i, flickcurl_get_place_type_label(i));
+    fprintf(stderr, "  %d) place %s:", i, flickcurl_get_place_type_label(i));
     if(name)
       fprintf(stderr," name '%s'", name);
     if(id)
@@ -363,7 +390,7 @@ command_print_photo(flickcurl_photo* photo)
   command_print_tags(photo->tags, NULL, NULL);
 
   if(photo->place)
-    command_print_place(photo->place, NULL, NULL);
+    command_print_place(photo->place, NULL, NULL, 1);
 
   if(photo->video)
     command_print_video(photo->video);
@@ -1618,12 +1645,8 @@ command_photos_geo_getLocation(flickcurl* fc, int argc, char *argv[])
   if(!location)
     return 1;
 
-  fprintf(stderr,
-          "%s: Photo ID %s location:\n  latitude %f  longitude %f  accuracy %s(%d)\n",
-          program, photo_id,
-          location->latitude, location->longitude, 
-          flickcurl_get_location_accuracy_label(location->accuracy),
-          location->accuracy);
+  fprintf(stderr, "%s: Photo ID %s location\n  ", program, photo_id);
+  command_print_location(location);
 
   flickcurl_free_location(location);
   return 0;
@@ -2553,7 +2576,7 @@ command_places_resolvePlaceId(flickcurl* fc, int argc, char *argv[])
 
   place=flickcurl_places_resolvePlaceId(fc, place_id);
   if(place) {
-    command_print_place(place, NULL, NULL);
+    command_print_place(place, NULL, NULL, 1);
     flickcurl_free_place(place);
   }
   
@@ -2568,7 +2591,7 @@ command_places_resolvePlaceURL(flickcurl* fc, int argc, char *argv[])
 
   place=flickcurl_places_resolvePlaceURL(fc, place_url);
   if(place) {
-    command_print_place(place, NULL, NULL);
+    command_print_place(place, NULL, NULL, 1);
     flickcurl_free_place(place);
   }
   
@@ -2818,7 +2841,8 @@ command_places_find(flickcurl* fc, int argc, char *argv[])
   if(places) {
     int i;
     for(i=0; places[i]; i++) {
-      command_print_place(places[i], NULL, NULL);
+      fprintf(stderr, "Place Result #%d\n", i);
+      command_print_place(places[i], NULL, NULL, 1);
     }
     flickcurl_free_places(places);
   }
@@ -2837,7 +2861,7 @@ command_places_findByLatLon(flickcurl* fc, int argc, char *argv[])
 
   place=flickcurl_places_findByLatLon(fc, lat, lon, accuracy);
   if(place) {
-    command_print_place(place, NULL, NULL);
+    command_print_place(place, NULL, NULL, 1);
     flickcurl_free_place(place);
   }
   
@@ -2943,6 +2967,41 @@ command_tags_getClusters(flickcurl* fc, int argc, char *argv[])
 
   flickcurl_free_tag_clusters(clusters);
   return 0;
+}
+
+
+static int
+command_places_forUser(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place** places=NULL;
+  int woe_id= -1;
+  int threshold= -1;
+  const char* place_id=NULL;
+  flickcurl_place_type place_type;
+  
+  place_type=flickcurl_get_place_type_by_label(argv[1]);
+  
+  if(argc > 2) {
+    woe_id=atoi(argv[2]);
+    if(argc > 3) {
+      place_id=argv[3];
+      if(argc > 4) {
+        threshold=atoi(argv[4]);
+      }
+    }
+  }
+
+  places=flickcurl_places_forUser(fc, place_type, woe_id, place_id, threshold);
+  if(places) {
+    int i;
+    for(i=0; places[i]; i++) {
+      fprintf(stderr, "Place Result #%d\n", i);
+      command_print_place(places[i], NULL, NULL, 0);
+    }
+    flickcurl_free_places(places);
+  }
+  
+  return (places == NULL);
 }
 
 
@@ -3248,6 +3307,9 @@ static flickcurl_cmd commands[] = {
   {"places.findByLatLon",
    "LAT LON ACCURACY", "Find places by LAT and LON with ACCURACY 1-16.",
    command_places_findByLatLon, 3, 3},
+  {"places.forUser",
+   "PLACE-TYPE [WOE-ID] [PLACE-ID [THRESHOLD]]]", "Find user places of PLACE-TYPE.",
+   command_places_forUser, 1, 4},
   {"places.resolvePlaceId",
    "PLACE-ID  / WOE-ID", "Find places information by PLACE-ID or WOE-ID (number).",
    command_places_resolvePlaceId, 1, 1},

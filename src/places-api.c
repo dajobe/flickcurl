@@ -302,3 +302,96 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
 }
 
 
+/**
+ * flickcurl_places_forUser:
+ * @fc: flickcurl context
+ * @place_type: A specific place type to cluster photos by.  Valid places types are neighbourhood, locality, region or country
+ * @woe_id: A Where on Earth identifier to use to filter photo clusters. (or <0)
+ * @place_id: A Flickr Places identifier to use to filter photo clusters. (or NULL)
+ * @threshold: The minimum number of photos that a place type must have to be included. If the number of photos is lowered then the parent place type for that place will be used. (or <0)
+ * 
+ * Return a list of the top 100 unique places clustered by a given place type for a user.
+ *
+ * This API added 2008-09-04 as announced in
+ * http://code.flickr.com/blog/2008/09/04/whos-on-first/
+ *
+ * Implements flickr.places.forUser (1.6)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_place**
+flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type,
+                         int woe_id, const char *place_id, int threshold)
+{
+  const char* parameters[10][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_place** places=NULL;
+  const char* place_type_str;
+  char woe_id_str[20];
+  char threshold_str[4];
+
+  place_type_str=flickcurl_get_place_type_label(place_type);
+  if(!place_type_str) {
+    flickcurl_error(fc, "Invalid place type %d", place_type);
+    return NULL;
+  }
+
+  if(place_type != FLICKCURL_PLACE_NEIGHBOURHOOD &&
+     place_type != FLICKCURL_PLACE_LOCALITY &&
+     place_type != FLICKCURL_PLACE_REGION &&
+     place_type != FLICKCURL_PLACE_COUNTRY) {
+    flickcurl_error(fc, "Place type '%s' (%d) is not valid for places.forUser",
+                    place_type_str, place_type);
+    return NULL;
+  }
+
+  parameters[count][0]  = "place_type";
+  parameters[count++][1]= place_type_str;
+
+  if(woe_id >= 0) {
+    sprintf(woe_id_str, "%d", woe_id);
+    parameters[count][0]  = "woe_id";
+    parameters[count++][1]= woe_id_str;
+  }
+
+  if(place_id) {
+    parameters[count][0]  = "place_id";
+    parameters[count++][1]= place_id;
+  }
+
+  if(threshold >=0) {
+    sprintf(threshold_str, "%d", threshold);
+    parameters[count][0]  = "threshold";
+    parameters[count++][1]= threshold_str;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.placesForUser", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  places=flickcurl_build_places(fc, xpathCtx, (const xmlChar*)"/rsp/places/place", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    places=NULL;
+
+  return places;
+}

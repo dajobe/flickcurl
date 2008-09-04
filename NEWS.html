@@ -12,7 +12,7 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-09-02">2008-09-02 Flickcurl 1.6</h2>
+<h2 id="D2008-09-04">2008-09-04 Flickcurl 1.6</h2>
 
 <p><a href="http://en.wikipedia.org/wiki/Mister_Rogers%27_Neighborhood">"It's a beautiful day in the neighborhood"</a>
 and also
@@ -29,6 +29,17 @@ both spellings just in case Flickr changes this.
 The neighbourhood / neighborhood feature was
 <a href="http://geobloggers.com/2008/08/19/correcting-location-data-the-flickr-way/">announced 2008-08-19</a>.
 </p>
+
+<p>Added <code>flickcurl_places_forUser()</code> function for new API call
+<a href="http://www.flickr.com/services/api/flickr.places.placesForUser.html"><em>flickr.places.placesForUser</em></a>
+to get the cluster of places for a user as
+<a href="http://code.flickr.com/blog/2008/09/04/whos-on-first/">announced 2008-09-04</a>.
+</p>
+<pre>
+  flickcurl_place** flickcurl_places_forUser(flickcurl* fc,
+     flickcurl_place_type place_type, int woe_id, const char* place_id,
+     int threshold);
+</pre>
 
 <p>Added support for the (experimental) <em>Photos List</em> feed
 <code>format</code> parameter by the new feature of allowing any
@@ -136,6 +147,10 @@ object.</p>
   void flickcurl_free_photos_list(flickcurl_photos_list* photos_list);
 </pre>
 
+<p>Added a <code>flickcurl_location</code> to a <code>flickcurl_place</code>
+for the new <code>flickcurl_places_forUser()</code> function.
+</p>
+
 <p>Added <code>flickcurl_get_feed_format_info()</code> to get the
 names and descriptions of the current known feed 'format' parameter
 values, as usable by the '_params' functions mentioned above.</p>
@@ -199,11 +214,19 @@ in its output.  This option does not make informational
 requests generate no output!
 </p>
 
+<p>Improved error reporting when an API fails (returns non-200),
+an error message is called via the error handler
+(set by <code>flickcurl_set_error_handler()</code>).
+</p>
+
+
 
 <h2 id="D2008-08-17">2008-08-17 Flickcurl 1.5</h2>
 
 <p>Added <code>flickcurl_tags_getClusters()</code> function for new
-API call <em>flickr.tags.getClusters</em> as
+API call
+<a href="http://www.flickr.com/services/api/flickr.tags.getClusters.html"><em>flickr.tags.getClusters</em></a>
+as
 <a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4218">announced 2008-07-17</a>
 </p>
 

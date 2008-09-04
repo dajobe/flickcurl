@@ -401,7 +401,7 @@ typedef struct flickcurl_comment_s {
  *
  * Permissions as used by flickcurl_photos_getPerms() and 
  * flickcurl_photos_setPerms() which use public, friend, family,
- * perm_comment and perm-addmeta.  flickr.photos.geo.setPerms() uses
+ * perm_comment and perm-addmeta.  flickcurl_photos_geo_setPerms() uses
  * public, contact, friend and family.
  *
  * A Photo permission.
@@ -422,9 +422,9 @@ typedef struct {
  * @longitude: The longitude from -180 to 180
  * @accuracy: Recorded accuracy level of the location.
  *   World level is 1, Country is ~3, Region ~6, City ~11, Street
- *   ~16. Current range is 1-16. Defaults to 16 if not specified. (<0 for none)
+ *   ~16. Current range is 1-16. (<0 for unknown accuracy)
  *
- * A Photo Location.
+ * A Location in the world with an optional accuracy
  */
 typedef struct {
   double latitude;
@@ -466,6 +466,8 @@ typedef enum {
  * @type: Location type of index 0 (the location) usually 
  *        FLICKCURL_PLACE_LOCATION but may be wider
  * @woe_ids: Array of WOE IDs
+ * @location: location for this place
+ * @count: count of photos (when used for flickcurl_places_forUser() )
  *
  * A Place.
  *
@@ -479,6 +481,8 @@ typedef struct {
   char* urls[FLICKCURL_PLACE_LAST+1];
   flickcurl_place_type type;
   char* woe_ids[FLICKCURL_PLACE_LAST+1];
+  flickcurl_location location;
+  int count;
 } flickcurl_place;
   
 
@@ -1544,6 +1548,8 @@ flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url
 FLICKCURL_API
 const char* flickcurl_get_place_type_label(flickcurl_place_type place_type);
 flickcurl_place_type flickcurl_get_place_type_by_label(const char* place_label);
+FLICKCURL_API
+flickcurl_place** flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold);
 
 /* flickr.contacts */
 FLICKCURL_API
