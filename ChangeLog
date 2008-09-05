@@ -1,3 +1,7 @@
+2008-09-05  Dave Beckett <dave@dajobe.org>
+
+	* src/places-api.c: words
+
 2008-09-04  Dave Beckett <dave@dajobe.org>
 
 	* utils/flickcurl.c: (command_places_placesForUser): Renamed from
