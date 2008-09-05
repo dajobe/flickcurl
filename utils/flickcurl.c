@@ -2971,7 +2971,7 @@ command_tags_getClusters(flickcurl* fc, int argc, char *argv[])
 
 
 static int
-command_places_forUser(flickcurl* fc, int argc, char *argv[])
+command_places_placesForUser(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_place** places=NULL;
   int woe_id= -1;
@@ -2991,7 +2991,8 @@ command_places_forUser(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  places=flickcurl_places_forUser(fc, place_type, woe_id, place_id, threshold);
+  places=flickcurl_places_placesForUser(fc, place_type, woe_id, place_id,
+                                        threshold);
   if(places) {
     int i;
     for(i=0; places[i]; i++) {
@@ -3307,9 +3308,9 @@ static flickcurl_cmd commands[] = {
   {"places.findByLatLon",
    "LAT LON ACCURACY", "Find places by LAT and LON with ACCURACY 1-16.",
    command_places_findByLatLon, 3, 3},
-  {"places.forUser",
+  {"places.placesForUser",
    "PLACE-TYPE [WOE-ID] [PLACE-ID [THRESHOLD]]]", "Find user places of PLACE-TYPE.",
-   command_places_forUser, 1, 4},
+   command_places_placesForUser, 1, 4},
   {"places.resolvePlaceId",
    "PLACE-ID  / WOE-ID", "Find places information by PLACE-ID or WOE-ID (number).",
    command_places_resolvePlaceId, 1, 1},
@@ -3664,6 +3665,9 @@ main(int argc, char *argv[])
   
   if(!strncmp(command, "flickr.", 7))
     command+=7;
+
+  if(!strcmp(command, "places.forUser"))
+    command=(char*)"places.placesForUser";
   
   for(i=0; commands[i].name; i++)
     if(!strcmp(command, commands[i].name)) {
