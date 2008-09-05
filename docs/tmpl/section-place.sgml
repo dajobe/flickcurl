@@ -27,6 +27,8 @@ Places in the real world.
 @urls: 
 @type: 
 @woe_ids: 
+@location: 
+@count: 
 
 <!-- ##### FUNCTION flickcurl_free_place ##### -->
 <para>
@@ -77,6 +79,19 @@ Places in the real world.
 @lat: 
 @lon: 
 @accuracy: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_forUser ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_type: 
+@woe_id: 
+@place_id: 
+@threshold: 
 @Returns: 
 
 
