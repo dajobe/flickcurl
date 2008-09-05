@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (115/115)</span>
+<span class="coverage">100.0% (116/116)</span>
 </p>
 
 
@@ -239,6 +239,7 @@ or <span class="unsupported">unsupported</span>.
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.find.html">flickr.places.find</a> (1.1)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon</a> (1.1)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForUser.html">flickr.places.placesForUser</a> (1.6)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceId.html">flickr.places.resolvePlaceId</a> (1.0)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceURL.html">flickr.places.resolvePlaceURL</a> (1.0)</li>
 </ul>
@@ -295,6 +296,12 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.6</strong>: flickr.places.placesForUser (1 new)</p>
+<pre>
+flickcurl_place** flickcurl_places_placesForUser(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold);
+</pre>
+
 
 <p><strong>1.5</strong>: flickr.tags.getClusters (1 new)</p>
 <pre>
