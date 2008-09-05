@@ -1,4 +1,6 @@
-2008-09-04  Dave Beckett <dave@dajobe.org>
+2008-09-04  Dave Beckett  <dajobe@yahoo-inc.com>
+
+	* Snapshotted flickcurl_1_6 for 1.6 release (SVN 831)
 
 	* NEWS.html, docs/flickcurl-sections.txt, src/flickcurl.h,
 	src/place.c, src/places-api.c, utils/flickcurl.c:
