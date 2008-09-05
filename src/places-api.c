@@ -409,10 +409,7 @@ flickcurl_places_placesForUser(flickcurl* fc,
  * 
  * Return a list of the top 100 unique places clustered by a given place type for a user.
  *
- * This API added 2008-09-04 as announced in
- * http://code.flickr.com/blog/2008/09/04/whos-on-first/
- *
- * @DEPRECATED: Use flickcurl_places_placesForUser
+ * @deprecated: Use flickcurl_places_placesForUser()
  *
  * Return value: non-0 on failure
  **/
