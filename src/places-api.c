@@ -303,7 +303,7 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
 
 
 /**
- * flickcurl_places_forUser:
+ * flickcurl_places_placesForUser:
  * @fc: flickcurl context
  * @place_type: A specific place type to cluster photos by.  Valid places types are neighbourhood, locality, region or country
  * @woe_id: A Where on Earth identifier to use to filter photo clusters. (or <0)
@@ -315,13 +315,15 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
  * This API added 2008-09-04 as announced in
  * http://code.flickr.com/blog/2008/09/04/whos-on-first/
  *
- * Implements flickr.places.forUser (1.6)
+ * Implements flickr.places.placesForUser (1.6)
  * 
  * Return value: non-0 on failure
  **/
 flickcurl_place**
-flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type,
-                         int woe_id, const char *place_id, int threshold)
+flickcurl_places_placesForUser(flickcurl* fc,
+                               flickcurl_place_type place_type,
+                               int woe_id, const char* place_id,
+                               int threshold)
 {
   const char* parameters[10][2];
   int count=0;
@@ -394,4 +396,30 @@ flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type,
     places=NULL;
 
   return places;
+}
+
+
+/**
+ * flickcurl_places_forUser:
+ * @fc: flickcurl context
+ * @place_type: A specific place type to cluster photos by.  Valid places types are neighbourhood, locality, region or country
+ * @woe_id: A Where on Earth identifier to use to filter photo clusters. (or <0)
+ * @place_id: A Flickr Places identifier to use to filter photo clusters. (or NULL)
+ * @threshold: The minimum number of photos that a place type must have to be included. If the number of photos is lowered then the parent place type for that place will be used. (or <0)
+ * 
+ * Return a list of the top 100 unique places clustered by a given place type for a user.
+ *
+ * This API added 2008-09-04 as announced in
+ * http://code.flickr.com/blog/2008/09/04/whos-on-first/
+ *
+ * @DEPRECATED: Use flickcurl_places_placesForUser
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_place**
+flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type,
+                         int woe_id, const char *place_id, int threshold)
+{
+  return flickcurl_places_placesForUser(fc, place_type, woe_id, place_id,
+                                        threshold);
 }

@@ -467,7 +467,7 @@ typedef enum {
  *        FLICKCURL_PLACE_LOCATION but may be wider
  * @woe_ids: Array of WOE IDs
  * @location: location for this place
- * @count: count of photos (when used for flickcurl_places_forUser() )
+ * @count: count of photos (when used for flickcurl_places_placesForUser() )
  *
  * A Place.
  *
@@ -1549,6 +1549,8 @@ FLICKCURL_API
 const char* flickcurl_get_place_type_label(flickcurl_place_type place_type);
 flickcurl_place_type flickcurl_get_place_type_by_label(const char* place_label);
 FLICKCURL_API
+flickcurl_place** flickcurl_places_placesForUser(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold);
+FLICKCURL_API FLICKCURL_DEPRECATED
 flickcurl_place** flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold);
 
 /* flickr.contacts */
