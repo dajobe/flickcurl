@@ -17,6 +17,16 @@
 <p>Not yet released.
 </p>
 
+<p>Added <code>flickcurl_places_placesForUser()</code> function 
+to match API name correctly for API call
+<a href="http://www.flickr.com/services/api/flickr.places.placesForUser.html"><em>flickr.places.placesForUser</em></a>
+</p>
+<pre>
+  flickcurl_place** flickcurl_places_placesForUser(flickcurl* fc,
+     flickcurl_place_type place_type, int woe_id, const char* place_id,
+     int threshold);
+</pre>
+
 
 <h2 id="D2008-09-04">2008-09-04 Flickcurl 1.6</h2>
 
