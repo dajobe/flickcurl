@@ -44,6 +44,57 @@
 
 
 /**
+ * flickcurl_tags_getClusterPhotos:
+ * @fc: flickcurl context
+ * @tag: The tag that this cluster belongs to.
+ * @cluster_id: The top three tags for the cluster, separated by dashes (just like the url).
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Returns the first 24 photos for a given tag cluster
+ *
+ * Implements flickr.tags.getClusterPhotos (1.7)
+ * 
+ * Return value: non-0 on failure
+ **/
+flickcurl_photos_list*
+flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
+                                const char* cluster_id,
+                                flickcurl_photos_list_params* list_params)
+{
+  const char* parameters[10][2];
+  int count=0;
+  flickcurl_photos_list* photos_list=NULL;
+  const char* format=NULL;
+  
+  if(!tag || !cluster_id)
+    return 1;
+
+  parameters[count][0]  = "tag";
+  parameters[count++][1]= tag;
+  parameters[count][0]  = "cluster_id";
+  parameters[count++][1]= cluster_id;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.tags.getClusterPhotos", parameters, count))
+    goto tidy;
+
+  photos_list=flickcurl_invoke_photos_list(fc,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
+  tidy:
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list=NULL;
+  }
+
+  return photos_list;
+}
+
+
+
+/**
  * flickcurl_tags_getClusters:
  * @fc: flickcurl context
  * @tag: The tag to fetch clusters for.

@@ -1674,6 +1674,8 @@ flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* 
 
 /* flickr.tag */
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag, const char* cluster_id, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
 flickcurl_tag_clusters* flickcurl_tags_getClusters(flickcurl* fc, const char* tag);
 FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count);
