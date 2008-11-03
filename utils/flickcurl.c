@@ -3006,6 +3006,34 @@ command_places_placesForUser(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_places_getInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place* place=NULL;
+  const char* place_id=NULL;
+  const char* woe_id=NULL;
+
+  if(strcmp(argv[1], "-"))
+    place_id = argv[1];
+
+  if(argc > 2) {
+    if(strcmp(argv[2], "-"))
+      woe_id = argv[2];
+  }
+
+  if(!place_id && !woe_id)
+    return 1;
+  
+  place=flickcurl_places_getInfo(fc, place_id, woe_id);
+  if(place) {
+    command_print_place(place, NULL, NULL, 1);
+    flickcurl_free_place(place);
+  }
+  
+  return (place == NULL);
+}
+
+
 
 typedef struct {
   const char*     name;
@@ -3308,6 +3336,9 @@ static flickcurl_cmd commands[] = {
   {"places.findByLatLon",
    "LAT LON ACCURACY", "Find places by LAT and LON with ACCURACY 1-16.",
    command_places_findByLatLon, 3, 3},
+  {"places.getInfo",
+   "PLACE-ID|- [WOE-ID|-]", "Find place by PLACE-ID or WOE-ID",
+   command_places_getInfo, 1, 2},
   {"places.placesForUser",
    "PLACE-TYPE [WOE-ID] [PLACE-ID [THRESHOLD]]]", "Find user places of PLACE-TYPE.",
    command_places_placesForUser, 1, 4},
