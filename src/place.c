@@ -114,6 +114,9 @@ flickcurl_free_place(flickcurl_place *place)
       free(place->woe_ids[i]);
   }
   
+  if(place->shapedata)
+    free(place->shapedata);
+
   free(place);
 }
 
@@ -488,6 +491,8 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
         case PLACE_SHAPEDATA:
           /* FIXME - get shapedata from value */
+          place->shapedata=NULL;
+          place->shapedata_length=0;
           break;
       }
       

@@ -483,6 +483,8 @@ typedef struct {
   char* woe_ids[FLICKCURL_PLACE_LAST+1];
   flickcurl_location location;
   int count;
+  char* shapedata;
+  size_t shapedata_length;
 } flickcurl_place;
   
 
