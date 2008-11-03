@@ -156,10 +156,12 @@ typedef enum {
   PLACE_LONGITUDE,
   /* place->count */
   PLACE_PHOTO_COUNT,
+  /* place->shapedata */
+  PLACE_SHAPEDATA,
 } place_field_type;
 
 
-#define PLACE_FIELDS_TABLE_SIZE 26
+#define PLACE_FIELDS_TABLE_SIZE 33
 
 /*
  * The XPaths here are relative, such as prefixed by /rsp/place
@@ -218,6 +220,18 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./neighborhood/@place_url",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_URL,
+  }
+  ,
+  {
+    (const xmlChar*)"./neighbourhood/@place_url",
+    FLICKCURL_PLACE_NEIGHBOURHOOD,
+    PLACE_URL,
+  }
+  ,
+  {
     (const xmlChar*)"./neighborhood",
     FLICKCURL_PLACE_NEIGHBOURHOOD,
     PLACE_NAME,
@@ -233,6 +247,12 @@ static struct {
     (const xmlChar*)"./locality/@place_id",
     FLICKCURL_PLACE_LOCALITY,
     PLACE_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"./locality/@place_url",
+    FLICKCURL_PLACE_LOCALITY,
+    PLACE_URL,
   }
   ,
   {
@@ -254,6 +274,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./county/@place_url",
+    FLICKCURL_PLACE_COUNTY,
+    PLACE_URL,
+  }
+  ,
+  {
     (const xmlChar*)"./county/@woeid",
     FLICKCURL_PLACE_COUNTY,
     PLACE_WOE_ID,
@@ -272,6 +298,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./region/@place_url",
+    FLICKCURL_PLACE_REGION,
+    PLACE_URL,
+  }
+  ,
+  {
     (const xmlChar*)"./region/@woeid",
     FLICKCURL_PLACE_REGION,
     PLACE_WOE_ID,
@@ -287,6 +319,12 @@ static struct {
     (const xmlChar*)"./country/@place_id",
     FLICKCURL_PLACE_COUNTRY,
     PLACE_ID,
+  }
+  ,
+  {
+    (const xmlChar*)"./country/@place_url",
+    FLICKCURL_PLACE_COUNTRY,
+    PLACE_URL,
   }
   ,
   {
@@ -323,6 +361,12 @@ static struct {
     (const xmlChar*)"./@photo_count", /* special */
     (flickcurl_place_type)0,
     PLACE_PHOTO_COUNT,
+  }
+  ,
+  {
+    (const xmlChar*)"./shapedata",
+    FLICKCURL_PLACE_COUNTRY,
+    PLACE_SHAPEDATA,
   }
   ,
   { 
@@ -440,6 +484,10 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
         case PLACE_PHOTO_COUNT:
           place->count=atoi(value);
+          break;
+
+        case PLACE_SHAPEDATA:
+          /* FIXME - get shapedata from value */
           break;
       }
       
