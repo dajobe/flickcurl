@@ -188,6 +188,67 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
 
 
 /**
+ * flickcurl_places_getInfo:
+ * @fc: flickcurl context
+ * @place_id: A Flickr Places ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
+ * @woe_id: A Where On Earth (WOE) ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
+ * 
+ * Get informations about a place.
+ *
+ * Implements flickr.places.getInfo (1.7)
+ * 
+ * Return value: new place object or NULL on failure
+ **/
+flickcurl_place*
+flickcurl_places_getInfo(flickcurl* fc, const char* place_id,
+                         const char* woe_id)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_place* place=NULL;
+
+  if(place_id) {
+    parameters[count][0]  = "place_id";
+    parameters[count++][1]= place_id;
+  } else if(woe_id) {
+    parameters[count][0]  = "woe_id";
+    parameters[count++][1]= woe_id;
+  } else
+    return NULL;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare_noauth(fc, "flickr.places.getInfo", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/place");
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    place=NULL;
+
+  return place;
+}
+
+
+/**
  * flickcurl_places_resolvePlaceId:
  * @fc: flickcurl context
  * @place_id: A Flickr Places ID
@@ -196,7 +257,7 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
  *
  * Implements flickr.places.resolvePlaceId (1.0)
  * 
- * Return value: non-0 on failure
+ * Return value: new place object or NULL on failure
  **/
 flickcurl_place*
 flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
