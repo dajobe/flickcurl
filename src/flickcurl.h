@@ -468,6 +468,10 @@ typedef enum {
  * @woe_ids: Array of WOE IDs
  * @location: location for this place
  * @count: count of photos (when used for flickcurl_places_placesForUser() )
+ * @shapedata: XML string of <shapedata> element when present (or NULL)
+ * @shapedata_length: size of @shapedate string
+ * @shapefile_urls: NULL-terminated array of pointers to shapefile URLs when present (or NULL)
+ * @shapefile_urls_count: number of entries in @shapefile_urls array
  *
  * A Place.
  *
@@ -483,8 +487,12 @@ typedef struct {
   char* woe_ids[FLICKCURL_PLACE_LAST+1];
   flickcurl_location location;
   int count;
+
+  /* shapefile fields */
   char* shapedata;
   size_t shapedata_length;
+  char** shapefile_urls;
+  int shapefile_urls_count;
 } flickcurl_place;
   
 
