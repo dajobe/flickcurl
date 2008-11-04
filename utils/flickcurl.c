@@ -328,6 +328,22 @@ command_print_place(flickcurl_place* place,
     command_print_location(&place->location);
   }
   
+  if(place->shapedata_length > 0) {
+    int s;
+#define MAX_XML 70
+    s = (place->shapedata_length > MAX_XML ? MAX_XML : place->shapedata_length);
+    fprintf(stderr, "  Shapedata (%d bytes):\n    ",
+            (int)place->shapedata_length);
+    fwrite(place->shapedata, 1, s, stderr);
+    fputs("...\n", stderr);
+  }
+  
+  if(place->shapefile_urls_count >0) {
+    fprintf(stderr, "  Shapefile URLs: %d\n", place->shapefile_urls_count);
+    for(i = 0; i < place->shapefile_urls_count; i++)
+      fprintf(stderr, "  0): %s\n", place->shapefile_urls[i]);
+  }
+  
   if(place->count >0)
     fprintf(stderr, "  Photos at Place: %d\n", place->count);
   
