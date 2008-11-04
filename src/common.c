@@ -61,6 +61,7 @@
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 
+#include <libxml/xmlsave.h>
 
 const char* const flickcurl_short_copyright_string = "Copyright 2007-2008 David Beckett.";
 
@@ -1455,6 +1456,59 @@ flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
   tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
+
+  return value;
+}
+
+
+char*
+flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
+                                    xmlXPathContextPtr xpathNodeCtx,
+                                    const xmlChar* xpathExpr, size_t* length_p)
+{
+  xmlXPathObjectPtr xpathObj = NULL;
+  xmlNodePtr sd_node;
+  xmlBufferPtr buffer = NULL;
+  xmlSaveCtxtPtr save_ctxt = NULL;
+  char* value = NULL;
+  size_t value_len = 0;
+  
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathNodeCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed=1;
+    goto tidy;
+  }
+  
+  sd_node = xpathObj->nodesetval->nodeTab[0];
+  
+  buffer = xmlBufferCreate();
+  if(!buffer)
+    goto tidy;
+  save_ctxt = xmlSaveToBuffer(buffer, NULL /* encoding */, 0 /* opts */);
+  
+  xmlSaveTree(save_ctxt, sd_node);
+  xmlSaveFlush(save_ctxt);
+  
+  value_len = xmlBufferLength(buffer);
+  if(!value_len)
+    goto tidy;
+  
+  value = malloc(value_len+1);
+  if(!value)
+    goto tidy;
+  memcpy(value, xmlBufferContent(buffer), value_len+1);
+
+  tidy:
+  if(buffer)
+    xmlBufferFree(buffer);
+
+  if(xpathObj)  
+    xmlXPathFreeObject(xpathObj);
+
+  if(value && length_p)
+    *length_p = value_len;
 
   return value;
 }

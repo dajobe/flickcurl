@@ -139,6 +139,7 @@ char* flickcurl_sqltimestamp_to_isotime(const char* timestamp);
 
 /* Evaluate an XPath to get the string value */
 char* flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
+char* flickcurl_xpath_eval_to_tree_string(flickcurl* fc, xmlXPathContextPtr xpathNodeCtx, const xmlChar* xpathExpr, size_t* length_p);
 
 char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const char* value, const char* method, const xmlChar* xpathExpr);
 
