@@ -117,6 +117,12 @@ flickcurl_free_place(flickcurl_place *place)
   if(place->shapedata)
     free(place->shapedata);
 
+  if(place->shapefile_urls) {
+    for(i = 0 ; i < place->shapefile_urls_count; i++)
+      free(place->shapefile_urls[i]);
+    free(place->shapefile_urls);
+  }
+
   free(place);
 }
 
@@ -161,10 +167,12 @@ typedef enum {
   PLACE_PHOTO_COUNT,
   /* place->shapedata */
   PLACE_SHAPEDATA,
+  /* place->shapefile_urls */
+  PLACE_SHAPEFILE_URL
 } place_field_type;
 
 
-#define PLACE_FIELDS_TABLE_SIZE 33
+#define PLACE_FIELDS_TABLE_SIZE 34
 
 /*
  * The XPaths here are relative, such as prefixed by /rsp/place
@@ -367,9 +375,15 @@ static struct {
   }
   ,
   {
-    (const xmlChar*)"./shapedata",
-    FLICKCURL_PLACE_COUNTRY,
+    (const xmlChar*)"./shapedata/.", /* special */
+    (flickcurl_place_type)0,
     PLACE_SHAPEDATA,
+  }
+  ,
+  {
+    (const xmlChar*)"./urls/shapefile", /* special */
+    (flickcurl_place_type)0,
+    PLACE_SHAPEFILE_URL,
   }
   ,
   { 
@@ -381,6 +395,7 @@ static struct {
 
 
 
+/* get shapedata from value */
 flickcurl_place**
 flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                        const xmlChar* xpathExpr, int* place_count_p)
@@ -447,10 +462,22 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     for(expri=0; place_fields_table[expri].xpath; expri++) {
       flickcurl_place_type place_type=place_fields_table[expri].place_type;
       place_field_type place_field=place_fields_table[expri].place_field;
-      char *value;
+      const xmlChar* place_xpathExpr = place_fields_table[expri].xpath;
+      char *value = NULL;
       
-      value=flickcurl_xpath_eval(fc, xpathNodeCtx,
-                                 place_fields_table[expri].xpath);
+      if(place_field == PLACE_SHAPEDATA) {
+        place->shapedata = flickcurl_xpath_eval_to_tree_string(fc,
+                                                               xpathNodeCtx,
+                                                               place_xpathExpr,
+                                                                &place->shapedata_length);
+        if(!place->shapedata) {
+          fc->failed=1;
+          break;
+        }
+        continue;
+      }
+      
+      value = flickcurl_xpath_eval(fc, xpathNodeCtx, place_xpathExpr);
       if(!value)
         continue;
 
@@ -490,9 +517,23 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           break;
 
         case PLACE_SHAPEDATA:
-          /* FIXME - get shapedata from value */
-          place->shapedata=NULL;
-          place->shapedata_length=0;
+          /* handled above */
+          break;
+
+        case PLACE_SHAPEFILE_URL:
+          if(1) {
+            int size = place->shapefile_urls_count + 1;
+            char** shapefile_urls;
+            shapefile_urls = (char**)calloc(size+1, sizeof(char*));
+            if(shapefile_urls) {
+              memcpy(shapefile_urls, place->shapefile_urls,
+                     size * sizeof(char*));
+              shapefile_urls[place->shapefile_urls_count++] = value;
+              free(place->shapefile_urls);
+              place->shapefile_urls = shapefile_urls;
+            } else
+              fc->failed = 1;
+          }
           break;
       }
       
