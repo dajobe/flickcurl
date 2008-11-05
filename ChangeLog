@@ -1,3 +1,48 @@
+2008-11-05  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/places-api.c, utils/flickcurl.c: Added
+	places.getInfoByUrl
+
+2008-11-03  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c:
+	(command_print_place): Print shapedata and
+	shapefile_urls if present
+
+	* src/place.c:
+	(flickcurl_free_place): Free shapefile urls Add
+	PLACE_SHAPEFILE_URL (not yet generated in API but predicted!)
+	(flickcurl_build_places): Use flickcurl_xpath_eval_to_tree_string
+	to fill in place->shapedata as an XML string. Fill in
+	place->shapefile_urls as an array of URLs - based on predicated
+	output
+
+	* src/flickcurl.h: flickcurl_place gains shapefile_urls and
+	shapefile_urls_count fields.
+
+	* src/common.c, src/flickcurl_internal.h:
+	(flickcurl_xpath_eval_to_tree_string): Added
+
+	* src/flickcurl.h, src/place.c: Add shapedate and shapedata_length
+	fields to flickcurl_place
+
+	* utils/flickcurl.c: Add places.getInfo
+
+	* src/flickcurl.h: Added flickcurl_places_getInfo to API
+
+	* src/place.c: struct place_fields_table - added place_url
+	attributes.
+	(flickcurl_build_places): Add placeholder for <shapedata>
+	processing.
+
+	* src/places-api.c:
+	(flickcurl_places_getInfo): Added.
+
+2008-09-19  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/tags-api.c:
+	(flickcurl_tags_getClusterPhotos): Added
+
 2008-09-05  Dave Beckett <dave@dajobe.org>
 
 	* src/places-api.c: words
