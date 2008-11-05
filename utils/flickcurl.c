@@ -3051,6 +3051,23 @@ command_places_getInfo(flickcurl* fc, int argc, char *argv[])
 
 
 
+static int
+command_places_getInfoByUrl(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place* place=NULL;
+  const char* url=argv[1];
+
+  place=flickcurl_places_getInfoByUrl(fc, url);
+  if(place) {
+    command_print_place(place, NULL, NULL, 1);
+    flickcurl_free_place(place);
+  }
+  
+  return (place == NULL);
+}
+
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3355,6 +3372,9 @@ static flickcurl_cmd commands[] = {
   {"places.getInfo",
    "PLACE-ID|- [WOE-ID|-]", "Find place by PLACE-ID or WOE-ID",
    command_places_getInfo, 1, 2},
+  {"places.getInfoByUrl",
+   "URL", "Find place by place URL",
+   command_places_getInfoByUrl, 1, 1},
   {"places.placesForUser",
    "PLACE-TYPE [WOE-ID] [PLACE-ID [THRESHOLD]]]", "Find user places of PLACE-TYPE.",
    command_places_placesForUser, 1, 4},

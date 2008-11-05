@@ -1554,6 +1554,8 @@ flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat, double
 FLICKCURL_API
 flickcurl_place* flickcurl_places_getInfo(flickcurl* fc, const char* place_id, const char* woe_id);
 FLICKCURL_API
+flickcurl_place* flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url);
+FLICKCURL_API
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
 FLICKCURL_API
 flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);

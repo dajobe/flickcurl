@@ -249,6 +249,62 @@ flickcurl_places_getInfo(flickcurl* fc, const char* place_id,
 
 
 /**
+ * flickcurl_places_getInfoByUrl:
+ * @fc: flickcurl context
+ * @url: A flickr.com/places URL in the form of /country/region/city. For example: /Canada/Quebec/Montreal
+ * 
+ * Lookup information about a place, by its flickr.com/places URL.
+ *
+ * Implements flickr.places.getInfoByUrl (1.7)
+ * 
+ * Return value: new place object or NULL on failure
+ **/
+flickcurl_place*
+flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
+{
+  const char* parameters[8][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_place* place=NULL;
+  
+  if(!url)
+    return NULL;
+
+  parameters[count][0]  = "url";
+  parameters[count++][1]= url;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.getInfoByUrl", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/place");
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    place=NULL;
+
+  return place;
+}
+
+
+/**
  * flickcurl_places_resolvePlaceId:
  * @fc: flickcurl context
  * @place_id: A Flickr Places ID
