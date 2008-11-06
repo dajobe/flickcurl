@@ -470,10 +470,6 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                                                                xpathNodeCtx,
                                                                place_xpathExpr,
                                                                 &place->shapedata_length);
-        if(!place->shapedata) {
-          fc->failed=1;
-          break;
-        }
         continue;
       }
       

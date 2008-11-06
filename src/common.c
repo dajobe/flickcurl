@@ -1480,7 +1480,10 @@ flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
     fc->failed=1;
     goto tidy;
   }
-  
+
+  if(!xpathObj->nodesetval->nodeTab)
+    goto tidy;
+    
   sd_node = xpathObj->nodesetval->nodeTab[0];
   
   buffer = xmlBufferCreate();

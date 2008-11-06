@@ -3050,7 +3050,6 @@ command_places_getInfo(flickcurl* fc, int argc, char *argv[])
 }
 
 
-
 static int
 command_places_getInfoByUrl(flickcurl* fc, int argc, char *argv[])
 {
@@ -3066,6 +3065,37 @@ command_places_getInfoByUrl(flickcurl* fc, int argc, char *argv[])
   return (place == NULL);
 }
 
+
+static int
+command_places_getChildrenWithPhotosPublic(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place** places=NULL;
+  const char* place_id=NULL;
+  const char* woe_id=NULL;
+
+  if(strcmp(argv[1], "-"))
+    place_id = argv[1];
+
+  if(argc > 2) {
+    if(strcmp(argv[2], "-"))
+      woe_id = argv[2];
+  }
+
+  if(!place_id && !woe_id)
+    return 1;
+  
+  places=flickcurl_places_getChildrenWithPhotosPublic(fc, place_id, woe_id);
+  if(places) {
+    int i;
+    for(i=0; places[i]; i++) {
+      fprintf(stderr, "Place Result #%d\n", i);
+      command_print_place(places[i], NULL, NULL, 0);
+    }
+    flickcurl_free_places(places);
+  }
+  
+  return (places == NULL);
+}
 
 
 typedef struct {
@@ -3369,6 +3399,9 @@ static flickcurl_cmd commands[] = {
   {"places.findByLatLon",
    "LAT LON ACCURACY", "Find places by LAT and LON with ACCURACY 1-16.",
    command_places_findByLatLon, 3, 3},
+  {"places.getChildrenWithPhotosPublic",
+   "PLACE-ID|- [WOE-ID|-]", "Find child places with public photos by PLACE-ID or WOE-ID",
+   command_places_getChildrenWithPhotosPublic, 1, 2},
   {"places.getInfo",
    "PLACE-ID|- [WOE-ID|-]", "Find place by PLACE-ID or WOE-ID",
    command_places_getInfo, 1, 2},
