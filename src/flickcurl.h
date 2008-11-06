@@ -468,7 +468,7 @@ typedef enum {
  * @woe_ids: Array of WOE IDs
  * @location: location for this place
  * @count: count of photos (when used for flickcurl_places_placesForUser() )
- * @shapedata: XML string of <shapedata> element when present (or NULL)
+ * @shapedata: XML string of &lt;shapedata&gt; element and content elements when present (or NULL)
  * @shapedata_length: size of @shapedate string
  * @shapefile_urls: NULL-terminated array of pointers to shapefile URLs when present (or NULL)
  * @shapefile_urls_count: number of entries in @shapefile_urls array
