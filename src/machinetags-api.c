@@ -48,29 +48,37 @@
  * Return a list of unique namespaces, optionally limited by a given predicate, in alphabetical order.
  *
  * Implements flickr.machinetags.getNamespaces (1.7)
- * 
+ *
+ * As announced 2008-11-18
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ *
  * Return value: non-0 on failure
  **/
 int
 flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
-                                    const char* per_page, const char* page)
+                                    int per_page, int page)
 {
   const char* parameters[10][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   void* result=NULL;
+  char per_page_s[4];
+  char page_s[4];
   
   parameters[count][0]  = "predicate";
   parameters[count++][1]= predicate;
   parameters[count][0]  = "per_page";
-  parameters[count++][1]= per_page;
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
   parameters[count][0]  = "page";
-  parameters[count++][1]= page;
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
 
   parameters[count][0]  = NULL;
 
-  if(flickcurl_prepare(fc, "flickr.machinetags.getNamespaces", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.machinetags.getNamespaces", parameters,
+                       count))
     goto tidy;
 
   doc=flickcurl_invoke(fc);
@@ -110,27 +118,34 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
  *
  * Implements flickr.machinetags.getPairs (1.7)
  * 
+ * As announced 2008-11-18
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ *
  * Return value: non-0 on failure
  **/
 int
 flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
                                const char* predicate,
-                               const char* per_page, const char* page)
+                               int per_page, int page)
 {
   const char* parameters[11][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   void* result=NULL;
+  char per_page_s[4];
+  char page_s[4];
   
   parameters[count][0]  = "namespace";
   parameters[count++][1]= namespace;
   parameters[count][0]  = "predicate";
   parameters[count++][1]= predicate;
   parameters[count][0]  = "per_page";
-  parameters[count++][1]= per_page;
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
   parameters[count][0]  = "page";
-  parameters[count++][1]= page;
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
 
   parameters[count][0]  = NULL;
 
@@ -165,36 +180,44 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
 /**
  * flickcurl_machinetags_getPredicates:
  * @fc: flickcurl context
- * @namespace: Limit the list of predicates returned to those that have the following namespace. (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * @namespace: Limit the list of predicates returned to those that have the following namespace (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
  * 
  * Return a list of unique predicates, optionally limited by a given namespace.
  *
  * Implements flickr.machinetags.getPredicates (1.7)
  * 
+ * As announced 2008-11-18
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ *
  * Return value: non-0 on failure
  **/
 int
 flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
-                                    const char* per_page, const char* page)
+                                    int per_page, int page)
 {
   const char* parameters[10][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   void* result=NULL;
+  char per_page_s[4];
+  char page_s[4];
   
   parameters[count][0]  = "namespace";
   parameters[count++][1]= namespace;
   parameters[count][0]  = "per_page";
-  parameters[count++][1]= per_page;
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
   parameters[count][0]  = "page";
-  parameters[count++][1]= page;
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
 
   parameters[count][0]  = NULL;
 
-  if(flickcurl_prepare(fc, "flickr.machinetags.getPredicates", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.machinetags.getPredicates", parameters,
+                       count))
     goto tidy;
 
   doc=flickcurl_invoke(fc);
@@ -227,25 +250,30 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
  * @fc: flickcurl context
  * @namespace: The namespace that all values should be restricted to.
  * @predicate: The predicate that all values should be restricted to.
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
  * 
  * Return a list of unique values for a namespace and predicate.
  *
  * Implements flickr.machinetags.getValues (1.7)
  * 
+ * As announced 2008-11-18
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ *
  * Return value: non-0 on failure
  **/
 int
 flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace,
                                 const char* predicate,
-                                const char* per_page, const char* page)
+                                int per_page, int page)
 {
   const char* parameters[11][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   void* result=NULL;
+  char per_page_s[4];
+  char page_s[4];
   
   if(!namespace || !predicate)
     return 1;
@@ -255,9 +283,11 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace,
   parameters[count][0]  = "predicate";
   parameters[count++][1]= predicate;
   parameters[count][0]  = "per_page";
-  parameters[count++][1]= per_page;
+  sprintf(per_page_s, "%d", per_page);
+  parameters[count++][1]= per_page_s;
   parameters[count][0]  = "page";
-  parameters[count++][1]= page;
+  sprintf(page_s, "%d", page);
+  parameters[count++][1]= page_s;
 
   parameters[count][0]  = NULL;
 

@@ -3098,6 +3098,100 @@ command_places_getChildrenWithPhotosPublic(flickcurl* fc, int argc, char *argv[]
 }
 
 
+static int
+command_machinetags_getNamespaces(flickcurl* fc, int argc, char *argv[])
+{
+  const char* predicate=NULL;
+  int per_page=10;
+  int page=0;
+
+  if(argc >1) {
+    predicate = argv[1];
+    if(argc >2) {
+      per_page = parse_page_param(argv[2]);
+      if(argc >3) {
+        page = parse_page_param(argv[3]);
+      }
+    }
+  }
+
+  flickcurl_machinetags_getNamespaces(fc, predicate, per_page, page);
+
+  return 0;
+}
+
+
+static int
+command_machinetags_getPairs(flickcurl* fc, int argc, char *argv[])
+{
+  const char* namespace = NULL;
+  const char* predicate = NULL;
+  int per_page = 10;
+  int page = 0;
+
+  if(argc >1) {
+    namespace = argv[1];
+    if(argc >2) {
+      predicate = argv[2];
+      if(argc >3) {
+        per_page = parse_page_param(argv[3]);
+        if(argc >4) {
+          page = parse_page_param(argv[4]);
+        }
+      }
+    }
+  }
+
+  flickcurl_machinetags_getPairs(fc, namespace, predicate, per_page, page);
+
+  return 0;
+}
+
+
+static int
+command_machinetags_getPredicates(flickcurl* fc, int argc, char *argv[])
+{
+  const char* namespace = NULL;
+  int per_page = 10;
+  int page = 0;
+
+  if(argc >1) {
+    namespace = argv[1];
+    if(argc >2) {
+      per_page = parse_page_param(argv[2]);
+      if(argc >3) {
+        page = parse_page_param(argv[3]);
+      }
+    }
+  }
+
+  flickcurl_machinetags_getPredicates(fc, namespace, per_page, page);
+
+  return 0;
+}
+
+
+static int
+command_machinetags_getValues(flickcurl* fc, int argc, char *argv[])
+{
+  const char* namespace = argv[1];
+  const char* predicate = argv[2];
+  int per_page = 10;
+  int page = 0;
+
+  if(argc >3) {
+    per_page = parse_page_param(argv[3]);
+    if(argc >4) {
+      page = parse_page_param(argv[4]);
+    }
+  }
+
+  flickcurl_machinetags_getValues(fc, namespace, predicate, per_page, page);
+
+  return 0;
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3193,6 +3287,19 @@ static flickcurl_cmd commands[] = {
   {"interestingness.getList",
    "[PARAMS]", "Get interesting photos with optional parameters\n  date DATE  extras EXTRAS  per-page PER-PAGE  page PAGE  format FORMAT", 
    command_interestingness_getList,  1, 0},
+
+  {"machinetags.getNamespaces",
+   "[PREDICATE [PER-PAGE [PAGE]]]", "Get a list of namespaces with optional PREDICATE", 
+   command_machinetags_getNamespaces, 0, 3},
+  {"machinetags.getPairs",
+   "[NAMESPACE [PREDICATE [PER-PAGE [PAGE]]]]", "Get a list of unique NAMESPACE and PREDICATE pairs", 
+   command_machinetags_getPairs, 0, 4},
+  {"machinetags.getPredicates",
+   "[NAMESPACE [PER-PAGE [PAGE]]]", "Get a list of unique predicates optionally by NAMESPACE", 
+   command_machinetags_getPredicates, 0, 3},
+  {"machinetags.getValues",
+   "NAMESPACE PREDICATE [PER-PAGE [PAGE]]", "Get a list of unique values for a NAMESPACE and PREDICATE", 
+   command_machinetags_getValues, 2, 4},
 
   {"people.findByEmail",
    "EMAIL", "get a user's NSID from their EMAIL address", 

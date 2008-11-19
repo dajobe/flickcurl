@@ -1452,6 +1452,16 @@ flickcurl_photo** flickcurl_interestingness_getList(flickcurl* fc, const char* d
 FLICKCURL_API
 flickcurl_photos_list* flickcurl_interestingness_getList_params(flickcurl* fc, const char* date, flickcurl_photos_list_params* list_params);
 
+/* flickr.machinetags */
+FLICKCURL_API
+int flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
+FLICKCURL_API
+int flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+FLICKCURL_API
+int flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
+FLICKCURL_API
+int flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+
 /* flickr.photo.getSizes */
 FLICKCURL_API
 void flickcurl_free_size(flickcurl_size *size);
