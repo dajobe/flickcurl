@@ -53,6 +53,7 @@ favorites-api.c \
 interestingness-api.c \
 groups-api.c \
 groups-pools-api.c \
+machinetags-api.c \
 people-api.c \
 perms.c \
 photos-api.c \
