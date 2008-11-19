@@ -3104,6 +3104,7 @@ command_machinetags_getNamespaces(flickcurl* fc, int argc, char *argv[])
   const char* predicate=NULL;
   int per_page=10;
   int page=0;
+  flickcurl_namespace** namespaces = NULL;
 
   if(argc >1) {
     predicate = argv[1];
@@ -3115,7 +3116,18 @@ command_machinetags_getNamespaces(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  flickcurl_machinetags_getNamespaces(fc, predicate, per_page, page);
+  namespaces = flickcurl_machinetags_getNamespaces(fc, predicate,
+                                                   per_page, page);
+  if(namespaces) {
+    int i;
+    for(i = 0; namespaces[i]; i++) {
+      flickcurl_namespace *n = namespaces[i];
+      
+      fprintf(stderr,
+              "Namespace #%d: name %s usage %d predicates count %d\n",
+              i, n->name, n->usage_count, n->predicates_count);
+    }
+  }
 
   return 0;
 }

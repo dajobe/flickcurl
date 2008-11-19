@@ -33,6 +33,7 @@ exif.c \
 group.c \
 md5.c \
 location.c \
+machinetags.c \
 method.c \
 person.c \
 photo.c \

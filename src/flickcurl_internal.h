@@ -169,6 +169,10 @@ flickcurl_group** flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpath
 /* location.c */
 flickcurl_location* flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
+/* machinetags.c */
+flickcurl_namespace** flickcurl_build_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* namespace_count_p);
+flickcurl_namespace* flickcurl_build_namespace(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
+
 /* user_upload_status.c */
 flickcurl_user_upload_status* flickcurl_build_user_upload_status(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 

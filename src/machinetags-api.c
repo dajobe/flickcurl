@@ -54,7 +54,7 @@
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_namespace**
 flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
                                     int per_page, int page)
 {
@@ -62,9 +62,9 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
   char per_page_s[4];
   char page_s[4];
+  flickcurl_namespace** namespaces = NULL;
   
   parameters[count][0]  = "predicate";
   parameters[count++][1]= predicate;
@@ -93,16 +93,18 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  namespaces = flickcurl_build_namespaces(fc, xpathCtx, 
+                                          (const xmlChar*)"/rsp/namespaces/namespace", 
+                                          NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    namespaces = NULL;
 
-  return (result == NULL);
+  return namespaces;
 }
 
 

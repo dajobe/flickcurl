@@ -417,6 +417,21 @@ typedef struct {
 
 
 /**
+ * flickcurl_namespace:
+ * @name: Name
+ * @usage_count: Number of uses of this namespace
+ * @predicates_count: Number of predicates for this namespace
+ *
+ * A machine tags namespace
+ */
+typedef struct {
+  char *name;
+  int usage_count;
+  int predicates_count;
+} flickcurl_namespace;
+  
+
+/**
  * flickcurl_location:
  * @latitude: The latitude from -90 to 90
  * @longitude: The longitude from -180 to 180
@@ -1284,6 +1299,10 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 
 /* other flickcurl class destructors */
 FLICKCURL_API
+void flickcurl_free_namespace(flickcurl_namespace *nspace);
+FLICKCURL_API
+void flickcurl_free_namespaces(flickcurl_namespace** namespaces);
+FLICKCURL_API
 void flickcurl_free_tag(flickcurl_tag *t);
 FLICKCURL_API
 void flickcurl_free_tag_clusters(flickcurl_tag_clusters *tcs);
@@ -1454,7 +1473,7 @@ flickcurl_photos_list* flickcurl_interestingness_getList_params(flickcurl* fc, c
 
 /* flickr.machinetags */
 FLICKCURL_API
-int flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
+flickcurl_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
 FLICKCURL_API
 int flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
 FLICKCURL_API
