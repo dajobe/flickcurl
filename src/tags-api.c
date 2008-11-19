@@ -67,7 +67,7 @@ flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
   const char* format=NULL;
   
   if(!tag || !cluster_id)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "tag";
   parameters[count++][1]= tag;
