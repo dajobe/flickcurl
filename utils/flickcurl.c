@@ -3104,7 +3104,7 @@ command_machinetags_getNamespaces(flickcurl* fc, int argc, char *argv[])
   const char* predicate=NULL;
   int per_page=10;
   int page=0;
-  flickcurl_namespace** namespaces = NULL;
+  flickcurl_tag_namespace** tag_namespaces = NULL;
 
   if(argc >1) {
     predicate = argv[1];
@@ -3116,20 +3116,51 @@ command_machinetags_getNamespaces(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  namespaces = flickcurl_machinetags_getNamespaces(fc, predicate,
-                                                   per_page, page);
-  if(namespaces) {
+  tag_namespaces = flickcurl_machinetags_getNamespaces(fc, predicate,
+                                                       per_page, page);
+  if(tag_namespaces) {
     int i;
-    for(i = 0; namespaces[i]; i++) {
-      flickcurl_namespace *n = namespaces[i];
+    for(i = 0; tag_namespaces[i]; i++) {
+      flickcurl_tag_namespace *tn = tag_namespaces[i];
       
       fprintf(stderr,
               "Namespace #%d: name %s usage %d predicates count %d\n",
-              i, n->name, n->usage_count, n->predicates_count);
+              i, tn->name, tn->usage_count, tn->predicates_count);
     }
+    flickcurl_free_tag_namespaces(tag_namespaces);
   }
 
-  return 0;
+  return (tag_namespaces != NULL);
+}
+
+
+static void
+command_print_predicate_values(flickcurl_tag_predicate_value **tag_pvs,
+                               const char* label)
+{
+  int i;
+  if(label)
+    fprintf(stderr, "%s: %s\n", program, label);
+
+  for(i = 0; tag_pvs[i]; i++) {
+    flickcurl_tag_predicate_value* tpv = tag_pvs[i];
+    fprintf(stderr, "  #%d) ", i);
+    if(tpv->predicate) {
+      fputs("predicate ", stderr);
+      fputs(tpv->predicate, stderr);
+      fputc(' ', stderr);
+    }
+    if(tpv->value) {
+      fputs("value ", stderr);
+      fputs(tpv->value, stderr);
+      fputc(' ', stderr);
+    }
+    if(tpv->usage_count > 0)
+      fprintf(stderr, "usage %d", tpv->usage_count);
+    if(tpv->used_in_namespace_count > 0)
+      fprintf(stderr, "used in %d namespaces", tpv->used_in_namespace_count);
+      fputc('\n', stderr);
+  }
 }
 
 
@@ -3140,6 +3171,7 @@ command_machinetags_getPairs(flickcurl* fc, int argc, char *argv[])
   const char* predicate = NULL;
   int per_page = 10;
   int page = 0;
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
 
   if(argc >1) {
     namespace = argv[1];
@@ -3154,9 +3186,14 @@ command_machinetags_getPairs(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  flickcurl_machinetags_getPairs(fc, namespace, predicate, per_page, page);
+  tag_pvs = flickcurl_machinetags_getPairs(fc, namespace, predicate, per_page,
+                                           page);
+  if(tag_pvs) {
+    command_print_predicate_values(tag_pvs, "getPairs returned");
+    flickcurl_free_tag_predicate_values(tag_pvs);
+  }
 
-  return 0;
+  return (tag_pvs == NULL);
 }
 
 
@@ -3166,6 +3203,7 @@ command_machinetags_getPredicates(flickcurl* fc, int argc, char *argv[])
   const char* namespace = NULL;
   int per_page = 10;
   int page = 0;
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
 
   if(argc >1) {
     namespace = argv[1];
@@ -3177,9 +3215,14 @@ command_machinetags_getPredicates(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  flickcurl_machinetags_getPredicates(fc, namespace, per_page, page);
+  tag_pvs = flickcurl_machinetags_getPredicates(fc, namespace, per_page, page);
 
-  return 0;
+  if(tag_pvs) {
+    command_print_predicate_values(tag_pvs, "getPredicates returned");
+    flickcurl_free_tag_predicate_values(tag_pvs);
+  }
+
+  return (tag_pvs == NULL);
 }
 
 
@@ -3190,6 +3233,7 @@ command_machinetags_getValues(flickcurl* fc, int argc, char *argv[])
   const char* predicate = argv[2];
   int per_page = 10;
   int page = 0;
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
 
   if(argc >3) {
     per_page = parse_page_param(argv[3]);
@@ -3198,9 +3242,15 @@ command_machinetags_getValues(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  flickcurl_machinetags_getValues(fc, namespace, predicate, per_page, page);
+  tag_pvs = flickcurl_machinetags_getValues(fc, namespace, predicate,
+                                            per_page, page);
 
-  return 0;
+  if(tag_pvs) {
+    command_print_predicate_values(tag_pvs, "getValues returned");
+    flickcurl_free_tag_predicate_values(tag_pvs);
+  }
+
+  return (tag_pvs == NULL);
 }
 
 

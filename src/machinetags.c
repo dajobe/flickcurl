@@ -43,28 +43,28 @@
 
 
 /**
- * flickcurl_free_namespace:
- * @namespace: namespace object
+ * flickcurl_free_tag_namespace:
+ * @tag_nspace: machinetag namespace object
  *
- * Destructor for namespace object
+ * Destructor for machinetag namespace object
  */
 void
-flickcurl_free_namespace(flickcurl_namespace *nspace)
+flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_nspace)
 {
-  if(nspace->name)
-    free(nspace->name);
+  if(tag_nspace->name)
+    free(tag_nspace->name);
   
-  free(nspace);
+  free(tag_nspace);
 }
 
 
-flickcurl_namespace**
-flickcurl_build_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
-                           const xmlChar* xpathExpr, int* namespace_count_p)
+flickcurl_tag_namespace**
+flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                               const xmlChar* xpathExpr, int* namespace_count_p)
 {
-  flickcurl_namespace** namespaces=NULL;
+  flickcurl_tag_namespace** tag_namespaces = NULL;
   int nodes_count;
-  int namespace_count;
+  int tag_namespace_count;
   int i;
   xmlXPathObjectPtr xpathObj=NULL;
   xmlNodeSetPtr nodes;
@@ -81,12 +81,12 @@ flickcurl_build_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes=xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count=xmlXPathNodeSetGetLength(nodes);
-  namespaces=(flickcurl_namespace**)calloc(sizeof(flickcurl_namespace*), nodes_count+1);
+  tag_namespaces = (flickcurl_tag_namespace**)calloc(sizeof(flickcurl_tag_namespace*), nodes_count + 1);
   
-  for(i=0, namespace_count=0; i < nodes_count; i++) {
+  for(i=0, tag_namespace_count = 0; i < nodes_count; i++) {
     xmlNodePtr node=nodes->nodeTab[i];
     xmlAttr* attr;
-    flickcurl_namespace* n;
+    flickcurl_tag_namespace* tn;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
@@ -95,7 +95,7 @@ flickcurl_build_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    n = (flickcurl_namespace*)calloc(sizeof(flickcurl_namespace), 1);
+    tn = (flickcurl_tag_namespace*)calloc(sizeof(flickcurl_tag_namespace), 1);
     
     for(attr=node->properties; attr; attr=attr->next) {
       const char *attr_name=(const char*)attr->name;
@@ -105,10 +105,10 @@ flickcurl_build_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "usage")) {
-        n->usage_count = atoi(attr_value);
+        tn->usage_count = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "predicates")) {
-        n->predicates_count = atoi(attr_value);
+        tn->predicates_count = atoi(attr_value);
         free(attr_value);
       }
     }
@@ -116,41 +116,47 @@ flickcurl_build_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     /* Walk children for text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        n->name = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(n->name, (const char*)chnode->content);
+        tn->name = (char*)malloc(strlen((const char*)chnode->content)+1);
+        strcpy(tn->name, (const char*)chnode->content);
       }
     }
     
 #if FLICKCURL_DEBUG > 1
     fprintf(stderr, "namespace: name %s usage %d predicates count %d\n",
-            n->name, n->usage_count, n->predicates_count);
+            tn->name, tn->usage_count, tn->predicates_count);
 #endif
     
-    namespaces[namespace_count++] = n;
+    tag_namespaces[tag_namespace_count++] = tn;
   } /* for nodes */
 
   if(namespace_count_p)
-    *namespace_count_p=namespace_count;
+    *namespace_count_p = tag_namespace_count;
   
  tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
 
-  return namespaces;
+  return tag_namespaces;
 }
 
 
-flickcurl_namespace*
-flickcurl_build_namespace(flickcurl* fc, xmlXPathContextPtr xpathCtx,
-                          const xmlChar* root_xpathExpr)
+flickcurl_tag_namespace*
+flickcurl_build_tag_namespace(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                              const xmlChar* root_xpathExpr)
 {
-  flickcurl_namespace** namespaces;
-  flickcurl_namespace* result=NULL;
+  flickcurl_tag_namespace** tag_namespaces;
+  flickcurl_tag_namespace* result = NULL;
 
-  namespaces = flickcurl_build_namespaces(fc, xpathCtx, root_xpathExpr, NULL);
-  if(namespaces) {
-    result = namespaces[0];
-    free(namespaces);
+  tag_namespaces = flickcurl_build_tag_namespaces(fc, xpathCtx, root_xpathExpr,
+                                                  NULL);
+  if(tag_namespaces) {
+    int i;
+    
+    result = tag_namespaces[0];
+
+    for(i = 1; tag_namespaces[i]; i++)
+      flickcurl_free_tag_namespace(tag_namespaces[i]);
+    free(tag_namespaces);
   }
   
   return result;
@@ -158,19 +164,153 @@ flickcurl_build_namespace(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
 
 /**
- * flickcurl_free_namespaces:
+ * flickcurl_free_tag_namespaces:
  * @namespaces: namespace object array
  *
  * Destructor for array of namespace object
  */
 void
-flickcurl_free_namespaces(flickcurl_namespace** namespaces)
+flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_namespaces)
 {
   int i;
   
-  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(namespaces, flickcurl_namespace_array);
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tag_namespaces,
+                                         flickcurl_tag_namespace_array);
 
-  for(i=0; namespaces[i]; i++)
-    flickcurl_free_namespace(namespaces[i]);
-  free(namespaces);
+  for(i = 0; tag_namespaces[i]; i++)
+    flickcurl_free_tag_namespace(tag_namespaces[i]);
+  free(tag_namespaces);
+}
+
+
+/**
+ * flickcurl_free_tag_predicate_value:
+ * @tag_nspace: machinetag predicate_value object
+ *
+ * Destructor for machinetag predicate-value pair  object
+ */
+void
+flickcurl_free_tag_predicate_value(flickcurl_tag_predicate_value *tag_pv)
+{
+  if(tag_pv->predicate)
+    free(tag_pv->predicate);
+  
+  if(tag_pv->value)
+    free(tag_pv->value);
+  
+  free(tag_pv);
+}
+
+
+/*
+ * @content_mode: set use of element content: 1 (predicate), 2 (value) otherwise ignored
+ */
+flickcurl_tag_predicate_value**
+flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                                     const xmlChar* xpathExpr,
+                                     int content_mode,
+                                     int* predicate_value_count_p)
+{
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
+  int nodes_count;
+  int tag_predicate_value_count;
+  int i;
+  xmlXPathObjectPtr xpathObj=NULL;
+  xmlNodeSetPtr nodes;
+  
+  /* Now do predicate_values */
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed=1;
+    goto tidy;
+  }
+  
+  nodes=xpathObj->nodesetval;
+  /* This is a max size - it can include nodes that are CDATA */
+  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  tag_pvs = (flickcurl_tag_predicate_value**)calloc(sizeof(flickcurl_tag_predicate_value*), nodes_count + 1);
+  
+  for(i=0, tag_predicate_value_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node=nodes->nodeTab[i];
+    xmlAttr* attr;
+    flickcurl_tag_predicate_value* tpv;
+    xmlNodePtr chnode;
+    
+    if(node->type != XML_ELEMENT_NODE) {
+      flickcurl_error(fc, "Got unexpected node type %d", node->type);
+      fc->failed=1;
+      break;
+    }
+    
+    tpv = (flickcurl_tag_predicate_value*)calloc(sizeof(flickcurl_tag_predicate_value), 1);
+    
+    for(attr=node->properties; attr; attr=attr->next) {
+      const char *attr_name=(const char*)attr->name;
+      char *attr_value;
+
+      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      strcpy(attr_value, (const char*)attr->children->content);
+      
+      if(!strcmp(attr_name, "usage")) {
+        tpv->usage_count = atoi(attr_value);
+        free(attr_value);
+      } else if(!strcmp(attr_name, "namespaces")) {
+        tpv->used_in_namespace_count = atoi(attr_value);
+        free(attr_value);
+      } else if(!strcmp(attr_name, "predicate")) {
+        tpv->predicate=attr_value;
+      } else if(!strcmp(attr_name, "value")) {
+        tpv->value=attr_value;
+      }
+    }
+
+    if(content_mode >=1 && content_mode <= 2) {
+      /* Walk children for predicate */
+      for(chnode = node->children; chnode; chnode = chnode->next) {
+        if(chnode->type == XML_TEXT_NODE) {
+          char **ptr = (content_mode == 1) ? &tpv->predicate : &tpv->value;
+          *ptr = (char*)malloc(strlen((const char*)chnode->content)+1);
+          strcpy(*ptr, (const char*)chnode->content);
+        }
+      }
+    }
+    
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "predicate_value: predicate %s value %s\n",
+            tpv->predicate, tpv->value);
+#endif
+    
+    tag_pvs[tag_predicate_value_count++] = tpv;
+  } /* for nodes */
+
+  if(predicate_value_count_p)
+    *predicate_value_count_p = tag_predicate_value_count;
+  
+ tidy:
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
+
+  return tag_pvs;
+}
+
+
+/**
+ * flickcurl_free_tag_predicate_values:
+ * @predicate_values: predicate_value object array
+ *
+ * Destructor for array of predicate_value object
+ */
+void
+flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value** tag_predicate_values)
+{
+  int i;
+  
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tag_predicate_values,
+                                         flickcurl_tag_predicate_value_array);
+
+  for(i = 0; tag_predicate_values[i]; i++)
+    flickcurl_free_tag_predicate_value(tag_predicate_values[i]);
+  free(tag_predicate_values);
 }

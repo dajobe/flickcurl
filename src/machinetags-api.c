@@ -54,7 +54,7 @@
  *
  * Return value: non-0 on failure
  **/
-flickcurl_namespace**
+flickcurl_tag_namespace**
 flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
                                     int per_page, int page)
 {
@@ -64,7 +64,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
   xmlXPathContextPtr xpathCtx=NULL; 
   char per_page_s[4];
   char page_s[4];
-  flickcurl_namespace** namespaces = NULL;
+  flickcurl_tag_namespace** tag_namespaces = NULL;
   
   parameters[count][0]  = "predicate";
   parameters[count++][1]= predicate;
@@ -93,18 +93,18 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
     goto tidy;
   }
 
-  namespaces = flickcurl_build_namespaces(fc, xpathCtx, 
-                                          (const xmlChar*)"/rsp/namespaces/namespace", 
-                                          NULL);
+  tag_namespaces = flickcurl_build_tag_namespaces(fc, xpathCtx, 
+                                                  (const xmlChar*)"/rsp/namespaces/namespace", 
+                                                  NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    namespaces = NULL;
+    tag_namespaces = NULL;
 
-  return namespaces;
+  return tag_namespaces;
 }
 
 
@@ -125,7 +125,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_tag_predicate_value**
 flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
                                const char* predicate,
                                int per_page, int page)
@@ -134,9 +134,9 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
   char per_page_s[4];
   char page_s[4];
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
   
   parameters[count][0]  = "namespace";
   parameters[count++][1]= namespace;
@@ -166,16 +166,19 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  tag_pvs = flickcurl_build_tag_predicate_values(fc, xpathCtx, 
+                                                 (const xmlChar*)"/rsp/pairs/pair", 
+                                                 0 /* content not used */,
+                                                 NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    tag_pvs = NULL;
 
-  return (result == NULL);
+  return tag_pvs;
 }
 
 
@@ -195,7 +198,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_tag_predicate_value**
 flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
                                     int per_page, int page)
 {
@@ -203,9 +206,9 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
   char per_page_s[4];
   char page_s[4];
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
   
   parameters[count][0]  = "namespace";
   parameters[count++][1]= namespace;
@@ -234,16 +237,19 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  tag_pvs = flickcurl_build_tag_predicate_values(fc, xpathCtx, 
+                                                 (const xmlChar*)"/rsp/predicates/predicate", 
+                                                 1 /* content is predicate */,
+                                                 NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    tag_pvs = NULL;
 
-  return (result == NULL);
+  return tag_pvs;
 }
 
 
@@ -264,7 +270,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_tag_predicate_value**
 flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace,
                                 const char* predicate,
                                 int per_page, int page)
@@ -273,12 +279,12 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace,
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
   char per_page_s[4];
   char page_s[4];
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
   
   if(!namespace || !predicate)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "namespace";
   parameters[count++][1]= namespace;
@@ -308,14 +314,17 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace,
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  tag_pvs = flickcurl_build_tag_predicate_values(fc, xpathCtx, 
+                                                 (const xmlChar*)"/rsp/values/value", 
+                                                 2 /* content is value */,
+                                                 NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    tag_pvs = NULL;
 
-  return (result == NULL);
+  return tag_pvs;
 }

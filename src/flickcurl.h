@@ -417,7 +417,7 @@ typedef struct {
 
 
 /**
- * flickcurl_namespace:
+ * flickcurl_tag_namespace:
  * @name: Name
  * @usage_count: Number of uses of this namespace
  * @predicates_count: Number of predicates for this namespace
@@ -428,7 +428,24 @@ typedef struct {
   char *name;
   int usage_count;
   int predicates_count;
-} flickcurl_namespace;
+} flickcurl_tag_namespace;
+  
+
+/**
+ * flickcurl_tag_predicate_value:
+ * @usage_count: Number of uses of this predicate-value pair
+ * @predicate: Predicate name or NULL
+ * @used_in_namespace_count: number of namespaces this pair is used in
+ * @value: Value or NULL
+ *
+ * A machine tag predicate-value pair
+ */
+typedef struct {
+  int usage_count;
+  char *predicate;
+  int used_in_namespace_count;
+  char *value;
+} flickcurl_tag_predicate_value;
   
 
 /**
@@ -1299,9 +1316,9 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 
 /* other flickcurl class destructors */
 FLICKCURL_API
-void flickcurl_free_namespace(flickcurl_namespace *nspace);
+void flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_namespace);
 FLICKCURL_API
-void flickcurl_free_namespaces(flickcurl_namespace** namespaces);
+void flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_namespaces);
 FLICKCURL_API
 void flickcurl_free_tag(flickcurl_tag *t);
 FLICKCURL_API
@@ -1345,7 +1362,10 @@ FLICKCURL_API
 void flickcurl_free_places(flickcurl_place** places_object);
 FLICKCURL_API
 void flickcurl_free_video(flickcurl_video *video);
-
+FLICKCURL_API
+void flickcurl_free_tag_predicate_value(flickcurl_tag_predicate_value *tag_pv);
+FLICKCURL_API
+void flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value** tag_predicate_values);
 
 /* utility methods */
 /* get an image URL for a photo in some size */
@@ -1473,13 +1493,13 @@ flickcurl_photos_list* flickcurl_interestingness_getList_params(flickcurl* fc, c
 
 /* flickr.machinetags */
 FLICKCURL_API
-flickcurl_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
+flickcurl_tag_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
 FLICKCURL_API
-int flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
 FLICKCURL_API
-int flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
 FLICKCURL_API
-int flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
 
 /* flickr.photo.getSizes */
 FLICKCURL_API

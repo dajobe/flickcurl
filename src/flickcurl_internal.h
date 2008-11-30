@@ -170,8 +170,9 @@ flickcurl_group** flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpath
 flickcurl_location* flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
 /* machinetags.c */
-flickcurl_namespace** flickcurl_build_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* namespace_count_p);
-flickcurl_namespace* flickcurl_build_namespace(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
+flickcurl_tag_namespace** flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* namespace_count_p);
+flickcurl_tag_namespace* flickcurl_build_tag_namespace(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
+flickcurl_tag_predicate_value** flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int content_mode, int* predicate_value_count_p);
 
 /* user_upload_status.c */
 flickcurl_user_upload_status* flickcurl_build_user_upload_status(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
