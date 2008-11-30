@@ -3950,16 +3950,22 @@ main(int argc, char *argv[])
   }
 
   if((argc-1) < commands[cmd_index].min) {
-    fprintf(stderr, "%s: Need min %d arguments for command `%s'\n", program,
-            commands[cmd_index].min, command);
+    fprintf(stderr,
+            "%s: Minimum of %d arguments for command `%s'\n  USAGE: %s %s %s\n",
+            program,
+            commands[cmd_index].min, command,
+            program, command, commands[cmd_index].args);
     usage=1;
     goto usage;
   }
   
   if(commands[cmd_index].max > 0 && 
      (argc-1) > commands[cmd_index].max) {
-    fprintf(stderr, "%s: Need max %d arguments for command `%s'\n", program,
-            commands[cmd_index].max, command);
+    fprintf(stderr,
+            "%s: Maxiumum of %d arguments for command `%s'\n  USAGE: %s %s %s\n",
+            program,
+            commands[cmd_index].max, command,
+            program, command, commands[cmd_index].args);
     usage=1;
     goto usage;
   }
