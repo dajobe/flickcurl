@@ -53,6 +53,8 @@
  * Returns the first 24 photos for a given tag cluster
  *
  * Implements flickr.tags.getClusterPhotos (1.7)
+ *
+ * Added to API (not announced) some time between 2008-09-04 ad 2008-09-19
  * 
  * Return value: non-0 on failure
  **/
