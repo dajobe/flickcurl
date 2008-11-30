@@ -12,20 +12,121 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-XX-YY">2008-XX-YY Flickcurl 1.7</h2>
+<h2 id="D2008-11-30">2008-11-30 Flickcurl 1.7</h2>
 
-<p>Not yet released.
-</p>
+<p>Added support for the new Machine Tags API
+as <a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4545">announced 2008-11-18</a>.
+Added representations for machine tag namespaces
+<code>flickcurl_tag_namespace</code> and machine tag predicate/value
+pairs <code>flickcurl_tag_predicate_value</code>.</p>
+
+<p>Added functions for the new API calls
+<a href="http://www.flickr.com/services/api/flickr.machinetags.getNamespaces.html">flickr.machinetags.getNamespaces</a>,
+<a href="http://www.flickr.com/services/api/flickr.machinetags.getPairs.html">flickr.machinetags.getPairs</a>,
+<a href="http://www.flickr.com/services/api/flickr.machinetags.getPredicates.html">flickr.machinetags.getPredicates</a> and
+<a href="http://www.flickr.com/services/api/flickr.machinetags.getValues.html">flickr.machinetags.getValues</a>:</p>
+<pre>
+  flickcurl_tag_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc,
+    const char* predicate, int per_page, int page);
+
+  flickcurl_tag_predicate_value** flickcurl_machinetags_getPairs(flickcurl* fc,
+    const char* namespace, const char* predicate, int per_page, int page);
+
+  flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc,
+    const char* namespace, int per_page, int page);
+
+  flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, 
+    const char* namespace, const char* predicate, int per_page, int page);
+</pre>
+
+<p>Added destructors for new machine tag structures and arrays of them:</p>
+<pre>
+  void flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_nspace);
+  void flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_nspaces);
+  void flickcurl_free_tag_predicate_value(flickcurl_tag_predicate_value* tag_pv);
+  void flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value **tag_pvs);
+</pre>
+
+<p>Added <code>flickcurl_tags_getClusterPhotos()</code> function for
+new API call
+<a href="http://www.flickr.com/services/api/flickr.tags.getClusterPhotos.html">flickr.tags.getClusterPhotos</a>
+to get a set of photos around a cluster (of 3 tags).
+This was added to the web service API but not announced some time between
+2008-09-04 ad 2008-09-19.</p>
+<pre>
+  flickcurl_photos_list* flickcurl_tags_getClusterPhotos(flickcurl* fc,
+    const char* tag, const char* cluster_id,
+    flickcurl_photos_list_params* list_params);
+</pre>
+
+
+<p>Updated Places API for changes as
+<a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4510">announced
+2008-11-05</a>
+and in <a href="http://code.flickr.com/blog/2008/10/30/the-shape-of-alpha/">The Shape of Alpha</a>
+to support querying for places via place IDs
+or <a href="http://developer.yahoo.com/geo/">Where on Earth (WOE) Ids</a>.
+The places APIs may now return ESRI shape information and
+<code>flickcurl_place</code> now stores any XML
+<code>&lt;shapedata&gt;</code> and ESRI shapefile URLs returned
+in a lookup call e.g:</p>
+<pre>
+$ ./flickcurl places.getInfo 4hLQygSaBJ92
+  Type locality (2)
+  Location: latitude 45.512000  longitude -73.554000  accuracy unknown
+  Shapedata (1752 bytes):
+    &lt;polylines&gt;
+                        &lt;polyline&gt;45.427627563477,-73.589645385742 45.427051544...
+  Shapefile URLs: 1
+    0): http://farm4.static.flickr.com/3228/shapefiles/3534_20081111_0a8afe03c5.tar.gz
+  0) place location: name 'Montreal, Quebec, Canada' id 4hLQygSaBJ92 woeid 3534 url '/Canada/Quebec/Montreal'
+  2) place locality: name 'Montreal, Quebec, Canada' id 4hLQygSaBJ92 woeid 3534 url '/Canada/Quebec/Montreal'
+  3) place county: name 'Montréal, Quebec, Canada' id cFBi9x6bCJ8D5rba1g woeid 29375198 url '/cFBi9x6bCJ8D5rba1g'
+  4) place region: name 'Quebec, Canada' id CrZUvXebApjI0.72 woeid 2344924 url '/Canada/Quebec'
+  5) place country: name 'Canada' id EESRy8qbApgaeIkbsA woeid 23424775 url '/Canada'
+</pre>
+
+<p>Added
+<code>flickcurl_places_getInfo()</code> for
+<a href="http://www.flickr.com/services/api/flickr.places.getInfo.html">flickr.places.getInfo</a>,
+<code>flickcurl_places_getInfoByUrl()</code> for
+<a href="http://www.flickr.com/services/api/flickr.places.getInfoByUrl.html">flickr.places.getInfoByUrl</a>
+and <code>flickcurl_places_getChildrenWithPhotosPublic()</code> for 
+<a href="http://www.flickr.com/services/api/flickr.places.getChildrenWithPhotosPublic.html">flickr.places.getChildrenWithPhotosPublic</a>:</p>
+<pre>
+  flickcurl_place** flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc,
+    const char* place_id, const char* woe_id);
+
+  flickcurl_place* flickcurl_places_getInfo(flickcurl* fc,
+    const char* place_id, const char* woe_id);
+
+  flickcurl_place* flickcurl_places_getInfoByUrl(flickcurl* fc,
+    const char* url);
+</pre>
 
 <p>Added <code>flickcurl_places_placesForUser()</code> function 
 to match API name correctly for API call
 <a href="http://www.flickr.com/services/api/flickr.places.placesForUser.html"><em>flickr.places.placesForUser</em></a>
+deprecating wrong name <code>flickcurl_places_forUser()</code>.
 </p>
 <pre>
   flickcurl_place** flickcurl_places_placesForUser(flickcurl* fc,
      flickcurl_place_type place_type, int woe_id, const char* place_id,
      int threshold);
 </pre>
+
+
+<p>Fixed photoset API calls
+<code>flickcurl_photosets_getList()</code> and
+<code>flickcurl_photosets_getPhotos_params()</code> to correctly find
+photos in a photoset from latest web service API.  Not clear if the
+existing code was wrong or the web service response changed.
+</p>
+
+<p>Updated <code>flickcurl(1)</code> utility to give a usage
+message for a commmand when it is called with too many or too few
+arguments.
+</p>
 
 
 <h2 id="D2008-09-04">2008-09-04 Flickcurl 1.6</h2>
