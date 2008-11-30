@@ -125,6 +125,20 @@ flickcurl_groups_search
 </SECTION>
 
 <SECTION>
+<FILE>section-machinetags</FILE>
+flickcurl_tag_namespace
+flickcurl_tag_predicate_value
+flickcurl_free_tag_namespace
+flickcurl_free_tag_namespaces
+flickcurl_free_tag_predicate_value
+flickcurl_free_tag_predicate_values
+flickcurl_machinetags_getNamespaces
+flickcurl_machinetags_getPairs
+flickcurl_machinetags_getPredicates
+flickcurl_machinetags_getValues
+</SECTION>
+
+<SECTION>
 <FILE>section-person</FILE>
 flickcurl_free_person
 flickcurl_free_persons
@@ -250,11 +264,15 @@ flickcurl_place
 flickcurl_free_place
 flickcurl_free_places
 flickcurl_place_type
+flickcurl_get_place_type_by_label
+flickcurl_get_place_type_label
 flickcurl_places_find
 flickcurl_places_findByLatLon
 flickcurl_places_forUser
-flickcurl_get_place_type_by_label
-flickcurl_get_place_type_label
+flickcurl_places_getChildrenWithPhotosPublic
+flickcurl_places_getInfo
+flickcurl_places_getInfoByUrl
+flickcurl_places_placesForUser
 flickcurl_places_resolvePlaceId
 flickcurl_places_resolvePlaceURL
 </SECTION>
@@ -295,6 +313,7 @@ flickcurl_tag_clusters
 flickcurl_free_tag
 flickcurl_free_tag_clusters
 flickcurl_tag_handler
+flickcurl_tags_getClusterPhotos
 flickcurl_tags_getClusters
 flickcurl_tags_getHotList
 flickcurl_tags_getListPhoto
