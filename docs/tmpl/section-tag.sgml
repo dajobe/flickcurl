@@ -72,6 +72,18 @@ Photo tagging.
 @tag: 
 
 
+<!-- ##### FUNCTION flickcurl_tags_getClusterPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@tag: 
+@cluster_id: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_tags_getClusters ##### -->
 <para>
 
