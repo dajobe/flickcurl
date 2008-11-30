@@ -54,7 +54,7 @@
  *
  * Implements flickr.tags.getClusterPhotos (1.7)
  *
- * Added to API (not announced) some time between 2008-09-04 ad 2008-09-19
+ * Added to API (not announced) some time between 2008-09-04 and 2008-09-19
  * 
  * Return value: non-0 on failure
  **/
