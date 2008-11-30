@@ -375,13 +375,13 @@ static struct {
   }
   ,
   {
-    (const xmlChar*)"./shapedata/.", /* special */
+    (const xmlChar*)"./shapedata/polylines/.", /* special */
     (flickcurl_place_type)0,
     PLACE_SHAPEDATA,
   }
   ,
   {
-    (const xmlChar*)"./urls/shapefile", /* special */
+    (const xmlChar*)"./shapedata/urls/shapefile", /* special */
     (flickcurl_place_type)0,
     PLACE_SHAPEFILE_URL,
   }
@@ -518,13 +518,17 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
         case PLACE_SHAPEFILE_URL:
           if(1) {
-            int size = place->shapefile_urls_count + 1;
+            int size = place->shapefile_urls_count;
             char** shapefile_urls;
-            shapefile_urls = (char**)calloc(size+1, sizeof(char*));
+            shapefile_urls = (char**)calloc(size+1+1, sizeof(char*));
             if(shapefile_urls) {
-              memcpy(shapefile_urls, place->shapefile_urls,
-                     size * sizeof(char*));
-              shapefile_urls[place->shapefile_urls_count++] = value;
+              if(size)
+                memcpy(shapefile_urls, place->shapefile_urls,
+                       size * sizeof(char*));
+              shapefile_urls[size++] = value;
+              shapefile_urls[size] = NULL;
+
+              place->shapefile_urls_count++;
               free(place->shapefile_urls);
               place->shapefile_urls = shapefile_urls;
             } else
