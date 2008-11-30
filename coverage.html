@@ -313,10 +313,10 @@ or <span class="unsupported">unsupported</span>.
 
 <p><strong>1.7</strong>: flickr.machinetags.getNamespaces, flickr.machinetags.getPairs, flickr.machinetags.getPredicates, flickr.machinetags.getValues, flickr.places.getChildrenWithPhotosPublic, flickr.places.getInfo, flickr.places.getInfoByUrl, flickr.tags.getClusterPhotos (8 new)</p>
 <pre>
-flickcurl_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
-int flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
-int flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
-int flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_tag_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
 flickcurl_place** flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc, const char* place_id, const char* woe_id);
 flickcurl_place* flickcurl_places_getInfo(flickcurl* fc, const char* place_id, const char* woe_id);
 flickcurl_place* flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url);
