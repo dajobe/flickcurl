@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (116/116)</span>
+<span class="coverage">100.0% (124/124)</span>
 </p>
 
 
@@ -108,6 +108,16 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.interestingness.getList.html">flickr.interestingness.getList</a> (0.13)</li>
+</ul>
+
+
+<h3>machinetags</h3>
+
+<ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getNamespaces.html">flickr.machinetags.getNamespaces</a> (1.7)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getPairs.html">flickr.machinetags.getPairs</a> (1.7)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getPredicates.html">flickr.machinetags.getPredicates</a> (1.7)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getValues.html">flickr.machinetags.getValues</a> (1.7)</li>
 </ul>
 
 
@@ -239,6 +249,9 @@ or <span class="unsupported">unsupported</span>.
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.find.html">flickr.places.find</a> (1.1)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon</a> (1.1)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getInfo.html">flickr.places.getInfo</a> (1.7)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getInfoByUrl.html">flickr.places.getInfoByUrl</a> (1.7)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getChildrenWithPhotosPublic.html">flickr.places.getChildrenWithPhotosPublic</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForUser.html">flickr.places.placesForUser</a> (1.6)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceId.html">flickr.places.resolvePlaceId</a> (1.0)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceURL.html">flickr.places.resolvePlaceURL</a> (1.0)</li>
@@ -265,6 +278,7 @@ or <span class="unsupported">unsupported</span>.
 <h3>tags</h3>
 
 <ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getClusterPhotos.html">flickr.tags.getClusterPhotos</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getClusters.html">flickr.tags.getClusters</a> (1.5)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getHotList.html">flickr.tags.getHotList</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.tags.getListPhoto.html">flickr.tags.getListPhoto</a> (0.9)</li>
@@ -296,6 +310,19 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.7</strong>: flickr.machinetags.getNamespaces, flickr.machinetags.getPairs, flickr.machinetags.getPredicates, flickr.machinetags.getValues, flickr.places.getChildrenWithPhotosPublic, flickr.places.getInfo, flickr.places.getInfoByUrl, flickr.tags.getClusterPhotos (8 new)</p>
+<pre>
+flickcurl_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
+int flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+int flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
+int flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_place** flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc, const char* place_id, const char* woe_id);
+flickcurl_place* flickcurl_places_getInfo(flickcurl* fc, const char* place_id, const char* woe_id);
+flickcurl_place* flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url);
+flickcurl_photos_list* flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag, const char* cluster_id, flickcurl_photos_list_params* list_params);
+</pre>
+
 
 <p><strong>1.6</strong>: flickr.places.placesForUser (1 new)</p>
 <pre>
