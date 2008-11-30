@@ -261,6 +261,11 @@ flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc,
  *
  * Implements flickr.places.getInfo (1.7)
  * 
+ * Announced 2008-10-30
+ * http://code.flickr.com/blog/2008/10/30/the-shape-of-alpha/
+ * and in detail 2008-11-05
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4510
+ * 
  * Return value: new place object or NULL on failure
  **/
 flickcurl_place*
@@ -320,6 +325,11 @@ flickcurl_places_getInfo(flickcurl* fc, const char* place_id,
  * Lookup information about a place, by its flickr.com/places URL.
  *
  * Implements flickr.places.getInfoByUrl (1.7)
+ *
+ * Announced 2008-10-30
+ * http://code.flickr.com/blog/2008/10/30/the-shape-of-alpha/
+ * and in detail 2008-11-05
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4510
  * 
  * Return value: new place object or NULL on failure
  **/
