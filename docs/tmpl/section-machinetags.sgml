@@ -1,0 +1,120 @@
+<!-- ##### SECTION Title ##### -->
+Machine tag
+
+<!-- ##### SECTION Short_Description ##### -->
+Machine tags.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Machine tags.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT flickcurl_tag_namespace ##### -->
+<para>
+
+</para>
+
+@name: 
+@usage_count: 
+@predicates_count: 
+
+<!-- ##### STRUCT flickcurl_tag_predicate_value ##### -->
+<para>
+
+</para>
+
+@usage_count: 
+@predicate: 
+@used_in_namespace_count: 
+@value: 
+
+<!-- ##### FUNCTION flickcurl_free_tag_namespace ##### -->
+<para>
+
+</para>
+
+@tag_nspace: 
+
+
+<!-- ##### FUNCTION flickcurl_free_tag_namespaces ##### -->
+<para>
+
+</para>
+
+@tag_nspaces: 
+
+
+<!-- ##### FUNCTION flickcurl_free_tag_predicate_value ##### -->
+<para>
+
+</para>
+
+@tag_pv: 
+
+
+<!-- ##### FUNCTION flickcurl_free_tag_predicate_values ##### -->
+<para>
+
+</para>
+
+@tag_pvs: 
+
+
+<!-- ##### FUNCTION flickcurl_machinetags_getNamespaces ##### -->
+<para>
+
+</para>
+
+@fc: 
+@predicate: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_machinetags_getPairs ##### -->
+<para>
+
+</para>
+
+@fc: 
+@namespace: 
+@predicate: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_machinetags_getPredicates ##### -->
+<para>
+
+</para>
+
+@fc: 
+@namespace: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_machinetags_getValues ##### -->
+<para>
+
+</para>
+
+@fc: 
+@namespace: 
+@predicate: 
+@per_page: 
+@page: 
+@Returns: 
+
+
