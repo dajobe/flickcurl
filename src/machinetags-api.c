@@ -42,7 +42,7 @@
  * flickcurl_machinetags_getNamespaces:
  * @fc: flickcurl context
  * @predicate: Limit the list of namespaces returned to those that have the following predicate (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
+ * @per_page: Number of namespaces to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
  * 
  * Return a list of unique namespaces, optionally limited by a given predicate, in alphabetical order.
@@ -113,7 +113,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
  * @fc: flickcurl context
  * @namespace: Limit the list of pairs returned to those that have the following namespace (or NULL)
  * @predicate: Limit the list of pairs returned to those that have the following predicate (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
+ * @per_page: Number of pairs to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
  * 
  * Return a list of unique namespace and predicate pairs, optionally limited by predicate or namespace, in alphabetical order.
@@ -183,7 +183,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
  * flickcurl_machinetags_getPredicates:
  * @fc: flickcurl context
  * @namespace: Limit the list of predicates returned to those that have the following namespace (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
+ * @per_page: Number of predicates to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
  * 
  * Return a list of unique predicates, optionally limited by a given namespace.
@@ -252,7 +252,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
  * @fc: flickcurl context
  * @namespace: The namespace that all values should be restricted to.
  * @predicate: The predicate that all values should be restricted to.
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
+ * @per_page: Number of values to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
  * 
  * Return a list of unique values for a namespace and predicate.
