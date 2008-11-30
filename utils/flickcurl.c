@@ -341,7 +341,7 @@ command_print_place(flickcurl_place* place,
   if(place->shapefile_urls_count >0) {
     fprintf(stderr, "  Shapefile URLs: %d\n", place->shapefile_urls_count);
     for(i = 0; i < place->shapefile_urls_count; i++)
-      fprintf(stderr, "  0): %s\n", place->shapefile_urls[i]);
+      fprintf(stderr, "    %d): %s\n", i, place->shapefile_urls[i]);
   }
   
   if(place->count >0)
