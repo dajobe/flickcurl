@@ -1,3 +1,73 @@
+2008-11-30  Dave Beckett <dave@dajobe.org>
+
+	* src/tags-api.c: docs
+
+	* src/place.c: (flickcurl_build_places): Fix shapefile paths
+
+	* utils/flickcurl.c: shapefile url print tidying
+
+	* src/places-api.c: add places API announce dates
+
+	* src/photosets-api.c: (flickcurl_photosets_getList,
+	flickcurl_photosets_getPhotos_params): Fix photoset photo xpath
+	now /rsp/photoset/photo
+
+	* utils/flickcurl.c: Give usage message when min/max args are wrong
+
+	* docs/tmpl/section-machinetags.sgml: Update template for machine tags
+
+	* src/flickcurl.h, src/machinetags.c: Rename some args to match docs
+
+	* docs/flickcurl-docs.xml, docs/flickcurl-sections.txt: Add new
+	functions to sections
+
+	* src/flickcurl.h, src/flickcurl_internal.h,
+	src/machinetags-api.c, src/machinetags.c, utils/flickcurl.c:
+	Renamed flickcurl_namespace to flickcurl_tag_namespace and
+	adjusted all machine tag namespace functions to use that naming
+	for constructors, destructors, methods:
+	flickcurl_free_tag_namespace, flickcurl_free_tag_namespaces,
+	flickcurl_machinetags_getNamespaces.
+
+	Added flickcurl_tag_predicate_value structure
+	(flickcurl_free_tag_predicate_value,
+	flickcurl_free_tag_predicate_values): Added.
+	(flickcurl_machinetags_getPairs, flickcurl_machinetags_getPredicates,
+	flickcurl_machinetags_getValues): Return array of
+	flickcurl_tag_predicate_value
+
+	Adjusted utils/flickcurl to new return
+	value. (command_print_predicate_values): Added.
+
+2008-11-19  Dave Beckett <dave@dajobe.org>
+
+	* src/Makefile.am, src/flickcurl.h, src/flickcurl_internal.h,
+	src/machinetags-api.c, src/machinetags.c, utils/flickcurl.c: Added
+	flickcurl_namespace typedef for machine tags.
+	(flickcurl_free_namespace, flickcurl_free_namespaces): Added.
+	(flickcurl_machinetags_getNamespaces): Now returns array of
+	flickcurl_namespace
+	(flickcurl_build_namespaces, flickcurl_build_namespace): Added.
+
+2008-11-18  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/machinetags-api.c, utils/flickcurl.c:
+	update machinetags APIs calling conventions
+
+	* src/tags-api.c: (flickcurl_tags_getClusterPhotos): Fix error return
+
+	* src/Makefile.am, src/machinetags-api.c: Add flickr.machinetags
+	methods added 2008-11-18
+
+2008-11-06  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: xml quoting
+
+	* src/common.c, src/flickcurl.h, src/place.c, src/places-api.c,
+	utils/flickcurl.c: Added
+	flickcurl_places_getChildrenWithPhotosPublic() for
+	flickr.places.getChildrenWithPhotosPublic
+
 2008-11-05  Dave Beckett <dave@dajobe.org>
 
 	* src/flickcurl.h, src/places-api.c, utils/flickcurl.c: Added
