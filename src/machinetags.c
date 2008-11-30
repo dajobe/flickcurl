@@ -165,27 +165,27 @@ flickcurl_build_tag_namespace(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
 /**
  * flickcurl_free_tag_namespaces:
- * @namespaces: namespace object array
+ * @tag_nspaces: namespace object array
  *
  * Destructor for array of namespace object
  */
 void
-flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_namespaces)
+flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_nspaces)
 {
   int i;
   
-  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tag_namespaces,
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tag_nspaces,
                                          flickcurl_tag_namespace_array);
 
-  for(i = 0; tag_namespaces[i]; i++)
-    flickcurl_free_tag_namespace(tag_namespaces[i]);
-  free(tag_namespaces);
+  for(i = 0; tag_nspaces[i]; i++)
+    flickcurl_free_tag_namespace(tag_nspaces[i]);
+  free(tag_nspaces);
 }
 
 
 /**
  * flickcurl_free_tag_predicate_value:
- * @tag_nspace: machinetag predicate_value object
+ * @tag_pv: machinetag predicate_value object
  *
  * Destructor for machinetag predicate-value pair  object
  */
@@ -298,19 +298,19 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
 /**
  * flickcurl_free_tag_predicate_values:
- * @predicate_values: predicate_value object array
+ * @tag_pvs: predicate_value object array
  *
  * Destructor for array of predicate_value object
  */
 void
-flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value** tag_predicate_values)
+flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value** tag_pvs)
 {
   int i;
   
-  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tag_predicate_values,
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tag_pvs,
                                          flickcurl_tag_predicate_value_array);
 
-  for(i = 0; tag_predicate_values[i]; i++)
-    flickcurl_free_tag_predicate_value(tag_predicate_values[i]);
-  free(tag_predicate_values);
+  for(i = 0; tag_pvs[i]; i++)
+    flickcurl_free_tag_predicate_value(tag_pvs[i]);
+  free(tag_pvs);
 }

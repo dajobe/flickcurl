@@ -1316,9 +1316,9 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 
 /* other flickcurl class destructors */
 FLICKCURL_API
-void flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_namespace);
+void flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_nspace);
 FLICKCURL_API
-void flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_namespaces);
+void flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_nspaces);
 FLICKCURL_API
 void flickcurl_free_tag(flickcurl_tag *t);
 FLICKCURL_API
@@ -1363,9 +1363,9 @@ void flickcurl_free_places(flickcurl_place** places_object);
 FLICKCURL_API
 void flickcurl_free_video(flickcurl_video *video);
 FLICKCURL_API
-void flickcurl_free_tag_predicate_value(flickcurl_tag_predicate_value *tag_pv);
+void flickcurl_free_tag_predicate_value(flickcurl_tag_predicate_value* tag_pv);
 FLICKCURL_API
-void flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value** tag_predicate_values);
+void flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value **tag_pvs);
 
 /* utility methods */
 /* get an image URL for a photo in some size */
