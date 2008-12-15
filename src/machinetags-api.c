@@ -51,6 +51,8 @@
  *
  * As announced 2008-11-18
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ * and
+ * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
  * Return value: non-0 on failure
  **/
@@ -122,6 +124,8 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
  * 
  * As announced 2008-11-18
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ * and
+ * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
  * Return value: non-0 on failure
  **/
@@ -195,6 +199,8 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
  * 
  * As announced 2008-11-18
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ * and
+ * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
  * Return value: non-0 on failure
  **/
@@ -267,6 +273,8 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
  * 
  * As announced 2008-11-18
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4545
+ * and
+ * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
  * Return value: non-0 on failure
  **/
