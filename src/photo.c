@@ -664,6 +664,10 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(!string_value)
         continue;
 
+#if FLICKCURL_DEBUG > 1
+        fprintf(stderr, "  tyepe %d  string value '%s'\n", datatype,
+                string_value);
+#endif
       switch(datatype) {
         case VALUE_TYPE_PHOTO_ID:
           photo->id=string_value;
@@ -693,10 +697,10 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
           if(unix_time >= 0) {
             char* new_value=flickcurl_unixtime_to_isotime(unix_time);
-  #if FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
             fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
-                    value, (long)unix_time, new_value);
-  #endif
+                    string_value, (long)unix_time, new_value);
+#endif
             free(string_value);
             string_value= new_value;
             int_value= (int)unix_time;
