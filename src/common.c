@@ -1472,6 +1472,7 @@ flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
   xmlSaveCtxtPtr save_ctxt = NULL;
   char* value = NULL;
   size_t value_len = 0;
+  xmlNodeSetPtr nodes;
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathNodeCtx);
   if(!xpathObj) {
@@ -1481,10 +1482,11 @@ flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
     goto tidy;
   }
 
-  if(!xpathObj->nodesetval->nodeTab)
+  nodes = xpathObj->nodesetval;
+  if(xmlXPathNodeSetIsEmpty(nodes))
     goto tidy;
     
-  sd_node = xpathObj->nodesetval->nodeTab[0];
+  sd_node = nodes->nodeTab[0];
   
   buffer = xmlBufferCreate();
   if(!buffer)
