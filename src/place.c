@@ -585,3 +585,169 @@ flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 }
 
 
+/**
+ * flickcurl_place_type_to_id:
+ * @place_type: place type
+ *
+ * Turn a place type into a place ID
+ *
+ * Return value: place ID for type or <0 on failure
+ */
+int
+flickcurl_place_type_to_id(flickcurl_place_type place_type)
+{
+  int place_type_id = -1;
+  
+  if(place_type == FLICKCURL_PLACE_NEIGHBORHOOD)
+    place_type_id = 22;
+  else if(place_type == FLICKCURL_PLACE_LOCALITY)
+    place_type_id = 7;
+  else if(place_type == FLICKCURL_PLACE_REGION)
+    place_type_id = 8;
+  else if(place_type == FLICKCURL_PLACE_COUNTRY)
+    place_type_id = 12;
+  else if(place_type == FLICKCURL_PLACE_CONTINENT)
+    place_type_id = 29;
+  else
+    place_type_id = -1;
+
+  return place_type;
+}
+
+
+/**
+ * flickcurl_place_id_to_type:
+ * @place_type_id: place type ID
+ *
+ * Turn a place type into a place ID
+ *
+ * Return value: place type for fID or FLICKCURL_PLACE_LOCATION on failure
+ */
+flickcurl_place_type
+flickcurl_place_id_to_type(int place_type_id)
+{
+  flickcurl_place_type place_type = FLICKCURL_PLACE_LOCATION;
+  
+  if(place_type_id == 22)
+    place_type = FLICKCURL_PLACE_NEIGHBORHOOD;
+  else if(place_type_id == 7)
+    place_type = FLICKCURL_PLACE_LOCALITY;
+  else if(place_type_id == 8)
+    place_type = FLICKCURL_PLACE_REGION;
+  else if(place_type_id == 12)
+    place_type = FLICKCURL_PLACE_COUNTRY;
+  else if(place_type_id == 29)
+    place_type = FLICKCURL_PLACE_CONTINENT;
+  else
+    place_type = FLICKCURL_PLACE_LOCATION;
+
+  return place_type;
+}
+
+
+flickcurl_place_type_info**
+flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                            const xmlChar* xpathExpr, int* place_type_count_p)
+{
+  flickcurl_place_type_info** place_types=NULL;
+  int nodes_count;
+  int place_type_count;
+  int i;
+  xmlXPathObjectPtr xpathObj=NULL;
+  xmlNodeSetPtr nodes;
+  
+  /* Now do place_types */
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed=1;
+    goto tidy;
+  }
+  
+  nodes=xpathObj->nodesetval;
+  /* This is a max size - it can include nodes that are CDATA */
+  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  place_types = (flickcurl_place_type_info**)calloc(sizeof(flickcurl_place_type*), nodes_count + 1);
+  
+  for(i=0, place_type_count=0; i < nodes_count; i++) {
+    xmlNodePtr node=nodes->nodeTab[i];
+    xmlAttr* attr;
+    flickcurl_place_type_info* pt;
+    xmlNodePtr chnode;
+    
+    if(node->type != XML_ELEMENT_NODE) {
+      flickcurl_error(fc, "Got unexpected node type %d", node->type);
+      fc->failed=1;
+      break;
+    }
+    
+    pt = (flickcurl_place_type_info*)calloc(sizeof(flickcurl_place_type), 1);
+    
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
+      char *attr_value;
+
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
+      strcpy(attr_value, (const char*)attr->children->content);
+      
+      if(!strcmp(attr_name, "id")) {
+        pt->id = atoi(attr_value);
+        free(attr_value);
+        pt->type = flickcurl_place_id_to_type(pt->id);
+      }
+    }
+
+    /* Walk children nodes for name text */
+    for(chnode=node->children; chnode; chnode=chnode->next) {
+      if(chnode->type == XML_TEXT_NODE) {
+        pt->name = (char*)malloc(strlen((const char*)chnode->content)+1);
+        strcpy(pt->name, (const char*)chnode->content);
+      }
+    }
+
+//#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "place_type: id %d  type %d  name %s\n",
+            pt->id, pt->type, pt->name);
+//#endif
+    
+    place_types[place_type_count++] = pt;
+  } /* for nodes */
+
+  if(place_type_count_p)
+    *place_type_count_p = place_type_count;
+  
+ tidy:
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
+
+  return place_types;
+}
+
+
+/**
+ * flickcurl_free_place_type_infos:
+ * @ptis_object: list of place type info
+ *
+ * Destructor for place type info list
+ */
+void
+flickcurl_free_place_type_infos(flickcurl_place_type_info **ptis_object)
+{
+  int i;
+  
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(ptis_object,
+                                         flickcurl_place_type_info);
+
+  for(i=0; ptis_object[i]; i++) {
+    flickcurl_place_type_info *pti = ptis_object[i];
+    char * n = pti->name;
+    if(n)
+      free(n);
+    free(pti);
+  }
+
+  free(ptis_object);
+}
+
+

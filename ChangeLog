@@ -1,3 +1,11 @@
+2008-12-18  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 1.8
+
+2008-12-15  Dave Beckett <dave@dajobe.org>
+
+	* src/machinetags-api.c: more docs
+
 2008-11-30  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_7 for 1.7 release (SVN 880)

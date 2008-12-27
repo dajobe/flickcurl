@@ -202,6 +202,7 @@ flickcurl_photoset* flickcurl_build_photoset(flickcurl* fc, xmlXPathContextPtr x
 /* place.c */
 flickcurl_place** flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* place_count_p);
 flickcurl_place* flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
+flickcurl_place_type_info** flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* place_type_count_p);
 
 /* size.c */
 flickcurl_size** flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* size_count_p);

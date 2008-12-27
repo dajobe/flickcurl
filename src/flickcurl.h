@@ -473,7 +473,8 @@ typedef struct {
  * @FLICKCURL_PLACE_LOCALITY: locality
  * @FLICKCURL_PLACE_COUNTY: county
  * @FLICKCURL_PLACE_REGION: region
- * @FLICKCURL_PLACE_COUNTRY: country (widest place)
+ * @FLICKCURL_PLACE_COUNTRY: country
+ * @FLICKCURL_PLACE_CONTINENT: continent (widest place) (Flickcurl 1.8)
  * @FLICKCURL_PLACE_LAST: internal offset to last in enum list
  *
  * Place type
@@ -486,8 +487,24 @@ typedef enum {
   FLICKCURL_PLACE_COUNTY,
   FLICKCURL_PLACE_REGION,
   FLICKCURL_PLACE_COUNTRY,
-  FLICKCURL_PLACE_LAST = FLICKCURL_PLACE_COUNTRY
+  FLICKCURL_PLACE_CONTINENT,
+  FLICKCURL_PLACE_LAST = FLICKCURL_PLACE_CONTINENT
 } flickcurl_place_type;
+
+
+/**
+ * flickcurl_place_type_info:
+ * @type: type enum ID
+ * @id: web service call ID
+ * @name: name
+ *
+ * Place type information
+ */
+typedef struct {
+  flickcurl_place_type type;
+  int id;
+  char *name;
+} flickcurl_place_type_info;
 
 
 /**
@@ -1361,6 +1378,8 @@ void flickcurl_free_place(flickcurl_place* place);
 FLICKCURL_API
 void flickcurl_free_places(flickcurl_place** places_object);
 FLICKCURL_API
+void flickcurl_free_place_type_infos(flickcurl_place_type_info **ptis_object);
+FLICKCURL_API
 void flickcurl_free_video(flickcurl_video *video);
 FLICKCURL_API
 void flickcurl_free_tag_predicate_value(flickcurl_tag_predicate_value* tag_pv);
@@ -1614,9 +1633,19 @@ FLICKCURL_API
 const char* flickcurl_get_place_type_label(flickcurl_place_type place_type);
 flickcurl_place_type flickcurl_get_place_type_by_label(const char* place_label);
 FLICKCURL_API
+flickcurl_place_type_info** flickcurl_places_getPlaceTypes(flickcurl* fc);
+FLICKCURL_API
+int flickcurl_places_placesForBoundingBox(flickcurl* fc, const char* bbox, flickcurl_place_type place_type);
+FLICKCURL_API
+int flickcurl_places_placesForContacts(flickcurl* fc, flickcurl_place_type place_type, const char* woe_id, const char* place_id, const char* threshold, const char* contacts, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date);
+FLICKCURL_API
+int flickcurl_places_placesForTags(flickcurl* fc, flickcurl_place_type place_type, const char* woe_id, const char* place_id, const char* threshold, const char* tags, const char* tag_mode, const char* machine_tags, const char* machine_tag_mode, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date);
+FLICKCURL_API
 flickcurl_place** flickcurl_places_placesForUser(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold);
 FLICKCURL_API FLICKCURL_DEPRECATED
 flickcurl_place** flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold);
+int flickcurl_place_type_to_id(flickcurl_place_type place_type);
+flickcurl_place_type flickcurl_place_id_to_type(int place_type_id);
 
 /* flickr.contacts */
 FLICKCURL_API
@@ -1644,11 +1673,21 @@ flickcurl_comment** flickcurl_photos_comments_getList(flickcurl* fc, const char*
 
 /* flickr.photos.geo */
 FLICKCURL_API
+int flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc, flickcurl_location* location, const char* place_id, int woe_id);
+FLICKCURL_API
+int flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id, const char* place_id, int woe_id);
+FLICKCURL_API
 flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
 FLICKCURL_API
 flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_geo_photosForLocation_params(flickcurl* fc, flickcurl_location* location, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
+flickcurl_photo** flickcurl_photos_geo_photosForLocation(flickcurl* fc, flickcurl_location* location, const char* extras, int per_page, int page);
+FLICKCURL_API
 int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
+int flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id, int context);
 FLICKCURL_API
 int flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id, flickcurl_location* location);
 FLICKCURL_API

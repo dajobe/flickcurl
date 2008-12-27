@@ -190,7 +190,7 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
 /**
  * flickcurl_places_getChildrenWithPhotosPublic:
  * @fc: flickcurl context
- * @place_id: A Flickr Places ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
+ * @place_id: A Places ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
  * @woe_id: A Where On Earth (WOE) ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
  * 
  * Return a list of locations with public photos that are parented by a Where on Earth (WOE) or Places ID.
@@ -254,7 +254,7 @@ flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc,
 /**
  * flickcurl_places_getInfo:
  * @fc: flickcurl context
- * @place_id: A Flickr Places ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
+ * @place_id: A Places ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
  * @woe_id: A Where On Earth (WOE) ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
  * 
  * Get informations about a place.
@@ -379,11 +379,357 @@ flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
 
 
 /**
+ * flickcurl_places_getPlaceTypes:
+ * @fc: flickcurl context
+ * 
+ * Get a list of available place types
+ *
+ * Implements flickr.places.getPlaceTypes (1.8)
+ * 
+ * Return value: array of #flickcurl_place_type_info or NULL on failure
+ **/
+flickcurl_place_type_info**
+flickcurl_places_getPlaceTypes(flickcurl* fc)
+{
+  const char* parameters[7][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_place_type_info** place_types=NULL;
+  
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.getPlaceTypes", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  place_types = flickcurl_build_place_types(fc, xpathCtx,
+                                            (const xmlChar*)"/rsp/place_types/place",
+                                            NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    place_types = NULL;
+
+  return place_types;
+}
+
+
+/**
+ * flickcurl_places_placesForBoundingBox:
+ * @fc: flickcurl context
+ * @bbox: A comma-delimited list of 4 values defining the Bounding Box of the area that will be searched. The 4 values represent the bottom-left corner of the box and the top-right corner, minimum_longitude, minimum_latitude, maximum_longitude, maximum_latitude.
+ * @place_type: The place type to cluster photos by (or NULL)
+ * 
+ * Return all the locations of a matching place type for a bounding box.
+ *
+ * The maximum allowable size of a bounding box (the distance between
+ * the SW and NE corners) is governed by the place type you are
+ * requesting. Allowable sizes are as follows:
+ * neighbourhood: 3km (1.8mi), locality: 7km (4.3mi), county: 50km (31mi),
+ * region: 200km (124mi), country: 500km (310mi), continent: 1500km (932mi)
+ *
+ * Implements flickr.places.placesForBoundingBox (1.8)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_places_placesForBoundingBox(flickcurl* fc, const char* bbox,
+                                      flickcurl_place_type place_type)
+{
+  const char* parameters[10][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  void* result=NULL;
+  char place_type_id_str[3];
+  int place_type_id;
+  
+  if(!bbox)
+    return 1;
+
+  place_type_id = flickcurl_place_type_to_id(place_type);
+  if(place_type_id < 0)
+    return 1;
+  
+  parameters[count][0]  = "bbox";
+  parameters[count++][1]= bbox;
+  /* deliberately not using deprecated parameter place_type */
+/*
+  parameters[count][0]  = "place_type";
+  parameters[count++][1]= place_type;
+*/
+  parameters[count][0]  = "place_type_id";
+  sprintf(place_type_id_str, "%d", place_type_id);
+  parameters[count++][1]= place_type_id_str;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.placesForBoundingBox", parameters,
+                       count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  result=NULL; /* your code here */
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    result=NULL;
+
+  return (result == NULL);
+}
+
+
+/**
+ * flickcurl_places_placesForContacts:
+ * @fc: flickcurl context
+ * @place_type: A specific place type to cluster photos by.
+ * @woe_id: A Where on Earth ID to use to filter photo clusters (or NULL)
+ * @place_id: A Places ID to use to filter photo clusters (or NULL)
+ * @threshold: The minimum number of photos that a place type must have to be included. If the number of photos is lowered then the parent place type for that place will be used.
+ * @contacts: Search your contacts. Either 'all' or 'ff' for just friends and family. (Default is 'all') (or NULL)
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * 
+ * Return a list of the top 100 unique places clustered by a given
+ * placetype for a user's contacts.
+ *
+ * Implements flickr.places.placesForContacts (1.8)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_places_placesForContacts(flickcurl* fc,
+                                   flickcurl_place_type place_type,
+                                   const char* woe_id,
+                                   const char* place_id,
+                                   const char* threshold,
+                                   const char* contacts,
+                                   const char* min_upload_date,
+                                   const char* max_upload_date,
+                                   const char* min_taken_date,
+                                   const char* max_taken_date)
+{
+  const char* parameters[17][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  void* result=NULL;
+  char place_type_id_str[3];
+  int place_type_id;
+
+  place_type_id = flickcurl_place_type_to_id(place_type);
+  if(place_type_id < 0)
+    return 1;
+  
+  /* deliberately not using deprecated parameter place_type */
+/*  
+  parameters[count][0]  = "place_type";
+  parameters[count++][1]= place_type;
+*/
+  parameters[count][0]  = "place_type_id";
+  sprintf(place_type_id_str, "%d", place_type_id);
+  parameters[count++][1]= place_type_id_str;
+  parameters[count][0]  = "woe_id";
+  parameters[count++][1]= woe_id;
+  parameters[count][0]  = "place_id";
+  parameters[count++][1]= place_id;
+  parameters[count][0]  = "threshold";
+  parameters[count++][1]= threshold;
+  parameters[count][0]  = "contacts";
+  parameters[count++][1]= contacts;
+  parameters[count][0]  = "min_upload_date";
+  parameters[count++][1]= min_upload_date;
+  parameters[count][0]  = "max_upload_date";
+  parameters[count++][1]= max_upload_date;
+  parameters[count][0]  = "min_taken_date";
+  parameters[count++][1]= min_taken_date;
+  parameters[count][0]  = "max_taken_date";
+  parameters[count++][1]= max_taken_date;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.placesForContacts", parameters,
+                       count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  result=NULL; /* your code here */
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    result=NULL;
+
+  return (result == NULL);
+}
+
+
+/**
+ * flickcurl_places_placesForTags:
+ * @fc: flickcurl context
+ * @place_type: The place type to cluster photos by
+ * @woe_id: A Where on Earth ID to use to filter photo clusters (or NULL)
+ * @place_id: A Places ID to use to filter photo clusters (or NULL)
+ * @threshold: The minimum number of photos that a place type must have to be included. If the number of photos is lowered then the parent place type for that place will be used.
+ * @tags: A comma-delimited list of tags. Photos with one or more of the tags listed will be returned. (or NULL)
+ * @tag_mode: Either 'any' for an OR combination of tags, or 'all' for an AND combination. Defaults to 'any' if not specified. (or NULL)
+ * @machine_tags: Multiple machine tags may be queried by passing a comma-separated list. The number of machine tags you can pass in a single query depends on the tag mode (AND or OR) that you are querying with. "AND" queries are limited to (16) machine tags. "OR" queries are limited to (8). See below. (or NULL)
+ * @machine_tag_mode: Either 'any' for an OR combination of tags, or 'all' for an AND combination. Defaults to 'any' if not specified. (or NULL)
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned (or NULL)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned (or NULL)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned (or NULL)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned (or NULL)
+ * 
+ * Return a list of the top 100 unique places clustered by a given
+ * placetype for set of tags or machine tags.
+ *
+ * Machine tags extra information.  Aside from passing in a fully
+ * formed machine tag, there is a special syntax for searching on
+ * specific properties :
+ *
+ * <ul>
+ *   <li>Find photos using the 'dc' namespace : <code>"machine_tags" => "dc:"</code></li>
+ *   <li> Find photos with a title in the 'dc' namespace : <code>"machine_tags" => "dc:title="</code></li>
+ *   <li>Find photos titled "mr. camera" in the 'dc' namespace : <code>"machine_tags" => "dc:title=\"mr. camera\"</code></li>
+ *   <li>Find photos whose value is "mr. camera" : <code>"machine_tags" => "*:*=\"mr. camera\""</code></li>
+ *   <li>Find photos that have a title, in any namespace : <code>"machine_tags" => "*:title="</code></li>
+ *   <li>Find photos that have a title, in any namespace, whose value is "mr. camera" : <code>"machine_tags" => "*:title=\"mr. camera\""</code></li>
+ *   <li>Find photos, in the 'dc' namespace whose value is "mr. camera" : <code>"machine_tags" => "dc:*=\"mr. camera\""</code></li>
+ *  </ul>
+ * 
+ * Implements flickr.places.placesForTags (1.8)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_places_placesForTags(flickcurl* fc,
+                               flickcurl_place_type place_type,
+                               const char* woe_id,
+                               const char* place_id,
+                               const char* threshold,
+                               const char* tags, const char* tag_mode,
+                               const char* machine_tags, const char* machine_tag_mode,
+                               const char* min_upload_date, const char* max_upload_date,
+                               const char* min_taken_date, const char* max_taken_date)
+{
+  const char* parameters[19][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  void* result=NULL;
+  char place_type_id_str[3];
+  int place_type_id;
+  
+  place_type_id = flickcurl_place_type_to_id(place_type);
+  if(place_type_id < 0)
+    return 1;
+
+  parameters[count][0]  = "place_type_id";
+  sprintf(place_type_id_str, "%d", place_type_id);
+  parameters[count++][1]= place_type_id_str;
+  parameters[count][0]  = "woe_id";
+  parameters[count++][1]= woe_id;
+  parameters[count][0]  = "place_id";
+  parameters[count++][1]= place_id;
+  parameters[count][0]  = "threshold";
+  parameters[count++][1]= threshold;
+  parameters[count][0]  = "tags";
+  parameters[count++][1]= tags;
+  parameters[count][0]  = "tag_mode";
+  parameters[count++][1]= tag_mode;
+  parameters[count][0]  = "machine_tags";
+  parameters[count++][1]= machine_tags;
+  parameters[count][0]  = "machine_tag_mode";
+  parameters[count++][1]= machine_tag_mode;
+  parameters[count][0]  = "min_upload_date";
+  parameters[count++][1]= min_upload_date;
+  parameters[count][0]  = "max_upload_date";
+  parameters[count++][1]= max_upload_date;
+  parameters[count][0]  = "min_taken_date";
+  parameters[count++][1]= min_taken_date;
+  parameters[count][0]  = "max_taken_date";
+  parameters[count++][1]= max_taken_date;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.placesForTags", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  result=NULL; /* your code here */
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    result=NULL;
+
+  return (result == NULL);
+}
+
+
+/**
  * flickcurl_places_resolvePlaceId:
  * @fc: flickcurl context
- * @place_id: A Flickr Places ID
+ * @place_id: A Places ID
  * 
- * Find Flickr Places information by Place Id
+ * Find places information by Place ID
  *
  * Implements flickr.places.resolvePlaceId (1.0)
  * 
@@ -439,9 +785,9 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
 /**
  * flickcurl_places_resolvePlaceURL:
  * @fc: flickcurl context
- * @url: A Flickr Places URL.  Flickr Place URLs are of the form /country/region/city
+ * @url: A Places URL.  Place URLs are of the form /country/region/city
  * 
- * Find Flickr Places information by Place URL
+ * Find Places information by Place URL
  *
  * Implements flickr.places.resolvePlaceURL (1.0)
  * 
@@ -497,8 +843,8 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
  * flickcurl_places_placesForUser:
  * @fc: flickcurl context
  * @place_type: A specific place type to cluster photos by.  Valid places types are neighbourhood, locality, region or country
- * @woe_id: A Where on Earth identifier to use to filter photo clusters. (or <0)
- * @place_id: A Flickr Places identifier to use to filter photo clusters. (or NULL)
+ * @woe_id: A Where on Earth ID to use to filter photo clusters. (or <0)
+ * @place_id: A Places ID to use to filter photo clusters. (or NULL)
  * @threshold: The minimum number of photos that a place type must have to be included. If the number of photos is lowered then the parent place type for that place will be used. (or <0)
  * 
  * Return a list of the top 100 unique places clustered by a given place type for a user.
@@ -594,8 +940,8 @@ flickcurl_places_placesForUser(flickcurl* fc,
  * flickcurl_places_forUser:
  * @fc: flickcurl context
  * @place_type: A specific place type to cluster photos by.  Valid places types are neighbourhood, locality, region or country
- * @woe_id: A Where on Earth identifier to use to filter photo clusters. (or <0)
- * @place_id: A Flickr Places identifier to use to filter photo clusters. (or NULL)
+ * @woe_id: A Where on Earth ID to use to filter photo clusters. (or <0)
+ * @place_id: A Places ID to use to filter photo clusters. (or NULL)
  * @threshold: The minimum number of photos that a place type must have to be included. If the number of photos is lowered then the parent place type for that place will be used. (or <0)
  * 
  * Return a list of the top 100 unique places clustered by a given place type for a user.

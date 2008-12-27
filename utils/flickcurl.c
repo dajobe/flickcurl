@@ -3254,6 +3254,26 @@ command_machinetags_getValues(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_places_getPlaceTypes(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place_type_info** place_types;
+
+  place_types = flickcurl_places_getPlaceTypes(fc);
+  if(place_types) {
+    int i;
+    for(i = 0; place_types[i]; i++) {
+      fprintf(stderr, "place type %d): id %d  type %d  name %s\n",
+              i, pt->id, pt->type, pt->name);
+    }
+    flickcurl_free_place_types(place_types);
+  }
+
+  return (place_types == NULL);
+}
+
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3577,6 +3597,9 @@ static flickcurl_cmd commands[] = {
   {"places.getInfoByUrl",
    "URL", "Find place by place URL",
    command_places_getInfoByUrl, 1, 1},
+  {"places.getPlaceTypes",
+   "URL", "Get a list of available place types",
+   command_places_getPlaceTypes, 0, 0},
   {"places.placesForUser",
    "PLACE-TYPE [WOE-ID] [PLACE-ID [THRESHOLD]]]", "Find user places of PLACE-TYPE.",
    command_places_placesForUser, 1, 4},
