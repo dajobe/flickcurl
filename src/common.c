@@ -1438,7 +1438,10 @@ flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
     goto tidy;
   }
     
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
+  if(xmlXPathNodeSetIsEmpty(nodes))
+    goto tidy;
+  
   for(i=0; i < xmlXPathNodeSetGetLength(nodes); i++) {
     xmlNodePtr node=nodes->nodeTab[i];
     
