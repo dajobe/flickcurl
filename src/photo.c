@@ -665,7 +665,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         continue;
 
 #if FLICKCURL_DEBUG > 1
-        fprintf(stderr, "  tyepe %d  string value '%s'\n", datatype,
+        fprintf(stderr, "  type %d  string value '%s'\n", datatype,
                 string_value);
 #endif
       switch(datatype) {
