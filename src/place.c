@@ -469,7 +469,7 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         place->shapedata = flickcurl_xpath_eval_to_tree_string(fc,
                                                                xpathNodeCtx,
                                                                place_xpathExpr,
-                                                                &place->shapedata_length);
+                                                               &place->shapedata_length);
         continue;
       }
       
@@ -477,6 +477,11 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(!value)
         continue;
 
+#if FLICKCURL_DEBUG > 1
+      fprintf(stderr, "field %d array #%d with value: '%s'\n",
+              place_type, (int)place_field, value);
+#endif
+      
       switch(place_field) {
         case PLACE_NAME:
           place->names[(int)place_type]=value;
@@ -496,20 +501,24 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
         case PLACE_TYPE:
           place->type=flickcurl_get_place_type_by_label(value);
+          free(value); value=NULL;
           break;
 
         case PLACE_LATITUDE:
           place->location.accuracy= -1;
           place->location.latitude=atof(value);
+          free(value); value=NULL;
           break;
 
         case PLACE_LONGITUDE:
           place->location.accuracy= -1;
           place->location.longitude=atof(value);
+          free(value); value=NULL;
           break;
 
         case PLACE_PHOTO_COUNT:
           place->count=atoi(value);
+          free(value); value=NULL;
           break;
 
         case PLACE_SHAPEDATA:
@@ -527,20 +536,20 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                        size * sizeof(char*));
               shapefile_urls[size++] = value;
               shapefile_urls[size] = NULL;
-
+              value = NULL;
+              
               place->shapefile_urls_count++;
               free(place->shapefile_urls);
               place->shapefile_urls = shapefile_urls;
             } else
               fc->failed = 1;
+
+            if(value) {
+              free(value); value=NULL;
+            }
           }
           break;
       }
-      
-#if FLICKCURL_DEBUG > 1
-      fprintf(stderr, "field %d array #%d with value: '%s'\n",
-              place_type, (int)place_field, value);
-#endif
       
       if(fc->failed)
         goto placestidy;
