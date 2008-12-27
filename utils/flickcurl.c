@@ -3263,10 +3263,11 @@ command_places_getPlaceTypes(flickcurl* fc, int argc, char *argv[])
   if(place_types) {
     int i;
     for(i = 0; place_types[i]; i++) {
+      flickcurl_place_type_info *pt=place_types[i];
       fprintf(stderr, "place type %d): id %d  type %d  name %s\n",
               i, pt->id, pt->type, pt->name);
     }
-    flickcurl_free_place_types(place_types);
+    flickcurl_free_place_type_infos(place_types);
   }
 
   return (place_types == NULL);
