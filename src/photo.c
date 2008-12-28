@@ -548,18 +548,6 @@ static struct {
   }
   ,
   {
-    (const xmlChar*)"./location/region/@place_id",
-    PHOTO_FIELD_region_placeid,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
-    (const xmlChar*)"./location/region/@woeid",
-    PHOTO_FIELD_region_woeid,
-    VALUE_TYPE_STRING
-  }
-  ,
-  {
     (const xmlChar*)"./location/country/@place_id",
     PHOTO_FIELD_country_placeid,
     VALUE_TYPE_STRING
