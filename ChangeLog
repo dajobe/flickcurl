@@ -1,3 +1,47 @@
+2008-12-28  Dave Beckett <dave@dajobe.org>
+
+	* src/photo.c: Removed duplicate xpaths
+	"./location/region/@place_id" for region_placeid and
+	"./location/region/@woeid" for region_woeid
+
+2008-12-27  Dave Beckett <dave@dajobe.org>
+
+	* src/place.c:
+	(flickcurl_build_places): Free strings used for atoi, atof
+
+	* src/photo.c: debug typo
+
+	* src/photo.c: debug messages
+
+	* src/common.c:
+	(flickcurl_xpath_eval): Use xmlXPathNodeSetIsEmpty
+
+	* utils/flickcurl.c:
+	(command_places_getPlaceTypes): make it compile
+
+	* ChangeLog, src/flickcurl.h, src/flickcurl_internal.h,
+	src/photos-geo-api.c, src/place.c, src/places-api.c,
+	utils/flickcurl.c: Added flickcurl_place_type_info Added
+	FLICKCURL_PLACE_CONTINENT
+	(flickcurl_places_getPlaceTypes): Added.
+	(flickcurl_places_placesForBoundingBox): Added skeleton.
+	(flickcurl_places_placesForContacts): Added skeleton.
+	(flickcurl_places_placesForTags): Added skeleton.
+	(flickcurl_free_place_type_infos): Added.
+	(flickcurl_photos_geo_batchCorrectLocation): Added.
+	(flickcurl_photos_geo_correctLocation): Added skeleton.
+	(flickcurl_photos_geo_photosForLocation_params): Added.
+	(flickcurl_photos_geo_photosForLocation): Added.
+	(flickcurl_photos_geo_setContext): Added.
+	(flickcurl_build_place_types): Added.
+	(flickcurl_place_type_to_id): Added.
+	(flickcurl_place_id_to_type): Added.
+
+	flickcurl command: Added places.getPlaceTypes
+
+	* src/common.c: (flickcurl_xpath_eval_to_tree_string): Check for
+	empty nodeset with xmlXPathNodeSetIsEmpty macro.
+
 2008-12-18  Dave Beckett <dave@dajobe.org>
 
 	* NEWS.html, configure.ac: Bump version to 1.8
