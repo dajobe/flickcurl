@@ -620,7 +620,7 @@ flickcurl_place_type_to_id(flickcurl_place_type place_type)
   else
     place_type_id = -1;
 
-  return place_type;
+  return place_type_id;
 }
 
 
