@@ -3275,6 +3275,42 @@ command_places_getPlaceTypes(flickcurl* fc, int argc, char *argv[])
 
 
 
+static int
+command_places_placesForBoundingBox(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place** places=NULL;
+  double minimum_longitude;
+  double minimum_latitude;
+  double maximum_longitude;
+  double maximum_latitude;
+  flickcurl_place_type place_type = FLICKCURL_PLACE_LOCATION;
+  
+  place_type = flickcurl_get_place_type_by_label(argv[1]);
+  
+  minimum_longitude = atof(argv[2]);
+  minimum_latitude = atof(argv[3]);
+  maximum_longitude = atof(argv[4]);
+  maximum_latitude = atof(argv[5]);
+
+  places = flickcurl_places_placesForBoundingBox(fc,
+                                                 place_type, 
+                                                 minimum_longitude,
+                                                 minimum_latitude,
+                                                 maximum_longitude,
+                                                 maximum_latitude);
+  if(places) {
+    int i;
+    for(i=0; places[i]; i++) {
+      fprintf(stderr, "Place Result #%d\n", i);
+      command_print_place(places[i], NULL, NULL, 0);
+    }
+    flickcurl_free_places(places);
+  }
+  
+  return (places == NULL);
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3601,6 +3637,9 @@ static flickcurl_cmd commands[] = {
   {"places.getPlaceTypes",
    "URL", "Get a list of available place types",
    command_places_getPlaceTypes, 0, 0},
+  {"places.placesForBoundingBox",
+   "PLACE-TYPE MIN-LONG MIN-LAT MAX-LONG MAX-LAT", "Find user places of PLACE-TYPE in bbox.",
+   command_places_placesForBoundingBox, 5, 5},
   {"places.placesForUser",
    "PLACE-TYPE [WOE-ID] [PLACE-ID [THRESHOLD]]]", "Find user places of PLACE-TYPE.",
    command_places_placesForUser, 1, 4},

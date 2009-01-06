@@ -432,8 +432,11 @@ flickcurl_places_getPlaceTypes(flickcurl* fc)
 /**
  * flickcurl_places_placesForBoundingBox:
  * @fc: flickcurl context
- * @bbox: A comma-delimited list of 4 values defining the Bounding Box of the area that will be searched. The 4 values represent the bottom-left corner of the box and the top-right corner, minimum_longitude, minimum_latitude, maximum_longitude, maximum_latitude.
- * @place_type: The place type to cluster photos by (or NULL)
+ * @place_type: The place type to cluster photos by
+ * @minimum_longitude: Bound Box bottom-left corner longitude
+ * @minimum_latitude: Bound Box bottom-left corner latitude
+ * @maximum_longitude: Bound Box top-right corner longitude
+ * @maximum_latitude: Bound Box top-right corner latitude
  * 
  * Return all the locations of a matching place type for a bounding box.
  *
@@ -447,25 +450,29 @@ flickcurl_places_getPlaceTypes(flickcurl* fc)
  * 
  * Return value: non-0 on failure
  **/
-int
-flickcurl_places_placesForBoundingBox(flickcurl* fc, const char* bbox,
-                                      flickcurl_place_type place_type)
+flickcurl_place**
+flickcurl_places_placesForBoundingBox(flickcurl* fc,
+                                      flickcurl_place_type place_type,
+                                      double minimum_longitude,
+                                      double minimum_latitude,
+                                      double maximum_longitude,
+                                      double maximum_latitude)
 {
   const char* parameters[10][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
+  flickcurl_place** places=NULL;
   char place_type_id_str[3];
-  int place_type_id;
-  
-  if(!bbox)
-    return 1;
+  int place_type_id = -1;
+  char bbox[255];
 
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
-    return 1;
-  
+    return NULL;
+
+  sprintf(bbox, "%f,%f,%f,%f",  minimum_longitude, minimum_latitude,
+          maximum_longitude, maximum_latitude);
   parameters[count][0]  = "bbox";
   parameters[count++][1]= bbox;
   /* deliberately not using deprecated parameter place_type */
@@ -476,7 +483,7 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc, const char* bbox,
   parameters[count][0]  = "place_type_id";
   sprintf(place_type_id_str, "%d", place_type_id);
   parameters[count++][1]= place_type_id_str;
-
+  
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.places.placesForBoundingBox", parameters,
@@ -495,16 +502,17 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc, const char* bbox,
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  places = flickcurl_build_places(fc, xpathCtx,
+                                  (const xmlChar*)"/rsp/places/place", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    places = NULL;
 
-  return (result == NULL);
+  return places;
 }
 
 

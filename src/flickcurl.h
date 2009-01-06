@@ -1635,7 +1635,7 @@ flickcurl_place_type flickcurl_get_place_type_by_label(const char* place_label);
 FLICKCURL_API
 flickcurl_place_type_info** flickcurl_places_getPlaceTypes(flickcurl* fc);
 FLICKCURL_API
-int flickcurl_places_placesForBoundingBox(flickcurl* fc, const char* bbox, flickcurl_place_type place_type);
+flickcurl_place** flickcurl_places_placesForBoundingBox(flickcurl* fc, flickcurl_place_type place_type, double minimum_longitude, double minimum_latitude, double maximum_longitude, double maximum_latitude);
 FLICKCURL_API
 int flickcurl_places_placesForContacts(flickcurl* fc, flickcurl_place_type place_type, const char* woe_id, const char* place_id, const char* threshold, const char* contacts, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date);
 FLICKCURL_API
