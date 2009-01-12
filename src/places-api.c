@@ -639,14 +639,19 @@ flickcurl_places_placesForContacts(flickcurl* fc,
   parameters[count][0]  = "place_type_id";
   sprintf(place_type_id_str, "%d", place_type_id);
   parameters[count++][1]= place_type_id_str;
-  parameters[count][0]  = "woe_id";
-  sprintf(woe_id_str, "%d", woe_id);
-  parameters[count++][1]= woe_id_str;
-  parameters[count][0]  = "place_id";
-  parameters[count++][1]= place_id;
+  if(woe_id >= 0) {
+    parameters[count][0]  = "woe_id";
+    sprintf(woe_id_str, "%d", woe_id);
+    parameters[count++][1]= woe_id_str;
+  }
+  if(place_id) {
+    parameters[count][0]  = "place_id";
+    parameters[count++][1]= place_id;
+  }
   parameters[count][0]  = "threshold";
   sprintf(threshold_str, "%d", threshold);
   parameters[count++][1]= threshold_str;
+
   if(contacts) {
     parameters[count][0]  = "contacts";
     parameters[count++][1]= contacts;

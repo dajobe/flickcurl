@@ -3327,11 +3327,13 @@ command_places_placesForContacts(flickcurl* fc, int argc, char *argv[])
   int max_taken_date = -1;
   
   place_type = flickcurl_get_place_type_by_label(argv[1]);
-  woe_id = atoi(argv[2]);
-  place_id = argv[3];
+  if(strcmp(argv[2], "-"))
+     woe_id = atoi(argv[2]);
+  if(strcmp(argv[3], "-"))
+     place_id = argv[3];
   threshold = atoi(argv[4]);
+  argv+= 5; argc-= 5;
 
-  argv+=4; argc-=4;
   while(!usage && argc) {
     char* field=argv[0];
     argv++; argc--;
