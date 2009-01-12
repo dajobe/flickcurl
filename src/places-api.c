@@ -197,6 +197,8 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
  *
  * Implements flickr.places.getChildrenWithPhotosPublic (1.7)
  * 
+ * @deprecated: Replaced by flickcurl_places_getChildrenWithPhotosPublic2() with integer woe_id argument.
+ *
  * Return value: array of places or NULL on failure
  **/
 flickcurl_place**
@@ -204,18 +206,46 @@ flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc,
                                              const char* place_id,
                                              const char* woe_id)
 {
+  int woe_id_i = -1;
+  if(woe_id)
+    woe_id_i = atoi(woe_id);
+  return flickcurl_places_getChildrenWithPhotosPublic2(fc, place_id, woe_id_i);
+}
+
+
+
+/**
+ * flickcurl_places_getChildrenWithPhotosPublic2:
+ * @fc: flickcurl context
+ * @place_id: A Places ID (or NULL)
+ * @woe_id: A Where On Earth (WOE) ID (or <0)
+ * 
+ * Return a list of locations with public photos that are parented by a Where on Earth (WOE) or Places ID.
+ *
+ * You must pass either a valid Places ID or a WOE ID.
+ *
+ * Replaces flickcurl_places_getChildrenWithPhotosPublic() with integer @woe_id arg.
+ * 
+ * Return value: array of places or NULL on failure
+ **/
+flickcurl_place**
+flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
+                                              const char* place_id, int woe_id)
+{
   const char* parameters[9][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_place** places=NULL;
+  char woe_id_str[10];
 
   if(place_id) {
     parameters[count][0]  = "place_id";
     parameters[count++][1]= place_id;
-  } else if(woe_id) {
+  } else if(woe_id >= 0) {
+    sprintf(woe_id_str, "%d", woe_id);
     parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id;
+    parameters[count++][1]= woe_id_str;
   } else
     return NULL;
 
@@ -254,10 +284,12 @@ flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc,
 /**
  * flickcurl_places_getInfo:
  * @fc: flickcurl context
- * @place_id: A Places ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
- * @woe_id: A Where On Earth (WOE) ID. (While optional, you must pass either a valid Places ID or a WOE ID.) (or NULL)
+ * @place_id: A Places ID (or NULL)
+ * @woe_id: A Where On Earth (WOE) ID. (or NULL)
  * 
- * Get informations about a place.
+ * Get information about a place.
+ *
+ * While optional, you must pass either a valid Places ID or a WOE ID.
  *
  * Implements flickr.places.getInfo (1.7)
  * 
@@ -266,24 +298,52 @@ flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc,
  * and in detail 2008-11-05
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4510
  * 
+ * @deprecated: Replaced by flickcurl_places_getInfo2() with integer woe_id argument.
+ *
+ * Return value: new place object or NULL on failure
+ **/
+flickcurl_place* flickcurl_places_getInfo(flickcurl* fc,
+                                          const char* place_id,
+                                          const char* woe_id)
+{
+  int woe_id_i = -1;
+  if(woe_id)
+    woe_id_i = atoi(woe_id);
+  return flickcurl_places_getInfo2(fc, place_id, woe_id_i);
+}
+
+
+/**
+ * flickcurl_places_getInfo2:
+ * @fc: flickcurl context
+ * @place_id: A Places ID. (or NULL)
+ * @woe_id: A Where On Earth (WOE) ID (or <0)
+ * 
+ * Get information about a place.
+ *
+ * While optional, you must pass either a valid Places ID or a WOE ID.
+ *
+ * Replaces flickcurl_places_getInfo() with integer woe_id argument.
+ *
  * Return value: new place object or NULL on failure
  **/
 flickcurl_place*
-flickcurl_places_getInfo(flickcurl* fc, const char* place_id,
-                         const char* woe_id)
+flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
 {
   const char* parameters[9][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   flickcurl_place* place=NULL;
+  char woe_id_str[10];
 
   if(place_id) {
     parameters[count][0]  = "place_id";
     parameters[count++][1]= place_id;
-  } else if(woe_id) {
+  } else if(woe_id >= 0) {
+    sprintf(woe_id_str, "%d", woe_id);
     parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id;
+    parameters[count++][1]= woe_id_str;
   } else
     return NULL;
 
@@ -524,41 +584,52 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
  * @place_id: A Places ID to use to filter photo clusters (or NULL)
  * @threshold: The minimum number of photos that a place type must have to be included. If the number of photos is lowered then the parent place type for that place will be used.
  * @contacts: Search your contacts. Either 'all' or 'ff' for just friends and family. (Default is 'all') (or NULL)
- * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
- * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
- * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
- * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned (or <0)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned (or <0)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned (or <0)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned (or <0)
  * 
  * Return a list of the top 100 unique places clustered by a given
  * placetype for a user's contacts.
+ *
+ * One of @woe_id or @place_id must be given.
  *
  * Implements flickr.places.placesForContacts (1.8)
  * 
  * Return value: non-0 on failure
  **/
-int
+flickcurl_place**
 flickcurl_places_placesForContacts(flickcurl* fc,
                                    flickcurl_place_type place_type,
-                                   const char* woe_id,
+                                   int woe_id,
                                    const char* place_id,
-                                   const char* threshold,
+                                   int threshold,
                                    const char* contacts,
-                                   const char* min_upload_date,
-                                   const char* max_upload_date,
-                                   const char* min_taken_date,
-                                   const char* max_taken_date)
+                                   int min_upload_date,
+                                   int max_upload_date,
+                                   int min_taken_date,
+                                   int max_taken_date)
 {
   const char* parameters[17][2];
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
+  flickcurl_place** places=NULL;
   char place_type_id_str[3];
   int place_type_id;
-
+  char min_upload_date_s[20];
+  char max_upload_date_s[20];
+  char min_taken_date_s[20];
+  char max_taken_date_s[20];
+  char woe_id_str[10];
+  char threshold_str[10];
+  
+  if(!woe_id && !place_id)
+    return NULL;
+  
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
-    return 1;
+    return NULL;
   
   /* deliberately not using deprecated parameter place_type */
 /*  
@@ -569,22 +640,38 @@ flickcurl_places_placesForContacts(flickcurl* fc,
   sprintf(place_type_id_str, "%d", place_type_id);
   parameters[count++][1]= place_type_id_str;
   parameters[count][0]  = "woe_id";
-  parameters[count++][1]= woe_id;
+  sprintf(woe_id_str, "%d", woe_id);
+  parameters[count++][1]= woe_id_str;
   parameters[count][0]  = "place_id";
   parameters[count++][1]= place_id;
   parameters[count][0]  = "threshold";
-  parameters[count++][1]= threshold;
-  parameters[count][0]  = "contacts";
-  parameters[count++][1]= contacts;
-  parameters[count][0]  = "min_upload_date";
-  parameters[count++][1]= min_upload_date;
-  parameters[count][0]  = "max_upload_date";
-  parameters[count++][1]= max_upload_date;
-  parameters[count][0]  = "min_taken_date";
-  parameters[count++][1]= min_taken_date;
-  parameters[count][0]  = "max_taken_date";
-  parameters[count++][1]= max_taken_date;
-
+  sprintf(threshold_str, "%d", threshold);
+  parameters[count++][1]= threshold_str;
+  if(contacts) {
+    parameters[count][0]  = "contacts";
+    parameters[count++][1]= contacts;
+  }
+  if(min_upload_date >= 0) {
+    sprintf(min_upload_date_s, "%d", min_upload_date);
+    parameters[count][0]  = "min_upload_date";
+    parameters[count++][1]= min_upload_date_s;
+  }
+  if(max_upload_date >= 0) {
+    sprintf(max_upload_date_s, "%d", max_upload_date);
+    parameters[count][0]  = "max_upload_date";
+    parameters[count++][1]= max_upload_date_s;
+  }
+  if(min_taken_date >= 0) {
+    sprintf(min_taken_date_s, "%d", min_taken_date);
+    parameters[count][0]  = "min_taken_date";
+    parameters[count++][1]= min_taken_date_s;
+  }
+  if(max_taken_date >= 0) {
+    sprintf(max_taken_date_s, "%d", max_taken_date);
+    parameters[count][0]  = "max_taken_date";
+    parameters[count++][1]= max_taken_date_s;
+  }
+  
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.places.placesForContacts", parameters,
@@ -603,16 +690,17 @@ flickcurl_places_placesForContacts(flickcurl* fc,
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  places = flickcurl_build_places(fc, xpathCtx,
+                                  (const xmlChar*)"/rsp/places/place", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    places = NULL;
 
-  return (result == NULL);
+  return places;
 }
 
 
@@ -656,7 +744,7 @@ flickcurl_places_placesForContacts(flickcurl* fc,
 int
 flickcurl_places_placesForTags(flickcurl* fc,
                                flickcurl_place_type place_type,
-                               const char* woe_id,
+                               int woe_id,
                                const char* place_id,
                                const char* threshold,
                                const char* tags, const char* tag_mode,
@@ -671,6 +759,7 @@ flickcurl_places_placesForTags(flickcurl* fc,
   void* result=NULL;
   char place_type_id_str[3];
   int place_type_id;
+  char woe_id_str[10];
   
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
@@ -680,7 +769,8 @@ flickcurl_places_placesForTags(flickcurl* fc,
   sprintf(place_type_id_str, "%d", place_type_id);
   parameters[count++][1]= place_type_id_str;
   parameters[count][0]  = "woe_id";
-  parameters[count++][1]= woe_id;
+  sprintf(woe_id_str, "%d", woe_id);
+  parameters[count++][1]= woe_id_str;
   parameters[count][0]  = "place_id";
   parameters[count++][1]= place_id;
   parameters[count][0]  = "threshold";

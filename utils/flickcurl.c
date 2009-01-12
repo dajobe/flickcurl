@@ -3027,20 +3027,20 @@ command_places_getInfo(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_place* place=NULL;
   const char* place_id=NULL;
-  const char* woe_id=NULL;
+  int woe_id = -1;
 
   if(strcmp(argv[1], "-"))
     place_id = argv[1];
 
   if(argc > 2) {
     if(strcmp(argv[2], "-"))
-      woe_id = argv[2];
+      woe_id = atoi(argv[2]);
   }
 
   if(!place_id && !woe_id)
     return 1;
   
-  place=flickcurl_places_getInfo(fc, place_id, woe_id);
+  place=flickcurl_places_getInfo2(fc, place_id, woe_id);
   if(place) {
     command_print_place(place, NULL, NULL, 1);
     flickcurl_free_place(place);
@@ -3071,20 +3071,20 @@ command_places_getChildrenWithPhotosPublic(flickcurl* fc, int argc, char *argv[]
 {
   flickcurl_place** places=NULL;
   const char* place_id=NULL;
-  const char* woe_id=NULL;
+  int woe_id = -1;
 
   if(strcmp(argv[1], "-"))
     place_id = argv[1];
 
   if(argc > 2) {
     if(strcmp(argv[2], "-"))
-      woe_id = argv[2];
+      woe_id = atoi(argv[2]);
   }
 
   if(!place_id && !woe_id)
     return 1;
   
-  places=flickcurl_places_getChildrenWithPhotosPublic(fc, place_id, woe_id);
+  places=flickcurl_places_getChildrenWithPhotosPublic2(fc, place_id, woe_id);
   if(places) {
     int i;
     for(i=0; places[i]; i++) {
@@ -3307,6 +3307,79 @@ command_places_placesForBoundingBox(flickcurl* fc, int argc, char *argv[])
     flickcurl_free_places(places);
   }
   
+  return (places == NULL);
+}
+
+
+static int
+command_places_placesForContacts(flickcurl* fc, int argc, char *argv[])
+{
+  int usage=0;
+  flickcurl_place** places=NULL;
+  flickcurl_place_type place_type = FLICKCURL_PLACE_LOCATION;
+  int woe_id = -1;
+  char* place_id = NULL;
+  int threshold = -1;
+  char* contacts = NULL;
+  int min_upload_date = -1;
+  int max_upload_date = -1;
+  int min_taken_date = -1;
+  int max_taken_date = -1;
+  
+  place_type = flickcurl_get_place_type_by_label(argv[1]);
+  woe_id = atoi(argv[2]);
+  place_id = argv[3];
+  threshold = atoi(argv[4]);
+
+  argv+=4; argc-=4;
+  while(!usage && argc) {
+    char* field=argv[0];
+    argv++; argc--;
+
+    if(!strcmp(field, "contacts")) {
+      contacts = argv[0];
+      argv++; argc--;
+    } else if(!strcmp(field, "min-upload")) {
+      min_upload_date = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "max-upload")) {
+      max_upload_date = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "min-taken")) {
+      min_taken_date = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "max-taken")) {
+      max_taken_date = atoi(argv[0]);
+      argv++; argc--;
+    } else {
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      usage=1;
+    }
+  }
+
+  if(usage) {
+    places = NULL;
+    goto tidy;
+  }
+
+  places = flickcurl_places_placesForContacts(fc,
+                                              place_type, 
+                                              woe_id, place_id, threshold,
+                                              contacts,
+                                              min_upload_date,
+                                              max_upload_date,
+                                              min_taken_date,
+                                              max_taken_date);
+  if(places) {
+    int i;
+    for(i=0; places[i]; i++) {
+      fprintf(stderr, "Place Result #%d\n", i);
+      command_print_place(places[i], NULL, NULL, 0);
+    }
+    flickcurl_free_places(places);
+  }
+
+  tidy:
   return (places == NULL);
 }
 
@@ -3640,6 +3713,9 @@ static flickcurl_cmd commands[] = {
   {"places.placesForBoundingBox",
    "PLACE-TYPE MIN-LONG MIN-LAT MAX-LONG MAX-LAT", "Find user places of PLACE-TYPE in bbox.",
    command_places_placesForBoundingBox, 5, 5},
+  {"places.placesForContacts",
+   "PLACE-TYPE WOE-ID|- PLACE-ID|- THRESHOLD [PARAMS]", "Find top 100 unique places clustered by a given PLACE-TYPE for a\nuser's contacts with optional parameters\n  contacts CONTACTS  min-upload MIN-UPLOAD-DATE  max-upload MAX-UPLOAD-DATE\n  min-taken MIN-TAKEN-DATE  max-taken MAX-TAKEN-DATE",
+   command_places_placesForContacts, 4, 0},
   {"places.placesForUser",
    "PLACE-TYPE [WOE-ID] [PLACE-ID [THRESHOLD]]]", "Find user places of PLACE-TYPE.",
    command_places_placesForUser, 1, 4},

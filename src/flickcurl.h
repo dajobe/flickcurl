@@ -1619,10 +1619,14 @@ FLICKCURL_API
 flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);
 FLICKCURL_API
 flickcurl_place* flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon, int accuracy);
-FLICKCURL_API
+FLICKCURL_API FLICKCURL_DEPRECATED
 flickcurl_place** flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc, const char* place_id, const char* woe_id);
 FLICKCURL_API
+flickcurl_place** flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc, const char* place_id, int woe_id);
+FLICKCURL_API FLICKCURL_DEPRECATED
 flickcurl_place* flickcurl_places_getInfo(flickcurl* fc, const char* place_id, const char* woe_id);
+FLICKCURL_API
+flickcurl_place* flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, const int woe_id);
 FLICKCURL_API
 flickcurl_place* flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url);
 FLICKCURL_API
@@ -1637,9 +1641,9 @@ flickcurl_place_type_info** flickcurl_places_getPlaceTypes(flickcurl* fc);
 FLICKCURL_API
 flickcurl_place** flickcurl_places_placesForBoundingBox(flickcurl* fc, flickcurl_place_type place_type, double minimum_longitude, double minimum_latitude, double maximum_longitude, double maximum_latitude);
 FLICKCURL_API
-int flickcurl_places_placesForContacts(flickcurl* fc, flickcurl_place_type place_type, const char* woe_id, const char* place_id, const char* threshold, const char* contacts, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date);
+flickcurl_place** flickcurl_places_placesForContacts(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold, const char* contacts, int min_upload_date, int max_upload_date, int min_taken_date, int max_taken_date);
 FLICKCURL_API
-int flickcurl_places_placesForTags(flickcurl* fc, flickcurl_place_type place_type, const char* woe_id, const char* place_id, const char* threshold, const char* tags, const char* tag_mode, const char* machine_tags, const char* machine_tag_mode, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date);
+int flickcurl_places_placesForTags(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, const char* threshold, const char* tags, const char* tag_mode, const char* machine_tags, const char* machine_tag_mode, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date);
 FLICKCURL_API
 flickcurl_place** flickcurl_places_placesForUser(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold);
 FLICKCURL_API FLICKCURL_DEPRECATED
