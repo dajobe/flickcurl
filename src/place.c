@@ -114,14 +114,8 @@ flickcurl_free_place(flickcurl_place *place)
       free(place->woe_ids[i]);
   }
   
-  if(place->shapedata)
-    free(place->shapedata);
-
-  if(place->shapefile_urls) {
-    for(i = 0 ; i < place->shapefile_urls_count; i++)
-      free(place->shapefile_urls[i]);
-    free(place->shapefile_urls);
-  }
+  if(place->shape)
+    flickcurl_free_shape(place->shape);
 
   free(place);
 }
