@@ -55,7 +55,7 @@
  *
  * Implements flickr.contacts.getList (0.11)
  * 
- * Return value: non-0 on failure
+ * Return value: NULL on failure
  **/
 flickcurl_contact**
 flickcurl_contacts_getList(flickcurl* fc, const char* filter,
@@ -116,6 +116,78 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
 
   if(fc->failed)
     contacts=NULL;
+
+  return contacts;
+}
+
+
+/**
+ * flickcurl_contacts_getListRecentlyUploaded:
+ * @fc: flickcurl context
+ * @date_lastupload: Limits the results to contacts that have uploaded photos since this date (in the form of a Unix timestamp).  The default, and maximum, offset is 1 hour.  (or < 0)
+ * @filter: Limit the result set to all contacts or only those who are friends or family. Valid options are: ff: friends and family, all: all your contacts. Default value is "all". (or NULL)
+ * 
+ * Return a list of contacts for a user who have recently uploaded
+ * photos along with the total count of photos uploaded.
+ *
+ * This API added 2009-01-14 as announced in
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4668
+ *
+ * Implements flickr.contacts.getListRecentlyUploaded (1.8)
+ * 
+ * Return value: NULL on failure
+ **/
+flickcurl_contact**
+flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
+                                           int date_lastupload,
+                                           const char* filter)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_contact** contacts=NULL;
+  int contacts_count=0;
+  char date_lastupload_str[20];
+  
+  if(date_lastupload >= 0) {
+    parameters[count][0]  = "date_lastupload";
+    sprintf(date_lastupload_str, "%d", date_lastupload);
+    parameters[count++][1]= date_lastupload_str;
+  }
+  if(filter) {
+    parameters[count][0]  = "filter";
+    parameters[count++][1]= filter;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.contacts.getListRecentlyUploaded",
+                       parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  contacts=flickcurl_build_contacts(fc, xpathCtx, 
+                                    (xmlChar*)"/rsp/contacts/contact", 
+                                    &contacts_count);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    contacts = NULL;
 
   return contacts;
 }

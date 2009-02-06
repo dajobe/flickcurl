@@ -2,7 +2,7 @@
  *
  * flickcurl utility - Invoke the Flickcurl library
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -667,6 +667,7 @@ command_tags_getListPhoto(flickcurl* fc, int argc, char *argv[])
 
   command_print_tags(tags, "Photo ID", photo_id);
   free(tags);
+
   return 0;
 }
 
@@ -3386,6 +3387,184 @@ command_places_placesForContacts(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_contact(flickcurl_contact* contact, int i)
+{
+  fprintf(stderr,
+          "contact %d: NSID %s username %s iconserver %d realname %s friend %d family %d ignored %d upload count %d\n",
+          i,
+          contact->nsid, contact->username,
+          contact->iconserver, contact->realname,
+          contact->is_friend, contact->is_family,
+          contact->ignored, contact->uploaded);
+}
+
+
+static int
+command_contacts_getList(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_contact **contacts = NULL;
+  const char* filter = NULL;
+  int page = -1;
+  int per_page = -1;
+  
+  if(argc >1) {
+    filter = argv[1];
+    if(argc >2) {
+      per_page = parse_page_param(argv[2]);
+      if(argc >3) {
+        page = parse_page_param(argv[3]);
+      }
+    }
+  }
+
+  contacts = flickcurl_contacts_getList(fc, filter, page, per_page);
+  if(contacts) {
+    int i;
+    for(i=0; contacts[i]; i++)
+      command_print_contact(contacts[i], i);
+
+    flickcurl_free_contacts(contacts);
+  }
+
+  return (contacts == NULL);
+}
+
+
+static int
+command_contacts_getListRecentlyUploaded(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_contact **contacts = NULL;
+  int date_lastupload = 1;
+  const char* filter = NULL;
+  
+  if(argc >1) {
+    date_lastupload = atoi(argv[1]);
+    if(argc >2) {
+      filter = argv[2];
+    }
+  }
+
+  contacts = flickcurl_contacts_getListRecentlyUploaded(fc, date_lastupload,
+                                                        filter);
+  if(contacts) {
+    int i;
+    for(i=0; contacts[i]; i++)
+      command_print_contact(contacts[i], i);
+
+    flickcurl_free_contacts(contacts);
+  }
+
+  return (contacts == NULL);
+}
+
+
+static int
+command_places_getShapeHistory(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_shapedata **shapes = NULL;
+  int woe_id = -1;
+  char* place_id = NULL;
+
+  if(strcmp(argv[1], "-"))
+    place_id = argv[1];
+  if(argc > 2) {
+    if(strcmp(argv[2], "-"))
+     woe_id = atoi(argv[2]);
+  }
+
+  if(!woe_id < 0 && !place_id)
+    return NULL;
+
+  shapes = flickcurl_places_getShapeHistory(fc, place_id, woe_id);
+  if(shapes) {
+    int i;
+    for(i=0; shapes[i]; i++) {
+      fprintf(stderr,
+              "Shape %d: created %d  alpha %2.2f  #points %d  #edges %d  data size: %d bytes  urls count: %d\n",
+              i, shapes[i]->created, shapes[i]->alpha,
+              shapes[i]->points, shapes[i]->edges,
+              (int)(shapes[i]->data_length),
+              shapes[i]->file_urls_count);
+      if(shapes[i]->file_urls_count > 0) {
+        int j;
+        for(j=0; j < shapes[i]->file_urls_count; j++) {
+          fprintf(stderr,"  URL %d: %s\n", j, shapes[i]->file_urls[j]);
+        }
+      }
+
+    }
+    flickcurl_free_shapes(shapes);
+  }
+
+  return (shapes == NULL);
+}
+
+
+static int
+command_places_tagsForPlace(flickcurl* fc, int argc, char *argv[])
+{
+  int usage=0;
+  flickcurl_tag **tags = NULL;
+  int woe_id = -1;
+  const char* place_id = NULL;
+  int min_upload_date = -1;
+  int max_upload_date = -1;
+  int min_taken_date = -1;
+  int max_taken_date = -1;
+    
+  argv++; argc--;
+  if(strcmp(argv[0], "-"))
+    place_id = argv[0];
+  argv++; argc--;
+  if(argc) {
+    if(strcmp(argv[0], "-"))
+     woe_id = atoi(argv[0]);
+  }
+
+  while(!usage && argc > 0) {
+    char* field=argv[0];
+    argv++; argc--;
+
+    if(!strcmp(field, "min-upload")) {
+      min_upload_date = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "max-upload")) {
+      max_upload_date = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "min-taken")) {
+      min_taken_date = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "max-taken")) {
+      max_taken_date = atoi(argv[0]);
+      argv++; argc--;
+    } else {
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      usage=1;
+    }
+  }
+
+  if(usage) {
+    tags = NULL;
+    goto tidy;
+  }
+
+  tags = flickcurl_places_tagsForPlace(fc, woe_id, place_id,
+                                       min_upload_date, max_upload_date,
+                                       min_taken_date, max_taken_date);
+  if(tags) {
+    fprintf(stderr, "%s: Tags for WOE ID %d / place ID %s\n",
+            program, woe_id, place_id);
+    command_print_tags(tags, NULL, NULL);
+    free(tags);
+  }
+
+  tidy:
+  return (tags == NULL);
+}
+
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3438,6 +3617,13 @@ static flickcurl_cmd commands[] = {
   {"blogs.postPhoto",
    "BLOG-ID PHOTO-ID TITLE DESCRIPTION [BLOG-PASSWORD]", "Post PHOTO-ID to blog BLOG-ID with TITLE, DESCRIPTION and optional password.",
    command_blogs_postPhoto, 4, 5},
+
+  {"contacts.getList",
+   "[FILTER [PER-PAGE [PAGE]]]", "Get a list of contacts with optional FILTER", 
+   command_contacts_getList, 0, 3},
+  {"contacts.getListRecentlyUploaded",
+   "[DATE-LAST-UPLOAD [FILTER]]", "Get a list of recent uploading contacts since DATE-LAST-UPLOAD with optional FILTER", 
+   command_contacts_getListRecentlyUploaded, 0, 2},
 
   {"favorites.add",
    "PHOTO-ID", "Adds PHOTO-ID to the current user's favorites.",
@@ -3712,6 +3898,9 @@ static flickcurl_cmd commands[] = {
   {"places.getPlaceTypes",
    "URL", "Get a list of available place types",
    command_places_getPlaceTypes, 0, 0},
+  {"places.getShapeHistory",
+   "PLACE-ID|- [WOE-ID|-]", "Get history of shapes for a place by PLACE-ID or WOE-ID",
+   command_places_getShapeHistory, 1, 0},
   {"places.placesForBoundingBox",
    "PLACE-TYPE MIN-LONG MIN-LAT MAX-LONG MAX-LAT", "Find user places of PLACE-TYPE in bbox.",
    command_places_placesForBoundingBox, 5, 5},
@@ -3727,6 +3916,9 @@ static flickcurl_cmd commands[] = {
   {"places.resolvePlaceURL",
    "PLACE-URL", "Find places information by PLACE-URL.",
    command_places_resolvePlaceURL, 1, 1},
+  {"places.tagsForPlace",
+   "PLACE-ID|- [WOE-ID|-]", "Get tags for a place by PLACE-ID or WOE-ID with optional parameters\n  min-upload MIN-UPLOAD-DATE  max-upload MAX-UPLOAD-DATE\n  min-taken MIN-TAKEN-DATE  max-taken MAX-TAKEN-DATE",
+   command_places_tagsForPlace, 1, 0},
 
   {"prefs.getContentType",
    "", "Get default content type preference for user.",

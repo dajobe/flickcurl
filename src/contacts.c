@@ -147,19 +147,24 @@ flickcurl_build_contacts(flickcurl* fc,
         contact_object->ignored=atoi((const char*)attr_value);
         free(attr_value);
       }
+      else if(!strcmp(attr_name, "uploaded")) {
+        contact_object->uploaded = atoi((const char*)attr_value);
+        free(attr_value);
+      }
       else
         free(attr_value);
     }
 
 #if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "contact: NSID %s username %s iconserver %d realname %s friend %d family %d ignored %d\n",
+    fprintf(stderr, "contact: NSID %s username %s iconserver %d realname %s friend %d family %d ignored %d uploaded %d\n",
             contact_object->nsid,
             contact_object->username,
             contact_object->iconserver,
             contact_object->realname,
             contact_object->is_friend,
             contact_object->is_family,
-            contact_object->ignored);
+            contact_object->ignored,
+            contact_object->uploaded);
 #endif
     
     contacts[contact_count++]=contact_object;

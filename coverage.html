@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (124/124)</span>
+<span class="coverage">100.7% (135/134)</span>
 </p>
 
 
@@ -70,6 +70,7 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.contacts.getList.html">flickr.contacts.getList</a> (0.11)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.contacts.getListRecentlyUploaded.html">flickr.contacts.getListRecentlyUploaded</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.contacts.getPublicList.html">flickr.contacts.getPublicList</a> (0.11)</li>
 </ul>
 
@@ -178,9 +179,13 @@ or <span class="unsupported">unsupported</span>.
 <h3>photos.geo</h3>
 
 <ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.batchCorrectLocation.html">flickr.photos.geo.batchCorrectLocation</a> (1.8)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.correctLocation.html">flickr.photos.geo.correctLocation</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.getLocation.html">flickr.photos.geo.getLocation</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.getPerms.html">flickr.photos.geo.getPerms</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.photosoForLocation.html">flickr.photos.geo.photosForLocation</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.removeLocation.html">flickr.photos.geo.removeLocation</a> (0.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.setContext.html">flickr.photos.geo.setContext</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.setLocation.html">flickr.photos.geo.setLocation</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.geo.setPerms.html">flickr.photos.geo.setPerms</a> (0.12)</li>
 </ul>
@@ -249,13 +254,21 @@ or <span class="unsupported">unsupported</span>.
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.find.html">flickr.places.find</a> (1.1)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.findByLatLon.html">flickr.places.findByLatLon</a> (1.1)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getChildrenWithPhotosPublic.html">flickr.places.getChildrenWithPhotosPublic</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getInfo.html">flickr.places.getInfo</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getInfoByUrl.html">flickr.places.getInfoByUrl</a> (1.7)</li>
-  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getChildrenWithPhotosPublic.html">flickr.places.getChildrenWithPhotosPublic</a> (1.7)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getPlaceTypes.html">flickr.places.getPlaceTypes</a> (1.8)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getShapeHistory.html">flickr.places.getShapeHistory</a> (1.8)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForBoundingBox.html">flickr.places.placesForBoundingBox</a> (1.8)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForContacts.html">flickr.places.placesForContacts</a> (1.8)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForTags.html">flickr.places.placesForTags</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForUser.html">flickr.places.placesForUser</a> (1.6)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceId.html">flickr.places.resolvePlaceId</a> (1.0)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.resolvePlaceURL.html">flickr.places.resolvePlaceURL</a> (1.0)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.tagsForPlace.html">flickr.places.tagsForPlace</a> (1.8)</li>
 </ul>
+
+
 
 <h3>prefs</h3>
 <ul>
@@ -310,6 +323,22 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.8</strong>: flickr.contacts.getListRecentlyUploaded, flickr.photos.geo.batchCorrectLocation, flickr.photos.geo.correctLocation, flickr.photos.geo.photosForLocation, flickr.photos.geo.setContext, flickr.places.getPlaceTypes, flickr.places.getShapeHistory, flickr.places.placesForBoundingBox, flickr.places.placesForContacts, flickr.places.placesForTags, flickr.places.tagsForPlace (11 new)</p>
+<pre>
+flickcurl_contact** flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc, int date_lastupload, const char* filter);
+int flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc, flickcurl_location* location, const char* place_id, int woe_id);
+int flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id, const char* place_id, int woe_id);
+flickcurl_photo** flickcurl_photos_geo_photosForLocation(flickcurl* fc, flickcurl_location* location, const char* extras, int per_page, int page);
+int flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id, int context);
+flickcurl_place_type_info** flickcurl_places_getPlaceTypes(flickcurl* fc);
+flickcurl_shapedata** flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id, int woe_id);
+flickcurl_place** flickcurl_places_placesForBoundingBox(flickcurl* fc, flickcurl_place_type place_type, double minimum_longitude, double minimum_latitude, double maximum_longitude, double maximum_latitude);
+flickcurl_place** flickcurl_places_placesForContacts(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, int threshold, const char* contacts, int min_upload_date, int max_upload_date, int min_taken_date, int max_taken_date);
+int flickcurl_places_placesForTags(flickcurl* fc, flickcurl_place_type place_type, int woe_id, const char* place_id, const char* threshold, const char* tags, const char* tag_mode, const char* machine_tags, const char* machine_tag_mode, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date);
+flickcurl_tag** flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id, int min_upload_date, int max_upload_date, int min_taken_date, int max_taken_date);
+</pre>
+
 
 <p><strong>1.7</strong>: flickr.machinetags.getNamespaces, flickr.machinetags.getPairs, flickr.machinetags.getPredicates, flickr.machinetags.getValues, flickr.places.getChildrenWithPhotosPublic, flickr.places.getInfo, flickr.places.getInfoByUrl, flickr.tags.getClusterPhotos (8 new)</p>
 <pre>

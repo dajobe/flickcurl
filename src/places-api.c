@@ -5,7 +5,7 @@
  * Places API announced 2008-01-11
  * http://tech.groups.yahoo.com/group/yws-flickr/message/3688
  *
- * Copyright (C) 2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2008-2009, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -486,6 +486,80 @@ flickcurl_places_getPlaceTypes(flickcurl* fc)
     place_types = NULL;
 
   return place_types;
+}
+
+
+/**
+ * flickcurl_places_getShapeHistory:
+ * @fc: flickcurl context
+ * @place_id: A Flickr Places ID (or NULL)
+ * @woe_id: A Where On Earth (WOE) ID (or <0)
+ * 
+ * Return an historical list of all the shape data generated for a
+ * Places or Where on Earth (WOE) ID.
+ *
+ * While optional, you must pass either a valid Places ID or a WOE ID.
+ *
+ * Implements flickr.places.getShapeHistory (1.8)
+ * 
+ * Announced 2009-01-12 in
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4669
+ * 
+ * Return value: NULL on failure
+ **/
+flickcurl_shapedata**
+flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
+                                 int woe_id)
+{
+  const char* parameters[9][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  flickcurl_shapedata** shapes=NULL;
+  char woe_id_str[20];
+  
+  if(!place_id && woe_id < 0)
+    return NULL;
+
+  if(place_id) {
+    parameters[count][0]  = "place_id";
+    parameters[count++][1]= place_id;
+  }
+  if(woe_id >=0) {
+    parameters[count][0]  = "woe_id";
+    sprintf(woe_id_str, "%d", woe_id);
+    parameters[count++][1]= woe_id_str;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.getShapeHistory", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  shapes = flickcurl_build_shapes(fc, xpathCtx,
+                                  (const xmlChar*)"/rsp/shapes/shapedata",
+                                  NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    shapes = NULL;
+
+  return shapes;
 }
 
 
@@ -1059,4 +1133,105 @@ flickcurl_places_forUser(flickcurl* fc, flickcurl_place_type place_type,
 {
   return flickcurl_places_placesForUser(fc, place_type, woe_id, place_id,
                                         threshold);
+}
+
+
+/**
+ * flickcurl_places_tagsForPlace:
+ * @fc: flickcurl context
+ * @woe_id: A Where on Earth identifier to use to filter photo clusters (or <0)
+ * @place_id: A Flickr Places identifier to use to filter photo clusters (or NULL)
+ * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
+ * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
+ * 
+ * Return a list of the top 100 unique tags for a Flickr Places or
+ * Where on Earth (WOE) ID
+ *
+ * (While optional, you must pass either a valid Places ID or a WOE ID.)
+*
+ * Implements flickr.places.tagsForPlace (1.8)
+ * 
+ * Return value: NULL on failure
+ **/
+flickcurl_tag**
+flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
+                              int min_upload_date, int max_upload_date,
+                              int min_taken_date, int max_taken_date)
+{
+  const char* parameters[13][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx=NULL; 
+  char woe_id_str[20];
+  char min_upload_date_str[20];
+  char max_upload_date_str[20];
+  char min_taken_date_str[20];
+  char max_taken_date_str[20];
+  flickcurl_tag** tags=NULL;
+  
+  if(woe_id < 0 && !place_id)
+    return NULL;
+
+  if(woe_id >= 0) {
+    parameters[count][0]  = "woe_id";
+    sprintf(woe_id_str, "%d", woe_id);
+    parameters[count++][1]= woe_id_str;
+  }
+  if(place_id) {
+    parameters[count][0]  = "place_id";
+    parameters[count++][1]= place_id;
+  }
+  if(min_upload_date) {
+    parameters[count][0]  = "min_upload_date";
+    sprintf(min_upload_date_str, "%d", min_upload_date);
+    parameters[count++][1]= min_upload_date_str;
+  }
+  if(min_upload_date) {
+    parameters[count][0]  = "max_upload_date";
+    sprintf(min_upload_date_str, "%d", min_upload_date);    
+    parameters[count++][1]= max_upload_date_str;
+  }
+  if(max_upload_date) {
+    parameters[count][0]  = "min_taken_date";
+    sprintf(max_upload_date_str, "%d", max_upload_date);    
+    parameters[count++][1]= min_taken_date_str;
+  }
+  if(min_taken_date) {
+    parameters[count][0]  = "max_taken_date";
+    sprintf(min_taken_date_str, "%d", min_taken_date);    
+    parameters[count++][1]= max_taken_date_str;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.tagsForPlace", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  tags=flickcurl_build_tags(fc, NULL,
+                            xpathCtx, 
+                            (xmlChar*)"/rsp/tags/tag", 
+                            NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tags=NULL;
+
+  return tags;
 }

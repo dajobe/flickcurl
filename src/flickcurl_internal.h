@@ -204,6 +204,10 @@ flickcurl_place** flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpath
 flickcurl_place* flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 flickcurl_place_type_info** flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* place_type_count_p);
 
+/* shape.c */
+flickcurl_shapedata** flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* shape_count_p);
+flickcurl_shapedata* flickcurl_build_shape(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
+
 /* size.c */
 flickcurl_size** flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* size_count_p);
 
