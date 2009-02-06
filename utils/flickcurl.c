@@ -3474,7 +3474,7 @@ command_places_getShapeHistory(flickcurl* fc, int argc, char *argv[])
   }
 
   if(!woe_id < 0 && !place_id)
-    return NULL;
+    return 1;
 
   shapes = flickcurl_places_getShapeHistory(fc, place_id, woe_id);
   if(shapes) {
