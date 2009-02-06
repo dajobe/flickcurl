@@ -212,9 +212,9 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(!value)
         continue;
 
-//#if FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
       fprintf(stderr, "field %d with value: '%s'\n", (int)shape_field, value);
-//#endif
+#endif
       
       switch(shape_field) {
         case SHAPE_CREATED:
