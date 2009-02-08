@@ -3565,13 +3565,13 @@ command_places_tagsForPlace(flickcurl* fc, int argc, char *argv[])
 
 
 static void
-command_print_institution(flickcurl_institution* institution, int index)
+command_print_institution(flickcurl_institution* institution, int ix)
 {
   int i;
 
   fprintf(stderr, "Institution %d:\n"
           "  NSID: %s\n  Date launch: %d\n  Name: %s\n",
-          index, institution->nsid, institution->date_launch,
+          ix, institution->nsid, institution->date_launch,
           institution->name);
 
   for(i = 0 ; i <= FLICKCURL_INSTITUTION_URL_LAST; i++) {
