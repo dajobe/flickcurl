@@ -294,7 +294,7 @@ static const char* flickcurl_institution_url_type_label[FLICKCURL_INSTITUTION_UR
 
 
 /**
- * flickcurl_get_institution_url_label:
+ * flickcurl_get_institution_url_type_label:
  * @url_type: institution url enum
  *
  * Get label for institution url type
@@ -308,5 +308,3 @@ flickcurl_get_institution_url_type_label(flickcurl_institution_url_type url_type
     return flickcurl_institution_url_type_label[(int)url_type];
   return NULL;
 }
-
-
