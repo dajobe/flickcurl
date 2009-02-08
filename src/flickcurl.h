@@ -456,11 +456,10 @@ typedef struct {
  * @name: Institution name
  * @urls: Array of related urls.
  *
- * Flickr Commons instituiion
+ * Flickr Commons institution
  *
  */
-typedef struct 
-{
+typedef struct {
   char *nsid;
   int date_launch;
   char *name;
