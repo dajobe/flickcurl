@@ -74,9 +74,20 @@ flickcurl_free_comments
 </SECTION>
 
 <SECTION>
+<FILE>section-commons</FILE>
+flickcurl_institution
+flickcurl_institution_url_type
+flickcurl_free_institution
+flickcurl_free_institutions
+flickcurl_get_institution_url_type_label
+flickcurl_commons_getInstitutions
+</SECTION>
+
+<SECTION>
 <FILE>section-contact</FILE>
 flickcurl_contact
 flickcurl_contacts_getList
+flickcurl_contacts_getListRecentlyUploaded
 flickcurl_contacts_getPublicList
 flickcurl_free_contact
 flickcurl_free_contacts
@@ -175,9 +186,14 @@ flickcurl_photos_comments_deleteComment
 flickcurl_photos_comments_editComment
 flickcurl_photos_comments_getList
 flickcurl_photos_delete
+flickcurl_photos_geo_batchCorrectLocation
+flickcurl_photos_geo_correctLocation
 flickcurl_photos_geo_getLocation
 flickcurl_photos_geo_getPerms
+flickcurl_photos_geo_photosForLocation
+flickcurl_photos_geo_photosForLocation_params
 flickcurl_photos_geo_removeLocation
+flickcurl_photos_geo_setContext
 flickcurl_photos_geo_setLocation
 flickcurl_photos_geo_setPerms
 flickcurl_photos_getAllContexts
@@ -264,17 +280,29 @@ flickcurl_place
 flickcurl_free_place
 flickcurl_free_places
 flickcurl_place_type
+flickcurl_place_type_info
+flickcurl_place_type_to_id
+flickcurl_free_place_type_infos
 flickcurl_get_place_type_by_label
 flickcurl_get_place_type_label
 flickcurl_places_find
 flickcurl_places_findByLatLon
 flickcurl_places_forUser
 flickcurl_places_getChildrenWithPhotosPublic
+flickcurl_places_getChildrenWithPhotosPublic2
 flickcurl_places_getInfo
+flickcurl_places_getInfo2
 flickcurl_places_getInfoByUrl
+flickcurl_places_getPlaceTypes
+flickcurl_places_getShapeHistory
+flickcurl_place_id_to_type
+flickcurl_places_placesForBoundingBox
+flickcurl_places_placesForContacts
 flickcurl_places_placesForUser
+flickcurl_places_placesForTags
 flickcurl_places_resolvePlaceId
 flickcurl_places_resolvePlaceURL
+flickcurl_places_tagsForPlace
 </SECTION>
 
 <SECTION>
@@ -303,6 +331,13 @@ flickcurl_new_serializer
 flickcurl_free_serializer
 flickcurl_serialize_photo
 flickcurl_term_type
+</SECTION>
+
+<SECTION>
+<FILE>section-shapes</FILE>
+flickcurl_free_shape
+flickcurl_free_shapes
+flickcurl_shapedata
 </SECTION>
 
 <SECTION>
@@ -385,6 +420,7 @@ flickcurl_s
 flickcurl_category_s
 flickcurl_photo_s
 flickcurl_serializer_s
+flickcurl_shapedata_s
 read_ini_config
 set_config_var_handler
 emit_finish
