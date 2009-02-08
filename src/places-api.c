@@ -806,15 +806,15 @@ flickcurl_places_placesForContacts(flickcurl* fc,
  * formed machine tag, there is a special syntax for searching on
  * specific properties :
  *
- * <ul>
- *   <li>Find photos using the 'dc' namespace : <code>"machine_tags" => "dc:"</code></li>
- *   <li> Find photos with a title in the 'dc' namespace : <code>"machine_tags" => "dc:title="</code></li>
- *   <li>Find photos titled "mr. camera" in the 'dc' namespace : <code>"machine_tags" => "dc:title=\"mr. camera\"</code></li>
- *   <li>Find photos whose value is "mr. camera" : <code>"machine_tags" => "*:*=\"mr. camera\""</code></li>
- *   <li>Find photos that have a title, in any namespace : <code>"machine_tags" => "*:title="</code></li>
- *   <li>Find photos that have a title, in any namespace, whose value is "mr. camera" : <code>"machine_tags" => "*:title=\"mr. camera\""</code></li>
- *   <li>Find photos, in the 'dc' namespace whose value is "mr. camera" : <code>"machine_tags" => "dc:*=\"mr. camera\""</code></li>
- *  </ul>
+ * <ItemizedList>
+ *   <ListItem>Find photos using the 'dc' namespace : <code>"machine_tags" => "dc:"</literal></ListItem>
+ *   <ListItem> Find photos with a title in the 'dc' namespace : <code>"machine_tags" => "dc:title="</literal></ListItem>
+ *   <ListItem>Find photos titled "mr. camera" in the 'dc' namespace : <code>"machine_tags" => "dc:title=\"mr. camera\"</literal></ListItem>
+ *   <ListItem>Find photos whose value is "mr. camera" : <code>"machine_tags" => "*:*=\"mr. camera\""</literal></ListItem>
+ *   <ListItem>Find photos that have a title, in any namespace : <code>"machine_tags" => "*:title="</literal></ListItem>
+ *   <ListItem>Find photos that have a title, in any namespace, whose value is "mr. camera" : <code>"machine_tags" => "*:title=\"mr. camera\""</literal></ListItem>
+ *   <ListItem>Find photos, in the 'dc' namespace whose value is "mr. camera" : <code>"machine_tags" => "dc:*=\"mr. camera\""</literal></ListItem>
+ *  </ItemizedList>
  * 
  * Implements flickr.places.placesForTags (1.8)
  * 
