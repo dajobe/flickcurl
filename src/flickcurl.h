@@ -764,6 +764,7 @@ typedef struct {
  * @is_friend: is friend boolean
  * @is_family: is family boolean
  * @ignored: ignored
+ * @uploaded: count of number of photos uploaded (for flickcurl_contacts_getListRecentlyUploaded() )
  *
  * A contact.
  */
@@ -1962,6 +1963,12 @@ void flickcurl_array_free(char *array[]);
  * flickcurl_serializer_s:
  *
  * flickcurl_serializer_s
+ */
+
+/**
+ * flickcurl_shapedata_s:
+ *
+ * flickcurl_shapedata_s
  */
 
 #ifdef __cplusplus
