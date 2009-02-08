@@ -806,15 +806,15 @@ flickcurl_places_placesForContacts(flickcurl* fc,
  * formed machine tag, there is a special syntax for searching on
  * specific properties :
  *
- * <ItemizedList>
- *   <ListItem>Find photos using the 'dc' namespace : <literal>"machine_tags" => "dc:"</literal></ListItem>
- *   <ListItem> Find photos with a title in the 'dc' namespace : <literal>"machine_tags" => "dc:title="</literal></ListItem>
- *   <ListItem>Find photos titled "mr. camera" in the 'dc' namespace : <literal>"machine_tags" => "dc:title=\"mr. camera\"</literal></ListItem>
- *   <ListItem>Find photos whose value is "mr. camera" : <literal>"machine_tags" => "*:*=\"mr. camera\""</literal></ListItem>
- *   <ListItem>Find photos that have a title, in any namespace : <literal>"machine_tags" => "*:title="</literal></ListItem>
- *   <ListItem>Find photos that have a title, in any namespace, whose value is "mr. camera" : <literal>"machine_tags" => "*:title=\"mr. camera\""</literal></ListItem>
- *   <ListItem>Find photos, in the 'dc' namespace whose value is "mr. camera" : <literal>"machine_tags" => "dc:*=\"mr. camera\""</literal></ListItem>
- *  </ItemizedList>
+ * <itemizedlist>
+ *   <listitem>Find photos using the 'dc' namespace : <literal>"machine_tags" => "dc:"</literal></listitem>
+ *   <listitem> Find photos with a title in the 'dc' namespace : <literal>"machine_tags" => "dc:title="</literal></listitem>
+ *   <listitem>Find photos titled "mr. camera" in the 'dc' namespace : <literal>"machine_tags" => "dc:title=\"mr. camera\"</literal></listitem>
+ *   <listitem>Find photos whose value is "mr. camera" : <literal>"machine_tags" => "*:*=\"mr. camera\""</literal></listitem>
+ *   <listitem>Find photos that have a title, in any namespace : <literal>"machine_tags" => "*:title="</literal></listitem>
+ *   <listitem>Find photos that have a title, in any namespace, whose value is "mr. camera" : <literal>"machine_tags" => "*:title=\"mr. camera\""</literal></listitem>
+ *   <listitem>Find photos, in the 'dc' namespace whose value is "mr. camera" : <literal>"machine_tags" => "dc:*=\"mr. camera\""</literal></listitem>
+ *  </itemizedlist>
  * 
  * Implements flickr.places.placesForTags (1.8)
  * 
