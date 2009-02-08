@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.7% (135/134)</span>
+<span class="coverage">100.0% (136/136)</span>
 </p>
 
 
@@ -330,8 +330,9 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>1.8</strong>: flickr.contacts.getListRecentlyUploaded, flickr.photos.geo.batchCorrectLocation, flickr.photos.geo.correctLocation, flickr.photos.geo.photosForLocation, flickr.photos.geo.setContext, flickr.places.getPlaceTypes, flickr.places.getShapeHistory, flickr.places.placesForBoundingBox, flickr.places.placesForContacts, flickr.places.placesForTags, flickr.places.tagsForPlace (11 new)</p>
+<p><strong>1.8</strong>: flickr.commons.getInstitutions, flickr.contacts.getListRecentlyUploaded, flickr.photos.geo.batchCorrectLocation, flickr.photos.geo.correctLocation, flickr.photos.geo.photosForLocation, flickr.photos.geo.setContext, flickr.places.getPlaceTypes, flickr.places.getShapeHistory, flickr.places.placesForBoundingBox, flickr.places.placesForContacts, flickr.places.placesForTags, flickr.places.tagsForPlace (12 new)</p>
 <pre>
+flickcurl_institution** flickcurl_commons_getInstitutions(flickcurl* fc);
 flickcurl_contact** flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc, int date_lastupload, const char* filter);
 int flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc, flickcurl_location* location, const char* place_id, int woe_id);
 int flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id, const char* place_id, int woe_id);
