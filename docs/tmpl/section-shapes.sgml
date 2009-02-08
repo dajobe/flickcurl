@@ -1,0 +1,51 @@
+<!-- ##### SECTION Title ##### -->
+Shape data
+
+<!-- ##### SECTION Short_Description ##### -->
+ESRI shape data.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+ESRI shape data.
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION flickcurl_free_shape ##### -->
+<para>
+
+</para>
+
+@shape: 
+
+
+<!-- ##### FUNCTION flickcurl_free_shapes ##### -->
+<para>
+
+</para>
+
+@shapes_object: 
+
+
+<!-- ##### STRUCT flickcurl_shapedata ##### -->
+<para>
+
+</para>
+
+@created: 
+@alpha: 
+@points: 
+@edges: 
+@data: 
+@data_length: 
+@file_urls: 
+@file_urls_count: 
+

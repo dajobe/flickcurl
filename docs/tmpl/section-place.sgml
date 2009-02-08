@@ -33,6 +33,7 @@ Places in the real world.
 @shapedata_length: 
 @shapefile_urls: 
 @shapefile_urls_count: 
+@shape: 
 
 <!-- ##### FUNCTION flickcurl_free_place ##### -->
 <para>
@@ -62,7 +63,34 @@ Places in the real world.
 @FLICKCURL_PLACE_COUNTY: 
 @FLICKCURL_PLACE_REGION: 
 @FLICKCURL_PLACE_COUNTRY: 
+@FLICKCURL_PLACE_CONTINENT: 
 @FLICKCURL_PLACE_LAST: 
+
+<!-- ##### STRUCT flickcurl_place_type_info ##### -->
+<para>
+
+</para>
+
+@type: 
+@id: 
+@name: 
+
+<!-- ##### FUNCTION flickcurl_place_type_to_id ##### -->
+<para>
+
+</para>
+
+@place_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_free_place_type_infos ##### -->
+<para>
+
+</para>
+
+@ptis_object: 
+
 
 <!-- ##### FUNCTION flickcurl_get_place_type_by_label ##### -->
 <para>
@@ -128,7 +156,29 @@ Places in the real world.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_places_getChildrenWithPhotosPublic2 ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_id: 
+@woe_id: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_places_getInfo ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_id: 
+@woe_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_getInfo2 ##### -->
 <para>
 
 </para>
@@ -149,6 +199,67 @@ Places in the real world.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_places_getPlaceTypes ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_getShapeHistory ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_id: 
+@woe_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_place_id_to_type ##### -->
+<para>
+
+</para>
+
+@place_type_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_placesForBoundingBox ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_type: 
+@minimum_longitude: 
+@minimum_latitude: 
+@maximum_longitude: 
+@maximum_latitude: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_placesForContacts ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_type: 
+@woe_id: 
+@place_id: 
+@threshold: 
+@contacts: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_places_placesForUser ##### -->
 <para>
 
@@ -159,6 +270,27 @@ Places in the real world.
 @woe_id: 
 @place_id: 
 @threshold: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_placesForTags ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_type: 
+@woe_id: 
+@place_id: 
+@threshold: 
+@tags: 
+@tag_mode: 
+@machine_tags: 
+@machine_tag_mode: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
 @Returns: 
 
 
@@ -179,6 +311,21 @@ Places in the real world.
 
 @fc: 
 @url: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_places_tagsForPlace ##### -->
+<para>
+
+</para>
+
+@fc: 
+@woe_id: 
+@place_id: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
 @Returns: 
 
 

@@ -220,6 +220,30 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_geo_batchCorrectLocation ##### -->
+<para>
+
+</para>
+
+@fc: 
+@location: 
+@place_id: 
+@woe_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_geo_correctLocation ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@place_id: 
+@woe_id: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_geo_getLocation ##### -->
 <para>
 
@@ -240,6 +264,30 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_geo_photosForLocation ##### -->
+<para>
+
+</para>
+
+@fc: 
+@location: 
+@extras: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_geo_photosForLocation_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@location: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_geo_removeLocation ##### -->
 <para>
 
@@ -247,6 +295,17 @@ Photo.
 
 @fc: 
 @photo_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_geo_setContext ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@context: 
 @Returns: 
 
 

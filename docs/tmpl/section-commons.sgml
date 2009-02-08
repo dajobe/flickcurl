@@ -1,0 +1,66 @@
+<!-- ##### SECTION Title ##### -->
+Flickr Commons
+
+<!-- ##### SECTION Short_Description ##### -->
+Flickr Commons and institutions
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Flickr Commons and institutions
+</para>
+
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### ENUM flickcurl_institution_url_type ##### -->
+<para>
+
+</para>
+
+@FLICKCURL_INSTITUTION_URL_NONE: 
+@FLICKCURL_INSTITUTION_URL_SITE: 
+@FLICKCURL_INSTITUTION_URL_LICENSE: 
+@FLICKCURL_INSTITUTION_URL_FLICKR: 
+@FLICKCURL_INSTITUTION_URL_LAST: 
+
+<!-- ##### FUNCTION flickcurl_free_institution ##### -->
+<para>
+
+</para>
+
+@institution: 
+
+
+<!-- ##### FUNCTION flickcurl_free_institutions ##### -->
+<para>
+
+</para>
+
+@institutions_object: 
+
+
+<!-- ##### FUNCTION flickcurl_get_institution_url_type_label ##### -->
+<para>
+
+</para>
+
+@url_type: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_commons_getInstitutions ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+

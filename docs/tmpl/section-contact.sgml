@@ -29,6 +29,7 @@ A contact of a user.
 @is_friend: 
 @is_family: 
 @ignored: 
+@uploaded: 
 
 <!-- ##### FUNCTION flickcurl_contacts_getList ##### -->
 <para>
@@ -39,6 +40,17 @@ A contact of a user.
 @filter: 
 @page: 
 @per_page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_contacts_getListRecentlyUploaded ##### -->
+<para>
+
+</para>
+
+@fc: 
+@date_lastupload: 
+@filter: 
 @Returns: 
 
 
