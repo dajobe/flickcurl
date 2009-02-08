@@ -807,13 +807,13 @@ flickcurl_places_placesForContacts(flickcurl* fc,
  * specific properties :
  *
  * <ItemizedList>
- *   <ListItem>Find photos using the 'dc' namespace : <code>"machine_tags" => "dc:"</literal></ListItem>
- *   <ListItem> Find photos with a title in the 'dc' namespace : <code>"machine_tags" => "dc:title="</literal></ListItem>
- *   <ListItem>Find photos titled "mr. camera" in the 'dc' namespace : <code>"machine_tags" => "dc:title=\"mr. camera\"</literal></ListItem>
- *   <ListItem>Find photos whose value is "mr. camera" : <code>"machine_tags" => "*:*=\"mr. camera\""</literal></ListItem>
- *   <ListItem>Find photos that have a title, in any namespace : <code>"machine_tags" => "*:title="</literal></ListItem>
- *   <ListItem>Find photos that have a title, in any namespace, whose value is "mr. camera" : <code>"machine_tags" => "*:title=\"mr. camera\""</literal></ListItem>
- *   <ListItem>Find photos, in the 'dc' namespace whose value is "mr. camera" : <code>"machine_tags" => "dc:*=\"mr. camera\""</literal></ListItem>
+ *   <ListItem>Find photos using the 'dc' namespace : <literal>"machine_tags" => "dc:"</literal></ListItem>
+ *   <ListItem> Find photos with a title in the 'dc' namespace : <literal>"machine_tags" => "dc:title="</literal></ListItem>
+ *   <ListItem>Find photos titled "mr. camera" in the 'dc' namespace : <literal>"machine_tags" => "dc:title=\"mr. camera\"</literal></ListItem>
+ *   <ListItem>Find photos whose value is "mr. camera" : <literal>"machine_tags" => "*:*=\"mr. camera\""</literal></ListItem>
+ *   <ListItem>Find photos that have a title, in any namespace : <literal>"machine_tags" => "*:title="</literal></ListItem>
+ *   <ListItem>Find photos that have a title, in any namespace, whose value is "mr. camera" : <literal>"machine_tags" => "*:title=\"mr. camera\""</literal></ListItem>
+ *   <ListItem>Find photos, in the 'dc' namespace whose value is "mr. camera" : <literal>"machine_tags" => "dc:*=\"mr. camera\""</literal></ListItem>
  *  </ItemizedList>
  * 
  * Implements flickr.places.placesForTags (1.8)
