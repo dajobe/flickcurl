@@ -31,6 +31,7 @@ context.c \
 config.c \
 exif.c \
 group.c \
+institution.c \
 md5.c \
 location.c \
 machinetags.c \
@@ -50,6 +51,7 @@ vsnprintf.c \
 activity-api.c \
 auth-api.c \
 blogs-api.c \
+commons-api.c \
 contacts-api.c \
 favorites-api.c \
 interestingness-api.c \

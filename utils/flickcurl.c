@@ -3564,6 +3564,44 @@ command_places_tagsForPlace(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_institution(flickcurl_institution* institution, int index)
+{
+  int i;
+
+  fprintf(stderr, "Institution %d:\n"
+          "  NSID: %s\n  Date launch: %d\n  Name: %s\n",
+          index, institution->nsid, institution->date_launch,
+          institution->name);
+
+  for(i = 0 ; i <= FLICKCURL_INSTITUTION_URL_LAST; i++) {
+    if(institution->urls[i])
+      fprintf(stderr, "  URL %s: %s\n",
+              flickcurl_get_institution_url_type_label(i),
+              institution->urls[i]);
+  }
+  
+}
+
+
+static int
+command_commons_getInstitutions(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_institution** institutions = NULL;
+  
+  institutions = flickcurl_commons_getInstitutions(fc);
+  if(institutions) {
+    int i;
+    for(i=0; institutions[i]; i++)
+      command_print_institution(institutions[i], i);
+
+    flickcurl_free_institutions(institutions);
+  }
+
+  return (institutions == NULL);
+}
+
+
 
 typedef struct {
   const char*     name;
@@ -3617,6 +3655,10 @@ static flickcurl_cmd commands[] = {
   {"blogs.postPhoto",
    "BLOG-ID PHOTO-ID TITLE DESCRIPTION [BLOG-PASSWORD]", "Post PHOTO-ID to blog BLOG-ID with TITLE, DESCRIPTION and optional password.",
    command_blogs_postPhoto, 4, 5},
+
+  {"commons.getInstitutions",
+   "", "Get list of institutions", 
+   command_commons_getInstitutions,  0, 0},
 
   {"contacts.getList",
    "[FILTER [PER-PAGE [PAGE]]]", "Get a list of contacts with optional FILTER", 

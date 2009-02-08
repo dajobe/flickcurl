@@ -166,6 +166,10 @@ flickcurl_exif** flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCt
 /* group.c */
 flickcurl_group** flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* group_count_p);
 
+/* institution.c */
+flickcurl_institution** flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* institution_count_p);
+flickcurl_institution* flickcurl_build_institution(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
+
 /* location.c */
 flickcurl_location* flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 

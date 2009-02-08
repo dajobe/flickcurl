@@ -450,6 +450,44 @@ typedef struct {
   
 
 /**
+ * flickcurl_institution:
+ * @nsid: NSID
+ * @date_launch: Date launched in unix timestamp format
+ * @name: Institution name
+ * @urls: Array of related urls.
+ *
+ * Flickr Commons instituiion
+ *
+ */
+typedef struct 
+{
+  char *nsid;
+  int date_launch;
+  char *name;
+  char **urls;
+} flickcurl_institution;
+
+
+/**
+ * flickcurl_institution_url_type:
+ * @FLICKCURL_INSTITUTION_URL_NONE: internal
+ * @FLICKCURL_INSTITUTION_URL_SITE: site URL
+ * @FLICKCURL_INSTITUTION_URL_LICENSE: license URL
+ * @FLICKCURL_INSTITUTION_URL_FLICKR: flickr photos page URL
+ * @FLICKCURL_INSTITUTION_URL_LAST: internal offset to last in enum list
+ *
+ * Institution URL type
+*/
+typedef enum {
+  FLICKCURL_INSTITUTION_URL_NONE = 0,
+  FLICKCURL_INSTITUTION_URL_SITE,
+  FLICKCURL_INSTITUTION_URL_LICENSE,
+  FLICKCURL_INSTITUTION_URL_FLICKR,
+  FLICKCURL_INSTITUTION_URL_LAST = FLICKCURL_INSTITUTION_URL_FLICKR
+} flickcurl_institution_url_type;
+
+
+/**
  * flickcurl_location:
  * @latitude: The latitude from -90 to 90
  * @longitude: The longitude from -180 to 180
@@ -1391,6 +1429,10 @@ void flickcurl_free_context(flickcurl_context *context);
 FLICKCURL_API
 void flickcurl_free_contexts(flickcurl_context** contexts);
 FLICKCURL_API
+void flickcurl_free_institution(flickcurl_institution *institution);
+FLICKCURL_API
+void flickcurl_free_institutions(flickcurl_institution **institutions_object);
+FLICKCURL_API
 void flickcurl_free_perms(flickcurl_perms *perms);
 FLICKCURL_API
 void flickcurl_free_location(flickcurl_location *location);
@@ -1494,6 +1536,11 @@ FLICKCURL_API
 int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
 FLICKCURL_API
 void flickcurl_free_blogs(flickcurl_blog **blogs_object);
+
+/* flickr.commons */
+FLICKCURL_API
+flickcurl_institution** flickcurl_commons_getInstitutions(flickcurl* fc);
+const char* flickcurl_get_institution_url_type_label(flickcurl_institution_url_type url_type);
 
 /* flickr.favorites */
 FLICKCURL_API
