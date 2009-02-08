@@ -9,15 +9,23 @@ Flickr Commons and institutions
 Flickr Commons and institutions
 </para>
 
-
 <!-- ##### SECTION See_Also ##### -->
 <para>
 
 </para>
 
-
 <!-- ##### SECTION Stability_Level ##### -->
 
+
+<!-- ##### STRUCT flickcurl_institution ##### -->
+<para>
+
+</para>
+
+@nsid: 
+@date_launch: 
+@name: 
+@urls: 
 
 <!-- ##### ENUM flickcurl_institution_url_type ##### -->
 <para>
