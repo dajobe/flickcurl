@@ -12,9 +12,108 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2008-12-18">2008-12-18 Flickcurl 1.8</h2>
+<h2 id="D2009-02-XX">2009-02-XX Flickcurl 1.8</h2>
 
 <p>Not yet released.
+</p>
+
+<p>Added functions for 12 new API calls
+<a href="http://www.flickr.com/services/api/flickr.commons.getInstitutions.html">flickr.commons.getInstitutions</a>,
+<a href="http://www.flickr.com/services/api/flickr.contacts.getListRecentlyUploaded.html">flickr.contacts.getListRecentlyUploaded</a>,
+<a href="http://www.flickr.com/services/api/flickr.photos.geo.batchCorrectLocation.html">flickr.photos.geo.batchCorrectLocation</a>,
+<a href="http://www.flickr.com/services/api/flickr.photos.geo.correctLocation.html">flickr.photos.geo.correctLocation</a>,
+<a href="http://www.flickr.com/services/api/flickr.photos.geo.photosForLocation.html">flickr.photos.geo.photosForLocation</a>,
+<a href="http://www.flickr.com/services/api/flickr.photos.geo.setContext.html">flickr.photos.geo.setContext</a>,
+<a href="http://www.flickr.com/services/api/flickr.places.getPlaceTypes.html">flickr.places.getPlaceTypes</a>,
+<a href="http://www.flickr.com/services/api/flickr.places.getShapeHistory.html">flickr.places.getShapeHistory</a>,
+<a href="http://www.flickr.com/services/api/flickr.places.placesForBoundingBox.html">flickr.places.placesForBoundingBox</a>,
+<a href="http://www.flickr.com/services/api/flickr.places.placesForContacts.html">flickr.places.placesForContacts</a>,
+<a href="http://www.flickr.com/services/api/flickr.places.placesForTags.html">flickr.places.placesForTags</a> and
+<a href="http://www.flickr.com/services/api/flickr.places.tagsForPlace.html">flickr.places.tagsForPlace</a>
+as announced
+<a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4669">2009-01-12</a> (flickr.places.getShapeHistory),
+<a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4668">2009-01-14</a> (flickr.contacts.getListRecentlyUploaded)
+and
+<a href="http://flickr.com/groups/api/discuss/72157613093793775/">2009-01-29</a> (Commons API):</p>
+<pre>
+  flickcurl_institution** flickcurl_commons_getInstitutions(flickcurl* fc);
+
+  flickcurl_contact** flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
+    int date_lastupload, const char* filter);
+
+  int flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
+    flickcurl_location* location, const char* place_id, int woe_id);
+  int flickcurl_photos_geo_correctLocation(flickcurl* fc,
+    const char* photo_id, const char* place_id, int woe_id);
+  flickcurl_photo** flickcurl_photos_geo_photosForLocation(flickcurl* fc,
+    flickcurl_location* location, const char* extras, int per_page, int page);
+  flickcurl_photos_list* flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
+    flickcurl_location* location, flickcurl_photos_list_params* list_params);
+  int flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id,
+    int context);
+
+  flickcurl_place_type_info** flickcurl_places_getPlaceTypes(flickcurl* fc);
+  flickcurl_shapedata** flickcurl_places_getShapeHistory(flickcurl* fc,
+    const char* place_id, int woe_id);
+  flickcurl_place** flickcurl_places_placesForBoundingBox(flickcurl* fc,
+    flickcurl_place_type place_type, double minimum_longitude,
+    double minimum_latitude, double maximum_longitude,
+    double maximum_latitude);
+  flickcurl_place** flickcurl_places_placesForContacts(flickcurl* fc,
+    flickcurl_place_type place_type, int woe_id, const char* place_id,
+    int threshold, const char* contacts, int min_upload_date,
+    int max_upload_date, int min_taken_date, int max_taken_date);
+  int flickcurl_places_placesForTags(flickcurl* fc,
+    flickcurl_place_type place_type, int woe_id, const char* place_id,
+    const char* threshold, const char* tags, const char* tag_mode,
+    const char* machine_tags, const char* machine_tag_mode,
+    const char* min_upload_date, const char* max_upload_date,
+    const char* min_taken_date, const char* max_taken_date);
+  flickcurl_tag** flickcurl_places_tagsForPlace(flickcurl* fc,
+    int woe_id, const char* place_id, int min_upload_date,
+    int max_upload_date, int min_taken_date, int max_taken_date);
+</pre>
+
+<p>Added
+<code>flickcurl_institution</code> class and
+<code>flickcurl_institution_url_type</code> enum for URL types
+for response from <code>flickcurl_commons_getInstitutions()</code>.
+Added <code>flickcurl_free_institution()</code> and
+<code>flickcurl_free_institutions()</code> to destroy instances.
+</p>
+
+<p>Added <code>FLICKCURL_PLACE_CONTINENT</code> value to place
+<code>flickcurl_location</code> enum.
+</p>
+
+<p>Added <code>flickcurl_place_type_info</code> for results of
+<code>flickcurl_places_getPlaceTypes()</code>.  Added
+<code>flickcurl_free_place_type_infos()</code> to destroy instances.
+</p>
+
+<p>Added new <code>flickcurl_shapedata</code> class to store shape
+information, ESRI shape data and/or URLs returned by
+<code>flickcurl_places_getShapeHistory()</code>.
+</p>
+
+<p><code>flickcurl_place</code> structure gains a <code>shape</code>
+field returning a pointer to the <code>flickcurl_shapedata</code>
+shape data, deprecating old shape fields.
+Added <code>flickcurl_free_shape()</code> and
+<code>flickcurl_free_shapes()</code> to destroy instances.
+</p>
+
+<p><code>flickcurl_tag</code> gains a new uploaded field for use with
+<code>flickcurl_contacts_getListRecentlyUploaded()</code>
+</p>
+
+<p>Deprecated <code>flickcurl_places_getChildrenWithPhotosPublic()</code>
+and <code>flickcurl_places_getInfo()</code> replacing them with new
+<code>flickcurl_places_getChildrenWithPhotosPublic2()</code>
+and <code>flickcurl_places_getInfo2()</code>
+that taken an integer WOEID parameter rather than string.</p>
+
+<p>Updated <code>flickcurl(1)</code> utility for new API calls.
 </p>
 
 
