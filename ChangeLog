@@ -1,3 +1,93 @@
+2009-02-08  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html: 1.8
+
+	* docs/tmpl/section-commons.sgml, docs/tmpl/section-shapes.sgml: tmpls
+
+	* src/flickcurl.h: autodocs
+
+	* src/places-api.c: more autodocs in docbook sgml
+
+	* src/places-api.c: more autodocs in docbook sgml
+
+	* src/places-api.c: autodocs in docbook sgml
+
+	* docs/tmpl/section-commons.sgml, docs/tmpl/section-contact.sgml,
+	docs/tmpl/section-photo.sgml, docs/tmpl/section-place.sgml,
+	docs/tmpl/section-shapes.sgml, docs/tmpl/section-unused.sgml:
+	Update tmpls
+
+	* coverage.html: added commons
+
+	* src/flickcurl.h: autodocs
+
+	* src/institution.c: autodocs
+
+	* docs/flickcurl-sections.txt: added new functions for 1.8
+
+	* utils/flickcurl.c:
+	(command_print_institution): Rename to ix
+
+	* src/Makefile.am, src/commons-api.c, src/flickcurl.h,
+	src/flickcurl_internal.h, src/institution.c, utils/flickcurl.c:
+	Added flickr.commons API
+	(flickcurl_commons_getInstitutions): Added.
+	Added flickcurl_instutition class.
+	(flickcurl_free_institution, flickcurl_free_institutions,
+	flickcurl_get_institution_url_type_label): Added.
+	(flickcurl_build_institutions, flickcurl_build_institution): Added
+	internal helpers.
+	Updated utility to call commons.getInstitutions
+
+	* docs/flickcurl-docs.xml: 2009 and commons
+
+2009-02-06  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: fix return
+
+	* src/place.c: (flickcurl_free_place): Do not free shape data twice.
+
+	* src/shape.c: disable debug message
+
+	* coverage.html, src/Makefile.am, src/contacts-api.c,
+	src/contacts.c, src/flickcurl.h, src/flickcurl_internal.h,
+	src/place.c, src/places-api.c, src/shape.c, utils/flickcurl.c:
+	(flickcurl_places_getShapeHistory, flickcurl_places_tagsForPlace,
+	flickcurl_contacts_getListRecentlyUploaded): Added.  Updated
+	utility for new calls.  Added missing contacts.getList command.
+
+	Added flickcurl_shapedata structure and deprecated old shape fields
+	in flickcurl_place (but continue to include them).
+	(flickcurl_build_shapes, flickcurl_free_shape, flickcurl_free_shapes):
+	Added to create and free flickcurl_shape structures.
+
+2009-01-12  Dave Beckett <dave@dajobe.org>
+
+	* src/places-api.c, utils/flickcurl.c:
+	Make flickcurl_places_placesForContacts work and fix arg parsing
+
+2009-01-11  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/places-api.c, utils/flickcurl.c:
+	(flickcurl_places_getChildrenWithPhotosPublic2): Added to
+	deprecate flickcurl_places_getChildrenWithPhotosPublic with an
+	integer woe_id argument.
+	(flickcurl_places_getInfo2): Added to deprecated
+	flickcurl_places_getInfo with an integer woe_id argument.
+	(flickcurl_places_placesForContacts): Use integer woe_id and
+	threshold.  Implemented.
+
+	Added places.placesForContacts via function
+	command_places_placesForContacts to flickcurl utility.
+
+2009-01-05  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/places-api.c,
+	utils/flickcurl.c: (flickcurl_places_placesForBoundingBox): Made
+	work.  Added to flickcurl utility
+
+	* src/place.c: (flickcurl_place_type_to_id): Return ID
+
 2008-12-28  Dave Beckett <dave@dajobe.org>
 
 	* src/photo.c: Removed duplicate xpaths
