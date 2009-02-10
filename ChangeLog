@@ -1,6 +1,12 @@
+2009-02-09  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_8 for 1.8 release (SVN 920)
+
+	* NEWS.html: 1.8
+
 2009-02-08  Dave Beckett <dave@dajobe.org>
 
-	* coverage.html: 1.8
+	* README.html, LICENSE.html, NEWS.html, coverage.html: 2009
 
 	* docs/tmpl/section-commons.sgml, docs/tmpl/section-shapes.sgml: tmpls
 
