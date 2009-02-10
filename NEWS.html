@@ -12,10 +12,11 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2009-02-XX">2009-02-XX Flickcurl 1.8</h2>
+<h2 id="D2009-02-09">2009-02-09 Flickcurl 1.8</h2>
 
-<p>Not yet released.
-</p>
+<p>Added support for new commons API with new institution class, new
+photos geo and places APIs, and new shape history API with a new
+shape structure class.</p>
 
 <p>Added functions for 12 new API calls
 <a href="http://www.flickr.com/services/api/flickr.commons.getInstitutions.html">flickr.commons.getInstitutions</a>,
@@ -74,12 +75,21 @@ and
     int max_upload_date, int min_taken_date, int max_taken_date);
 </pre>
 
+<p>Added destructors for new classes:</p>
+<pre>
+  void flickcurl_free_institution(flickcurl_institution *);
+  void flickcurl_free_institutions(flickcurl_institution **);
+  void flickcurl_free_place_type_infos(flickcurl_place_type_info **);
+  void flickcurl_free_shape(flickcurl_shapedata *);
+  void flickcurl_free_shapes(flickcurl_shapedata **);
+</pre>
+
 <p>Added
 <code>flickcurl_institution</code> class and
 <code>flickcurl_institution_url_type</code> enum for URL types
 for response from <code>flickcurl_commons_getInstitutions()</code>.
 Added <code>flickcurl_free_institution()</code> and
-<code>flickcurl_free_institutions()</code> to destroy instances.
+<code>flickcurl_free_institutions()</code> destructors.
 </p>
 
 <p>Added <code>FLICKCURL_PLACE_CONTINENT</code> value to place
@@ -88,7 +98,7 @@ Added <code>flickcurl_free_institution()</code> and
 
 <p>Added <code>flickcurl_place_type_info</code> for results of
 <code>flickcurl_places_getPlaceTypes()</code>.  Added
-<code>flickcurl_free_place_type_infos()</code> to destroy instances.
+<code>flickcurl_free_place_type_infos()</code> destructor.
 </p>
 
 <p>Added new <code>flickcurl_shapedata</code> class to store shape
@@ -100,7 +110,7 @@ information, ESRI shape data and/or URLs returned by
 field returning a pointer to the <code>flickcurl_shapedata</code>
 shape data, deprecating old shape fields.
 Added <code>flickcurl_free_shape()</code> and
-<code>flickcurl_free_shapes()</code> to destroy instances.
+<code>flickcurl_free_shapes()</code> destructors.
 </p>
 
 <p><code>flickcurl_tag</code> gains a new uploaded field for use with
