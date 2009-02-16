@@ -2,7 +2,7 @@
  *
  * config.c - INI configuration file handling
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -57,9 +57,10 @@ read_ini_config(const char* filename, const char* application,
                 void* user_data, set_config_var_handler handler)
 {
   FILE* fh;
-  char buf[256];
-  int in_section=0;
-  int lineno=1;
+#define INI_BUF_SIZE 255
+  char buf[INI_BUF_SIZE+1];
+  int in_section = 0;
+  int lineno = 1;
   
   if(access((const char*)filename, R_OK))
     return 1;
@@ -72,25 +73,37 @@ read_ini_config(const char* filename, const char* application,
     size_t len;
     char *line;
     char *p;
-    int warned=0;
-    
-    for(line=buf, len=0; !feof(fh); ) {
-      int c=fgetc(fh);
+    int warned = 0;
+    int c = -1;
+    int lastch = -1;
+
+    for(line = buf, len = 0; !feof(fh); lastch = c) {
+      c = fgetc(fh);
       if(c == '\n') {
+        /* Line endings: \n or \r\n (\r is removed after this loop) */
+        lineno++;
+        break;
+      } else if (lastch == '\r') {
+        /* Line ending: \r - need to put back this character */
+        ungetc(c, fh);
+        line--;
+        len--;
+
         lineno++;
         break;
       }
 
-      if(len > 255) {
+      if(len > INI_BUF_SIZE) {
         if(!warned++)
-          fprintf(stderr, "read_ini_config(): line %d truncated\n", lineno);
+          fprintf(stderr, "read_ini_config(): line %d too long - truncated\n",
+                  lineno);
         continue;
       }
-      *line++=c;
+      *line++ = c;
       len++;
     }
-    *line='\0';
-
+    *line = '\0';
+    
     if(!len)
       continue;
 
@@ -99,11 +112,18 @@ read_ini_config(const char* filename, const char* application,
 #endif
     
     /* remove leading spaces */
-    for(line=buf; 
-        *line && (*line==' ' || *line == '\t');
+    for(line = buf; 
+        *line && (*line == ' ' || *line == '\t');
         line++, len--)
       ;
 
+    /* remove trailing \r, \n or \r\n */
+    if(line[len-1] == '\n')
+      line[(len--)-1] = '\0';
+
+    if(line[len-1] == '\r')
+      line[(len--)-1] = '\0';
+    
 #ifdef CONFIG_DEBUG    
     fprintf(stderr, "Line 2 >>%s<<\n", line);
 #endif
@@ -111,9 +131,6 @@ read_ini_config(const char* filename, const char* application,
     /* skip if empty line or all white space OR starts with a comment */
     if(!*line || *line == '#')
       continue;
-    
-    if(line[len-1]=='\n')
-      line[(len--)-1]='\0';
     
 #ifdef CONFIG_DEBUG    
     fprintf(stderr, "Line 3 >>%s<<\n", line);
@@ -125,7 +142,7 @@ read_ini_config(const char* filename, const char* application,
          (len-2) == strlen(application) &&
          !strncmp(line+1, application, len-2)
          )
-        in_section=1;
+        in_section = 1;
       continue;
     }
 
@@ -137,9 +154,9 @@ read_ini_config(const char* filename, const char* application,
     fprintf(stderr, "Line 4 >>%s<<\n", line);
 #endif
 
-    p=strchr(line, '=');
+    p = strchr(line, '=');
     if(p) {
-      *p='\0';
+      *p = '\0';
 #ifdef CONFIG_DEBUG    
       fprintf(stderr, "Found key '%s' value '%s'\n", line, p+1);
 #endif
