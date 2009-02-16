@@ -477,7 +477,7 @@ flickcurl_photosets_getList(flickcurl* fc, const char* user_id)
   }
 
   photoset_list=flickcurl_build_photosets(fc, xpathCtx,
-                                          (const xmlChar*)"/rsp/photoset/photo", NULL);
+                                          (const xmlChar*)"/rsp/photosets/photoset", NULL);
 
   tidy:
   if(xpathCtx)
