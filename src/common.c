@@ -447,7 +447,7 @@ flickcurl_set_http_accept(flickcurl* fc, const char *value)
 void
 flickcurl_set_api_key(flickcurl* fc, const char *api_key)
 {
-#ifdef FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
   fprintf(stderr, "API Key: '%s'\n", api_key);
 #endif
   if(fc->api_key)
@@ -481,7 +481,7 @@ flickcurl_get_api_key(flickcurl* fc)
 void
 flickcurl_set_shared_secret(flickcurl* fc, const char *secret)
 {
-#ifdef FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
   fprintf(stderr, "Secret: '%s'\n", secret);
 #endif
   if(fc->secret)
@@ -515,7 +515,7 @@ flickcurl_get_shared_secret(flickcurl* fc)
 void
 flickcurl_set_auth_token(flickcurl *fc, const char* auth_token)
 {
-#ifdef FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
   fprintf(stderr, "Auth token: '%s'\n", auth_token);
 #endif
   if(fc->auth_token)
