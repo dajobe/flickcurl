@@ -1,4 +1,20 @@
-2009-02-09  Dave Beckett  <dave@dajobe.org>
+2009-02-15  Dave Beckett <dave@dajobe.org>
+
+	* src/config.c: (read_ini_config): Handle \r\n, \r and \n newlines
+
+	* src/common.c: macro
+
+	* src/common.c: Be less noisy when debugging - don't print output
+	of set auth token, api key and secret
+
+	* src/photosets-api.c: (flickcurl_photosets_getList): Fix to match
+	correct xpath
+
+2009-02-10  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 1.9
+
+2009-02-09  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_8 for 1.8 release (SVN 920)
 
