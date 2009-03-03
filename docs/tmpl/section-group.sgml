@@ -74,6 +74,46 @@ Groups of users.
 @Returns: 
 
 
+<!-- ##### STRUCT flickcurl_member ##### -->
+<para>
+
+</para>
+
+@nsid: 
+@username: 
+@iconserver: 
+@iconfarm: 
+@member_type: 
+
+<!-- ##### FUNCTION flickcurl_free_member ##### -->
+<para>
+
+</para>
+
+@member_object: 
+
+
+<!-- ##### FUNCTION flickcurl_free_members ##### -->
+<para>
+
+</para>
+
+@members_object: 
+
+
+<!-- ##### FUNCTION flickcurl_groups_members_getList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@group_id: 
+@membertypes: 
+@per_page: 
+@page: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_groups_pools_add ##### -->
 <para>
 
