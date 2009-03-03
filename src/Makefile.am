@@ -35,6 +35,7 @@ institution.c \
 md5.c \
 location.c \
 machinetags.c \
+members.c \
 method.c \
 person.c \
 photo.c \
@@ -56,6 +57,7 @@ contacts-api.c \
 favorites-api.c \
 interestingness-api.c \
 groups-api.c \
+groups-members-api.c \
 groups-pools-api.c \
 machinetags-api.c \
 people-api.c \

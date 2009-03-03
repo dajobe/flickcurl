@@ -237,5 +237,3 @@ flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
 
   return groups;
 }
-
-

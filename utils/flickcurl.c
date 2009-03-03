@@ -3602,6 +3602,49 @@ command_commons_getInstitutions(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_member(flickcurl_member* member, int i)
+{
+    fprintf(stderr,
+            "member %d: NSID %s username %s iconserver %d iconfarm %d member type %d\n",
+            i,
+            member->nsid, member->username,
+            member->iconserver, member->iconfarm, member->member_type);
+}
+
+
+static int
+command_groups_members_getList(flickcurl* fc, int argc, char *argv[])
+{
+  const char *group_id = argv[1];
+  const char *membertypes = NULL;
+  int per_page = -1;
+  int page = -1;
+  flickcurl_member** members;
+
+  if(argc > 1) {
+    membertypes = argv[2];
+    if(argc > 2) {
+      per_page = parse_page_param(argv[3]);
+      if(argc > 3) {
+        page = parse_page_param(argv[4]);
+      }
+    }
+  }
+
+  members = flickcurl_groups_members_getList(fc, group_id, membertypes,
+                                             per_page, page);
+  if(members) {
+    int i;
+    for(i=0; members[i]; i++)
+      command_print_member(members[i], i);
+
+    flickcurl_free_members(members);
+  }
+
+  return (members == NULL);
+}
+
 
 typedef struct {
   const char*     name;
@@ -3689,6 +3732,10 @@ static flickcurl_cmd commands[] = {
   {"groups.search",
    "TEXT [PER-PAGE [PAGE]]", "Search for groups matching TEXT paging PER-PAGE and PAGE.",
    command_groups_search, 1, 3},
+
+  {"groups.members.getList",
+   "GROUP-ID [MEMBER-TYPES [PER-PAGE [PAGE]]]", "Get list of MEMBER-TYPES types members of group GROUP-ID.",
+   command_groups_members_getList, 1, 4},
 
   {"groups.pools.add",
    "PHOTO-ID GROUP-ID", "Add PHOTO-ID in GROUP-ID pool.",

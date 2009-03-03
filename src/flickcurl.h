@@ -2,7 +2,7 @@
  *
  * flickcurl.h - Flickcurl API
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -1313,6 +1313,24 @@ FLICKCURL_API
 int flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo);
 
 
+/**
+ * flickcurl_member:
+ * @nsid: NSID
+ * @username: User name
+ * @iconserver: icon server
+ * @iconfarm: icon farm
+ * @member_type: member type - 1: narwhal, 2: member, 3: moderator 4: admin
+ *
+ * Member in a group
+ */
+typedef struct {
+  char *nsid;
+  char *username;
+  int iconserver;
+  int iconfarm;
+  int member_type;
+} flickcurl_member;
+
 
 /* callback handlers */
 
@@ -1567,6 +1585,15 @@ FLICKCURL_API
 flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
 FLICKCURL_API
 flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
+
+/* flickr.groups.members */
+FLICKCURL_API
+void flickcurl_free_member(flickcurl_member *member_object);
+FLICKCURL_API
+void flickcurl_free_members(flickcurl_member **members_object);
+FLICKCURL_API
+flickcurl_member** flickcurl_groups_members_getList(flickcurl* fc, const char* group_id, const char* membertypes, int per_page, int page);
+
 
 /* flickr.groups.pools */
 FLICKCURL_API

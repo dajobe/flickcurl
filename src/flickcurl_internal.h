@@ -184,6 +184,9 @@ flickcurl_user_upload_status* flickcurl_build_user_upload_status(flickcurl* fc, 
 /* md5.c - MD5 as hex string */
 extern char* MD5_string(char *string);
 
+/* members.c */
+flickcurl_member** flickcurl_build_members(flickcurl* fc,  xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* member_count_p);
+
 /* method.c */
 flickcurl_method* flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 
