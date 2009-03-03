@@ -126,6 +126,10 @@ flickcurl_free_group
 flickcurl_free_groups
 flickcurl_groups_browse
 flickcurl_groups_getInfo
+flickcurl_member
+flickcurl_free_member
+flickcurl_free_members
+flickcurl_groups_members_getList
 flickcurl_groups_pools_add
 flickcurl_groups_pools_getContext
 flickcurl_groups_pools_getGroups
