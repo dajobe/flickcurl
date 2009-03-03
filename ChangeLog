@@ -1,3 +1,23 @@
+2009-03-02  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-group.sgml: templates
+
+	* docs/flickcurl-sections.txt:
+	Add flickcurl_groups_members_getList and members
+
+	* src/Makefile.am, src/flickcurl.h, src/flickcurl_internal.h,
+	src/groups-api.c, src/groups-members-api.c, src/members.c,
+	utils/flickcurl.c:
+	flickcurl_member added
+	(flickcurl_groups_members_getList): Added to implement new
+	flickr.groups.members.getList API method added sometime between
+	2009-02-23 and 2009-03-02.
+	(flickcurl_free_member, flickcurl_free_members): Added to destroy
+	members.
+	(flickcurl_build_members): Added.
+
+	Added flickr.groups.members.getList to flickcurl utility
+
 2009-02-15  Dave Beckett <dave@dajobe.org>
 
 	* src/config.c: (read_ini_config): Handle \r\n, \r and \n newlines
