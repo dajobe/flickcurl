@@ -1,3 +1,17 @@
+2009-03-03  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-docs.xml, docs/flickcurl-sections.txt,
+	docs/tmpl/section-panda.sgml, src/panda-api.c:
+	panda docs
+
+	* src/Makefile.am, src/flickcurl.h, src/panda-api.c, utils/flickcurl.c:
+	Added Panda support
+	(flickcurl_panda_getList): Added to implement flickr.panda.getList
+	API added 2009-03-03
+	(flickcurl_panda_getPhotos): Added to implement
+	flickr.panda.getPhotos API added 2009-03-03 Updated flickcurl
+	utility to support the new calls.
+
 2009-03-02  Dave Beckett <dave@dajobe.org>
 
 	* docs/tmpl/section-group.sgml: templates
