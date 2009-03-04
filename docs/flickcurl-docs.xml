@@ -69,14 +69,15 @@ C library for the Flickr web service API.
     <xi:include href="xml/section-blogs.xml"/>
     <xi:include href="xml/section-category.xml"/>
     <xi:include href="xml/section-comment.xml"/>
-    <xi:include href="xml/section-contact.xml"/>
     <xi:include href="xml/section-commons.xml"/>
+    <xi:include href="xml/section-contact.xml"/>
     <xi:include href="xml/section-context.xml"/>
     <xi:include href="xml/section-exif.xml"/>
     <xi:include href="xml/section-favorite.xml"/>
     <xi:include href="xml/section-group.xml"/>
     <xi:include href="xml/section-machinetags.xml"/>
     <xi:include href="xml/section-misc.xml"/>
+    <xi:include href="xml/section-panda.xml"/>
     <xi:include href="xml/section-people.xml"/>
     <xi:include href="xml/section-person.xml"/>
     <xi:include href="xml/section-photo.xml"/>

@@ -154,6 +154,12 @@ flickcurl_machinetags_getValues
 </SECTION>
 
 <SECTION>
+<FILE>section-panda</FILE>
+flickcurl_panda_getList
+flickcurl_panda_getPhotos
+</SECTION>
+
+<SECTION>
 <FILE>section-person</FILE>
 flickcurl_free_person
 flickcurl_free_persons

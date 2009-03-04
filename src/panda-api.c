@@ -109,7 +109,7 @@ flickcurl_build_pandas(flickcurl* fc,
  * Get the current list of Flickr Pandas
  *
  * Can be used with flickcurl_panda_getPhotos() to get photos for the
- * given <a href="http://www.flickr.com/explore/panda">FLickr Panda</a>
+ * given <ulink url="http://www.flickr.com/explore/panda">FLickr Panda</ulink>
  *
  * Announced 2009-03-03
  * http://code.flickr.com/blog/2009/03/03/panda-tuesday-the-history-of-the-panda-new-apis-explore-and-you/
@@ -168,7 +168,7 @@ flickcurl_panda_getList(flickcurl* fc)
  * Ask the Flickr Pandas for a list of recent public (and "safe") photos.
  *
  * Use flickcurl_panda_getList() to get the list of
- * <a href="http://www.flickr.com/explore/panda">FLickr Pandas</a>
+ * <ulink url="http://www.flickr.com/explore/panda">FLickr Pandas</ulink>
  *
  * Announced 2009-03-03
  * http://code.flickr.com/blog/2009/03/03/panda-tuesday-the-history-of-the-panda-new-apis-explore-and-you/
