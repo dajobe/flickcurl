@@ -1629,6 +1629,12 @@ flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* f
 FLICKCURL_API
 flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
 
+/* flickr.panda */
+FLICKCURL_API
+char** flickcurl_panda_getList(flickcurl* fc);
+FLICKCURL_API
+flickcurl_photo** flickcurl_panda_getPhotos(flickcurl *fc, const char *panda_name);
+
 /* flickr.photo.getSizes */
 FLICKCURL_API
 void flickcurl_free_size(flickcurl_size *size);

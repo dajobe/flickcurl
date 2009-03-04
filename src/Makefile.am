@@ -62,6 +62,7 @@ groups-pools-api.c \
 machinetags-api.c \
 people-api.c \
 perms.c \
+panda-api.c \
 photos-api.c \
 photos-comments-api.c \
 photos-geo-api.c \

@@ -3646,6 +3646,46 @@ command_groups_members_getList(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_panda_getList(flickcurl* fc, int argc, char *argv[])
+{
+  int i;
+  char **pandas;
+  
+  pandas = flickcurl_panda_getList(fc);
+  if(!pandas)
+    return 1;
+  
+  for(i = 0; pandas[i]; i++)
+    fprintf(stderr, "%s: panda %d: %s\n", program, i, pandas[i]);
+  free(pandas);
+
+  return 0;
+}
+
+static int
+command_panda_getPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char *panda = argv[1];
+  flickcurl_photo **photos = NULL;
+  int i;
+  
+  photos = flickcurl_panda_getPhotos(fc, panda);
+  if(!photos)
+    return 1;
+
+  fprintf(stderr, "%s: Panda %s returned photos!\n", program, panda);
+  for(i = 0; photos[i]; i++) {
+    fprintf(stderr, "%s: %s photo %d\n", program, panda, i);
+    command_print_photo(photos[i]);
+  }
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3769,6 +3809,13 @@ static flickcurl_cmd commands[] = {
   {"machinetags.getValues",
    "NAMESPACE PREDICATE [PER-PAGE [PAGE]]", "Get a list of unique values for a NAMESPACE and PREDICATE", 
    command_machinetags_getValues, 2, 4},
+
+  {"panda.getList",
+   "", "get the current list of pandas", 
+   command_panda_getList,  0, 0},
+  {"panda.getPhotos",
+   "PANDA", "ask a PANDA for a list of recent public and safe photos", 
+   command_panda_getPhotos,  1, 1},
 
   {"people.findByEmail",
    "EMAIL", "get a user's NSID from their EMAIL address", 
