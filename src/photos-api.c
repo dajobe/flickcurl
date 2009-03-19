@@ -1978,7 +1978,7 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
   int result=1;
-  char date_posted_str[10];
+  char date_posted_str[20];
   char* date_taken_str=NULL;
   char date_taken_granularity_str[3];
   
