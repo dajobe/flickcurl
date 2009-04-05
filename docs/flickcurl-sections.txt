@@ -26,6 +26,7 @@ flickcurl_set_error_handler
 flickcurl_set_http_accept
 flickcurl_set_proxy
 flickcurl_set_request_delay
+flickcurl_set_service_uri
 flickcurl_set_shared_secret
 flickcurl_set_sign
 flickcurl_set_tag_handler

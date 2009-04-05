@@ -4,7 +4,7 @@
  *
  * All API calls and defines here many change in any release.
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -336,6 +336,9 @@ struct flickcurl_s {
   flickcurl_chunk* chunks;
   /* count of chunks */
   int chunks_count;
+
+  /* Web Service URI that is called */
+  char *service_uri;
 };
 
 struct flickcurl_serializer_s

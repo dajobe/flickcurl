@@ -73,6 +73,8 @@ const char* const flickcurl_home_url_string = "http://librdf.org/flickcurl/";
 const char* const flickcurl_version_string = VERSION;
 
 
+const char* const flickcurl_flickr_service_uri =  "http://www.flickr.com/services/rest/?";
+
 
 static void
 flickcurl_error_varargs(flickcurl* fc, const char *message, 
@@ -191,6 +193,8 @@ flickcurl_new(void)
   fc=(flickcurl*)calloc(1, sizeof(flickcurl));
   if(!fc)
     return NULL;
+
+  fc->service_uri = strdup(flickcurl_flickr_service_uri);
 
   /* DEFAULT delay between requests is 1000ms i.e 1 request/second max */
   fc->request_delay=1000;
@@ -438,6 +442,29 @@ flickcurl_set_http_accept(flickcurl* fc, const char *value)
 
 
 /**
+ * flickcurl_set_service_uri:
+ * @fc: flickcurl object
+ * @url: Service URI (or NULL)
+ *
+ * Set Web Service URI for flickcurl requests
+ *
+ * Sets the service to the default (Flickr API web service) if @url is NULL.
+ */
+void
+flickcurl_set_service_uri(flickcurl *fc, const char *uri)
+{
+  if(!uri)
+    uri = flickcurl_flickr_service_uri;
+    
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "Service URI set to: '%s'\n", uri);
+#endif
+    if(fc->service_uri)
+      free(fc->service_uri);
+    fc->service_uri = strdup(uri);
+}
+
+/**
  * flickcurl_set_api_key:
  * @fc: flickcurl object
  * @api_key: API Key
@@ -583,7 +610,6 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 
 static int
 flickcurl_prepare_common(flickcurl *fc, 
-                         const char* url,
                          const char* method,
                          const char* upload_field, const char* upload_value,
                          const char* parameters[][2], int count,
@@ -593,7 +619,7 @@ flickcurl_prepare_common(flickcurl *fc,
   char *md5_string=NULL;
   size_t* values_len=NULL;
 
-  if(!url || !parameters)
+  if(!fc->service_uri || !parameters)
     return 1;
   
   /* If one is given, both are required */
@@ -741,7 +767,7 @@ flickcurl_prepare_common(flickcurl *fc,
     parameters[count][0] = NULL;
   }
 
-  strcpy(fc->uri, url);
+  strcpy(fc->uri, fc->service_uri);
 
   if(parameters_in_url) {
     for(i=0; parameters[i][0]; i++) {
@@ -794,7 +820,6 @@ flickcurl_prepare_noauth(flickcurl *fc, const char* method,
   }
   
   return flickcurl_prepare_common(fc,
-                                  "http://www.flickr.com/services/rest/?",
                                   method,
                                   NULL, NULL,
                                   parameters, count,
@@ -812,7 +837,6 @@ flickcurl_prepare(flickcurl *fc, const char* method,
   }
   
   return flickcurl_prepare_common(fc,
-                                  "http://www.flickr.com/services/rest/?",
                                   method,
                                   NULL, NULL,
                                   parameters, count,
@@ -827,7 +851,6 @@ flickcurl_prepare_upload(flickcurl *fc,
                          const char* parameters[][2], int count)
 {
   return flickcurl_prepare_common(fc,
-                                  url,
                                   NULL,
                                   upload_field, upload_value,
                                   parameters, count,
