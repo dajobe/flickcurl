@@ -2,7 +2,7 @@
  *
  * contacts-api.c - Flickr flickr.contacts.* API calls
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
  * Copyright (C) 2007 Vanilla I. Shu <vanilla -at- fatpipi.cirx.org>
  *   (flickcurl_contacts_getList, flickcurl_contacts_getPublicList)
  * 

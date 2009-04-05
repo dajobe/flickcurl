@@ -2,7 +2,7 @@
  *
  * contacts.c - Flickcurl method contact functions
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
  * Copyright (C) 2007 Vanilla I. Shu 
  *   (flickcurl_free_contact, flickcurl_free_contacts,
  *    flickcurl_build_contacts)
