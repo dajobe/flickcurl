@@ -1,3 +1,23 @@
+2009-04-04  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-core.sgml: sgml docs
+
+	* README.html, coverage.html, NEWS.html: Flickcurl 1.9
+
+	* src/groups-members-api.c: flickcurl_groups_members_getList
+	announcement
+
+	* src/contacts-api.c, src/contacts.c, src/groups-api.c,
+	src/photos-api.c, src/photosets-api.c, src/place.c: 2009
+
+	* src/common.c: autodocs
+
+	* docs/flickcurl-sections.txt, src/common.c, src/flickcurl.h,
+	src/flickcurl_internal.h:
+	(flickcurl_set_service_uri): Added to allow using
+	Flickr-compatible services such as 23hq.com.  Fix based on patch
+	from Thorsten Zitterell
+
 2009-03-18  Dave Beckett <dave@dajobe.org>
 
 	* src/photos-api.c:
