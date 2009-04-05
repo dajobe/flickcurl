@@ -1,4 +1,6 @@
-2009-04-04  Dave Beckett <dave@dajobe.org>
+2009-04-04  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_9 for 1.9 release (SVN 948)
 
 	* docs/tmpl/section-core.sgml: sgml docs
 
