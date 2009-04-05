@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (136/136)</span>
+<span class="coverage">100.0% (139/139)</span>
 </p>
 
 
@@ -100,6 +100,13 @@ or <span class="unsupported">unsupported</span>.
 </ul>
 
 
+<h3>groups.members</h3>
+
+<ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.members.getList.html">flickr.groups.members.getList</a> (1.9)</li>
+</ul>
+
+
 <h3>groups.pools</h3>
 
 <ul>
@@ -125,6 +132,14 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getPairs.html">flickr.machinetags.getPairs</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getPredicates.html">flickr.machinetags.getPredicates</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getValues.html">flickr.machinetags.getValues</a> (1.7)</li>
+</ul>
+
+
+<h3>panda</h3>
+
+<ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.panda.getPhotos.html">flickr.panda.getPhotos</a> (1.9)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.panda.getList.html">flickr.panda.getList</a> (1.9)</li>
 </ul>
 
 
@@ -329,6 +344,14 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.9</strong>: flickr.groups.members.getList, flickr.panda.getList, flickr.panda.getPhotos (3 new)</p>
+<pre>
+flickcurl_member** flickcurl_groups_members_getList(flickcurl* fc, const char* group_id, const char* membertypes, int per_page, int page);
+char** flickcurl_panda_getList(flickcurl* fc);
+flickcurl_photo** flickcurl_panda_getPhotos(flickcurl *fc, const char *panda_name);
+</pre>
+
 
 <p><strong>1.8</strong>: flickr.commons.getInstitutions, flickr.contacts.getListRecentlyUploaded, flickr.photos.geo.batchCorrectLocation, flickr.photos.geo.correctLocation, flickr.photos.geo.photosForLocation, flickr.photos.geo.setContext, flickr.places.getPlaceTypes, flickr.places.getShapeHistory, flickr.places.placesForBoundingBox, flickr.places.placesForContacts, flickr.places.placesForTags, flickr.places.tagsForPlace (12 new)</p>
 <pre>
