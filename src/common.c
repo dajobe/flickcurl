@@ -448,7 +448,7 @@ flickcurl_set_http_accept(flickcurl* fc, const char *value)
  *
  * Set Web Service URI for flickcurl requests
  *
- * Sets the service to the default (Flickr API web service) if @url is NULL.
+ * Sets the service to the default (Flickr API web service) if @uri is NULL.
  */
 void
 flickcurl_set_service_uri(flickcurl *fc, const char *uri)
