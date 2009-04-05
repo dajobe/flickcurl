@@ -12,10 +12,50 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2009-XX-YY">2009-XX-YY Flickcurl 1.9</h2>
+<h2 id="D2009-04-04">2009-04-04 Flickcurl 1.9</h2>
 
-<p>Not yet released.
+<p>Added functions for 2 new API calls
+<a href="http://www.flickr.com/services/api/flickr.panda.getList.html">flickr.panda.getList</a>
+<a href="http://www.flickr.com/services/api/flickr.panda.getPhotos.html">flickr.panda.getPhotos</a>
+as <a href="http://code.flickr.com/blog/2009/03/03/panda-tuesday-the-history-of-the-panda-new-apis-explore-and-you/">announced on 2009-03-03</a>
+used in the vomiting
+<a href="http://www.flickr.com/explore/panda">Flickr Panda</a>.
 </p>
+<pre>
+  char** flickcurl_panda_getList(flickcurl* fc);
+
+  flickcurl_photo** flickcurl_panda_getPhotos(flickcurl *fc,
+    const char *panda_name);
+</pre>
+
+<p>Added function for 1 new API call
+<a href="http://www.flickr.com/services/api/flickr.groups.members.getList.html">flickr.groups.members.getList</a>
+as
+<a href="http://tech.groups.yahoo.com/group/yws-flickr/message/4749">announced as experimental on 2009-02-24</a>.
+</p>
+<pre>
+  flickcurl_member** flickcurl_groups_members_getList(flickcurl* fc,
+    const char* group_id, const char* membertypes, int per_page, int page);
+</pre>
+
+<p>
+Updated the <code>flickcurl(1)</code> utility to support the 3 new calls.
+</p>
+
+<p>Fixed <code>flickcurl_photosets_getList()</code> to work again
+with XML returned by the web service.  Not clear if the service
+changed since this used to work and the code did not change.
+</p>
+
+<p>Allow config file <code>~/.flickcurl.conf</code> (as used by
+<code>flickcurl(1)</code> utility) to contain DOS newline sequence (\r\n)
+as well as Unix (\n) and \r.
+</p>
+
+<p>Increased date buffer size in
+<code>flickcurl_photos_setDates()</code> to prevent buffer overruns.
+</p>
+
 
 
 <h2 id="D2009-02-09">2009-02-09 Flickcurl 1.8</h2>
