@@ -444,7 +444,7 @@ flickcurl_set_http_accept(flickcurl* fc, const char *value)
 /**
  * flickcurl_set_service_uri:
  * @fc: flickcurl object
- * @url: Service URI (or NULL)
+ * @uri: Service URI (or NULL)
  *
  * Set Web Service URI for flickcurl requests
  *
