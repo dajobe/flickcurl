@@ -57,6 +57,8 @@
  * Flickr member's group privileges.
  *
  * Implements flickr.groups.members.getList (1.9)
+ * as announced as an experimental API on 2009-02-24:
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/4749
  * 
  * Return value: list of members or NULL on failure
  **/
