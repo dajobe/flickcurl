@@ -169,6 +169,15 @@ Core library functions
 @Param2: 
 
 
+<!-- ##### FUNCTION flickcurl_set_service_uri ##### -->
+<para>
+
+</para>
+
+@fc: 
+@uri: 
+
+
 <!-- ##### FUNCTION flickcurl_set_shared_secret ##### -->
 <para>
 
