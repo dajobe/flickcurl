@@ -339,6 +339,12 @@ struct flickcurl_s {
 
   /* Web Service URI that is called */
   char *service_uri;
+
+  /* Upload Web Service URI that is called */
+  char *upload_service_uri;
+
+  /* Replace Web Service URI that is called */
+  char *replace_service_uri;
 };
 
 struct flickcurl_serializer_s

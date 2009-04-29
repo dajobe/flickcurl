@@ -1367,6 +1367,11 @@ extern const char* const flickcurl_version_string;
 
 FLICKCURL_API
 extern const char* const flickcurl_flickr_service_uri;
+FLICKCURL_API
+extern const char* const flickcurl_flickr_upload_service_uri;
+FLICKCURL_API
+extern const char* const flickcurl_flickr_replace_service_uri;
+
 
 /* library init - call once before creating anything */
 FLICKCURL_API
@@ -1387,6 +1392,10 @@ void flickcurl_free(flickcurl *fc);
 /* flickcurl* object set methods */
 FLICKCURL_API
 void flickcurl_set_service_uri(flickcurl *fc, const char *uri);
+FLICKCURL_API
+void flickcurl_set_upload_service_uri(flickcurl *fc, const char *uri);
+FLICKCURL_API
+void flickcurl_set_replace_service_uri(flickcurl *fc, const char *uri);
 FLICKCURL_API
 void flickcurl_set_api_key(flickcurl* fc, const char *api_key);
 FLICKCURL_API

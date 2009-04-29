@@ -127,9 +127,9 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
 
 
   if(flickcurl_prepare_upload(fc,
-                            "http://api.flickr.com/services/upload/",
-                            "photo", params->photo_file,
-                            parameters, count))
+                              fc->upload_service_uri,
+                              "photo", params->photo_file,
+                              parameters, count))
     goto tidy;
 
   doc=flickcurl_invoke(fc);
@@ -250,7 +250,7 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare_upload(fc,
-                              "http://api.flickr.com/services/replace/",
+                              fc->replace_service_uri,
                               "photo", photo_file,
                               parameters, count))
     goto tidy;
