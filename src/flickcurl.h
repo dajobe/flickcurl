@@ -1627,11 +1627,11 @@ flickcurl_photos_list* flickcurl_interestingness_getList_params(flickcurl* fc, c
 FLICKCURL_API
 flickcurl_tag_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
 FLICKCURL_API
-flickcurl_tag_predicate_value** flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace, const char* predicate, int per_page, int page);
 FLICKCURL_API
-flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace, int per_page, int page);
 FLICKCURL_API
-flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace, const char* predicate, int per_page, int page);
 
 /* flickr.panda */
 FLICKCURL_API

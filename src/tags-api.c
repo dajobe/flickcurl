@@ -121,7 +121,7 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
   int count=0;
   xmlDocPtr doc=NULL;
   xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
+  flickcurl_tag_clusters* clusters=NULL;
   
   if(!tag)
     return NULL;
@@ -146,17 +146,17 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
     goto tidy;
   }
 
-  result=flickcurl_build_tag_clusters(fc, xpathCtx,
-                                      (const xmlChar*)"/rsp/clusters/cluster");
+  clusters = flickcurl_build_tag_clusters(fc, xpathCtx,
+                                          (const xmlChar*)"/rsp/clusters/cluster");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    clusters = NULL;
 
-  return result;
+  return clusters;
 }
 
 

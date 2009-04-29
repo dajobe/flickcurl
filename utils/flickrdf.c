@@ -356,8 +356,8 @@ ser_emit_triple(void* user_data,
   raptor_statement s;
   raptor_uri* predicate_ns_uri;
   
-  s.subject_type=subject_type;
-  if(s.subject_type == FLICKCURL_TERM_TYPE_RESOURCE)
+  s.subject_type = (raptor_identifier_type)subject_type;
+  if((flickcurl_term_type)s.subject_type == FLICKCURL_TERM_TYPE_RESOURCE)
     s.subject=(void*)raptor_new_uri((const unsigned char*)subject);
   else /* blank node */
     s.subject=(void*)subject;
@@ -368,8 +368,8 @@ ser_emit_triple(void* user_data,
   raptor_free_uri(predicate_ns_uri);
   s.predicate_type=RAPTOR_IDENTIFIER_TYPE_RESOURCE;
 
-  s.object_type=object_type;
-  if(s.object_type == FLICKCURL_TERM_TYPE_RESOURCE)
+  s.object_type = (raptor_identifier_type)object_type;
+  if((flickcurl_term_type)s.object_type == FLICKCURL_TERM_TYPE_RESOURCE)
     s.object=(void*)raptor_new_uri((const unsigned char*)object);
   else /* literal or blank node */
     s.object=(void*)object;
@@ -381,10 +381,10 @@ ser_emit_triple(void* user_data,
 
   raptor_serialize_statement(serializer, &s);
 
-  if(s.subject_type == FLICKCURL_TERM_TYPE_RESOURCE)
+  if((flickcurl_term_type)s.subject_type == FLICKCURL_TERM_TYPE_RESOURCE)
     raptor_free_uri((raptor_uri*)s.subject);
   raptor_free_uri((raptor_uri*)s.predicate);
-  if(s.object_type == FLICKCURL_TERM_TYPE_RESOURCE)
+  if((flickcurl_term_type)s.object_type == FLICKCURL_TERM_TYPE_RESOURCE)
     raptor_free_uri((raptor_uri*)s.object);
   if(datatype_uri)
     raptor_free_uri(s.object_literal_datatype);

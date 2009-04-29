@@ -1526,7 +1526,7 @@ flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
   if(!value_len)
     goto tidy;
   
-  value = malloc(value_len+1);
+  value = (char*)malloc(value_len+1);
   if(!value)
     goto tidy;
   memcpy(value, xmlBufferContent(buffer), value_len+1);

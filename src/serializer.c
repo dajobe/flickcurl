@@ -661,7 +661,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
       fsf->emit_triple(fcs->data,
                        place_bnode, FLICKCURL_TERM_TYPE_BLANK,
                        PLACES_NS, "type",
-                       flickcurl_get_place_type_label(i),
+                       flickcurl_get_place_type_label((flickcurl_place_type)i),
                        FLICKCURL_TERM_TYPE_LITERAL,
                        NULL);
 

@@ -90,6 +90,7 @@ flickcurl_free_shapes(flickcurl_shapedata **shapes_object)
 
 /* flickcurl_shapedata fields */
 typedef enum {
+  SHAPE_NONE = 0,
   /* shape->created */
   SHAPE_CREATED,
   /* shape->alpha */
@@ -146,7 +147,7 @@ static struct {
   ,
   { 
     NULL,
-    (unsigned short)0
+    SHAPE_NONE
   }
 };
 
@@ -264,6 +265,11 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             }
           }
           break;
+
+        case SHAPE_NONE:
+        default:
+          flickcurl_error(fc, "Unknown shape field %d",  shape_field);
+          fc->failed=1;
       }
       
       if(fc->failed)

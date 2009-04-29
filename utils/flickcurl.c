@@ -356,7 +356,8 @@ command_print_place(flickcurl_place* place,
     if(!name && !id && !url && !woe_id)
       continue;
     
-    fprintf(stderr, "  %d) place %s:", i, flickcurl_get_place_type_label(i));
+    fprintf(stderr, "  %d) place %s:", i,
+            flickcurl_get_place_type_label((flickcurl_place_type)i));
     if(name)
       fprintf(stderr," name '%s'", name);
     if(id)
@@ -3168,14 +3169,14 @@ command_print_predicate_values(flickcurl_tag_predicate_value **tag_pvs,
 static int
 command_machinetags_getPairs(flickcurl* fc, int argc, char *argv[])
 {
-  const char* namespace = NULL;
+  const char *nspace = NULL;
   const char* predicate = NULL;
   int per_page = 10;
   int page = 0;
   flickcurl_tag_predicate_value** tag_pvs = NULL;
 
   if(argc >1) {
-    namespace = argv[1];
+    nspace = argv[1];
     if(argc >2) {
       predicate = argv[2];
       if(argc >3) {
@@ -3187,7 +3188,7 @@ command_machinetags_getPairs(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  tag_pvs = flickcurl_machinetags_getPairs(fc, namespace, predicate, per_page,
+  tag_pvs = flickcurl_machinetags_getPairs(fc, nspace, predicate, per_page,
                                            page);
   if(tag_pvs) {
     command_print_predicate_values(tag_pvs, "getPairs returned");
@@ -3201,13 +3202,13 @@ command_machinetags_getPairs(flickcurl* fc, int argc, char *argv[])
 static int
 command_machinetags_getPredicates(flickcurl* fc, int argc, char *argv[])
 {
-  const char* namespace = NULL;
+  const char *nspace = NULL;
   int per_page = 10;
   int page = 0;
   flickcurl_tag_predicate_value** tag_pvs = NULL;
 
   if(argc >1) {
-    namespace = argv[1];
+    nspace = argv[1];
     if(argc >2) {
       per_page = parse_page_param(argv[2]);
       if(argc >3) {
@@ -3216,7 +3217,7 @@ command_machinetags_getPredicates(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  tag_pvs = flickcurl_machinetags_getPredicates(fc, namespace, per_page, page);
+  tag_pvs = flickcurl_machinetags_getPredicates(fc, nspace, per_page, page);
 
   if(tag_pvs) {
     command_print_predicate_values(tag_pvs, "getPredicates returned");
@@ -3230,7 +3231,7 @@ command_machinetags_getPredicates(flickcurl* fc, int argc, char *argv[])
 static int
 command_machinetags_getValues(flickcurl* fc, int argc, char *argv[])
 {
-  const char* namespace = argv[1];
+  const char *nspace = argv[1];
   const char* predicate = argv[2];
   int per_page = 10;
   int page = 0;
@@ -3243,7 +3244,7 @@ command_machinetags_getValues(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  tag_pvs = flickcurl_machinetags_getValues(fc, namespace, predicate,
+  tag_pvs = flickcurl_machinetags_getValues(fc, nspace, predicate,
                                             per_page, page);
 
   if(tag_pvs) {
@@ -3577,7 +3578,7 @@ command_print_institution(flickcurl_institution* institution, int ix)
   for(i = 0 ; i <= FLICKCURL_INSTITUTION_URL_LAST; i++) {
     if(institution->urls[i])
       fprintf(stderr, "  URL %s: %s\n",
-              flickcurl_get_institution_url_type_label(i),
+              flickcurl_get_institution_url_type_label((flickcurl_institution_url_type)i),
               institution->urls[i]);
   }
   

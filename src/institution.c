@@ -94,6 +94,7 @@ flickcurl_free_institutions(flickcurl_institution **institutions_object)
 
 /* flickcurl_institution fields */
 typedef enum {
+  INSTITUTION_NONE = 0,
   /* institution->nsid */
   INSTITUTION_NSID,
   /* institution->date_launch */
@@ -154,7 +155,7 @@ static struct {
   { 
     NULL,
     FLICKCURL_INSTITUTION_URL_NONE,
-    (unsigned short)0
+    INSTITUTION_NONE
   }
 };
 
@@ -240,6 +241,12 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case INSTITUTION_URL:
           institution->urls[(int)institution_url_type] = value;
           break;
+
+        case INSTITUTION_NONE:
+        default:
+          flickcurl_error(fc, "Unknown institution URL type %d",
+                          (int)institution_url_type);
+          fc->failed=1;
       }
       
       if(fc->failed)

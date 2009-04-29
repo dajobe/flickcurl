@@ -113,7 +113,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
 /**
  * flickcurl_machinetags_getPairs:
  * @fc: flickcurl context
- * @namespace: Limit the list of pairs returned to those that have the following namespace (or NULL)
+ * @nspace: Limit the list of pairs returned to those that have the following namespace (or NULL)
  * @predicate: Limit the list of pairs returned to those that have the following predicate (or NULL)
  * @per_page: Number of pairs to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
@@ -130,7 +130,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
  * Return value: non-0 on failure
  **/
 flickcurl_tag_predicate_value**
-flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
+flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
                                const char* predicate,
                                int per_page, int page)
 {
@@ -143,7 +143,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
   parameters[count][0]  = "namespace";
-  parameters[count++][1]= namespace;
+  parameters[count++][1]= nspace;
   parameters[count][0]  = "predicate";
   parameters[count++][1]= predicate;
   parameters[count][0]  = "per_page";
@@ -189,7 +189,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
 /**
  * flickcurl_machinetags_getPredicates:
  * @fc: flickcurl context
- * @namespace: Limit the list of predicates returned to those that have the following namespace (or NULL)
+ * @nspace: Limit the list of predicates returned to those that have the following namespace (or NULL)
  * @per_page: Number of predicates to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
  * 
@@ -205,7 +205,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace,
  * Return value: non-0 on failure
  **/
 flickcurl_tag_predicate_value**
-flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
+flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
                                     int per_page, int page)
 {
   const char* parameters[10][2];
@@ -217,7 +217,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
   parameters[count][0]  = "namespace";
-  parameters[count++][1]= namespace;
+  parameters[count++][1]= nspace;
   parameters[count][0]  = "per_page";
   sprintf(per_page_s, "%d", per_page);
   parameters[count++][1]= per_page_s;
@@ -262,7 +262,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
 /**
  * flickcurl_machinetags_getValues:
  * @fc: flickcurl context
- * @namespace: The namespace that all values should be restricted to.
+ * @nspace: The namespace that all values should be restricted to.
  * @predicate: The predicate that all values should be restricted to.
  * @per_page: Number of values to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500 (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1 (or NULL)
@@ -279,7 +279,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace,
  * Return value: non-0 on failure
  **/
 flickcurl_tag_predicate_value**
-flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace,
+flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
                                 const char* predicate,
                                 int per_page, int page)
 {
@@ -291,11 +291,11 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace,
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
-  if(!namespace || !predicate)
+  if(!nspace || !predicate)
     return NULL;
 
   parameters[count][0]  = "namespace";
-  parameters[count++][1]= namespace;
+  parameters[count++][1]= nspace;
   parameters[count][0]  = "predicate";
   parameters[count++][1]= predicate;
   parameters[count][0]  = "per_page";

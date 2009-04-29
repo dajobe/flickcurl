@@ -143,6 +143,7 @@ flickcurl_free_places(flickcurl_place **places_object)
 
 /* flickcurl_place fields */
 typedef enum {
+  PLACE_NONE = 0,
   /* place->names[place_type] */
   PLACE_NAME,
   /* place->ids[place_type] */
@@ -377,7 +378,7 @@ static struct {
   { 
     NULL,
     (flickcurl_place_type)0,
-    (unsigned short)0
+    PLACE_NONE
   }
 };
 
@@ -511,6 +512,11 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case PLACE_SHAPE:
           /* handled above */
           break;
+
+        case PLACE_NONE:
+        default:
+          flickcurl_error(fc, "Unknown place type %d",  (int)place_field);
+          fc->failed=1;
       }
       
       if(fc->failed)
