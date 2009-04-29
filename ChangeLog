@@ -1,4 +1,14 @@
-2009-04-04  Dave Beckett  <dave@dajobe.org>
+2009-04-29  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c, src/flickcurl.h, src/institution.c,
+	src/machinetags-api.c, src/place.c, src/serializer.c, src/shape.c,
+	src/tags-api.c, utils/flickcurl.c, utils/flickrdf.c:
+	Casts for compiling and using from C++.  Main change is to rename
+	variables and arguments called 'namespace' to 'nspace'
+
+2009-04-05  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 1.10
 
 	* Snapshotted flickcurl_1_9 for 1.9 release (SVN 948)
 
