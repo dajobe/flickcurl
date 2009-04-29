@@ -1,5 +1,29 @@
 2009-04-29  Dave Beckett <dave@dajobe.org>
 
+	* src/common.c, src/flickcurl.h, src/flickcurl_internal.h,
+	src/upload-api.c: Make uploading work again - add service URIs for
+	uploading and replacing services.
+	flickcurl structure gains upload_service_uri and
+	replace_service_uri fields.
+	Added constants: flickcurl_flickr_upload_service_uri and
+	flickcurl_flickr_replace_service_uri for default Flickr upload and
+	replace URIs.
+	(flickcurl_new): Initialise default upload and replace service URIs.
+	(flickcurl_free): Free service URIs.
+	(flickcurl_set_upload_service_uri): Added to set upload service URI,
+	(flickcurl_set_replace_service_uri): Added to set replace service
+	URI.
+	(flickcurl_prepare_common): Restore url parameter to use in calls,
+	do not just use fc->service_uri.
+	(flickcurl_photos_upload_params): Pass in fc->upload_service_uri
+	to flickcurl_prepare_upload.
+	(flickcurl_photos_replace): Pass in fc->replace_service_uri to
+	flickcurl_prepare_upload.
+	(flickcurl_prepare_noauth, flickcurl_prepare): Pass in
+	fc->service_uri to flickcurl_prepare_common.
+	(flickcurl_prepare_upload): Pass along incoming url to inner
+	flickcurl_prepare_common.
+
 	* src/common.c, src/flickcurl.h, src/institution.c,
 	src/machinetags-api.c, src/place.c, src/serializer.c, src/shape.c,
 	src/tags-api.c, utils/flickcurl.c, utils/flickrdf.c:
