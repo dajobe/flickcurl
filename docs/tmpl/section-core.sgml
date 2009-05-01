@@ -178,6 +178,24 @@ Core library functions
 @uri: 
 
 
+<!-- ##### FUNCTION flickcurl_set_replace_service_uri ##### -->
+<para>
+
+</para>
+
+@fc: 
+@uri: 
+
+
+<!-- ##### FUNCTION flickcurl_set_upload_service_uri ##### -->
+<para>
+
+</para>
+
+@fc: 
+@uri: 
+
+
 <!-- ##### FUNCTION flickcurl_set_shared_secret ##### -->
 <para>
 

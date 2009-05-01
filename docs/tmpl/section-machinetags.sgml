@@ -86,7 +86,7 @@ Machine tags.
 </para>
 
 @fc: 
-@namespace: 
+@nspace: 
 @predicate: 
 @per_page: 
 @page: 
@@ -99,7 +99,7 @@ Machine tags.
 </para>
 
 @fc: 
-@namespace: 
+@nspace: 
 @per_page: 
 @page: 
 @Returns: 
@@ -111,7 +111,7 @@ Machine tags.
 </para>
 
 @fc: 
-@namespace: 
+@nspace: 
 @predicate: 
 @per_page: 
 @page: 
