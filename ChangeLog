@@ -1,5 +1,9 @@
 2009-04-29  Dave Beckett <dave@dajobe.org>
 
+	* docs/flickcurl-sections.txt: Add
+	flickcurl_set_replace_service_uri and
+	flickcurl_set_upload_service_uri
+
 	* src/common.c, src/flickcurl.h, src/flickcurl_internal.h,
 	src/upload-api.c: Make uploading work again - add service URIs for
 	uploading and replacing services.
