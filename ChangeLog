@@ -1,5 +1,7 @@
 2009-04-29  Dave Beckett <dave@dajobe.org>
 
+	* Snapshotted flickcurl_1_10 for 1.10 release (SVN 960)
+
 	* docs/flickcurl-sections.txt: Add
 	flickcurl_set_replace_service_uri and
 	flickcurl_set_upload_service_uri
