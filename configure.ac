@@ -180,23 +180,30 @@ AC_SUBST(RAPTOR_MIN_VERSION)
 
 AC_ARG_WITH(raptor, [  --with-raptor    Use raptor to serialize (default=auto)], with_raptor="$withval", with_raptor="auto")
 
-RAPTOR_VERSION=
-if test "$with_raptor" != no; then
+# resolve autodetecting raptor
+if test "$with_raptor" = auto; then
   if $PKG_CONFIG raptor --exists; then
-    RAPTOR_VERSION=`$PKG_CONFIG raptor --modversion 2>/dev/null`
-
-    if $PKG_CONFIG raptor --atleast-version=$RAPTOR_MIN_VERSION; then
       with_raptor=yes
     else
       with_raptor=no
-      AC_MSG_WARN(Installed raptor $RAPTOR_VERSION is too old - need $RAPTOR_MIN_VERSION)
-    fi
+  fi
+fi
+
+# disable raptor if the version is too old
+RAPTOR_VERSION=
+if test "$with_raptor" = yes; then
+  RAPTOR_VERSION=`$PKG_CONFIG raptor --modversion 2>/dev/null`
+
+  if $PKG_CONFIG raptor --atleast-version=$RAPTOR_MIN_VERSION; then
+    with_raptor=yes
+  else
+    with_raptor=no
+    AC_MSG_WARN(Installed raptor $RAPTOR_VERSION is too old - need $RAPTOR_MIN_VERSION)
   fi
 fi
 
 AM_CONDITIONAL(RAPTOR, test $with_raptor = yes)
 AC_MSG_CHECKING(whether to use raptor)
-
 if test "$with_raptor" = yes; then
   AC_MSG_RESULT(yes)
   RAPTOR_LIBS="`$PKG_CONFIG raptor --libs`"
@@ -212,12 +219,6 @@ if test "$with_raptor" = yes; then
 else
   AC_MSG_RESULT(no)
 fi
-
-if test "X$PKG_CONFIG_REQUIRES" != X; then
-  PKG_CONFIG_REQUIRES="Requires:$PKG_CONFIG_REQUIRES"
-fi
-AC_SUBST(PKG_CONFIG_REQUIRES)
-
 
 AC_ARG_ENABLE(offline, [  --enable-offline        Turn on offline use of captured XML web service responses (default disabled).  ], offline="yes", offline="no")	
 AC_MSG_CHECKING(using offline mode)
@@ -291,6 +292,12 @@ if test "$USE_MAINTAINER_MODE" = yes; then
 fi
 
 AC_SUBST(STANDARD_CFLAGS)
+
+if test "X$PKG_CONFIG_REQUIRES" != X; then
+  PKG_CONFIG_REQUIRES="Requires:$PKG_CONFIG_REQUIRES"
+fi
+AC_SUBST(PKG_CONFIG_REQUIRES)
+
 
 dnl Shave "make autotools output sane" - disabled by default
 dnl http://git.lespiau.name/cgit/shave/  git clone git://git.lespiau.name/shave
