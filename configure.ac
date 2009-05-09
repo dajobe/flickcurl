@@ -294,8 +294,8 @@ fi
 
 AC_SUBST(STANDARD_CFLAGS)
 
-dnl Shave "make autotools output sane" - enabled by default
-dnl http://damien.lespiau.name/blog/2009/02/18/shave-making-the-autotools-output-sane/
+dnl Shave "make autotools output sane" - disabled by default
+dnl http://git.lespiau.name/cgit/shave/  git clone git://git.lespiau.name/shave
 SHAVE_INIT([build], [disable])
 
 AC_CONFIG_FILES([Makefile
