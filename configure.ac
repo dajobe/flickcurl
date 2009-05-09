@@ -49,7 +49,7 @@ AC_PROG_LIBTOOL
 # Checks for libraries.
 
 libxml_min_version=2.6.8
-raptor_min_version=1.4.0
+raptor_min_version=1.4.16
 libcurl_min_version=7.10.0
 libcurl_min_vernum=070A00
 
@@ -109,6 +109,12 @@ int main(int argc, char* argv) {
     AC_MSG_RESULT(yes))
 fi
 
+
+AC_CHECK_PROGS(PKG_CONFIG, pkg-config)
+
+PKG_CONFIG_REQUIRES=
+
+
 AC_ARG_WITH(xml2-config, [  --with-xml2-config=PATH   Location of libxml xml2-config []], xml2_config="$withval", xml2_config="")
 
 if test "X$xml2_config" != "X" ; then
@@ -135,6 +141,10 @@ libxml_min_version_dec=`echo $libxml_min_version | awk -F. '{printf("%d\n", 1000
 if test $libxml_version_dec -lt $libxml_min_version_dec; then
   AC_MSG_ERROR(libxml $LIBXML_VERSION is too old - $libxml_min_version or newer required.)
 fi
+
+LIBXML_MIN_VERSION=$libxml_min_version
+AC_SUBST(LIBXML_MIN_VERSION)
+
 
 
 LIBS="$LIBS `$XML_CONFIG --libs`"
@@ -169,13 +179,11 @@ if test $LIBCURL_VERNUM '<' $libcurl_min_vernum; then
   AC_MSG_ERROR(curl $LIBCURL_VERSION is too old - $libcurl_min_version or newer required.)
 fi
 
-
-AC_CHECK_PROGS(PKG_CONFIG, pkg-config)
-
-PKG_CONFIG_REQUIRES=
+LIBCURL_MIN_VERSION=$libcurl_min_version
+AC_SUBST(LIBCURL_MIN_VERSION)
 
 
-RAPTOR_MIN_VERSION=1.4.16
+RAPTOR_MIN_VERSION=$raptor_min_version
 AC_SUBST(RAPTOR_MIN_VERSION)
 
 AC_ARG_WITH(raptor, [  --with-raptor    Use raptor to serialize (default=auto)], with_raptor="$withval", with_raptor="auto")
