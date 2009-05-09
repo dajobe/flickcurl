@@ -9,4 +9,5 @@ Version: @VERSION@
 Libs: -L${libdir} -lflickcurl
 Libs.private: @LIBS@
 Cflags: -I${includedir}
+@PKG_CONFIG_REQUIRES@
 

@@ -170,55 +170,53 @@ if test $LIBCURL_VERNUM '<' $libcurl_min_vernum; then
 fi
 
 
+AC_CHECK_PROGS(PKG_CONFIG, pkg-config)
 
-AC_ARG_WITH(raptor-config, [  --with-raptor-config=PATH   Location of raptor raptor-config []], raptor_config="$withval", raptor_config="")
+PKG_CONFIG_REQUIRES=
 
-if test "X$raptor_config" != "X" ; then
-  AC_MSG_CHECKING(for $raptor_config)
 
-  if test -f $raptor_config ; then
-    RAPTOR_CONFIG=$raptor_config
-    AC_MSG_RESULT(yes)
-  else
-    AC_MSG_RESULT(no - searching PATH)
-  fi
-fi
-if test "X$RAPTOR_CONFIG" = "X"; then
-  AC_CHECK_PROGS(RAPTOR_CONFIG, raptor-config)
-fi
-
+RAPTOR_MIN_VERSION=1.4.16
+AC_SUBST(RAPTOR_MIN_VERSION)
 
 AC_ARG_WITH(raptor, [  --with-raptor    Use raptor to serialize (default=auto)], with_raptor="$withval", with_raptor="auto")
 
 RAPTOR_VERSION=
 if test "$with_raptor" != no; then
-  if test "X$RAPTOR_CONFIG" != "X"; then
-    RAPTOR_VERSION=`$RAPTOR_CONFIG --version 2>/dev/null`
+  if $PKG_CONFIG raptor --exists; then
+    RAPTOR_VERSION=`$PKG_CONFIG raptor --modversion 2>/dev/null`
 
-    # FIXME - could use raptor-config --decimal-version at some point
-    RAPTOR_VERSION_DEC=`echo $RAPTOR_VERSION | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
-    RAPTOR_MIN_VERSION_DEC=`echo $raptor_min_version | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
-
-    if test "X$RAPTOR_VERSION" -a $RAPTOR_VERSION_DEC -ge $RAPTOR_MIN_VERSION_DEC; then
+    if $PKG_CONFIG raptor --atleast-version=$RAPTOR_MIN_VERSION; then
       with_raptor=yes
     else
       with_raptor=no
+      AC_MSG_WARN(Installed raptor $RAPTOR_VERSION is too old - need $RAPTOR_MIN_VERSION)
     fi
   fi
 fi
 
 AM_CONDITIONAL(RAPTOR, test $with_raptor = yes)
 AC_MSG_CHECKING(whether to use raptor)
+
 if test "$with_raptor" = yes; then
   AC_MSG_RESULT(yes)
-  RAPTOR_LIBS="`$RAPTOR_CONFIG --libs`"
-  RAPTOR_CFLAGS="`$RAPTOR_CONFIG --cflags`"
+  RAPTOR_LIBS="`$PKG_CONFIG raptor --libs`"
+  RAPTOR_CFLAGS="`$PKG_CONFIG raptor --cflags`"
+
+  if test "X$PKG_CONFIG_REQUIRES" != X; then
+    PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
+  fi
+  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES raptor >= $RAPTOR_MIN_VERSION"
   AC_SUBST(RAPTOR_LIBS)
   AC_SUBST(RAPTOR_CFLAGS)
   AC_DEFINE(HAVE_RAPTOR, 1, [have raptor RDF parser library])
 else
   AC_MSG_RESULT(no)
 fi
+
+if test "X$PKG_CONFIG_REQUIRES" != X; then
+  PKG_CONFIG_REQUIRES="Requires:$PKG_CONFIG_REQUIRES"
+fi
+AC_SUBST(PKG_CONFIG_REQUIRES)
 
 
 AC_ARG_ENABLE(offline, [  --enable-offline        Turn on offline use of captured XML web service responses (default disabled).  ], offline="yes", offline="no")	
