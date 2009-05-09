@@ -1,7 +1,7 @@
 #
-# Makefile.am
+# Makefile.am - Top level automakefile for Flickcurl
 #
-# Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+# Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
 # 
 # This file is licensed under the following three licenses as alternatives:
 #   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -16,6 +16,8 @@
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
 SUBDIRS = src utils docs examples
+
+ACLOCAL_AMFLAGS = -I build
 
 bin_SCRIPTS = flickcurl-config
 

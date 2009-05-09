@@ -296,7 +296,7 @@ AC_SUBST(STANDARD_CFLAGS)
 
 dnl Shave "make autotools output sane" - enabled by default
 dnl http://damien.lespiau.name/blog/2009/02/18/shave-making-the-autotools-output-sane/
-SHAVE_INIT([build], [enable])
+SHAVE_INIT([build], [disable])
 
 AC_CONFIG_FILES([Makefile
 build/shave

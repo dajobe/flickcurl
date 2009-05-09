@@ -56,6 +56,10 @@ ltdl=
 if grep "^AC_LIBLTDL_" $confs >/dev/null; then
   ltdl="--ltdl"
 fi
+shave=
+if grep "^SHAVE_INIT" $confs >/dev/null; then
+  shave="--enable-shave"
+fi
 
 # Some dependencies for autotools:
 # automake 1.10 requires autoconf 2.60
@@ -77,7 +81,7 @@ autoconf_args=
 libtoolize_args="$ltdl --force --copy --automake"
 gtkdocize_args="--copy"
 # --enable-gtk-doc does no harm if it's not available
-configure_args="--enable-maintainer-mode --enable-gtk-doc"
+configure_args="--enable-maintainer-mode --enable-gtk-doc $shave"
 
 
 # You should not need to edit below here
