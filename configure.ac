@@ -5,6 +5,10 @@ AC_PREREQ(2.59)
 AC_INIT(Flickcurl, 1.11, http://bugs.librdf.org/, flickcurl)
 AC_CONFIG_SRCDIR([src/flickcurl.h])
 AM_CONFIG_HEADER([src/config.h])
+AC_CONFIG_AUX_DIR(build)
+AC_CONFIG_MACRO_DIR(build)
+AM_INIT_AUTOMAKE([1.7 check-news std-options -Wall])
+
 AC_REVISION($Revision: $)dnl
 
 AM_MAINTAINER_MODE
@@ -290,7 +294,13 @@ fi
 
 AC_SUBST(STANDARD_CFLAGS)
 
+dnl Shave "make autotools output sane" - enabled by default
+dnl http://damien.lespiau.name/blog/2009/02/18/shave-making-the-autotools-output-sane/
+SHAVE_INIT([build], [enable])
+
 AC_CONFIG_FILES([Makefile
+build/shave
+build/shave-libtool
 src/Makefile
 utils/Makefile
 examples/Makefile
