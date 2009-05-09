@@ -210,7 +210,7 @@ if test "$with_raptor" = yes; then
   RAPTOR_CFLAGS="`$PKG_CONFIG raptor --cflags`"
 
   LIBS="$LIBS $RAPTOR_LIBS"
-  CPPFLAGS="$CPPFLAGS $RAPTOR_LIBS"
+  CPPFLAGS="$CPPFLAGS $RAPTOR_CFLAGS"
 
   if test "X$PKG_CONFIG_REQUIRES" != X; then
     PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
