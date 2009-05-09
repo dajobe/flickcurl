@@ -1,3 +1,33 @@
+2009-05-09  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac: Set raptor libs and cflags correctly
+
+	* configure.ac: Add raptor libs and cflags to LIBS and CPPFLAGS
+
+	* configure.ac: Separate raptor autodetection, version checking
+	and enabling
+
+	* configure.ac, flickcurl.pc.in: Find raptor via pkg-config and
+	update flickcurl.pc to reflect it
+
+	* configure.ac: Update shave comments
+
+	* Makefile.am, autogen.sh, configure.ac: Disable shave by default,
+	enable it for maintainers and make autogen.sh do that
+
+	* build, build/shave-libtool.in, build/shave.in, build/shave.m4,
+	configure.ac: Added SHAVE support "make autotools output sane" -
+	enabled by default http://git.lespiau.name/cgit/shave/
+	git clone git://git.lespiau.name/shave
+
+	* autogen.sh: libtool V2 needed
+	Add -Wall to automake args
+	Reorder args to remove dups
+	Find config_aux_dir and config_macro_dir and use them for copying in
+	config.{sub,guess} and adjusting aclocal args respectively.
+
+	* NEWS.html, configure.ac: Bump version to 1.11
+
 2009-04-29  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_10 for 1.10 release (SVN 962)
