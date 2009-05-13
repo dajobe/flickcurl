@@ -332,7 +332,7 @@ command_print_shape(flickcurl_shapedata* shape)
     int j;
     fprintf(stderr, "  Shapefile URLs: %d\n", shape->file_urls_count);
     for(j=0; j < shape->file_urls_count; j++) {
-      fprintf(stderr,"  URL %d: %s\n", j, shape->file_urls[j]);
+      fprintf(stderr,"    URL %d: %s\n", j, shape->file_urls[j]);
     }
   }
 }
@@ -3501,6 +3501,7 @@ command_places_getShapeHistory(flickcurl* fc, int argc, char *argv[])
     for(i=0; shapes[i]; i++) {
       fprintf(stderr, "Shape %d: ", i);
       command_print_shape(shapes[i]);
+      fputc('\n', stderr);
     }
 
     flickcurl_free_shapes(shapes);
