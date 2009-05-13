@@ -3482,11 +3482,11 @@ command_places_getShapeHistory(flickcurl* fc, int argc, char *argv[])
     int i;
     for(i=0; shapes[i]; i++) {
       fprintf(stderr,
-              "Shape %d: created %d  alpha %2.2f  #points %d  #edges %d  data size: %d bytes  urls count: %d\n",
+              "Shape %d: created %d  alpha %2.2f  #points %d  #edges %d  data size: %d bytes  urls count: %d  is donuthole: %d\n",
               i, shapes[i]->created, shapes[i]->alpha,
               shapes[i]->points, shapes[i]->edges,
               (int)(shapes[i]->data_length),
-              shapes[i]->file_urls_count);
+              shapes[i]->file_urls_count, shapes[i]->is_donuthole);
       if(shapes[i]->file_urls_count > 0) {
         int j;
         for(j=0; j < shapes[i]->file_urls_count; j++) {
