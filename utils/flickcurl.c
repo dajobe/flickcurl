@@ -310,6 +310,35 @@ command_print_location(flickcurl_location* location)
 
 
 static void
+command_print_shape(flickcurl_shapedata* shape)
+{
+  fprintf(stderr,
+          "created %d  alpha %2.2f  #points %d  #edges %d\n"
+          "  is donuthole: %d  has donuthole: %d\n",
+          shape->created, shape->alpha, shape->points, shape->edges,
+          shape->is_donuthole, shape->has_donuthole);
+
+  if(shape->data_length > 0) {
+    int s;
+#define MAX_XML 70
+    s = (shape->data_length > MAX_XML ? MAX_XML : shape->data_length);
+    fprintf(stderr, "  Shapedata (%d bytes):\n    ",
+            (int)shape->data_length);
+    fwrite(shape->data, 1, s, stderr);
+    fputs("...\n", stderr);
+  }
+
+  if(shape->file_urls_count > 0) {
+    int j;
+    fprintf(stderr, "  Shapefile URLs: %d\n", shape->file_urls_count);
+    for(j=0; j < shape->file_urls_count; j++) {
+      fprintf(stderr,"  URL %d: %s\n", j, shape->file_urls[j]);
+    }
+  }
+}
+
+
+static void
 command_print_place(flickcurl_place* place,
                     const char* label, const char* value,
                     int print_locality)
@@ -331,21 +360,7 @@ command_print_place(flickcurl_place* place,
   if(place->timezone)
     fprintf(stderr, "  Timezone: %s\n", place->timezone);
   
-  if(place->shapedata_length > 0) {
-    int s;
-#define MAX_XML 70
-    s = (place->shapedata_length > MAX_XML ? MAX_XML : place->shapedata_length);
-    fprintf(stderr, "  Shapedata (%d bytes):\n    ",
-            (int)place->shapedata_length);
-    fwrite(place->shapedata, 1, s, stderr);
-    fputs("...\n", stderr);
-  }
-  
-  if(place->shapefile_urls_count >0) {
-    fprintf(stderr, "  Shapefile URLs: %d\n", place->shapefile_urls_count);
-    for(i = 0; i < place->shapefile_urls_count; i++)
-      fprintf(stderr, "    %d): %s\n", i, place->shapefile_urls[i]);
-  }
+  command_print_shape(place->shape);
   
   if(place->count >0)
     fprintf(stderr, "  Photos at Place: %d\n", place->count);
@@ -3484,20 +3499,10 @@ command_places_getShapeHistory(flickcurl* fc, int argc, char *argv[])
   if(shapes) {
     int i;
     for(i=0; shapes[i]; i++) {
-      fprintf(stderr,
-              "Shape %d: created %d  alpha %2.2f  #points %d  #edges %d  data size: %d bytes  urls count: %d  is donuthole: %d\n",
-              i, shapes[i]->created, shapes[i]->alpha,
-              shapes[i]->points, shapes[i]->edges,
-              (int)(shapes[i]->data_length),
-              shapes[i]->file_urls_count, shapes[i]->is_donuthole);
-      if(shapes[i]->file_urls_count > 0) {
-        int j;
-        for(j=0; j < shapes[i]->file_urls_count; j++) {
-          fprintf(stderr,"  URL %d: %s\n", j, shapes[i]->file_urls[j]);
-        }
-      }
-
+      fprintf(stderr, "Shape %d: ", i);
+      command_print_shape(shapes[i]);
     }
+
     flickcurl_free_shapes(shapes);
   }
 
