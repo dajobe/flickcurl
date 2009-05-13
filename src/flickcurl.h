@@ -560,6 +560,7 @@ typedef struct {
  * @shapefile_urls: DEPRECATED for @shape->file_urls: NULL-terminated array of pointers to shapefile URLs when present (or NULL)
  * @shapefile_urls_count: DEPRECATED for @shape->file_urls_count: number of entries in @shapefile_urls array
  * @shape: shapefile data (inline data and shapefile urls)
+ * @timezone: timezone of location in 'zoneinfo' format such as “Europe/Paris”.
  *
  * A Place.
  *
@@ -583,6 +584,7 @@ typedef struct {
   int shapefile_urls_count;
 
   struct flickcurl_shapedata_s* shape;
+  char* timezone;
 } flickcurl_place;
   
 
