@@ -102,7 +102,9 @@ typedef enum {
   /* shape->data */
   SHAPE_DATA,
   /* shape->file_urls */
-  SHAPE_FILE_URL
+  SHAPE_FILE_URL,
+  /* shape->is_donuthole */
+  SHAPE_IS_DONUTHOLE
 } shape_field_type;
 
 
@@ -133,6 +135,11 @@ static struct {
   {
     (const xmlChar*)"./@count_edges",
     SHAPE_EDGES
+  }
+  ,
+  {
+    (const xmlChar*)"./@is_donuthole",
+    SHAPE_IS_DONUTHOLE
   }
   ,
   {
@@ -235,6 +242,11 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
         case SHAPE_EDGES:
           shape->edges = atoi(value);
+          free(value); value=NULL;
+          break;
+
+        case SHAPE_IS_DONUTHOLE:
+          shape->is_donuthole = atoi(value);
           free(value); value=NULL;
           break;
 
