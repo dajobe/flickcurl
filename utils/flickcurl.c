@@ -328,6 +328,9 @@ command_print_place(flickcurl_place* place,
     command_print_location(&place->location);
   }
   
+  if(place->timezone)
+    fprintf(stderr, "  Timezone: %s\n", place->timezone);
+  
   if(place->shapedata_length > 0) {
     int s;
 #define MAX_XML 70
