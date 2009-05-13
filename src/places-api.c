@@ -505,6 +505,9 @@ flickcurl_places_getPlaceTypes(flickcurl* fc)
  * Announced 2009-01-12 in
  * http://tech.groups.yahoo.com/group/yws-flickr/message/4669
  * 
+ * Addition of donut holes announced 2009-05-06
+ * http://code.flickr.com/blog/2009/05/06/the-absence-and-the-anchor/
+ *
  * Return value: NULL on failure
  **/
 flickcurl_shapedata**
@@ -549,7 +552,7 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
   }
 
   shapes = flickcurl_build_shapes(fc, xpathCtx,
-                                  (const xmlChar*)"/rsp/shapes/shapedata",
+                                  (const xmlChar*)"/rsp/shapes/shapedata|/rsp/shapes/shape",
                                   NULL);
 
   tidy:
