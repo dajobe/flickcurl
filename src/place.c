@@ -117,6 +117,9 @@ flickcurl_free_place(flickcurl_place *place)
   if(place->shape)
     flickcurl_free_shape(place->shape);
 
+  if(place->timezone)
+    free(place->timezone);
+
   free(place);
 }
 
@@ -163,7 +166,9 @@ typedef enum {
   /* place->shape: source of derived DEPRECATED fields:
    * shapedata, shapedata_length, shapfile_urls and shapefile_urls_count 
    */
-  PLACE_SHAPE
+  PLACE_SHAPE,
+  /* place->timezone */
+  PLACE_TIMEZONE
 } place_field_type;
 
 
@@ -199,6 +204,12 @@ static struct {
     (const xmlChar*)"./@woeid",
     FLICKCURL_PLACE_LOCATION,
     PLACE_WOE_ID
+  }
+  ,
+  {
+    (const xmlChar*)"./@timezone",
+    FLICKCURL_PLACE_LOCATION,
+    PLACE_TIMEZONE
   }
   ,
   {
@@ -507,6 +518,10 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case PLACE_PHOTO_COUNT:
           place->count=atoi(value);
           free(value); value=NULL;
+          break;
+
+        case PLACE_TIMEZONE:
+          place->timezone = value;
           break;
 
         case PLACE_SHAPE:
