@@ -596,6 +596,7 @@ typedef struct {
  * @data_length: size of @shapedate string
  * @file_urls: NULL-terminated array of pointers to shapefile URLs when present (or NULL)
  * @file_urls_count: number of entries in @shapefile_urls array
+ * @is_donuthole: non-0 if shape is a donut (a hole)
  *
  * Shape data for a place.
  *
@@ -609,6 +610,7 @@ typedef struct flickcurl_shapedata_s {
   size_t data_length;
   char** file_urls;
   int file_urls_count;
+  int is_donuthole;
 } flickcurl_shapedata;
 
 
