@@ -1,4 +1,46 @@
+2009-05-12  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: formatting
+
+	* utils/flickcurl.c:
+	(command_print_shape): Added and handle is/has donut holes as well
+	as shapedata inline XML
+	(command_print_place, command_places_getShapeHistory): Use above
+
+	* src/shape.c: shape_field_type gains SHAPE_HAS_DONUTHOLE
+	shape_fields_table gains ./@has_donuthole XPATH
+	(flickcurl_build_shapes): Handle has_donutfield.
+
+	* src/flickcurl.h: flickcurl_shapedata gains has_donuthole field
+
+	* utils/flickcurl.c:
+	(command_print_place): Print location timezone
+
+	* src/place.c: place_field_type gains PLACE_TIMEZONE
+	(flickcurl_free_place, flickcurl_build_places): Add place timezone
+	field support
+
+	* src/flickcurl.h: flickcurl_place gains timezone field
+
+	* utils/flickcurl.c:
+	(command_places_getShapeHistory): Print is_donuthole flag
+
+	* src/shape.c: shape_field_type gains SHAPE_IS_DONUTHOLE
+	shape_fields_table gains ./@is_donuthole XPATH
+	(flickcurl_build_shapes): Handle is_donutfield.
+
+	* src/flickcurl.h: flickcurl_shapedata gains is_donuthole field
+
+	* src/places-api.c:
+	(flickcurl_places_getShapeHistory): Handle API response returning
+	/rsp/shapes/shape instead of /rsp/shapes/shapedata wot it used to.
+
 2009-05-09  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac, flickcurl.spec.in: Export libcurl
+	@LIBCURL_MIN_VERSION@ and libxml2-devel @LIBXML_MIN_VERSION@
+
+	* flickcurl.spec.in: Use @RAPTOR_MIN_VERSION@
 
 	* configure.ac: Set raptor libs and cflags correctly
 
