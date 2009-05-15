@@ -17,6 +17,37 @@
 <p>Not yet released.
 </p>
 
+<p>Added timezone field support to place  (This has not yet been announced)
+The <code>flickcurl_place</code> structure now has a
+<code>timezone</code> string field.
+</p>
+
+<p>Added donuthole support to shapes
+as <a href="http://code.flickr.com/blog/2009/05/06/the-absence-and-the-anchor/">announced 2009-05-06</a>.
+The <code>flicckurl_shapedata</code> structure now has
+<code>is_donuthole</code> and <code>has_donuthole</code> boolean flag fields.
+</p>
+
+<p>Fix handling API calls return shape XML with slightly different
+names so that places.getShapeHistory and places.getInfo both work
+now.</p>
+
+<p>Use <code>pkg-config raptor</code> configuration for checking
+raptor presence, versions, cflags and libs rather than the
+(deprecated) <code>raptor-config</code> program output.
+</p>
+
+<p>Added configure
+<a href="http://git.lespiau.name/cgit/shave/">SHAVE support</a>
+(<code>git clone git://git.lespiau.name/shave</code> ) to <em>"make
+autotools output sane"</em> which amounts to much less verbose
+messages when compiling.  It is now enabled by default.</p>
+
+<p>Compiling from subversion (<code>autogen.sh</code> or
+<code>configure --enable-maintainer-mode</code>) requires Libtool V2
+for consistency with my other projects.
+</p>
+
 
 
 <h2 id="D2009-05-01">2009-05-01 Flickcurl 1.10</h2>
