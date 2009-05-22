@@ -142,7 +142,7 @@ else
 fi
 
 LIBS="$LIBS `$PKG_CONFIG libxml-2.0 --libs`"
-CFLAGS="`$PKG_CONFIG libxml-2.0 --cflags` $CPPFLAGS"
+CFLAGS="`$PKG_CONFIG libxml-2.0 --cflags` $CFLAGS"
 
 if test "X$PKG_CONFIG_REQUIRES" != X; then
   PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
@@ -177,7 +177,7 @@ else
 fi
 
 LIBS="$LIBS `$PKG_CONFIG libcurl --libs`"
-CFLAGS="`$PKG_CONFIG libcurl --cflags` $CPPFLAGS"
+CFLAGS="`$PKG_CONFIG libcurl --cflags` $CFLAGS"
 
 if test "X$PKG_CONFIG_REQUIRES" != X; then
   PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
