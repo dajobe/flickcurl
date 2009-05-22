@@ -115,74 +115,77 @@ AC_CHECK_PROGS(PKG_CONFIG, pkg-config)
 PKG_CONFIG_REQUIRES=
 
 
-AC_ARG_WITH(xml2-config, [  --with-xml2-config=PATH   Location of libxml xml2-config []], xml2_config="$withval", xml2_config="")
-
-if test "X$xml2_config" != "X" ; then
-  AC_MSG_CHECKING(for $xml2_config)
-
-  if test -f $xml2_config ; then
-    XML_CONFIG=$xml2_config
-    AC_MSG_RESULT(yes)
-  else
-    AC_MSG_RESULT(no - searching PATH)
-  fi
-fi
-if test "X$XML_CONFIG" = "X"; then
-  AC_CHECK_PROGS(XML_CONFIG, xml2-config)
-fi
-
-if test "X$XML_CONFIG" = "X"; then
-  AC_MSG_ERROR(xml-config not found - please install libxml development headers and ibraries)
-fi
-
-LIBXML_VERSION=`$XML_CONFIG --version`
-libxml_version_dec=`echo $LIBXML_VERSION | awk -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
-libxml_min_version_dec=`echo $libxml_min_version | awk -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
-if test $libxml_version_dec -lt $libxml_min_version_dec; then
-  AC_MSG_ERROR(libxml $LIBXML_VERSION is too old - $libxml_min_version or newer required.)
-fi
-
+dnl libxml - required
 LIBXML_MIN_VERSION=$libxml_min_version
 AC_SUBST(LIBXML_MIN_VERSION)
 
+AC_ARG_WITH(xml2-config, [  --with-xml2-config=PATH   Location of libxml xml2-config []], xml2_config="$withval", xml2_config="")
+
+if test "X$xml2_config" != "X" ; then
+  AC_MSG_WARN(Ignoring --with-xml2-config parameter: using pkg-config now)
+fi
+
+AC_MSG_CHECKING(for libxml)
+if $PKG_CONFIG libxml-2.0 --exists; then
+  :
+else
+  AC_MSG_RESULT(no - not found)
+  AC_MSG_ERROR(Please install version $LIBXML_MIN_VERSION or newer)
+fi
+
+LIBXML_VERSION=`$PKG_CONFIG libxml-2.0 --modversion 2>/dev/null`
+AC_MSG_RESULT(yes - $LIBXML_VERSION)
+if $PKG_CONFIG libxml-2.0 --atleast-version=$LIBXML_MIN_VERSION; then
+  :
+else
+  AC_MSG_ERROR(libxml $LIBXML_VERSION is too old - $libxml_min_version or newer required.)
+fi
+
+LIBS="$LIBS `$PKG_CONFIG libxml-2.0 --libs`"
+CFLAGS="`$PKG_CONFIG libxml-2.0 --cflags` $CPPFLAGS"
+
+if test "X$PKG_CONFIG_REQUIRES" != X; then
+  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
+fi
+PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libxml-2.0 >= $LIBXML_MIN_VERSION"
 
 
-LIBS="$LIBS `$XML_CONFIG --libs`"
-CPPFLAGS="`$XML_CONFIG --cflags` $CPPFLAGS"
+dnl curl - required
+LIBCURL_MIN_VERSION=$libcurl_min_version
+AC_SUBST(LIBCURL_MIN_VERSION)
 
 AC_ARG_WITH(curl-config, [  --with-curl-config=PATH   Location of libcurl curl-config []], curl_config="$withval", curl_config="")
 
 if test "X$curl_config" != "X" ; then
-  AC_MSG_CHECKING(for $curl_config)
-
-  if test -f $curl_config ; then
-    CURL_CONFIG=$curl_config
-    AC_MSG_RESULT(yes)
-  else
-    AC_MSG_RESULT(no - searching PATH)
-  fi
-fi
-if test "X$CURL_CONFIG" = "X"; then
-  AC_CHECK_PROGS(CURL_CONFIG, curl-config)
+  AC_MSG_WARN(Ignoring --with-curl-config parameter: using pkg-config now)
 fi
 
-if test "X$CURL_CONFIG" = "X"; then
-  AC_MSG_ERROR(curl-config not found - please install curl development headers and ibraries)
+AC_MSG_CHECKING(for libcurl)
+if $PKG_CONFIG libcurl --exists; then
+:
+else
+  AC_MSG_RESULT(no - not found)
+  AC_MSG_ERROR(Please install version $LIBCURL_MIN_VERSION or newer)
 fi
 
-LIBS="$LIBS `$CURL_CONFIG --libs`"
-CPPFLAGS="`$CURL_CONFIG --cflags` $CPPFLAGS"
-
-LIBCURL_VERSION=`$CURL_CONFIG --version | sed -e 's/^libcurl *//'`
-LIBCURL_VERNUM=`$CURL_CONFIG --vernum`
-if test $LIBCURL_VERNUM '<' $libcurl_min_vernum; then
+LIBCURL_VERSION=`$PKG_CONFIG libcurl --modversion 2>/dev/null`
+AC_MSG_RESULT(yes - $LIBCURL_VERSION)
+if $PKG_CONFIG libxml-2.0 --atleast-version=$LIBXML_MIN_VERSION; then
+  :
+else
   AC_MSG_ERROR(curl $LIBCURL_VERSION is too old - $libcurl_min_version or newer required.)
 fi
 
-LIBCURL_MIN_VERSION=$libcurl_min_version
-AC_SUBST(LIBCURL_MIN_VERSION)
+LIBS="$LIBS `$PKG_CONFIG libcurl --libs`"
+CFLAGS="`$PKG_CONFIG libcurl --cflags` $CPPFLAGS"
+
+if test "X$PKG_CONFIG_REQUIRES" != X; then
+  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
+fi
+PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libcurl >= $LIBCURL_MIN_VERSION"
 
 
+dnl raptor - optional
 RAPTOR_MIN_VERSION=$raptor_min_version
 AC_SUBST(RAPTOR_MIN_VERSION)
 
@@ -213,7 +216,7 @@ fi
 AM_CONDITIONAL(RAPTOR, test $with_raptor = yes)
 AC_MSG_CHECKING(whether to use raptor)
 if test "$with_raptor" = yes; then
-  AC_MSG_RESULT(yes)
+  AC_MSG_RESULT(yes - $RAPTOR_VERSION)
   RAPTOR_LIBS="`$PKG_CONFIG raptor --libs`"
   RAPTOR_CFLAGS="`$PKG_CONFIG raptor --cflags`"
 
@@ -304,9 +307,6 @@ fi
 
 AC_SUBST(STANDARD_CFLAGS)
 
-if test "X$PKG_CONFIG_REQUIRES" != X; then
-  PKG_CONFIG_REQUIRES="Requires:$PKG_CONFIG_REQUIRES"
-fi
 AC_SUBST(PKG_CONFIG_REQUIRES)
 
 
