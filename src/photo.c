@@ -264,6 +264,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./@tags",
+    PHOTO_FIELD_none,
+    VALUE_TYPE_TAG_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./dates/@lastupdate",
     PHOTO_FIELD_dates_lastupdate,
     VALUE_TYPE_UNIXTIME
@@ -646,7 +652,8 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       int int_value= -1;
       flickcurl_photo_field_type field=photo_fields_table[expri].field;
       time_t unix_time;
-
+      int special = 0;
+      
       string_value=flickcurl_xpath_eval(fc, xpathNodeCtx,
                                         photo_fields_table[expri].xpath);
       if(!string_value)
@@ -703,6 +710,15 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           int_value=atoi(string_value);
           break;
 
+        case VALUE_TYPE_TAG_STRING:
+          /* A space-separated list of tags */
+          photo->tags = flickcurl_build_tags_from_string(fc, photo,
+                                                         (const char*)string_value,
+                                                         &photo->tags_count);
+          special = 1;
+          break;
+
+
         case VALUE_TYPE_NONE:
         case VALUE_TYPE_STRING:
         case VALUE_TYPE_FLOAT:
@@ -712,6 +728,9 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case VALUE_TYPE_PERSON_ID:
           abort();
       }
+
+      if(special)
+        continue;
 
       photo->fields[field].string = string_value;
       photo->fields[field].integer= (flickcurl_photo_field_type)int_value;
@@ -727,12 +746,14 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         goto tidy;
     } /* end for */
 
-    photo->tags=flickcurl_build_tags(fc, photo, xpathNodeCtx, 
-                                     (const xmlChar*)"./tags/tag",
-                                     &photo->tags_count);
+    if(!photo->tags)
+      photo->tags=flickcurl_build_tags(fc, photo, xpathNodeCtx, 
+                                       (const xmlChar*)"./tags/tag",
+                                       &photo->tags_count);
 
-    photo->place=flickcurl_build_place(fc, xpathNodeCtx,
-                                       (const xmlChar*)"./location");
+    if(!photo->place)
+      photo->place=flickcurl_build_place(fc, xpathNodeCtx,
+                                         (const xmlChar*)"./location");
 
     photo->video=flickcurl_build_video(fc, xpathNodeCtx,
                                        (const xmlChar*)"./video");
