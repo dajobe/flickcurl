@@ -1211,19 +1211,29 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 
   fc->total_bytes=0;
 
-  if(fc->is_write)
-    curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 1); /* Set POST */
-  else
-    curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 0);  /* Set GET */
+  /* default: read with no data: GET */
+  curl_easy_setopt(fc->curl_handle, CURLOPT_NOBODY, 1);
+  curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPGET, 1);
 
   if(fc->data) {
-    /* write is POST */
+    /* write with some data: POST */
+    /* CURLOPT_NOBODY=0 sets http request to HEAD - do it first to override */
+    curl_easy_setopt(fc->curl_handle, CURLOPT_NOBODY, 0);
+    /* this function only resets no-body flag for curl >= 7.14.1 */
+    curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 1);
     curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDS, fc->data);
     curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDSIZE, fc->data_length);
     /* Replace default POST content type 'application/x-www-form-urlencoded' */
     slist=curl_slist_append(slist, (const char*)"Content-Type: application/xml");
     /* curl_easy_setopt(fc->curl_handle, CURLOPT_CUSTOMREQUEST, fc->verb); */
+  } else if(fc->is_write) {
+    /* write with no data: POST */
+    /* CURLOPT_NOBODY=0 sets http request to HEAD - do it first to override */
+    curl_easy_setopt(fc->curl_handle, CURLOPT_NOBODY, 0);
+    /* this function only resets no-body flag for curl >= 7.14.1 */
+    curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 1);
   }
+
 
   if(slist)
     curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
