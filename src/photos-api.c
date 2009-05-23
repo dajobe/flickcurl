@@ -1696,6 +1696,7 @@ flickcurl_photos_search_params(flickcurl* fc,
   char lat_s[32];
   char lon_s[32];
   char radius_s[32];
+  char woe_id_s[32];
   const char* format=NULL;
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(params, flickcurl_search_params, NULL);
@@ -1822,6 +1823,11 @@ flickcurl_photos_search_params(flickcurl* fc,
   if(params->contacts && params->user_id) {
     parameters[count][0]  = "contacts";
     parameters[count++][1]= params->contacts;
+  }
+  if(params->woe_id >= 0) {
+    sprintf(woe_id_s, "%d", params->woe_id);
+    parameters[count][0]  = "woe_id";
+    parameters[count++][1]= woe_id_s;
   }
 
   /* Photos List parameters */
