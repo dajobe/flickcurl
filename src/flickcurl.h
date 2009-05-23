@@ -86,6 +86,7 @@ extern "C" {
  * @VALUE_TYPE_PHOTO_URI: internal
  * @VALUE_TYPE_MEDIA_TYPE: internal
  * @VALUE_TYPE_NONE: internal
+ * @VALUE_TYPE_TAG_STRING: internal
  * @VALUE_TYPE_LAST: internal offset to last in enum list
  * 
  * Field data types
@@ -103,7 +104,8 @@ typedef enum {
   VALUE_TYPE_URI,
   VALUE_TYPE_PERSON_ID, /* internal */
   VALUE_TYPE_MEDIA_TYPE, /* internal */
-  VALUE_TYPE_LAST = VALUE_TYPE_MEDIA_TYPE
+  VALUE_TYPE_TAG_STRING, /* internal */
+  VALUE_TYPE_LAST = VALUE_TYPE_TAG_STRING
 } flickcurl_field_value_type;
   
 
