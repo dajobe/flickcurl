@@ -220,6 +220,7 @@ flickcurl_size** flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCt
 
 /* tags.c  */
 flickcurl_tag** flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* tag_count_p);
+flickcurl_tag** flickcurl_build_tags_from_string(flickcurl* fc, flickcurl_photo* photo, const char *string, int *tag_count_p);
 flickcurl_tag_clusters* flickcurl_build_tag_clusters(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
 /* ticket.c */
