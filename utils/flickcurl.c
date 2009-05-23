@@ -1620,6 +1620,10 @@ command_photos_search(flickcurl* fc, int argc, char *argv[])
     } else if(!strcmp(field, "format")) {
       list_params.format=argv[0];
       argv++; argc--;
+    } else if(!strcmp(field, "woeid")) {
+      /* int: */
+      params.woe_id = atoi(argv[0]);
+      argv++; argc--;
     } else if(!strcmp(field, "tags")) {
       size_t tags_len=0;
       int j;
@@ -3904,7 +3908,7 @@ static flickcurl_cmd commands[] = {
    "PHOTO-ID TAG-ID", "Remove a tag TAG-ID from a photo.",
    command_photos_removeTag, 2, 2},
   {"photos.search",
-   "[PARAMS] tags TAGS...", "Search for photos/videos with many optional parameters\n        user USER  tag-mode any|all  text TEXT\n        (min|max)-(upload|taken)-date DATE\n        license LICENSE  privacy PRIVACY  bbox a,b,c,d\n        sort date-(posted|taken)-(asc|desc)|interestingness-(desc|asc)|relevance\n        accuracy 1-16  safe-search 1-3  type 1-4\n        machine-tags TAGS  machine-tag-mode any|all\n        group-id ID  place-id ID  extras EXTRAS\n        per-page PER-PAGE  page PAGES\n        media all|photos|videos  has-geo\n        lat LAT lon LON radius RADIUS radius-units km|mi\n        contacts (all|ff)\n        format FORMAT",
+   "[PARAMS] tags TAGS...", "Search for photos/videos with many optional parameters\n        user USER  tag-mode any|all  text TEXT\n        (min|max)-(upload|taken)-date DATE\n        license LICENSE  privacy PRIVACY  bbox a,b,c,d\n        sort date-(posted|taken)-(asc|desc)|interestingness-(desc|asc)|relevance\n        accuracy 1-16  safe-search 1-3  type 1-4\n        machine-tags TAGS  machine-tag-mode any|all\n        group-id ID  place-id ID  extras EXTRAS\n        per-page PER-PAGE  page PAGES\n        media all|photos|videos  has-geo\n        lat LAT lon LON radius RADIUS radius-units km|mi\n        contacts (all|ff)\n        format FORMAT  woeid WOEID",
    command_photos_search, 1, 0},
   {"photos.setContentType",
    "PHOTO-ID TYPE", "Set photo TYPE to one of 'photo', 'screenshot' or 'other'",
