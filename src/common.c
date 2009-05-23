@@ -1693,7 +1693,10 @@ static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1]={
   "float",
   "integer",
   "string",
-  "uri"
+  "uri",
+  "<internal>person ID",
+  "<internal>media type",
+  "<internal>tag string"
 };
 
 
