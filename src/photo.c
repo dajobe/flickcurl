@@ -230,7 +230,7 @@ flickcurl_photo_as_page_uri(flickcurl_photo *photo)
 
 
 /**
- * flickcurl_user_icon_uri:
+ * flickcurl_user_icon_url:
  * @farm: user icon farm
  * @server: user icon server or 0
  * @nsid: user nsid
@@ -268,7 +268,7 @@ flickcurl_user_icon_url(int farm, int server, char *nsid)
 
 
 /**
- * flickcurl_photo_as_user_icon_uri:
+ * flickcurl_photo_as_user_icon_url:
  * @photo: photo object
  *
  * Get the user's icon URI
