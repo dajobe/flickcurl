@@ -165,6 +165,8 @@ typedef enum {
  * @PHOTO_FIELD_usage_candownload: can download
  * @PHOTO_FIELD_usage_canblog: can blog
  * @PHOTO_FIELD_usage_canprint: can print
+ * @PHOTO_FIELD_owner_iconserver: server of owner's icon
+ * @PHOTO_FIELD_owner_iconfarm: farm of owner's icon
  * @PHOTO_FIELD_none: internal
  * @PHOTO_FIELD_FIRST: internal offset to first in enum list
  * @PHOTO_FIELD_LAST: internal offset to last in enum list
@@ -227,8 +229,10 @@ typedef enum {
   PHOTO_FIELD_usage_candownload,
   PHOTO_FIELD_usage_canblog,
   PHOTO_FIELD_usage_canprint,
+  PHOTO_FIELD_owner_iconserver,
+  PHOTO_FIELD_owner_iconfarm,
   PHOTO_FIELD_FIRST = PHOTO_FIELD_dateuploaded,
-  PHOTO_FIELD_LAST = PHOTO_FIELD_usage_canprint
+  PHOTO_FIELD_LAST = PHOTO_FIELD_owner_iconfarm
 } flickcurl_photo_field_type;
 
 

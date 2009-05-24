@@ -86,7 +86,9 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
   "country_woeid",
   "usage_candownload",
   "usage_canblog",
-  "usage_canprint"
+  "usage_canprint",
+  "owner_iconserver",
+  "owner_iconfarm"
 };
 
 
@@ -254,6 +256,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./@dateupload",
+    PHOTO_FIELD_dateuploaded,
+    VALUE_TYPE_UNIXTIME
+  }
+  ,
+  {
     (const xmlChar*)"./@farm",
     PHOTO_FIELD_farm,
     VALUE_TYPE_INTEGER
@@ -302,6 +310,12 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./@ownername",
+    PHOTO_FIELD_owner_realname,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
     (const xmlChar*)"./@place_id",
     PHOTO_FIELD_location_placeid,
     VALUE_TYPE_STRING
@@ -329,6 +343,18 @@ static struct {
     (const xmlChar*)"./@longitude",
     PHOTO_FIELD_location_longitude,
     VALUE_TYPE_FLOAT
+  }
+  ,
+  {
+    (const xmlChar*)"./@datetaken",
+    PHOTO_FIELD_dates_taken,
+    VALUE_TYPE_DATETIME
+  }
+  ,
+  {
+    (const xmlChar*)"./@datetakengranularity",
+    PHOTO_FIELD_dates_takengranularity,
+    VALUE_TYPE_INTEGER
   }
   ,
   {
@@ -643,6 +669,18 @@ static struct {
     (const xmlChar*)"./usage/@canprint",
     PHOTO_FIELD_usage_canprint,
     VALUE_TYPE_BOOLEAN
+  }
+  ,
+  {
+    (const xmlChar*)"./@iconserver",
+    PHOTO_FIELD_owner_iconserver,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./@iconfarm",
+    PHOTO_FIELD_owner_iconfarm,
+    VALUE_TYPE_INTEGER
   }
   ,
   { 
