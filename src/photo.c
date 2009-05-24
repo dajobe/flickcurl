@@ -88,7 +88,10 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
   "usage_canblog",
   "usage_canprint",
   "owner_iconserver",
-  "owner_iconfarm"
+  "owner_iconfarm",
+  "original_width",
+  "original_height",
+  "views"
 };
 
 
@@ -407,6 +410,12 @@ static struct {
     (const xmlChar*)"./@datetaken",
     PHOTO_FIELD_dates_taken,
     VALUE_TYPE_DATETIME
+  }
+  ,
+  {
+    (const xmlChar*)"./@lastupdate",
+    PHOTO_FIELD_dates_lastupdate,
+    VALUE_TYPE_UNIXTIME
   }
   ,
   {
@@ -738,6 +747,24 @@ static struct {
   {
     (const xmlChar*)"./@iconfarm",
     PHOTO_FIELD_owner_iconfarm,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./@o_width",
+    PHOTO_FIELD_original_width,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./@o_height",
+    PHOTO_FIELD_original_height,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./@views",
+    PHOTO_FIELD_views,
     VALUE_TYPE_INTEGER
   }
   ,
