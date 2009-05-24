@@ -296,6 +296,42 @@ static struct {
   }
   ,
   {
+    (const xmlChar*)"./@owner",
+    PHOTO_FIELD_owner_nsid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./@place_id",
+    PHOTO_FIELD_location_placeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./@woeid",
+    PHOTO_FIELD_location_woeid,
+    VALUE_TYPE_STRING
+  }
+  ,
+  {
+    (const xmlChar*)"./@accuracy",
+    PHOTO_FIELD_location_accuracy,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./@latitude",
+    PHOTO_FIELD_location_latitude,
+    VALUE_TYPE_FLOAT
+  }
+  ,
+  {
+    (const xmlChar*)"./@longitude",
+    PHOTO_FIELD_location_longitude,
+    VALUE_TYPE_FLOAT
+  }
+  ,
+  {
     (const xmlChar*)"./dates/@lastupdate",
     PHOTO_FIELD_dates_lastupdate,
     VALUE_TYPE_UNIXTIME
