@@ -1,3 +1,67 @@
+2009-05-24  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/photo.c: Added PHOTO_FIELD_original_width,
+	PHOTO_FIELD_original_height, PHOTO_FIELD_views for more photo
+	extras
+
+	* src/flickcurl.h, src/photo.c:
+	(flickcurl_user_icon_uri): Added to get a user buddy icon url.
+	(flickcurl_photo_as_user_icon_url): Added to get the user buddy
+	icon url from a user's photo
+
+	* src/flickcurl.h, src/photo.c: Added PHOTO_FIELD_owner_iconserver
+	and PHOTO_FIELD_owner_iconfarm fields
+
+	* src/photo.c: Support more fields returned as attributes from
+	'extras' in search: owner, place_id, woeid, accuracy, latitude,
+	longitude
+
+	* src/serializer.c: Added internal VALUE_TYPE_TAG_STRING to switch
+
+	* src/flickcurl.h, src/photo.c:
+	(flickcurl_photo_as_page_uri): Added
+
+2009-05-23  Dave Beckett <dave@dajobe.org>
+
+	* src/person.c:
+	(flickcurl_build_persons): Handle/ignore new VALUE_TYPE_TAG_STRING
+
+	* src/common.c:
+	flickcurl_field_value_type_label: Added internal types
+
+	* src/common.c:
+	(flickcurl_invoke_common): Added more attempts to reset curl
+	context between calls - GET/POST.
+
+	* src/flickcurl.h: Added internal VALUE_TYPE_TAG_STRING
+
+	* src/photo.c:
+	(flickcurl_build_photos): Use flickcurl_build_tags_from_string to
+	handle photos/@tags as special field type VALUE_TYPE_TAG_STRING
+
+	* src/flickcurl_internal.h:
+	(flickcurl_build_tags_from_string): Added
+
+	* src/tags.c:
+	(flickcurl_build_tags_from_string): Added
+
+	* src/flickcurl.h: flickcurl_search_params - document new
+	'extras': o_dims, views, media
+
+2009-05-22  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Add support for search woeid param
+
+	* src/flickcurl.h, src/photos-api.c: Add woe_id field to search
+	params
+
+	* configure.ac: CFLAGS
+
+	* flickcurl.pc.in: Always use Requires: - for libcurl and libxml
+
+	* configure.ac: Switch to pkg-config for libxml and libcurl
+	configuration
+
 2009-05-12  Dave Beckett <dave@dajobe.org>
 
 	* utils/flickcurl.c: formatting
