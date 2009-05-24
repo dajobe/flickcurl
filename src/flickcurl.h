@@ -1508,6 +1508,10 @@ void flickcurl_free_tag_predicate_values(flickcurl_tag_predicate_value **tag_pvs
 /* get an image URL for a photo in some size */
 FLICKCURL_API
 char* flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c);
+/* get a page URL for a photo */
+FLICKCURL_API
+char* flickcurl_photo_as_page_uri(flickcurl_photo *photo);
+
 /* get labels for various field/types */
 FLICKCURL_API
 const char* flickcurl_get_photo_field_label(flickcurl_photo_field_type field);

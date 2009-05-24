@@ -2,7 +2,7 @@
  *
  * photo.c - Flickcurl photo functions
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -158,7 +158,7 @@ flickcurl_free_photo(flickcurl_photo *photo)
  * @c can be s,m,t,b for sizes, o for original, otherwise default
  * http://www.flickr.com/services/api/misc.urls.html
  *
- * Return value: source URI or NULL on failure
+ * Return value: new source URI string or NULL on failure
  */
 char*
 flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
@@ -194,6 +194,32 @@ flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
   len=strlen(buf);
   result=(char*)malloc(len+1);
   strcpy(result, buf);
+  return result;
+}
+
+
+/**
+ * flickcurl_photo_as_page_uri:
+ * @photo: photo object
+ *
+ * Get a photo's page URI
+ *
+ * Return value: new source URI string or NULL on failure
+ */
+char*
+flickcurl_photo_as_page_uri(flickcurl_photo *photo)
+{
+  char buf[1024];
+  char *result;
+  size_t len;
+  
+  /* http://www.flickr.com/photos/{owner}/{photo id}/ */
+  sprintf(buf, "http://www.flickr.com/photos/%s/%s", 
+          photo->fields[PHOTO_FIELD_owner_nsid].string, photo->id);
+
+  len = strlen(buf);
+  result = (char*)malloc(len+1);
+  strncpy(result, buf, len+1);
   return result;
 }
 
