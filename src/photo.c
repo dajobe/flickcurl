@@ -226,6 +226,64 @@ flickcurl_photo_as_page_uri(flickcurl_photo *photo)
 }
 
 
+/**
+ * flickcurl_user_icon_uri:
+ * @farm: user icon farm
+ * @server: user icon server or 0
+ * @nsid: user nsid
+ *
+ * Get the user's icon URI
+ *
+ * The icon URL returned is always a 48x48 pixel JPEG.
+ *
+ * If @server is 0 (or the other fields are NULL), the default icon URL of
+ * http://www.flickr.com/images/buddyicon.jpg is returned.
+ *
+ * Defined by http://www.flickr.com/services/api/misc.buddyicons.html
+ *
+ * Return value: new icon URI string or NULL on failure
+ */
+char*
+flickcurl_user_icon_url(int farm, int server, char *nsid)
+{
+  char buf[1024];
+  char *result;
+  size_t len;
+  
+  if(server && farm && nsid)
+  /* http://farm{icon-farm}.static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg */
+    sprintf(buf, "http://farm%d.static.flickr.com/%d/buddicons/%s.jpg", 
+            farm, server, nsid);
+  else
+    strcpy(buf, "http://www.flickr.com/images/buddyicon.jpg");
+
+  len = strlen(buf);
+  result = (char*)malloc(len+1);
+  strncpy(result, buf, len+1);
+  return result;
+}
+
+
+/**
+ * flickcurl_photo_as_user_icon_uri:
+ * @photo: photo object
+ *
+ * Get the user's icon URI
+ *
+ * The icon URL returned is always a 48x48 pixel JPEG
+ *
+ * Return value: new icon URI string or NULL on failure
+ */
+char*
+flickcurl_photo_as_user_icon_url(flickcurl_photo *photo)
+{
+  return flickcurl_user_icon_url(
+            photo->fields[PHOTO_FIELD_owner_iconfarm].integer,
+            photo->fields[PHOTO_FIELD_owner_iconserver].integer,
+            photo->fields[PHOTO_FIELD_owner_nsid].string);
+}
+
+
 static struct {
   const xmlChar* xpath;
   flickcurl_photo_field_type field;
