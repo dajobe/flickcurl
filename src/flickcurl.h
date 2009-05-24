@@ -167,6 +167,9 @@ typedef enum {
  * @PHOTO_FIELD_usage_canprint: can print
  * @PHOTO_FIELD_owner_iconserver: server of owner's icon
  * @PHOTO_FIELD_owner_iconfarm: farm of owner's icon
+ * @PHOTO_FIELD_original_width: original photo width
+ * @PHOTO_FIELD_original_height: original photo height
+ * @PHOTO_FIELD_views: number of photo views
  * @PHOTO_FIELD_none: internal
  * @PHOTO_FIELD_FIRST: internal offset to first in enum list
  * @PHOTO_FIELD_LAST: internal offset to last in enum list
