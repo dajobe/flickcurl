@@ -17,10 +17,32 @@
 <p>Not yet released.
 </p>
 
-<p>Added timezone field support to place  (This has not yet been announced)
-The <code>flickcurl_place</code> structure now has a
-<code>timezone</code> string field.
+<p><code>flickcurl_search_params</code> structure now has an integer
+field <code>woe_id</code> for searching via Where On Earth IDs (WOEIDs).
+Forgot to add this earlier!
 </p>
+
+<p>The <code>flickcurl</code> utility was updated to support
+searching with the integer woeid parameter.</p>
+
+<p>Search results now decode more of the extras that can be returned
+in search queries when the <code>extras</code> field is set in the
+query to a comma-separated list of things to return.  The additions
+with their extras names are: original dimensions (o_dims), photo
+views count (views), simple list of tags (tags), photo user
+information (owner), geo information (geo) and user buddy icons
+(icons),
+</p>
+
+<p>Added new <code>flickcurl_photo</code> fields for 'extras' from
+search results: 
+<code>PHOTO_FIELD_original_height</code>,
+<code>PHOTO_FIELD_original_width</code>,
+<code>PHOTO_FIELD_owner_iconfarm</code>,
+<code>PHOTO_FIELD_owner_iconserver</code> and
+<code>PHOTO_FIELD_views</code>
+</p>
+
 
 <p>Added donuthole support to shapes
 as <a href="http://code.flickr.com/blog/2009/05/06/the-absence-and-the-anchor/">announced 2009-05-06</a>.
@@ -30,7 +52,46 @@ The <code>flicckurl_shapedata</code> structure now has
 
 <p>Fix handling API calls return shape XML with slightly different
 names so that places.getShapeHistory and places.getInfo both work
-now.</p>
+now (again?).</p>
+
+
+<p>Added function to get a user buddy icon URI for a given user:
+</p>
+<pre>
+  char* flickcurl_user_icon_uri(int farm, int server, char *nsid);
+</pre>
+
+<p>Added function to get the user buddy icon URI from a user's photo:
+</p>
+<pre>
+  char* flickcurl_photo_as_user_icon_url(flickcurl_photo *photo);
+</pre>
+
+<p>Added function to return the photo page URI of a photo:
+</p>
+<pre>
+  char* flickcurl_photo_as_page_uri(flickcurl_photo *photo);
+</pre>
+
+<p>Added timezone field support to place (This has not yet been
+announced as an API change).  The <code>flickcurl_place</code>
+structure now has a <code>timezone</code> string field.
+</p>
+
+
+<p>Make more attempts to reset the libcurl context between requests
+which should help in sequences of calls that mix GET (searches, get
+information) and POST (uploading, deletions etc.)  This is intended
+to try to fix a hard-to-test report of crashes with multiple upload
+and API calls on Solaris/SPARC.
+</p>
+
+
+<p>Configuration via <code>configure</code> now uses
+<code>pkg-config(1)</code> to get the compile (CFLAGS) and link
+(LIBS) flags info for libxml, libcurl and raptor.  This should work
+since those libraries have shipped the respective .pc file in
+releases for some time.</p>
 
 <p>Use <code>pkg-config raptor</code> configuration for checking
 raptor presence, versions, cflags and libs rather than the
