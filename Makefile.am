@@ -32,7 +32,8 @@ autogen.sh \
 flickcurl-config.in flickcurl.pc.in \
 flickcurl.rdf.in \
 $(man_MANS) \
-flickcurl.spec
+flickcurl.spec \
+flickcurl.conf.example
 
 # Allows 'make distcheck' to work
 DISTCHECK_CONFIGURE_FLAGS=--enable-gtk-doc

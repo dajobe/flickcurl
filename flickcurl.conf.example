@@ -1,0 +1,15 @@
+# Example flickcurl(1) utility program configuration file.
+#
+# This file should be installed as ~/.flickcurl.conf or $HOME/.flickcurl.conf
+# for the flickcurl(1) utility program to read from.
+#
+# The fields must be created by registering with Flickr for
+# an API key, shared secret and then authenticating.
+#
+# See http://librdf.org/flickcurl/api/flickcurl-auth.html for details
+# or possibly /usr/share/gtk-doc/html/flickcurl/flickcurl-section-auth.html
+
+[flickr]
+auth_token=1234567-8901234567890123
+api_key=0123456789abcdef0123456789abcdef
+secret=fedcba9876543210
