@@ -1523,9 +1523,9 @@ FLICKCURL_API
 char* flickcurl_photo_as_page_uri(flickcurl_photo *photo);
 /* get a owner icon URL for a photo */
 FLICKCURL_API
-char* flickcurl_user_icon_url(int farm, int server, char *nsid);
+char* flickcurl_user_icon_uri(int farm, int server, char *nsid);
 FLICKCURL_API
-char* flickcurl_photo_as_user_icon_url(flickcurl_photo *photo);
+char* flickcurl_photo_as_user_icon_uri(flickcurl_photo *photo);
 
 /* get labels for various field/types */
 FLICKCURL_API
