@@ -191,7 +191,7 @@ flickcurl_free_photos
 flickcurl_get_photo_field_label
 flickcurl_photo_as_page_uri
 flickcurl_photo_as_source_uri
-flickcurl_photo_as_user_icon_url
+flickcurl_photo_as_user_icon_uri
 flickcurl_photo_field
 flickcurl_photo_field_type
 flickcurl_field_value_type
@@ -426,7 +426,7 @@ flickcurl_get_content_type_label
 flickcurl_get_content_type_from_string
 flickcurl_get_safety_level_label
 flickcurl_get_safety_level_from_string
-flickcurl_user_icon_url
+flickcurl_user_icon_uri
 </SECTION>
 
 <SECTION>
