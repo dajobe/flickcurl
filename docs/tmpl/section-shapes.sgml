@@ -46,4 +46,6 @@ ESRI shape data.
 @data_length: 
 @file_urls: 
 @file_urls_count: 
+@is_donuthole: 
+@has_donuthole: 
 

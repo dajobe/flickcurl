@@ -34,6 +34,7 @@ Places in the real world.
 @shapefile_urls: 
 @shapefile_urls_count: 
 @shape: 
+@timezone: 
 
 <!-- ##### FUNCTION flickcurl_free_place ##### -->
 <para>

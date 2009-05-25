@@ -72,3 +72,21 @@ section-photoslists
 @groups: 
 @groups_count: 
 
+<!-- ##### FUNCTION flickcurl_photo_as_user_icon_url ##### -->
+<para>
+
+</para>
+
+@photo: 
+@Returns: 
+
+<!-- ##### FUNCTION flickcurl_user_icon_url ##### -->
+<para>
+
+</para>
+
+@farm: 
+@server: 
+@nsid: 
+@Returns: 
+
