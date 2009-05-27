@@ -1,4 +1,15 @@
+2009-05-26  Dave Beckett <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_11 for 1.11 release (SVN 1020)
+
 2009-05-24  Dave Beckett <dave@dajobe.org>
+
+	* Makefile.am, flickcurl.conf.example: Added
+	flickcurl.conf.example example ~/.flickcurl.conf file
+
+	* flickcurl.spec.in: use PACKAGE
+
+	* src/flickcurl.h, src/photo.c: Rename _url to _uri
 
 	* src/flickcurl.h, src/photo.c: Added PHOTO_FIELD_original_width,
 	PHOTO_FIELD_original_height, PHOTO_FIELD_views for more photo
@@ -6,7 +17,7 @@
 
 	* src/flickcurl.h, src/photo.c:
 	(flickcurl_user_icon_uri): Added to get a user buddy icon url.
-	(flickcurl_photo_as_user_icon_url): Added to get the user buddy
+	(flickcurl_photo_as_user_icon_uri): Added to get the user buddy
 	icon url from a user's photo
 
 	* src/flickcurl.h, src/photo.c: Added PHOTO_FIELD_owner_iconserver
