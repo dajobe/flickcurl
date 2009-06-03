@@ -124,6 +124,11 @@ flickcurl_arg** flickcurl_build_args(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 /* blog.c */
 flickcurl_blog** flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* blog_count_p);
 
+/* collection.c */
+flickcurl_collection** flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* collection_count_p);
+flickcurl_collection* flickcurl_build_collection(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
+
+
 /* common.c */
 /* invoke an error */
 void flickcurl_error(flickcurl* fc, const char *message, ...);

@@ -87,6 +87,8 @@ extern "C" {
  * @VALUE_TYPE_MEDIA_TYPE: internal
  * @VALUE_TYPE_NONE: internal
  * @VALUE_TYPE_TAG_STRING: internal
+ * @VALUE_TYPE_COLLECTION_ID: internal
+ * @VALUE_TYPE_ICON_PHOTOS: internal 
  * @VALUE_TYPE_LAST: internal offset to last in enum list
  * 
  * Field data types
@@ -105,7 +107,9 @@ typedef enum {
   VALUE_TYPE_PERSON_ID, /* internal */
   VALUE_TYPE_MEDIA_TYPE, /* internal */
   VALUE_TYPE_TAG_STRING, /* internal */
-  VALUE_TYPE_LAST = VALUE_TYPE_TAG_STRING
+  VALUE_TYPE_COLLECTION_ID, /* internal */
+  VALUE_TYPE_ICON_PHOTOS, /* internal */
+  VALUE_TYPE_LAST = VALUE_TYPE_ICON_PHOTOS
 } flickcurl_field_value_type;
   
 
@@ -941,6 +945,66 @@ typedef struct flickcurl_category_s flickcurl_category;
 
 
 /**
+ * flickcurl_set:
+ * @id: set ID
+ * @title: title
+ * @description: description
+ * @photos: photos
+ * @photos_count: number of photos
+ *
+ * A photo set containing photos.
+ */
+struct flickcurl_set_s {
+  char* id;
+  char *title;
+  char *description;
+  struct flickcurl_photo** photos;
+  int photos_count;
+};
+typedef struct flickcurl_set_s flickcurl_set;
+
+
+/**
+ * flickcurl_collection:
+ * @id: ID
+ * @child_count: children??
+ * @date_created: date created
+ * @iconlarge: large icon url
+ * @iconsmall: small icon url
+ * @server: server ID
+ * @secret: secret
+ * @title: title
+ * @description: description
+ * @photos: icon photos
+ * @photos_count: number of icon photos
+ * @collections: sub-collections
+ * @collections_count: number of sub-collections
+ * @sets: photo sets
+ * @sets_count: number of photo sets
+ *
+ * A photo collection.  May contain collections OR sets but not both.
+ */
+struct flickcurl_collection_s {
+  char* id;
+  int child_count;
+  int date_created;
+  char *iconlarge;
+  char *iconsmall;
+  int server;
+  char *secret;
+  char *title;
+  char *description;
+  flickcurl_photo **photos;
+  int photos_count;
+  struct flickcurl_collection_s** collections;
+  int collections_count;
+  flickcurl_set** sets;
+  int sets_count;
+};
+typedef struct flickcurl_collection_s flickcurl_collection;
+
+
+/**
  * flickcurl_person_field_type:
  * @PERSON_FIELD_isadmin: is admin field boolean
  * @PERSON_FIELD_ispro:  is pro field boolean
@@ -1453,6 +1517,10 @@ const char* flickcurl_get_auth_token(flickcurl *fc);
 
 /* other flickcurl class destructors */
 FLICKCURL_API
+void flickcurl_free_collection(flickcurl_collection *collection);
+FLICKCURL_API
+void flickcurl_free_collections(flickcurl_collection** collections);
+FLICKCURL_API
 void flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_nspace);
 FLICKCURL_API
 void flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_nspaces);
@@ -1596,6 +1664,12 @@ FLICKCURL_API
 int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
 FLICKCURL_API
 void flickcurl_free_blogs(flickcurl_blog **blogs_object);
+
+/* flickr.collections */
+FLICKCURL_API
+flickcurl_collection* flickcurl_collections_getInfo(flickcurl* fc, const char* collection_id);
+FLICKCURL_API
+flickcurl_collection* flickcurl_collections_getTree(flickcurl* fc, const char* collection_id, const char* user_id);
 
 /* flickr.commons */
 FLICKCURL_API

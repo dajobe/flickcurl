@@ -3699,6 +3699,70 @@ command_panda_getPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static void
+command_print_collection(flickcurl_collection *collection)
+{
+  fprintf(stderr, "Collection id %s  secret %s  server %d\n"
+                  "  Title %s\n"
+                  "  Description %s\n"
+                  "  Large icon %s\n"
+                  "  Small Icon %s\n",
+          collection->id, collection->secret, collection->server,
+          collection->title, collection->description,
+          collection->iconlarge, collection->iconsmall);
+
+  if(collection->photos)
+    flickcurl_free_photos(collection->photos);
+  
+  if(collection->collections) {
+    int i;
+  
+    for(i = 0; collection->collections[i]; i++) {
+      fprintf(stderr, "  Sub-Collection %d)", i);
+      command_print_collection(collection->collections[i]);
+    }
+  }
+  
+}
+
+
+static int
+command_collections_getInfo(flickcurl* fc, int argc, char *argv[])
+{
+  char *collection_id = argv[1];
+  flickcurl_collection *collection = NULL;
+  
+  collection = flickcurl_collections_getInfo(fc, collection_id);
+  if(collection) {
+    command_print_collection(collection);
+    flickcurl_free_collection(collection);
+  }
+
+  return (collection == NULL);
+}
+
+
+static int
+command_collections_getTree(flickcurl* fc, int argc, char *argv[])
+{
+  char *collection_id = NULL;
+  char *user_id = NULL;
+  flickcurl_collection *collection = NULL;
+  
+  if(strcmp(argv[1], "-"))
+    collection_id = argv[1];
+  if(strcmp(argv[2], "-"))
+    user_id = argv[2];
+
+  collection = flickcurl_collections_getTree(fc, collection_id, user_id);
+  if(collection) {
+    command_print_collection(collection);
+    flickcurl_free_collection(collection);
+  }
+
+  return (collection == NULL);
+}
+
 
 typedef struct {
   const char*     name;
@@ -3756,6 +3820,13 @@ static flickcurl_cmd commands[] = {
   {"commons.getInstitutions",
    "", "Get list of institutions", 
    command_commons_getInstitutions,  0, 0},
+
+  {"collections.getInfo",
+   "COLLECTION-ID", "Get information on collection COLLECTION-ID", 
+   command_collections_getInfo, 1, 1},
+  {"collections.getTree",
+   "[COLLECTION-ID|- [USER-ID|-]]", "Get tree of collections COLLECTION-ID for USER-ID", 
+   command_collections_getTree, 0, 2},
 
   {"contacts.getList",
    "[FILTER [PER-PAGE [PAGE]]]", "Get a list of contacts with optional FILTER", 

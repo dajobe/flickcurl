@@ -911,6 +911,8 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           break;
 
         case VALUE_TYPE_PERSON_ID:
+        case VALUE_TYPE_COLLECTION_ID:
+        case VALUE_TYPE_ICON_PHOTOS:
           abort();
       }
 

@@ -24,6 +24,7 @@ activity.c \
 args.c \
 blog.c \
 category.c \
+collection.c \
 common.c \
 comments.c \
 contacts.c \
@@ -53,6 +54,7 @@ activity-api.c \
 auth-api.c \
 blogs-api.c \
 commons-api.c \
+collections-api.c \
 contacts-api.c \
 favorites-api.c \
 interestingness-api.c \
