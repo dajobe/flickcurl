@@ -1,0 +1,3 @@
+*.o
+print-photo-info
+*.deps

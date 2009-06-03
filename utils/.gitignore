@@ -1,0 +1,7 @@
+*.o
+*.lo
+.deps
+.libs
+flickcurl
+flickrdf
+methods.lst*
