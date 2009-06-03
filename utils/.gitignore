@@ -1,7 +1,9 @@
-*.o
 *.lo
+*.o
 .deps
 .libs
+codegen
 flickcurl
 flickrdf
+list-methods
 methods.lst*
