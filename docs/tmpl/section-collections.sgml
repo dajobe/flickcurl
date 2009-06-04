@@ -1,0 +1,68 @@
+<!-- ##### SECTION Title ##### -->
+Collections
+
+<!-- ##### SECTION Short_Description ##### -->
+Collections of photos or sets.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Collections of photos or sets.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### TYPEDEF flickcurl_collection ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### FUNCTION flickcurl_collections_getInfo ##### -->
+<para>
+
+</para>
+
+@fc: 
+@collection_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_collections_getTree ##### -->
+<para>
+
+</para>
+
+@fc: 
+@collection_id: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_free_collection ##### -->
+<para>
+
+</para>
+
+@collection: 
+
+
+<!-- ##### FUNCTION flickcurl_free_collections ##### -->
+<para>
+
+</para>
+
+@collections: 
+
+
+<!-- ##### TYPEDEF flickcurl_set ##### -->
+<para>
+
+</para>
+
+

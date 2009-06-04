@@ -70,6 +70,16 @@ flickcurl_free_category
 </SECTION>
 
 <SECTION>
+<FILE>section-collections</FILE>
+flickcurl_collection
+flickcurl_collections_getInfo
+flickcurl_collections_getTree
+flickcurl_free_collection
+flickcurl_free_collections
+flickcurl_set
+</SECTION>
+
+<SECTION>
 <FILE>section-comment</FILE>
 flickcurl_comment
 flickcurl_free_comment
