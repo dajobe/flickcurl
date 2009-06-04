@@ -958,7 +958,7 @@ struct flickcurl_set_s {
   char* id;
   char *title;
   char *description;
-  struct flickcurl_photo** photos;
+  struct flickcurl_photo_s** photos;
   int photos_count;
 };
 typedef struct flickcurl_set_s flickcurl_set;
