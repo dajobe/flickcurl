@@ -1,3 +1,4 @@
+*.bak
 *.stamp
 flickcurl-decl-list.txt
 flickcurl-decl.txt
