@@ -1,6 +1,15 @@
+*.stamp
 flickcurl-decl-list.txt
 flickcurl-decl.txt
 flickcurl-docs.sgml
+flickcurl-undeclared.txt
+flickcurl-undocumented.txt
+flickcurl-unused.txt
 flickcurl.1
+flickcurl.args
+flickcurl.hierarchy
+flickcurl.interfaces
+flickcurl.prerequisites
+flickcurl.signals
 html
 version.xml

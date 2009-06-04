@@ -18,7 +18,8 @@ flickcurl.spec
 flickr.conf
 gtk-doc.make
 libtool
+old/
 releases
-setup.sh
+setup*.sh
 stylesheet.css
 xml/
