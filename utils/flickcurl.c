@@ -3764,6 +3764,38 @@ command_collections_getTree(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_machinetags_getRecentValues(flickcurl* fc, int argc, char *argv[])
+{
+  const char *nspace = NULL;
+  const char *predicate = NULL;
+  int added_since = 0;
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
+
+  if(argc >1) {
+    if(strcmp("-", argv[1]))
+      nspace = argv[1];
+    if(argc >2) {
+      if(strcmp("-", argv[2]))
+        nspace = argv[2];
+      if(argc >3) {
+        added_since = atoi(argv[3]);
+      }
+    }
+  }
+
+  tag_pvs = flickcurl_machinetags_getRecentValues(fc, nspace, predicate,
+                                                  added_since);
+
+  if(tag_pvs) {
+    command_print_predicate_values(tag_pvs, "getRecentValues returned");
+    flickcurl_free_tag_predicate_values(tag_pvs);
+  }
+
+  return (tag_pvs == NULL);
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3894,6 +3926,9 @@ static flickcurl_cmd commands[] = {
   {"machinetags.getValues",
    "NAMESPACE PREDICATE [PER-PAGE [PAGE]]", "Get a list of unique values for a NAMESPACE and PREDICATE", 
    command_machinetags_getValues, 2, 4},
+  {"machinetags.getRecentValues",
+   "[NAMESPACE|- [PREDICATE|- [ADDED-SINCE]]]", "Get a list of recent machinetags for NAMESPACE and PREDICATE since ADDED-SINCE", 
+   command_machinetags_getRecentValues, 0, 3},
 
   {"panda.getList",
    "", "get the current list of pandas", 

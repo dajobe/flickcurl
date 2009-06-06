@@ -54,7 +54,7 @@
  * and
  * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
- * Return value: non-0 on failure
+ * Return value: array of namespaces or NULL on failure
  **/
 flickcurl_tag_namespace**
 flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
@@ -127,7 +127,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
  * and
  * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
- * Return value: non-0 on failure
+ * Return value: array of pairs or NULL on failure
  **/
 flickcurl_tag_predicate_value**
 flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
@@ -202,7 +202,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
  * and
  * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
- * Return value: non-0 on failure
+ * Return value: array of predicates or NULL on failure
  **/
 flickcurl_tag_predicate_value**
 flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
@@ -276,7 +276,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
  * and
  * http://code.flickr.com/blog/2008/12/15/machine-tag-hierarchies/
  *
- * Return value: non-0 on failure
+ * Return value: array of values or NULL on failure
  **/
 flickcurl_tag_predicate_value**
 flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
@@ -336,3 +336,81 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
 
   return tag_pvs;
 }
+
+
+/**
+ * flickcurl_machinetags_getRecentValues:
+ * @fc: flickcurl context
+ * @nspace: A namespace that all values should be restricted to (or NULL)
+ * @predicate: A predicate that all values should be restricted to (or NULL)
+ * @added_since: Only return machine tags values that have been added since this timestamp, in epoch seconds (or <0)
+ * 
+ * Fetch recently used machine tags values.
+ *
+ * Implements flickr.machinetags.getRecentValues (1.12)
+ * 
+ * Return value: array of values or NULL on failure
+ **/
+flickcurl_tag_predicate_value**
+flickcurl_machinetags_getRecentValues(flickcurl* fc,
+                                      const char *nspace,
+                                      const char* predicate,
+                                      int added_since)
+{
+  const char* parameters[10][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag_predicate_value** tag_pvs = NULL;
+  char added_since_s[20];
+
+  if(nspace) {
+    parameters[count][0]  = "namespace";
+    parameters[count++][1]= nspace;
+  }
+
+  if(predicate) {
+    parameters[count][0]  = "predicate";
+    parameters[count++][1]= predicate;
+  }
+
+  if(added_since >= 0) {
+    sprintf(added_since_s, "%d", added_since);
+    parameters[count][0]  = "added_since";
+    parameters[count++][1]= added_since_s;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.machinetags.getRecentValues",
+                       parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed = 1;
+    goto tidy;
+  }
+
+  tag_pvs = flickcurl_build_tag_predicate_values(fc, xpathCtx, 
+                                                 (const xmlChar*)"/rsp/values/value", 
+                                                 2 /* content is value */,
+                                                 NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tag_pvs = NULL;
+
+  return tag_pvs;
+}
+
+

@@ -1725,6 +1725,8 @@ FLICKCURL_API
 flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace, int per_page, int page);
 FLICKCURL_API
 flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace, const char* predicate, int per_page, int page);
+FLICKCURL_API
+flickcurl_tag_predicate_value** flickcurl_machinetags_getRecentValues(flickcurl* fc, const char *nspace, const char* predicate, int added_since);
 
 /* flickr.panda */
 FLICKCURL_API
