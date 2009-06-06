@@ -945,23 +945,30 @@ typedef struct flickcurl_category_s flickcurl_category;
 
 
 /**
- * flickcurl_set:
- * @id: set ID
- * @title: title
- * @description: description
- * @photos: photos
- * @photos_count: number of photos
+ * flickcurl_photoset:
+ * @id: photoset ID
+ * @primary: primary photo ID
+ * @secret: secret
+ * @server: server
+ * @farm: farm
+ * @photos_count: count of photos in set
+ * @title: title of photoset
+ * @description: description of photoset (may be NULL)
  *
- * A photo set containing photos.
+ * A photoset.
+ *
  */
-struct flickcurl_set_s {
-  char* id;
-  char *title;
+typedef struct {
+  char *id;
+  char *primary;
+  char *secret;
+  int server;
+  int farm;
+  int photos_count;
+  char* title;
   char *description;
   struct flickcurl_photo_s** photos;
-  int photos_count;
-};
-typedef struct flickcurl_set_s flickcurl_set;
+} flickcurl_photoset;
 
 
 /**
@@ -998,7 +1005,7 @@ struct flickcurl_collection_s {
   int photos_count;
   struct flickcurl_collection_s** collections;
   int collections_count;
-  flickcurl_set** sets;
+  struct flickcurl_photoset_s** sets;
   int sets_count;
 };
 typedef struct flickcurl_collection_s flickcurl_collection;
@@ -1239,32 +1246,6 @@ typedef struct {
   int woe_id;
 } flickcurl_search_params;
   
-
-/**
- * flickcurl_photoset:
- * @id: photoset ID
- * @primary: primary photo ID
- * @secret: secret
- * @server: server
- * @farm: farm
- * @photos_count: count of photos in set
- * @title: title of photoset
- * @description: description of photoset (may be NULL)
- *
- * A photoset.
- *
- */
-typedef struct {
-  char *id;
-  char *primary;
-  char *secret;
-  int server;
-  int farm;
-  int photos_count;
-  char* title;
-  char *description;
-} flickcurl_photoset;
-
 
 /**
  * flickcurl_size:
