@@ -3711,9 +3711,6 @@ command_print_collection(flickcurl_collection *collection)
           collection->title, collection->description,
           collection->iconlarge, collection->iconsmall);
 
-  if(collection->photos)
-    flickcurl_free_photos(collection->photos);
-  
   if(collection->collections) {
     int i;
   
