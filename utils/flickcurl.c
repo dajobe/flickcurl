@@ -405,9 +405,10 @@ command_print_photo(flickcurl_photo* photo)
 {
   int i;
   
-  fprintf(stderr, "%s: Found %s with URI %s ID %s and %d tags\n",
-          program, photo->media_type,
-          photo->uri, photo->id, photo->tags_count);
+  fprintf(stderr, "%s with URI %s ID %s and %d tags\n",
+          photo->media_type, 
+          (photo->uri ? photo->uri : "(Unknown)"),
+          photo->id, photo->tags_count);
   
   for(i=0; i <= PHOTO_FIELD_LAST; i++) {
     flickcurl_photo_field_type field=(flickcurl_photo_field_type)i;
@@ -416,7 +417,7 @@ command_print_photo(flickcurl_photo* photo)
     if(datatype == VALUE_TYPE_NONE)
       continue;
     
-    fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
+    fprintf(stderr, "    field %s (%d) with %s value: '%s' / %d\n", 
             flickcurl_get_photo_field_label(field), field,
             flickcurl_get_field_value_type_label(datatype),
             photo->fields[field].string, photo->fields[field].integer);
@@ -440,6 +441,7 @@ command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
   photo=flickcurl_photos_getInfo(fc, argv[1]);
 
   if(photo) {
+    fprintf(stderr, "%s: ", program);
     command_print_photo(photo);
     flickcurl_free_photo(photo);
   }
@@ -3716,7 +3718,7 @@ command_print_collection(flickcurl_collection *collection)
     int i;
     
     for(i = 0; collection->photos[i]; i++) {
-      fprintf(stderr, "  icon photo %d)\n", i);
+      fprintf(stderr, "  icon photo %d) ", i);
       command_print_photo(collection->photos[i]);
     }
   }
