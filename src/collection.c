@@ -154,7 +154,7 @@ static struct {
   }
   ,
   {
-    (const xmlChar*)"./iconphotos",
+    (const xmlChar*)"./iconphotos/photo",
     COLLECTION_FIELD_iconphotos,
     VALUE_TYPE_ICON_PHOTOS
   }
