@@ -1,3 +1,36 @@
+2009-06-10  Dave Beckett <dave@dajobe.org>
+
+        * utils/flickcurl.c:
+        (command_print_photo): Print less and indent fields.  Update calls
+	to above to reduce duplication and newlines.
+
+2009-06-10  Dave Beckett <dave@dajobe.org>
+
+        * utils/flickcurl.c:
+        (command_print_collection): Print nicer optional description
+
+2009-06-10  Dave Beckett <dave@dajobe.org>
+
+        * utils/flickcurl.c:
+        (command_collections_getTree): Print photos inside
+
+2009-06-10  Dave Beckett <dave@dajobe.org>
+
+        * src/collection.c:
+        collection_fields_table - match iconphotos/photo
+        elements
+
+2009-06-10  Dave Beckett <dave@dajobe.org>
+
+        * utils/flickcurl.c:
+        (command_print_collection): Do not flickcurl_free_photos
+
+2009-06-10  Dave Beckett <dave@dajobe.org>
+
+        * src/collection.c:
+        (flickcurl_build_collections): Build icon photos using
+        flickcurl_build_photos
+
 2009-06-05  Dave Beckett <dave@dajobe.org>
 
 	* src/flickcurl.h, src/machinetags-api.c, utils/flickcurl.c: Added
