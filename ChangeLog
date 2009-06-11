@@ -1,6 +1,73 @@
+2009-06-05  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/machinetags-api.c, utils/flickcurl.c: Added
+	machinetags.getRecentValues support
+	(flickcurl_machinetags_getRecentValues): Added based on
+	flickcurl_machinetags_getValues processing.
+
+2009-06-05  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: Replace flickcurl_set with existing
+	flickcurl_photoset
+
+2009-06-04  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-docs.xml, docs/flickcurl-sections.txt,
+	docs/tmpl/section-collections.sgml, docs/tmpl/section-photo.sgml: 
+	Added collections to docs
+
+2009-06-04  Dave Beckett <dave@dajobe.org>
+
+	* docs/.gitignore: Ignore more tmp files
+
+2009-06-04  Dave Beckett <dave@dajobe.org>
+
+	* .gitignore, docs/.gitignore, docs/tmpl/.gitignore: Ignore more
+	dev files
+
+2009-06-04  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: Fix flickcurl_set use of flickcurl_photo_s
+	forward reference
+
+2009-06-02  Dave Beckett <dave@dajobe.org>
+
+	* .gitignore, src/Makefile.am, src/collection.c,
+	src/collections-api.c, src/flickcurl.h, src/flickcurl_internal.h,
+	src/person.c, src/photo.c, src/serializer.c, utils/flickcurl.c:
+	Added flickr collections API - not yet complete Added new types:
+	flickcurl_set and flickcurl_collection
+	(flickcurl_free_collection, flickcurl_free_collections): Added
+	destructors.  Added new API calls flickr.collections.getInfo and
+	flickr.collections.getTree
+	(flickcurl_build_collections): Added to build collection structure
+	into an array.  Does not handle icon photos, sub-sets or
+	sub-collections.
+	(flickcurl_build_collection): Added to use above to get just 1
+	collection.
+	(flickcurl_collections_getInfo): Added, using above to get
+	individual collection details.
+	(flickcurl_collections_getTree): Added, using above to get tree.
+	Not working at this point since the XML is slightly different.
+
+2009-06-02  Dave Beckett <dave@dajobe.org>
+
+	* utils/.gitignore: Ignore more
+
+2009-06-02  Dave Beckett <dave@dajobe.org>
+
+	* .gitignore, README.html, build/.gitignore, docs/.gitignore,
+	examples/.gitignore, src/.gitignore, utils/.gitignore: Switched from
+	Subversion to GIT source control hosted by GitHub.
+
+2009-05-27  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bump version to 1.12
+
 2009-05-26  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_11 for 1.11 release (SVN 1020)
+	This corresponds to GIT Commit bee9a12977670cabc0e65e43890a26f844c33302
 
 2009-05-24  Dave Beckett <dave@dajobe.org>
 
