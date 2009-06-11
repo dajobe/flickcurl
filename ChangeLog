@@ -35,8 +35,8 @@
 	* .gitignore, src/Makefile.am, src/collection.c,
 	src/collections-api.c, src/flickcurl.h, src/flickcurl_internal.h,
 	src/person.c, src/photo.c, src/serializer.c, utils/flickcurl.c:
-	Added flickr collections API - not yet complete Added new types:
-	flickcurl_set and flickcurl_collection
+	Added flickr collections API - not yet complete.
+	Added new types: flickcurl_set and flickcurl_collection
 	(flickcurl_free_collection, flickcurl_free_collections): Added
 	destructors.  Added new API calls flickr.collections.getInfo and
 	flickr.collections.getTree
