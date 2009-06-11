@@ -217,12 +217,19 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     for(expri=0; collection_fields_table[expri].xpath; expri++) {
       flickcurl_collection_field_type field=collection_fields_table[expri].field;
       flickcurl_field_value_type datatype=collection_fields_table[expri].type;
+      const xmlChar *field_xpath = collection_fields_table[expri].xpath;
       char *string_value;
       int int_value= -1;
       time_t unix_time;
+
+      if(datatype == VALUE_TYPE_ICON_PHOTOS) {
+        collection->photos = flickcurl_build_photos(fc, xpathNodeCtx,
+                                                    field_xpath,
+                                                    &collection->photos_count);
+        continue;
+      }
       
-      string_value=flickcurl_xpath_eval(fc, xpathNodeCtx,
-                                        collection_fields_table[expri].xpath);
+      string_value=flickcurl_xpath_eval(fc, xpathNodeCtx, field_xpath);
       if(!string_value)
         continue;
       
@@ -263,9 +270,6 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           break;
           
         case VALUE_TYPE_ICON_PHOTOS:
-          fprintf(stderr, "Do not know how to handle iconphotos type yet\n");
-          break;
-
         case VALUE_TYPE_PHOTO_ID:
         case VALUE_TYPE_PHOTO_URI:
         case VALUE_TYPE_MEDIA_TYPE:
