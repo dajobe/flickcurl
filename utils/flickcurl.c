@@ -3711,6 +3711,15 @@ command_print_collection(flickcurl_collection *collection)
           collection->title, collection->description,
           collection->iconlarge, collection->iconsmall);
 
+  if(collection->photos) {
+    int i;
+    
+    for(i = 0; collection->photos[i]; i++) {
+      fprintf(stderr, "  icon photo %d)\n", i);
+      command_print_photo(collection->photos[i]);
+    }
+  }
+  
   if(collection->collections) {
     int i;
   
