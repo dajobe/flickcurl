@@ -3708,7 +3708,8 @@ command_print_collection(flickcurl_collection *collection)
                   "  Large icon %s\n"
                   "  Small Icon %s\n",
           collection->id, collection->secret, collection->server,
-          collection->title, collection->description,
+          collection->title, 
+          (collection->description ? collection->description : "(None)"),
           collection->iconlarge, collection->iconsmall);
 
   if(collection->photos) {
