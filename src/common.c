@@ -1235,8 +1235,8 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   }
 
 
-  if(slist)
-    curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
+  /* set slist always - either a list of headers or none (NULL) */
+  curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPHEADER, slist);
 
   /* send all headers to this function */
   curl_easy_setopt(fc->curl_handle, CURLOPT_HEADERFUNCTION, 
