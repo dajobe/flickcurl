@@ -1,3 +1,12 @@
+2009-06-13  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_invoke_common): Always set/reset HTTP headers list.  This
+	allows requests that set/don't set headers to work in sequence when
+	called with the same flickcurl context.  The symptom of this was in
+	long sequences with mixed reads and writes, crashes or mysterious
+	failures happened.  Bug reported/found by Henning Spruth - thanks!
+
 2009-06-10  Dave Beckett <dave@dajobe.org>
 
         * utils/flickcurl.c:
