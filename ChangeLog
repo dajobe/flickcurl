@@ -1,3 +1,13 @@
+2009-06-21  Dave Beckett <dave@dajobe.org>
+
+	* README.md:
+	more markdown
+
+2009-06-21  Dave Beckett <dave@dajobe.org>
+
+	* README.md:
+	Add markdown README for github browsers
+
 2009-06-13  Dave Beckett <dave@dajobe.org>
 
 	* src/common.c:
