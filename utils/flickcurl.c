@@ -3805,6 +3805,68 @@ command_machinetags_getRecentValues(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_comments_getRecentForContacts(flickcurl* fc, int argc, char *argv[])
+{
+  int usage = 0;
+  int date_lastcomment = -1;
+  const char *filter = NULL;
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list = NULL;
+  int rc = 0;
+  
+  flickcurl_photos_list_params_init(&list_params);
+
+  argv++; argc--;
+  while(!usage && argc) {
+    char* field=argv[0];
+    argv++; argc--;
+
+    if(!strcmp(field, "since")) {
+      date_lastcomment = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "filter")) {
+      filter = argv[0];
+      argv++; argc--;
+    } else if(!strcmp(field, "per-page")) {
+      /* int: default 100, max 500 */
+      list_params.per_page = parse_page_param(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "page")) {
+      /* int: default 1 */
+      list_params.page = parse_page_param(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "format")) {
+      list_params.format = argv[0];
+      argv++; argc--;
+    } else {
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      usage=1;
+    }
+  }
+
+  if(usage)
+    goto tidy;
+  
+  photos_list = flickcurl_photos_comments_getRecentForContacts_params(fc,
+                                                                      date_lastcomment,
+                                                                      filter,
+                                                                      &list_params);
+  if(!photos_list) {
+    fprintf(stderr, "%s: Getting recent comments for contacts failed\n",
+            program);
+    return 1;
+  }
+  
+  rc = command_print_photos_list(fc, photos_list, output_fh, "Recent content photos");
+  flickcurl_free_photos_list(photos_list);
+
+  tidy:
+  
+  return rc;
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4056,6 +4118,9 @@ static flickcurl_cmd commands[] = {
   {"photos.comments.getList",
    "PHOTO-ID", "Get the comments for a photo PHOTO-ID.",
    command_photos_comments_getList, 1, 1},
+  {"photos.comments.getRecentForContacts",
+   "[PARAMS]", "Get the list of photos for user contacts with recent comments\n      since DATE-LAST-COMMENT filter CONTACTS-FILTER\n      per-page PER-PAGE page PAGE format FORMAT",
+   command_comments_getRecentForContacts, 0, 0},
 
   {"photos.geo.getLocation",
    "PHOTO-ID", "Get the geo location for a photo PHOTO-ID.",

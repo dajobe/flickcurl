@@ -262,3 +262,58 @@ flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id)
 
   return comments;
 }
+
+
+/**
+ * flickcurl_photos_comments_getRecentForContacts_params:
+ * @fc: flickcurl context
+ * @date_lastcomment: Limits the resultset to photos that have been commented on since this date. The date should be in the form of a Unix timestamp. The default, and maximum, offset is (1) hour (or <0)
+ * @contacts_filter: A comma-separated list of contact NSIDs to limit the scope of the query to (or NULL)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Return the list of photos belonging to your contacts that have
+ * been commented on recently.
+ *
+ * Implements flickr.photos.comments.getRecentForContacts (1.12)
+ * 
+ * Return value: list of photos or NULL on failure
+ **/
+flickcurl_photos_list*
+flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc,
+                                                      int date_lastcomment,
+                                                      const char* contacts_filter,
+                                                      flickcurl_photos_list_params* list_params)
+{
+  const char* parameters[12][2];
+  int count = 0;
+  flickcurl_photos_list* photos_list=NULL;
+  const char* format = NULL;
+  char date_lastcomment_str[20];
+  
+  /* API parameters */
+  if(date_lastcomment >= 0) {
+    parameters[count][0]  = "date_lastcomment";
+    sprintf(date_lastcomment_str, "%d", date_lastcomment);
+    parameters[count++][1]= date_lastcomment_str;
+  }
+  if(contacts_filter) {
+    parameters[count][0]  = "contacts_filter";
+    parameters[count++][1]= contacts_filter;
+  }
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photos.comments.getRecentForContacts",
+                       parameters, count))
+    goto tidy;
+
+  photos_list = flickcurl_invoke_photos_list(fc,
+                                             (const xmlChar*)"/rsp/photos/photo",
+                                             format);
+
+  tidy:
+
+  return photos_list;
+}

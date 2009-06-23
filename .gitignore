@@ -18,6 +18,7 @@ flickcurl.spec
 flickr.conf
 gtk-doc.make
 libtool
+not-used/
 old/
 releases
 setup*.sh

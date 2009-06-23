@@ -1894,6 +1894,8 @@ FLICKCURL_API
 int flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id, const char* comment_text);
 FLICKCURL_API
 flickcurl_comment** flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id);
+FLICKCURL_API
+flickcurl_photos_list* flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc, int date_lastcomment, const char* contacts_filter, flickcurl_photos_list_params* list_params);
 
 /* flickr.photos.geo */
 FLICKCURL_API
