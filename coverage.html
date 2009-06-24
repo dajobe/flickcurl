@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (139/139)</span>
+<span class="coverage">100.0% (143/143)</span>
 </p>
 
 
@@ -63,6 +63,13 @@ or <span class="unsupported">unsupported</span>.
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.blogs.getList.html">flickr.blogs.getList</a> (1.0)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.blogs.postPhoto.html">flickr.blogs.postPhoto</a> (1.0)</li>
+</ul>
+
+
+<h3>collections</h3>
+<ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.collections.getInfo.html">flickr.collections.getInfo</a> (1.12)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.collections.getTree.html">flickr.collections.getTree</a> (1.12)</li>
 </ul>
 
 
@@ -132,6 +139,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getPairs.html">flickr.machinetags.getPairs</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getPredicates.html">flickr.machinetags.getPredicates</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getValues.html">flickr.machinetags.getValues</a> (1.7)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.machinetags.getRecentValues.html">flickr.machinetags.getRecentValues</a> (1.12)</li>
 </ul>
 
 
@@ -194,6 +202,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.deleteComment.html">flickr.photos.comments.deleteComment</a> (0.10)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.editComment.html">flickr.photos.comments.editComment</a> (0.10)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.getList.html">flickr.photos.comments.getList</a> (0.10)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photos.comments.getRecentForContacts.html">flickr.photos.comments.getRecentForContacts</a> (1.12)</li>
 </ul>
 
 
@@ -345,6 +354,15 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
+<p><strong>1.12</strong>: flickr.collections.getInfo, flickr.collections.getTree, flickr.machinetags.getRecentValues, flickr.photos.comments.getRecentForContacts (4 new)</p>
+<pre>
+flickcurl_collection* flickcurl_collections_getInfo(flickcurl* fc, const char* collection_id);
+flickcurl_collection* flickcurl_collections_getTree(flickcurl* fc, const char* collection_id, const char* user_id);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getRecentValues(flickcurl* fc, const char *nspace, const char* predicate, int added_since);
+flickcurl_photos_list* flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc, int date_lastcomment, const char* contacts_filter, flickcurl_photos_list_params* list_params);
+</pre>
+
+
 <p><strong>1.9</strong>: flickr.groups.members.getList, flickr.panda.getList, flickr.panda.getPhotos (3 new)</p>
 <pre>
 flickcurl_member** flickcurl_groups_members_getList(flickcurl* fc, const char* group_id, const char* membertypes, int per_page, int page);
@@ -373,9 +391,9 @@ flickcurl_tag** flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const c
 <p><strong>1.7</strong>: flickr.machinetags.getNamespaces, flickr.machinetags.getPairs, flickr.machinetags.getPredicates, flickr.machinetags.getValues, flickr.places.getChildrenWithPhotosPublic, flickr.places.getInfo, flickr.places.getInfoByUrl, flickr.tags.getClusterPhotos (8 new)</p>
 <pre>
 flickcurl_tag_namespace** flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate, int per_page, int page);
-flickcurl_tag_predicate_value** flickcurl_machinetags_getPairs(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
-flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc, const char* namespace, int per_page, int page);
-flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char* namespace, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace, const char* predicate, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace, int per_page, int page);
+flickcurl_tag_predicate_value** flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace, const char* predicate, int per_page, int page);
 flickcurl_place** flickcurl_places_getChildrenWithPhotosPublic(flickcurl* fc, const char* place_id, const char* woe_id);
 flickcurl_place* flickcurl_places_getInfo(flickcurl* fc, const char* place_id, const char* woe_id);
 flickcurl_place* flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url);
@@ -424,8 +442,8 @@ flickcurl_activity** flickcurl_activity_userPhotos(flickcurl* fc, const char* ti
 flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);
 int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
 int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
-flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+flickcurl_photos_list* flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id, flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id, flickcurl_photos_list_params* list_params);
 int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
 flickcurl_place* flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url);
@@ -439,7 +457,7 @@ int flickcurl_test_null(flickcurl* fc);
 flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
 flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
 flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
-flickcurl_photo** flickcurl_interestingness_getList(flickcurl* fc, const char* date, const char* extras, int per_page, int page);
+flickcurl_photos_list* flickcurl_interestingness_getList_params(flickcurl* fc, const char* date, flickcurl_photos_list_params* list_params);
 flickcurl_group** flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id);
 flickcurl_user_upload_status* flickcurl_people_getUploadStatus(flickcurl* fc);
 int** flickcurl_photos_getCounts(flickcurl* fc, const char** dates_array, const char** taken_dates_array);
@@ -453,7 +471,7 @@ int flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id, const c
 int flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id, const char* primary_photo_id, const char** photo_ids_array);
 flickcurl_photoset* flickcurl_photosets_getInfo(flickcurl* fc, const char* photoset_id);
 flickcurl_photoset** flickcurl_photosets_getList(flickcurl* fc, const char* user_id);
-flickcurl_photo** flickcurl_photosets_getPhotos(flickcurl* fc, const char* photoset_id, const char* extras, int privacy_filter, int per_page, int page);
+flickcurl_photos_list* flickcurl_photosets_getPhotos_params(flickcurl* fc, const char* photoset_id, int privacy_filter, flickcurl_photos_list_params* list_params);
 int flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array);
 int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
 </pre>
@@ -463,18 +481,18 @@ int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, cons
 <pre>
 int flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id, const char* group_id);
 flickcurl_group** flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page);
-flickcurl_photo** flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, const char* extras, int per_page, int page);
+flickcurl_photos_list* flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id, const char* tags, const char* user_id, flickcurl_photos_list_params* list_params);
 int flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id, const char* group_id);
-flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id, int photo_count, int just_friends,  int single_photo, int include_self, const char* extras);
+flickcurl_photos_list* flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,  flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc, const char* user_id, int photo_count, int just_friends,  int single_photo, int include_self, flickcurl_photos_list_params* list_params);
 flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, const char* secret);
 flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
-flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_photos_getRecent(flickcurl* fc, const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_photos_getUntagged(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_photos_getWithGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_photos_getWithoutGeoData(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
-flickcurl_photo** flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date, const char* extras, int per_page, int page);
+flickcurl_photos_list* flickcurl_photos_getNotInSet_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_photos_getRecent_params(flickcurl* fc, flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_photos_getUntagged_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_photos_getWithGeoData_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_photos_getWithoutGeoData_params(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date, flickcurl_photos_list_params* list_params);
 flickcurl_location* flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id);
 flickcurl_perms* flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id);
 int flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id);
@@ -491,9 +509,9 @@ int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, 
 <pre>
 flickcurl_contact** flickcurl_contacts_getList(flickcurl* fc, const char* filter, int page, int per_page);
 flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
-flickcurl_photo** flickcurl_photos_getContactsPhotos(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, const char* extras);
+flickcurl_photos_list* flickcurl_photos_getContactsPhotos_params(flickcurl* fc, int contact_count, int just_friends, int single_photo, int include_self, flickcurl_photos_list_params* list_params);
 flickcurl_perms* flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id);
-flickcurl_photo** flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params);
+flickcurl_photos_list* flickcurl_photos_search_params(flickcurl* fc, flickcurl_search_params* params, flickcurl_photos_list_params* list_params);
 int flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id, int content_type);
 int flickcurl_photos_setDates(flickcurl* fc, const char* photo_id, int date_posted, int date_taken, int date_taken_granularity);
 int flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id, const char* title, const char* description);
