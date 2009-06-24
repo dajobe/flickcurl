@@ -1,3 +1,12 @@
+2009-06-23  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/photos-comments-api.c, utils/flickcurl.c:
+	Implement new API flickr.photos.comments.getRecentForContacts
+	(flickcurl_photos_comments_getRecentForContacts_params): Added to
+	implement flickr.photos.comments.getRecentForContacts Updated
+	flickcurl utility to add photos.comments.getRecentForContacts
+	command with all optional parameters.
+
 2009-06-21  Dave Beckett <dave@dajobe.org>
 
 	* README.md:
