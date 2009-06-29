@@ -314,6 +314,9 @@ dnl Shave "make autotools output sane" - disabled by default
 dnl http://git.lespiau.name/cgit/shave/  git clone git://git.lespiau.name/shave
 SHAVE_INIT([build], [disable])
 
+dnl when automake 1.11 is more widespread can use this:
+dnl m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])],)
+
 AC_CONFIG_FILES([Makefile
 build/shave
 build/shave-libtool
