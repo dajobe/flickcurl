@@ -1,3 +1,39 @@
+2009-06-28  Dave Beckett <dave@dajobe.org>
+
+	* autogen.sh:
+	Note automake 1.11 requirements
+
+2009-06-28  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac:
+	note can use automake 1.11 for shave-like
+	functionality at some point.
+
+2009-06-28  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt, docs/tmpl/flickcurl-unused.sgml,
+	docs/tmpl/section-collections.sgml,
+	docs/tmpl/section-machinetags.sgml, docs/tmpl/section-photo.sgml,
+	docs/tmpl/section-photoset.sgml, src/flickcurl.h:
+	Update autodocs
+
+2009-06-28  Dave Beckett <dave@dajobe.org>
+
+	* build/shave.in, build/shave.m4:
+	Update SHAVE from master
+	2134bb1207e06d1650918a56f6b142e9a840219d
+
+2009-06-26  Dave Beckett <dave@dajobe.org>
+
+	* .gitignore:
+	Ignore config.cache
+
+2009-06-24  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html:
+	Update to 143 API calls Prefer _params() version of
+	functions
+
 2009-06-23  Dave Beckett <dave@dajobe.org>
 
 	* src/flickcurl.h, src/photos-comments-api.c, utils/flickcurl.c:
