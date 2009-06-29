@@ -62,6 +62,7 @@ if grep "^SHAVE_INIT" $confs >/dev/null; then
 fi
 
 # Some dependencies for autotools:
+# automake 1.11 requires autoconf 2.62
 # automake 1.10 requires autoconf 2.60
 # automake 1.9 requires autoconf 2.58
 # automake 1.8 requires autoconf 2.58
