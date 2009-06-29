@@ -236,6 +236,18 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_comments_getRecentForContacts_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@date_lastcomment: 
+@contacts_filter: 
+@list_params: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_delete ##### -->
 <para>
 

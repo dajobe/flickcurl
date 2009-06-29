@@ -30,6 +30,7 @@ Set of Photos.
 @photos_count: 
 @title: 
 @description: 
+@photos: 
 
 <!-- ##### FUNCTION flickcurl_free_photoset ##### -->
 <para>

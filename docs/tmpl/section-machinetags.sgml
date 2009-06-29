@@ -105,6 +105,18 @@ Machine tags.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_machinetags_getRecentValues ##### -->
+<para>
+
+</para>
+
+@fc: 
+@nspace: 
+@predicate: 
+@added_since: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_machinetags_getValues ##### -->
 <para>
 

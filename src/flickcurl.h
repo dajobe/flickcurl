@@ -954,6 +954,7 @@ typedef struct flickcurl_category_s flickcurl_category;
  * @photos_count: count of photos in set
  * @title: title of photoset
  * @description: description of photoset (may be NULL)
+ * @photos: photos in a photoset (may be NULL)
  *
  * A photoset.
  *
