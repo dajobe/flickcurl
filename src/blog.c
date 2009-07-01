@@ -143,3 +143,113 @@ flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
   return blogs;
 }
+
+
+static void
+flickcurl_free_blog_service(flickcurl_blog_service *blog_service)
+{
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(blog_service, flickcurl_blog_service);
+
+  if(blog_service->id)
+    free(blog_service->id);
+  
+  if(blog_service->name)
+    free(blog_service->name);
+  
+  free(blog_service);
+}
+
+
+/**
+ * flickcurl_free_blog_services:
+ * @blog_services_object: blog services object array
+ *
+ * Destructor for array of blog services objects
+ */
+void
+flickcurl_free_blog_services(flickcurl_blog_service **blog_services_object)
+{
+  int i;
+  
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(blog_services_object, flickcurl_blog_service_array);
+
+  for(i = 0; blog_services_object[i]; i++)
+    flickcurl_free_blog_service(blog_services_object[i]);
+  
+  free(blog_services_object);
+}
+
+
+flickcurl_blog_service**
+flickcurl_build_blog_Services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+                              const xmlChar* xpathExpr,
+                              int* blog_services_count_p)
+{
+  flickcurl_blog_service** blog_services = NULL;
+  int nodes_count;
+  int blog_services_count;
+  int i;
+  xmlXPathObjectPtr xpathObj = NULL;
+  xmlNodeSetPtr nodes;
+  
+  xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+  if(!xpathObj) {
+    flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                    xpathExpr);
+    fc->failed = 1;
+    goto tidy;
+  }
+  
+  nodes = xpathObj->nodesetval;
+  /* This is a max size - it can include nodes that are CDATA */
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  blog_services = (flickcurl_blog_service**)calloc(sizeof(flickcurl_blog_service*), nodes_count+1);
+  
+  for(i = 0, blog_services_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
+    xmlAttr* attr;
+    flickcurl_blog_service* b;
+    xmlNodePtr chnode;
+    
+    if(node->type != XML_ELEMENT_NODE) {
+      flickcurl_error(fc, "Got unexpected node type %d", node->type);
+      fc->failed = 1;
+      break;
+    }
+    
+    b = (flickcurl_blog_service*)calloc(sizeof(flickcurl_blog_service), 1);
+    
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
+      char *attr_value;
+
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
+      strcpy(attr_value, (const char*)attr->children->content);
+      
+      if(!strcmp(attr_name, "id"))
+        b->id = attr_value;
+    } /* end attributes */
+
+    for(chnode = node->children; chnode; chnode = chnode->next) {
+      if(chnode->type == XML_TEXT_NODE) {
+        b->name = (char*)malloc(strlen((const char*)chnode->content)+1);
+        strcpy(b->name, (const char*)chnode->content);
+      }
+    }
+    
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "blog service: id %s  name '%s'\n", b->id, b->name);
+#endif
+    
+    blog_services[blog_services_count++] = b;
+  } /* for nodes */
+
+  if(blog_services_count_p)
+    *blog_services_count_p = blog_services_count;
+  
+ tidy:
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
+
+  return blog_services;
+}

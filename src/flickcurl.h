@@ -923,6 +923,19 @@ typedef struct {
 
 
 /**
+ * flickcurl_blog_service:
+ * @id: ID
+ * @name: Service Name
+ *
+ * A blog service.
+ */
+typedef struct {
+  char* id;
+  char* name;
+} flickcurl_blog_service;
+
+
+/**
  * flickcurl_category:
  * @id: category ID
  * @name: Name
@@ -1652,6 +1665,11 @@ FLICKCURL_API
 int flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id, const char* photo_id, const char* title, const char* description, const char* blog_password);
 FLICKCURL_API
 void flickcurl_free_blogs(flickcurl_blog **blogs_object);
+FLICKCURL_API
+flickcurl_blog_service** flickcurl_blogs_getServices(flickcurl* fc);
+FLICKCURL_API
+void flickcurl_free_blog_services(flickcurl_blog_service **blog_services_object);
+
 
 /* flickr.collections */
 FLICKCURL_API

@@ -3888,6 +3888,25 @@ command_short_uri(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_blogs_getServices(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_blog_service** blog_services;
+  
+  blog_services = flickcurl_blogs_getServices(fc);
+  if(blog_services) {
+    int i;
+    for (i = 0; blog_services[i]; i++) {
+      flickcurl_blog_service* blog_service = blog_services[i];
+      fprintf(stderr, "%d) blog service: id %s  name '%s'\n", i,
+              blog_service->id, blog_service->name);
+    }
+    flickcurl_free_blog_services(blog_services);
+  }
+  return 0;
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -3937,6 +3956,9 @@ static flickcurl_cmd commands[] = {
   {"blogs.getList",
    "", "Get a list of configured blogs for the calling user.",
    command_blogs_getList, 0, 0},
+  {"blogs.getServices",
+   "", "Get a list of blog services.",
+   command_blogs_getServices, 0, 0},
   {"blogs.postPhoto",
    "BLOG-ID PHOTO-ID TITLE DESCRIPTION [BLOG-PASSWORD]", "Post PHOTO-ID to blog BLOG-ID with TITLE, DESCRIPTION and optional password.",
    command_blogs_postPhoto, 4, 5},

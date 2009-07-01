@@ -90,6 +90,56 @@ flickcurl_blogs_getList(flickcurl* fc)
 
 
 /**
+ * flickcurl_blogs_getServices:
+ * @fc: flickcurl context
+ * 
+ * Return a list of Flickr supported blogging services
+ *
+ * Implements flickr.blogs.getServices (1.12)
+ * 
+ * Return value: list of services or NULL on failure
+ **/
+flickcurl_blog_service**
+flickcurl_blogs_getServices(flickcurl* fc)
+{
+  const char* parameters[7][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_blog_service **services = NULL;
+  
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.blogs.getServices", parameters, count))
+    goto tidy;
+
+  doc=flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  services = flickcurl_build_blog_Services(fc, xpathCtx,
+                                           (const xmlChar*)"/rsp/services/service", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    services = NULL;
+
+  return services;
+}
+
+
+/**
  * flickcurl_blogs_postPhoto:
  * @fc: flickcurl context
  * @blog_id: The id of the blog to post to
@@ -153,5 +203,3 @@ flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id,
 
   return fc->failed;
 }
-
-
