@@ -36,6 +36,15 @@ Posting photos to blogs
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_blogs_getServices ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_blogs_postPhoto ##### -->
 <para>
 
@@ -56,5 +65,13 @@ Posting photos to blogs
 </para>
 
 @blogs_object: 
+
+
+<!-- ##### FUNCTION flickcurl_free_blog_services ##### -->
+<para>
+
+</para>
+
+@blog_services_object: 
 
 

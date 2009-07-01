@@ -65,6 +65,15 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photo_as_short_uri ##### -->
+<para>
+
+</para>
+
+@photo: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photo_as_source_uri ##### -->
 <para>
 
@@ -81,6 +90,15 @@ Photo.
 </para>
 
 @photo: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photo_id_as_short_uri ##### -->
+<para>
+
+</para>
+
+@photo_id: 
 @Returns: 
 
 
