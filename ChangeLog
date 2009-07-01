@@ -1,3 +1,30 @@
+2009-06-30  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-blogs.sgml, docs/tmpl/section-photo.sgml:
+	
+	Updated sgml templates for API additions
+
+2009-06-30  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt, src/blog.c, src/blogs-api.c,
+	src/flickcurl.h, src/flickcurl_internal.h, utils/flickcurl.c:
+	Added support for new flickr.blogs.getServices API call Added
+	flickcurl_blog_service structure for describing a blog service.
+	(flickcurl_blogs_getServices): Added to implement
+	flickr.blogs.getServices API call.
+	(flickcurl_free_blog_services): Added to free blog services
+	array.
+	Updated utility to allow calling flickr.blogs.getServices.
+
+2009-06-30  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt, src/flickcurl.h, src/photo.c,
+	utils/flickcurl.c:
+	Added functions for generating flic.kr short URIs
+	(flickcurl_photo_as_short_uri, flickcurl_photo_id_as_short_uri):
+	Added to make an http://flic.kr short URI from a photo object or
+	photo ID string.  Added shorturi command to utility to call this.
+
 2009-06-28  Dave Beckett <dave@dajobe.org>
 
 	* autogen.sh:
