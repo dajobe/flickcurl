@@ -229,6 +229,86 @@ flickcurl_photo_as_page_uri(flickcurl_photo *photo)
 }
 
 
+#define SHORT_URI_ALPHABET_SIZE 58
+static const char short_uri_alphabet[SHORT_URI_ALPHABET_SIZE]=
+  "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
+
+#define SHORT_URI_PREFIX_LEN 17
+static const char short_uri_prefix[SHORT_URI_PREFIX_LEN] = 
+  "http://flic.kr/p/";
+
+
+/**
+ * flickcurl_photo_id_as_short_uri:
+ * @photo_id: photo ID
+ *
+ * Get a short URI for a photo ID
+ *
+ * Encoded based on description given in
+ * http://www.flickr.com/groups/api/discuss/72157616713786392/
+ *
+ * Return value: new short URI string or NULL on failure
+ */
+char*
+flickcurl_photo_id_as_short_uri(char *photo_id)
+{
+  char buf[SHORT_URI_ALPHABET_SIZE + 1];
+  int base_count = SHORT_URI_ALPHABET_SIZE;
+  char *p;
+  char *r;
+  long long num = atoll(photo_id);
+  char *result;
+
+  if(num <= 0)
+    return NULL;
+  
+  /* http://flic.kr/p/{base58-photo id}/ */
+
+  /* construct the encoding in reverse order into buf */
+  p = buf;
+  while(num >= base_count) {
+    double divisor = num / base_count;
+    long long modulus = (num - (base_count * (long long)divisor));
+    *p++ = short_uri_alphabet[modulus];
+    num = (long long)divisor;
+  }
+  if(num)
+    *p++ = short_uri_alphabet[num];
+    
+  result = (char*)malloc((p-buf) + SHORT_URI_PREFIX_LEN + 1);
+  if(!result)
+    return NULL;
+  
+  r = result;
+  strncpy(result, short_uri_prefix, SHORT_URI_PREFIX_LEN);
+  r += SHORT_URI_PREFIX_LEN;
+  /* now copy it backwards into new result string */
+  while(p != buf)
+    *r++ = *--p;
+  *r = '\0';
+
+  return result;
+}
+
+
+/**
+ * flickcurl_photo_as_short_uri:
+ * @photo: photo object
+ *
+ * Get a short URI for a photo
+ *
+ * Encoded based on description given in
+ * http://www.flickr.com/groups/api/discuss/72157616713786392/
+ *
+ * Return value: new short URI string or NULL on failure
+ */
+char*
+flickcurl_photo_as_short_uri(flickcurl_photo *photo)
+{
+  return flickcurl_photo_id_as_short_uri(photo->id);
+}
+
+
 /**
  * flickcurl_user_icon_uri:
  * @farm: user icon farm

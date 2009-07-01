@@ -1576,6 +1576,12 @@ FLICKCURL_API
 char* flickcurl_user_icon_uri(int farm, int server, char *nsid);
 FLICKCURL_API
 char* flickcurl_photo_as_user_icon_uri(flickcurl_photo *photo);
+/* get a short URL for a photo ID - http://flic.kr */
+FLICKCURL_API
+char* flickcurl_photo_id_as_short_uri(char *photo_id);
+/* get a short URL for a photo object - http://flic.kr */
+FLICKCURL_API
+char* flickcurl_photo_as_short_uri(flickcurl_photo *photo);
 
 /* get labels for various field/types */
 FLICKCURL_API

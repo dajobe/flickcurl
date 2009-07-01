@@ -3867,6 +3867,27 @@ command_comments_getRecentForContacts(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_short_uri(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id = argv[1];
+  char *uri;
+
+  uri = flickcurl_photo_id_as_short_uri(photo_id);
+  if(uri) {
+    fprintf(stderr, "%s: Short URI for photo ID %s is %s\n",
+            program, photo_id, uri);
+    free(uri);
+  } else {
+    fprintf(stderr, "%s: Failed to get short URI for photo ID %s\n",
+            program, photo_id);
+    return 1;
+  }
+  return 0;
+  
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4328,6 +4349,10 @@ static flickcurl_cmd commands[] = {
   {"replace",
    "FILE PHOTO-ID [async]", "Replace a photo PHOTO-ID with a new FILE (async)", 
    command_replace,  2, 3},
+
+  {"shorturi",
+   "PHOTO-ID", "Get the http://flic.kr short uri for PHOTO-ID", 
+   command_short_uri,  1, 1},
 
   {NULL, 
    NULL, NULL,
