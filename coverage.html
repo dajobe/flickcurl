@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (143/143)</span>
+<span class="coverage">100.0% (145/145)</span>
 </p>
 
 
@@ -62,6 +62,7 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.blogs.getList.html">flickr.blogs.getList</a> (1.0)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.blogs.getServices.html">flickr.blogs.getServices</a> (1.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.blogs.postPhoto.html">flickr.blogs.postPhoto</a> (1.0)</li>
 </ul>
 
@@ -289,6 +290,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getInfoByUrl.html">flickr.places.getInfoByUrl</a> (1.7)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getPlaceTypes.html">flickr.places.getPlaceTypes</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getShapeHistory.html">flickr.places.getShapeHistory</a> (1.8)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.getTopPlacesList.html">flickr.places.getTopPlacesList</a> (1.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForBoundingBox.html">flickr.places.placesForBoundingBox</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForContacts.html">flickr.places.placesForContacts</a> (1.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.places.placesForTags.html">flickr.places.placesForTags</a> (1.8)</li>
@@ -354,12 +356,14 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>1.12</strong>: flickr.collections.getInfo, flickr.collections.getTree, flickr.machinetags.getRecentValues, flickr.photos.comments.getRecentForContacts (4 new)</p>
+<p><strong>1.12</strong>: flickr.blogs.getServices, flickr.collections.getInfo, flickr.collections.getTree, flickr.machinetags.getRecentValues, flickr.photos.comments.getRecentForContacts, flickr.places.getTopPlacesList (6 new)</p>
 <pre>
+flickcurl_blog_service** flickcurl_blogs_getServices(flickcurl* fc);
 flickcurl_collection* flickcurl_collections_getInfo(flickcurl* fc, const char* collection_id);
 flickcurl_collection* flickcurl_collections_getTree(flickcurl* fc, const char* collection_id, const char* user_id);
 flickcurl_tag_predicate_value** flickcurl_machinetags_getRecentValues(flickcurl* fc, const char *nspace, const char* predicate, int added_since);
 flickcurl_photos_list* flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc, int date_lastcomment, const char* contacts_filter, flickcurl_photos_list_params* list_params);
+flickcurl_place** flickcurl_places_getTopPlacesList(flickcurl* fc, flickcurl_place_type place_type, const char* date, int woe_id, const char* place_id);
 </pre>
 
 
