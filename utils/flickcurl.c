@@ -3025,7 +3025,8 @@ command_places_placesForUser(flickcurl* fc, int argc, char *argv[])
   place_type=flickcurl_get_place_type_by_label(argv[1]);
   
   if(argc > 2) {
-    woe_id=atoi(argv[2]);
+    if(strcmp(argv[2], "-"))
+       woe_id = atoi(argv[2]);
     if(argc > 3) {
       place_id=argv[3];
       if(argc > 4) {
@@ -3921,7 +3922,8 @@ command_places_getTopPlacesList(flickcurl* fc, int argc, char *argv[])
   date = argv[2];
 
   if(argc > 3) {
-    woe_id = atoi(argv[3]);
+    if(strcmp(argv[3], "-"))
+       woe_id = atoi(argv[3]);
     if(argc > 4) {
       place_id = argv[4];
     }
@@ -4310,7 +4312,7 @@ static flickcurl_cmd commands[] = {
    "PLACE-ID|- [WOE-ID|-]", "Get history of shapes for a place by PLACE-ID or WOE-ID",
    command_places_getShapeHistory, 1, 0},
   {"places.getTopPlacesList",
-   "PLACE-TYPE [DATE [WOE-ID|- [PLACE-ID|-]]]", "Get the top 100 most geotagged places for a DATE (or yesterday).",
+   "PLACE-TYPE [DATE [WOE-ID|- [PLACE-ID]]]", "Get the top 100 most geotagged places for a DATE (or yesterday).",
    command_places_getTopPlacesList, 1, 4},
   {"places.placesForBoundingBox",
    "PLACE-TYPE MIN-LONG MIN-LAT MAX-LONG MAX-LAT", "Find user places of PLACE-TYPE in bbox.",
