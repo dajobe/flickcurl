@@ -220,6 +220,19 @@ Places in the real world.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_places_getTopPlacesList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@place_type: 
+@date: 
+@woe_id: 
+@place_id: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_place_id_to_type ##### -->
 <para>
 

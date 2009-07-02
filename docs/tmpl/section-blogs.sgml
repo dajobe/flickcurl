@@ -36,6 +36,14 @@ Posting photos to blogs
 @Returns: 
 
 
+<!-- ##### STRUCT flickcurl_blog_service ##### -->
+<para>
+
+</para>
+
+@id: 
+@name: 
+
 <!-- ##### FUNCTION flickcurl_blogs_getServices ##### -->
 <para>
 
