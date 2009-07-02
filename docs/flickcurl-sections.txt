@@ -58,6 +58,7 @@ flickcurl_auth_getToken
 <FILE>section-blogs</FILE>
 flickcurl_blog
 flickcurl_blogs_getList
+flickcurl_blog_service
 flickcurl_blogs_getServices
 flickcurl_blogs_postPhoto
 flickcurl_free_blogs
