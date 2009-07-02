@@ -359,8 +359,9 @@ command_print_place(flickcurl_place* place,
   
   if(place->timezone)
     fprintf(stderr, "  Timezone: %s\n", place->timezone);
-  
-  command_print_shape(place->shape);
+
+  if(place->shape)
+    command_print_shape(place->shape);
   
   if(place->count >0)
     fprintf(stderr, "  Photos at Place: %d\n", place->count);
@@ -3907,6 +3908,40 @@ command_blogs_getServices(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_places_getTopPlacesList(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_place** places = NULL;
+  flickcurl_place_type place_type;
+  const char* date;
+  int woe_id = -1;
+  const char* place_id = NULL;
+  
+  place_type = flickcurl_get_place_type_by_label(argv[1]);
+  date = argv[2];
+
+  if(argc > 3) {
+    woe_id = atoi(argv[3]);
+    if(argc > 4) {
+      place_id = argv[4];
+    }
+  }
+
+  places = flickcurl_places_getTopPlacesList(fc, place_type, date, woe_id,
+                                             place_id);
+  if(places) {
+    int i;
+    for(i = 0; places[i]; i++) {
+      fprintf(stderr, "Place Result #%d\n", i);
+      command_print_place(places[i], NULL, NULL, 1);
+    }
+    flickcurl_free_places(places);
+  }
+  
+  return (places == NULL);
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4274,6 +4309,9 @@ static flickcurl_cmd commands[] = {
   {"places.getShapeHistory",
    "PLACE-ID|- [WOE-ID|-]", "Get history of shapes for a place by PLACE-ID or WOE-ID",
    command_places_getShapeHistory, 1, 0},
+  {"places.getTopPlacesList",
+   "PLACE-TYPE [DATE [WOE-ID|- [PLACE-ID|-]]]", "Get the top 100 most geotagged places for a DATE (or yesterday).",
+   command_places_getTopPlacesList, 1, 4},
   {"places.placesForBoundingBox",
    "PLACE-TYPE MIN-LONG MIN-LAT MAX-LONG MAX-LAT", "Find user places of PLACE-TYPE in bbox.",
    command_places_placesForBoundingBox, 5, 5},

@@ -567,6 +567,87 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
 
 
 /**
+ * flickcurl_places_getTopPlacesList:
+ * @fc: flickcurl context
+ * @place_type_id: The numeric ID for a specific place type to cluster photos by. Valid place type IDs are : 22: neighbourhood, 7: locality, 8: region, 12: country, 29: continent
+ * @date: A valid date in YYYY-MM-DD format. The default is yesterday. (or NULL)
+ * @woe_id: Limit your query to only those top places belonging to a specific Where on Earth (WOE) identifier. (or NULL)
+ * @place_id: Limit your query to only those top places belonging to a specific Flickr Places identifier. (or NULL)
+ * 
+ * Return the top 100 most geotagged places for a day.
+ *
+ * Implements flickr.places.getTopPlacesList (1.12)
+ * 
+ * Return value: array of places or NULL on failure
+ **/
+flickcurl_place**
+flickcurl_places_getTopPlacesList(flickcurl* fc, 
+                                  flickcurl_place_type place_type,
+                                  const char* date, int woe_id, 
+                                  const char* place_id)
+{
+  const char* parameters[11][2];
+  int count=0;
+  xmlDocPtr doc=NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place** places = NULL;
+  char woe_id_str[10];
+  int place_type_id;
+  char place_type_id_str[3];
+  
+  place_type_id = flickcurl_place_type_to_id(place_type);
+  if(place_type_id < 0)
+    return NULL;
+
+  parameters[count][0]  = "place_type_id";
+  sprintf(place_type_id_str, "%d", place_type_id);
+  parameters[count++][1]= place_type_id_str;
+
+  if(date) {
+    parameters[count][0]  = "date";
+    parameters[count++][1]= date;
+  }
+  if(woe_id >= 0) {
+    sprintf(woe_id_str, "%d", woe_id);
+    parameters[count][0]  = "woe_id";
+    parameters[count++][1]= woe_id_str;
+  } else if(place_id) {
+    parameters[count][0]  = "place_id";
+    parameters[count++][1]= place_id;
+  }
+  
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.places.getTopPlacesList", parameters, count))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed=1;
+    goto tidy;
+  }
+
+  places = flickcurl_build_places(fc, xpathCtx,
+                                  (const xmlChar*)"/rsp/places/place", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    places = NULL;
+
+  return places;
+}
+
+
+/**
  * flickcurl_places_placesForBoundingBox:
  * @fc: flickcurl context
  * @place_type: The place type to cluster photos by

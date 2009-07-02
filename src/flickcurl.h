@@ -1867,6 +1867,8 @@ flickcurl_place* flickcurl_places_getInfo(flickcurl* fc, const char* place_id, c
 FLICKCURL_API
 flickcurl_place* flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, const int woe_id);
 FLICKCURL_API
+flickcurl_place** flickcurl_places_getTopPlacesList(flickcurl* fc, flickcurl_place_type place_type, const char* date, int woe_id, const char* place_id);
+FLICKCURL_API
 flickcurl_place* flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url);
 FLICKCURL_API
 flickcurl_place* flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id);
