@@ -569,7 +569,7 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
 /**
  * flickcurl_places_getTopPlacesList:
  * @fc: flickcurl context
- * @place_type_id: The numeric ID for a specific place type to cluster photos by. Valid place type IDs are : 22: neighbourhood, 7: locality, 8: region, 12: country, 29: continent
+ * @place_type: The place type to cluster photos by. Valid place types are : neighbourhood, locality, region, country and continent
  * @date: A valid date in YYYY-MM-DD format. The default is yesterday. (or NULL)
  * @woe_id: Limit your query to only those top places belonging to a specific Where on Earth (WOE) identifier. (or NULL)
  * @place_id: Limit your query to only those top places belonging to a specific Flickr Places identifier. (or NULL)
