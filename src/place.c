@@ -48,7 +48,8 @@ static const char* flickcurl_place_type_label[FLICKCURL_PLACE_LAST+1]={
   "locality",
   "county",
   "region",
-  "country"
+  "country",
+  "continent"
 };
 
 
@@ -172,7 +173,7 @@ typedef enum {
 } place_field_type;
 
 
-#define PLACE_FIELDS_TABLE_SIZE 34
+#define PLACE_FIELDS_TABLE_SIZE 35
 
 /*
  * The XPaths here are relative, such as prefixed by /rsp/place
@@ -184,6 +185,12 @@ static struct {
 } place_fields_table[PLACE_FIELDS_TABLE_SIZE+1]={
   {
     (const xmlChar*)"./@name",
+    FLICKCURL_PLACE_LOCATION,
+    PLACE_NAME,
+  }
+  ,
+  {
+    (const xmlChar*)".",
     FLICKCURL_PLACE_LOCATION,
     PLACE_NAME,
   }
