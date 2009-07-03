@@ -1,3 +1,50 @@
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html:
+	Updated for recent API additions: now 145 -
+	flickr.blogs.getServices - flickr.places.getTopPlacesList
+
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-blogs.sgml, docs/tmpl/section-place.sgml:
+	Updated sgml doc templates for recent APIs
+
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt:
+	Added flickcurl_blog_service
+
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* src/places-api.c:
+	(flickcurl_places_getTopPlacesList): autodocs
+
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt:
+	Added flickcurl_places_getTopPlacesList
+
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c:
+	Allow WOEID args to be "-" to omit them in
+	several calls.  Update places.getTopPlacesList args doc
+
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/places-api.c, utils/flickcurl.c:
+	Implement new Flickr API call flickr.places.getTopPlacesList
+	(flickcurl_places_getTopPlacesList): Added to implement
+	flickr.places.getTopPlacesList.
+	Update utility to allow calling flickr.places.getTopPlacesList.
+
+2009-07-01  Dave Beckett <dave@dajobe.org>
+
+	* src/place.c:
+	Added "continent" to flickcurl_place_type_label Get
+	place name from <place> element content as well as attribute.  In
+	Flickr API, there is always more than one way to get a field ;)
+
 2009-06-30  Dave Beckett <dave@dajobe.org>
 
 	* docs/tmpl/section-blogs.sgml, docs/tmpl/section-photo.sgml:
