@@ -17,6 +17,97 @@
 <p>Not yet released.
 </p>
 
+<p>Added function <code>flickcurl_places_getTopPlacesList()</code>
+for new API call
+<a href="http://www.flickr.com/services/api/flickr.places.getTopPlacesList.html">flickr.places.getTopPlacesList</a>.
+</p>
+<pre>
+  flickcurl_place** flickcurl_places_getTopPlacesList(flickcurl* fc,
+    flickcurl_place_type place_type, const char* date, int woe_id,
+    const char* place_id);
+</pre>
+
+<p>Added function <code>flickcurl_blogs_getServices()</code> and new
+<code>flickcurl_blog_service</code> structure for describing a blog service.
+for new API call
+<a href="http://www.flickr.com/services/api/flickr.blogs.getServices.html">flickr.blogs.getServices</a>.
+Added function
+<code>flickcurl_free_blog_services()</code> to free blog services array.
+</p>
+<pre>
+  flickcurl_blog_service** flickcurl_blogs_getServices(flickcurl* fc);
+
+  void flickcurl_free_blog_services(flickcurl_blog_service **blog_services_object);
+</pre>
+
+<p>Added function
+<code>flickcurl_photos_comments_getRecentForContacts_params()</code>
+for new API call
+<a href="http://www.flickr.com/services/api/flickr.photos.comments.getRecentForContacts.html">flickr.photos.comments.getRecentForContacts</a>
+</p>
+
+<p>Added function <code>flickcurl_machinetags_getRecentValues()</code>
+for new API call
+<a href="http://www.flickr.com/services/api/flickr.machinetags.getRecentValues.html">flickr.machinetags.getRecentValues</a>
+</p>
+
+<p>Added flickr collections API including new
+<code>flickcurl_collection</code> datatype:</p>
+<pre>
+  flickcurl_collection* flickcurl_collections_getInfo(flickcurl* fc,
+    const char* collection_id);
+
+  flickcurl_collection* flickcurl_collections_getTree(flickcurl* fc,
+    const char* collection_id, const char* user_id);
+</pre>
+
+<p>Added functions for generating <code>flic.kr</code> short URIs
+from a photo object or photo ID:</p>
+<pre>
+  char* flickcurl_photo_id_as_short_uri(char *photo_id);
+
+  char* flickcurl_photo_as_short_uri(flickcurl_photo *photo);
+</pre>
+
+<p>Fixed <code>flickcurl_invoke_common()</code> to always set / reset
+HTTP headers list to allows requests that set/don't set headers to
+work in sequence when called with the same flickcurl context.  The
+symptom of this was in long sequences with mixed reads and writes,
+crashes or mysterious failures happened.  Bug reported / found by
+Henning Spruth - thanks!
+</p>
+
+<p>Added continent type to allow
+<code>flickcurl_get_place_type_label()</code> and
+<code>flickcurl_get_place_type_by_label()</code> to use.  This allows
+'continent' to be used in place APIs when called from
+<code>flickcurl(1)</code> utility.
+</p>
+
+<p>Retrieve the place name from the <code>&lt;place&gt;</code>
+element content as well as from attribute value.  In the Flickr API,
+there is always more than one way to get a field <code>;)</code>
+</p>
+
+<p>Switched from Subversion to GIT source control hosted by 
+<a href="http://github.com/">GitHub</a>.
+The
+<a href="http://github.com/dajobe/flickcurl/tree/master">GitHub flickcurl project page</a>.
+previously was in Subversion at
+<a href="http://svn.dajobe.org/view/">svn.dajobe.org</a>
+and it moved as of SVN r1021 on 2006-06-02 after the 1.11 release tagged 
+<code>flickcurl_1_11</code>.
+</p>
+
+<p>Update SHAVE from master GIT 2134bb1207e06d1650918a56f6b142e9a840219d
+</p>
+
+<p>Added <code>flickcurl(1)</code> utility support for new API calls,
+allow WOEID args to be "-" to omitted and to add a
+<code>shorturi</code> command to generate <code>flic.kr</code> short
+URIs from a photo ID.
+</p>
+
 
 <h2 id="D2009-05-26">2009-05-26 Flickcurl 1.11</h2>
 
