@@ -312,6 +312,9 @@ flickcurl_free(flickcurl *fc)
   if(fc->replace_service_uri)
     free(fc->replace_service_uri);
 
+  if(fc->user_agent)
+    free(fc->user_agent);
+
   free(fc);
 }
 
