@@ -17,6 +17,7 @@ flickcurl_new
 flickcurl_free
 flickcurl_get_api_key
 flickcurl_get_auth_token
+flickcurl_get_current_request_wait
 flickcurl_get_extras_format_info
 flickcurl_get_feed_format_info
 flickcurl_set_api_key

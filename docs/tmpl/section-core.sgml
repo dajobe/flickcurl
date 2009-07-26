@@ -81,6 +81,15 @@ Core library functions
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_get_current_request_wait ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_get_extras_format_info ##### -->
 <para>
 
