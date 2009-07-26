@@ -1085,6 +1085,67 @@ flickcurl_curl_header_callback(void* ptr,  size_t  size, size_t nmemb,
 }
 
 
+/**
+ * flickcurl_get_current_request_wait:
+ * @fc: flickcurl object
+ *
+ * Get current wait that would be applied for a web service request called now
+ *
+ * Returns the wait time that would be applied in order to delay a
+ * web service request such that the web service rate limit is met.
+ *
+ * See flickcurl_set_request_delay() which by default is set to 1000ms.
+ * 
+ * Return value: delay in usecs or < 0 if delay is more than 247 seconds ('infinity')
+ */
+int
+flickcurl_get_current_request_wait(flickcurl *fc)
+{
+#ifdef OFFLINE
+  return 0;
+#else
+  int wait_usec = 0;
+  struct timeval now;
+  struct timeval uwait;
+  
+  /* If there was no previous request, return 0 */
+  if(!fc->last_request_time.tv_sec)
+    return 0;
+  
+  gettimeofday(&now, NULL);
+
+  memcpy(&uwait, &fc->last_request_time, sizeof(struct timeval));
+
+  /* Calculate in micro-seconds */
+  uwait.tv_usec += 1000 * fc->request_delay;
+  if(uwait.tv_usec >= 1000000) {
+    uwait.tv_sec+= uwait.tv_usec / 1000000;
+    uwait.tv_usec= uwait.tv_usec % 1000000;
+  }
+
+  if(now.tv_sec > uwait.tv_sec ||
+     (now.tv_sec == uwait.tv_sec && now.tv_usec > uwait.tv_usec)) {
+    wait_usec = 0; /* No need to delay */
+  } else {
+    /* Calculate wait in usec-seconds */
+    uwait.tv_sec = (uwait.tv_sec - now.tv_sec);
+    uwait.tv_usec = (uwait.tv_usec - now.tv_usec);
+    if(uwait.tv_usec < 0) {
+      uwait.tv_sec--;
+      uwait.tv_usec += 1000000;
+    }
+
+    if(uwait.tv_sec > 247)
+      wait_usec = -1; /* 'infinity' */
+    else
+      wait_usec = uwait.tv_sec * 1000000 + uwait.tv_usec;
+  }
+
+  return wait_usec;
+#endif
+}
+
+
 static int
 flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
                         xmlDocPtr* docptr_p)
@@ -1150,7 +1211,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 
     memcpy(&uwait, &fc->last_request_time, sizeof(struct timeval));
 
-#ifdef FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG > 1
     fprintf(stderr, "Previous request was at %lu.N%lu\n",
             (unsigned long)uwait.tv_sec, (unsigned long)1000*uwait.tv_usec);
 #endif
@@ -1162,7 +1223,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
       uwait.tv_usec= uwait.tv_usec % 1000000;
     }
 
-#ifdef FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG > 1
     fprintf(stderr, "Next request is no earlier than %lu.N%lu\n",
             (unsigned long)uwait.tv_sec, (unsigned long)1000*uwait.tv_usec);
     fprintf(stderr, "Now is %lu.N%lu\n",
@@ -1183,7 +1244,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
       }
       
       /* Wait until timeval 'wait' happens */
-#ifdef FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG > 1
       fprintf(stderr, "Waiting for %lu sec N%lu nsec period\n",
               (unsigned long)nwait.tv_sec, (unsigned long)nwait.tv_nsec);
 #endif
@@ -1191,7 +1252,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
         struct timespec rem;
         if(nanosleep(&nwait, &rem) < 0 && errno == EINTR) {
           memcpy(&nwait, &rem, sizeof(struct timeval));
-#ifdef FLICKCURL_DEBUG
+#ifdef FLICKCURL_DEBUG > 1
           fprintf(stderr, "EINTR - waiting for %lu sec N%lu nsec period\n",
                   (unsigned long)nwait.tv_sec, (unsigned long)nwait.tv_nsec);
 #endif

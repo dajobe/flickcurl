@@ -1501,6 +1501,8 @@ FLICKCURL_API
 void flickcurl_set_write(flickcurl *fc, int is_write);
 FLICKCURL_API
 void flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc);
+FLICKCURL_API
+int flickcurl_get_current_request_wait(flickcurl *fc);
 
 /* flickcurl* object set methods */
 FLICKCURL_API
