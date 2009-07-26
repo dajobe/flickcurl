@@ -267,7 +267,8 @@ struct flickcurl_s {
   char* upload_field;
   char* upload_value;
   
-  char uri[2048];
+  /* uri buffer for internal use of size @uri_len */
+  char* uri;
 
   CURL* curl_handle;
   char error_buffer[CURL_ERROR_SIZE];
@@ -352,6 +353,8 @@ struct flickcurl_s {
 
   /* Replace Web Service URI that is called */
   char *replace_service_uri;
+
+  unsigned int uri_len;
 };
 
 struct flickcurl_serializer_s

@@ -315,6 +315,9 @@ flickcurl_free(flickcurl *fc)
   if(fc->user_agent)
     free(fc->user_agent);
 
+  if(fc->uri)
+    free(fc->uri);
+
   free(fc);
 }
 
@@ -684,7 +687,8 @@ flickcurl_prepare_common(flickcurl *fc,
   int i;
   char *md5_string=NULL;
   size_t* values_len=NULL;
-
+  unsigned int fc_uri_len = 0;
+  
   if(!url || !parameters)
     return 1;
   
@@ -768,6 +772,8 @@ flickcurl_prepare_common(flickcurl *fc,
   if((need_auth && fc->auth_token) || fc->sign)
     flickcurl_sort_args(fc, parameters, count);
 
+  fc_uri_len = strlen(url);
+  
   /* Save away the parameters and calculate the value lengths */
   for(i=0; parameters[i][0]; i++) {
     size_t param_len=strlen(parameters[i][0]);
@@ -782,6 +788,9 @@ flickcurl_prepare_common(flickcurl *fc,
     strcpy(fc->param_fields[i], parameters[i][0]);
     fc->param_values[i]=(char*)malloc(values_len[i]+1);
     strcpy(fc->param_values[i], parameters[i][1]);
+
+    /* 3x value len is conservative URI %XX escaping on every char */
+    fc_uri_len += param_len + 1 /* = */ + 3 * values_len[i];
   }
 
   if(upload_field) {
@@ -822,6 +831,8 @@ flickcurl_prepare_common(flickcurl *fc,
     fc->param_values[count]=(char*)malloc(32+1); /* 32=MD5 */
     strcpy(fc->param_values[count], parameters[count][1]);
 
+    fc_uri_len += 7 /* "api_sig" */ + 1 /* = */ + 32 /* MD5 value: never escaped */;
+
     count++;
     
 #ifdef FLICKCURL_DEBUG
@@ -833,6 +844,15 @@ flickcurl_prepare_common(flickcurl *fc,
     parameters[count][0] = NULL;
   }
 
+  /* add &s between parameters */
+  fc_uri_len += count-1;
+
+  /* reuse or grow uri buffer */
+  if(fc->uri_len < fc_uri_len) {
+    free(fc->uri);
+    fc->uri = (char*)malloc(fc_uri_len+1);
+    fc->uri_len = fc_uri_len;
+  }
   strcpy(fc->uri, url);
 
   if(parameters_in_url) {
@@ -864,6 +884,9 @@ flickcurl_prepare_common(flickcurl *fc,
 
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "URI is '%s'\n", fc->uri);
+
+  FLICKCURL_ASSERT((strlen(fc->uri) == fc_uri_len),
+                   "Final URI does not match expected length");
 #endif
 
   if(md5_string)
