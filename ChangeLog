@@ -1,5 +1,14 @@
 2009-07-26  Dave Beckett <dave@dajobe.org>
 
+	* src/common.c, src/flickcurl.h:
+	Added call to get current web service request delay time.
+
+	(flickcurl_get_current_request_wait): Added.  Allows applications
+	to know when the library will delay - sleep - in order to let the
+	web service rate limiting work.  This allows the application to
+	come back later if it desires rather than have Flickcurl freeze
+	the entire application.
+
 	* src/common.c, src/flickcurl_internal.h:
 	Use a dynamic buffer size for request URI construction
 
