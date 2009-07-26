@@ -1,3 +1,36 @@
+2009-07-26  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c, src/flickcurl_internal.h:
+	Use a dynamic buffer size for request URI construction
+
+	Flickcurl crashed when dealing with requests e.g photo IDs that
+	exceeded the "big enough" buffer for a URI.  Need to move to a
+	dynamic model.  Bug noticed and reported by Henning Spruth -
+	thanks!
+
+	flickcurl_s structure moves uri to a char* not fixed buffer and
+	adds a uri_len field to record length of allocated buffer.
+
+	(flickcurl_prepare_common): Calculate length needed and create a
+	new url buffer if current one is too small.
+
+2009-07-09  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_free): Free any allocated user_agent.  Resource leak
+	found by Debarshi Ray - Thanks.
+
+2009-07-09  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac:
+	Bump version to 1.13
+
+2009-07-04  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 1.12
+
+	* 1.12
+
 2009-07-01  Dave Beckett <dave@dajobe.org>
 
 	* coverage.html:
@@ -138,36 +171,35 @@
 
 2009-06-10  Dave Beckett <dave@dajobe.org>
 
-        * utils/flickcurl.c:
-        (command_print_photo): Print less and indent fields.  Update calls
+	* utils/flickcurl.c:
+	(command_print_photo): Print less and indent fields.  Update calls
 	to above to reduce duplication and newlines.
 
 2009-06-10  Dave Beckett <dave@dajobe.org>
 
-        * utils/flickcurl.c:
-        (command_print_collection): Print nicer optional description
+	* utils/flickcurl.c:
+	(command_print_collection): Print nicer optional description
 
 2009-06-10  Dave Beckett <dave@dajobe.org>
 
-        * utils/flickcurl.c:
-        (command_collections_getTree): Print photos inside
+	* utils/flickcurl.c:
+	(command_collections_getTree): Print photos inside
 
 2009-06-10  Dave Beckett <dave@dajobe.org>
 
-        * src/collection.c:
-        collection_fields_table - match iconphotos/photo
-        elements
+	* src/collection.c:
+	collection_fields_table - match iconphotos / photo elements
 
 2009-06-10  Dave Beckett <dave@dajobe.org>
 
-        * utils/flickcurl.c:
-        (command_print_collection): Do not flickcurl_free_photos
+	* utils/flickcurl.c:
+	(command_print_collection): Do not flickcurl_free_photos
 
 2009-06-10  Dave Beckett <dave@dajobe.org>
 
-        * src/collection.c:
-        (flickcurl_build_collections): Build icon photos using
-        flickcurl_build_photos
+	* src/collection.c:
+	(flickcurl_build_collections): Build icon photos using
+	flickcurl_build_photos
 
 2009-06-05  Dave Beckett <dave@dajobe.org>
 
