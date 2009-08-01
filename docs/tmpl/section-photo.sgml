@@ -102,6 +102,15 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_source_uri_as_photo_id ##### -->
+<para>
+
+</para>
+
+@uri: 
+@Returns: 
+
+
 <!-- ##### STRUCT flickcurl_photo_field ##### -->
 <para>
 

@@ -209,6 +209,7 @@ flickcurl_photo_as_short_uri
 flickcurl_photo_as_source_uri
 flickcurl_photo_as_user_icon_uri
 flickcurl_photo_id_as_short_uri
+flickcurl_source_uri_as_photo_id
 flickcurl_photo_field
 flickcurl_photo_field_type
 flickcurl_field_value_type
