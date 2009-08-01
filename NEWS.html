@@ -12,9 +12,42 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2009-XX-YY">2009-XX-YY Flickcurl 1.13</h2>
+<h2 id="D2009-08-01">2009-08-01 Flickcurl 1.13</h2>
 
-<p>Not yet released.
+<p>Added function
+<code>flickcurl_source_uri_as_photo_id()</code> to get photo IDs from
+full raw 'farm' image URLs.  Added command <code>getphotoid</code>
+to the command-line utility to allow this to be called.
+</p>
+<pre>
+  char* flickcurl_source_uri_as_photo_id(const char *uri);
+</pre>
+
+<p>Added function
+<code>flickcurl_get_current_request_wait()</code> so applications can
+know when flickcurl will delay - sleep(2) - in order to let the web
+service rate limiting work.  This allows the application to avoid
+this and try again later if it desires, rather than have Flickcurl
+freeze the entire application (if single threaded).
+</p>
+<pre>
+  int flickcurl_get_current_request_wait(flickcurl *fc);
+</pre>
+
+<p>Use a dynamic buffer size for request URI construction to avoid
+crashing when dealing with requests e.g photo IDs that exceeded the
+"big enough" buffer for a URI.  Bug noticed and reported by Henning
+Spruth - thanks!
+</p>
+
+<p>After the above problem, reviewed the other fixed buffer sizes in
+the code and they are all for known fixed uses such as formatting a
+decimal number (of known size) into a string.  None of the remaining
+ones can be influenced by data passed by API calls.
+</p>
+
+<p>Fixed resource leak of user agent string in
+<code>flickcurl_free()</code> found by Debarshi Ray - Thanks.
 </p>
 
 
