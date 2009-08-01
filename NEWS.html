@@ -35,9 +35,9 @@ freeze the entire application (if single threaded).
 </pre>
 
 <p>Use a dynamic buffer size for request URI construction to avoid
-crashing when dealing with requests e.g photo IDs that exceeded the
-"big enough" buffer for a URI.  Bug noticed and reported by Henning
-Spruth - thanks!
+crashing when dealing with requests with e.g. long lists of of photo
+IDs that exceeded the "big enough" buffer for a URI.  Bug noticed and
+reported by Henning Spruth - thanks!
 </p>
 
 <p>After the above problem, reviewed the other fixed buffer sizes in
