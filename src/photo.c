@@ -309,6 +309,74 @@ flickcurl_photo_as_short_uri(flickcurl_photo *photo)
 }
 
 
+#define SOURCE_URI_MATCH1_LENGTH 11
+static const char const source_uri_match1[SOURCE_URI_MATCH1_LENGTH+1]="http://farm";
+#define SOURCE_URI_MATCH2_LENGTH 19
+static const char const source_uri_match2[SOURCE_URI_MATCH2_LENGTH+1]=".static.flickr.com/";
+
+/**
+ * flickcurl_source_uri_as_photo_id:
+ * @uri: source uri
+ *
+ * Get a photo ID from an image source URI
+ *
+ * Turns an URL that points to the photo into a photo ID.
+ * i.e. given an URI like these:
+ * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{o-secret}_o.(jpg|gif|png)</code> or
+ * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}_[mstb].jpg</code>
+ * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}.jpg</code>
+ * returns the {photo-id}
+ *
+ * Return value: new photo ID string or NULL on failure
+ */
+char*
+flickcurl_source_uri_as_photo_id(const char *uri)
+{
+  const char* p = uri;
+  const char* q = NULL;
+  char *photo_id = NULL;
+  size_t len = 0;
+  
+  if(!p)
+    return NULL;
+
+  if(memcmp(p, source_uri_match1, SOURCE_URI_MATCH1_LENGTH))
+    return NULL;
+  p+= SOURCE_URI_MATCH1_LENGTH;
+
+  /* now at {farm-id}.static... */
+  while(isdigit(*p))
+    p++;
+
+  if(memcmp(p, source_uri_match2, SOURCE_URI_MATCH2_LENGTH))
+    return NULL;
+  p+= SOURCE_URI_MATCH2_LENGTH;
+
+  /* now at {server-id}/{photo_id}_... */
+  while(isdigit(*p))
+    p++;
+  if(*p++ != '/')
+    return NULL;
+
+  /* now at {photo_id}_... */
+  q = p;
+  while(isdigit(*q))
+    q++;
+  if(*q != '_')
+    return NULL;
+
+  len = q-p;
+  photo_id = (char*)malloc(len+1);
+  if(!photo_id)
+    return NULL;
+  
+  memcpy(photo_id, p, len);
+  photo_id[len] = '\0';
+
+  return photo_id;
+}
+
+
 /**
  * flickcurl_user_icon_uri:
  * @farm: user icon farm

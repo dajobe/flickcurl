@@ -3944,6 +3944,27 @@ command_places_getTopPlacesList(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_source_uri_to_photoid(flickcurl* fc, int argc, char *argv[])
+{
+  char *uri = argv[1];
+  char *photo_id;
+
+  photo_id = flickcurl_source_uri_as_photo_id(uri);
+  if(!photo_id) {
+    fprintf(stderr, "%s: Failed to get photo ID for source URI %s\n",
+            program, uri);
+    return 1;
+  }
+
+  fprintf(stderr, "%s: Photo ID for source URI %s is %s\n",
+          program, uri, photo_id);
+  free(photo_id);
+
+  return 0;
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4415,6 +4436,10 @@ static flickcurl_cmd commands[] = {
   {"shorturi",
    "PHOTO-ID", "Get the http://flic.kr short uri for PHOTO-ID", 
    command_short_uri,  1, 1},
+
+  {"getphotoid",
+   "IMAGE-URL", "Get the photo id from a raw flickr farm IMAGE-URL", 
+   command_source_uri_to_photoid,  1, 1},
 
   {NULL, 
    NULL, NULL,
