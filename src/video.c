@@ -81,8 +81,13 @@ flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count=xmlXPathNodeSetGetLength(nodes);
   
-  v=(flickcurl_video*)calloc(sizeof(flickcurl_video), 1);
+  if( ! v=(flickcurl_video*)calloc(1, sizeof(flickcurl_video)) ) {
+    flickcurl_error(fc, "Unable to allocate the memory needed for video.");
+    fc->failed=1;
+    goto tidy;
+  }
 
+  
 
   for(i=0; i < nodes_count; i++) {
     xmlNodePtr node=nodes->nodeTab[i];
@@ -122,13 +127,14 @@ flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!count) {
     flickcurl_free_video(v);
     v=NULL;
-  } else {
+  } 
 #if FLICKCURL_DEBUG > 1
+else {
     fprintf(stderr, "video: ready %d  failed %d  pending %d  duration %d  width %d  height %d\n",
             v->ready, v->failed, v->pending, v->duration,
             v->width, v->height);
-#endif
   }
+#endif
   
  tidy:
   if(xpathObj)
