@@ -1212,7 +1212,7 @@ typedef struct {
  * @machine_tags: Machine tag search syntax 
  * @machine_tag_mode: Either 'any' for an OR combination of tags, or 'all' for an AND combination. Defaults to 'any' if not specified.
  * @group_id: The id of a group who's pool to search.  If specified, only matching photos posted to the group's pool will be returned. (or NULL)
- * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>, <code>o_dims</code>, <code>views</code>, <code>media</code>. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>, <code>o_dims</code>, <code>views</code>, <code>media</code>, <code>path_alias</code>, <code>url_sq</code>, <code>url_t</code>, <code>url_s</code>, <code>url_m</code>, <code>url_o</code>. (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
  * @place_id: A Flickr place id. (only used if bbox argument isn't present). Experimental.  Geo queries require some sort of limiting agent in order to prevent the database from crying. This is basically like the check against "parameterless searches" for queries without a geo component.   A tag, for instance, is considered a limiting agent as are user defined min_date_taken and min_date_upload parameters - If no limiting factor is passed we return only photos added in the last 12 hours (though we may extend the limit in the future) (or NULL)
@@ -1224,6 +1224,8 @@ typedef struct {
  * @radius_units: The unit of measure when doing radial geo queries. Valid options are "mi" (miles) and "km" (kilometers). The default is "km" (or NULL)
  * @contacts: (Experimental) Requires @user_id field be set and limits queries to photos beloing to that user's photos.  Valid arguments are 'all' or 'ff' for just friends and family.
  * @woe_id: A 32-bit identifier that uniquely represents spatial entities. (not used if bbox argument is present).  Same restrictions as @place_id (or <0)
+ * @geo_context: A numeric value representing the photo's geotagginess beyond latitude and longitude. The current list of context IDs is 0: not defined, 1: indoors and 2: outdoors.  Geo queries require some sort of limiting agent in order to prevent the database from crying (or < 0)
+ * @is_commons: Limit the scope of the search to only photos that are part of the Flickr Commons project. Default is false (0)
  *
  * Search parameters for flickcurl_photos_search()
  */
@@ -1258,6 +1260,8 @@ typedef struct {
   char* radius_units;
   char* contacts;
   int woe_id;
+  int geo_context;
+  int is_commons;
 } flickcurl_search_params;
   
 
