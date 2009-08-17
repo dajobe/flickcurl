@@ -1647,6 +1647,9 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * Ensure the @params object is propertly initialized to zeros/NULLs
  * or use flickcurl_search_params_init() to initialize this.
  *
+ * Flickcurl 1.14: Added geo_context and is_commons search parameters
+ * to #flickcurl_search_params.  Added more extras to docs.
+ *
  * Flickcurl 1.6: Added @list_params beyond flickcurl_photos_search()
  * to allow returning raw content if @list_params is present and
  * field @format is not NULL as announced 2008-08-25
@@ -1685,7 +1688,7 @@ flickcurl_photos_search_params(flickcurl* fc,
                                flickcurl_search_params* params,
                                flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[37][2];
+  const char* parameters[39][2];
   int count=0;
   flickcurl_photos_list* photos_list=NULL;
   char min_upload_date_s[15];
@@ -1697,6 +1700,7 @@ flickcurl_photos_search_params(flickcurl* fc,
   char lon_s[32];
   char radius_s[32];
   char woe_id_s[32];
+  char geo_context_s[2];
   const char* format=NULL;
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(params, flickcurl_search_params, NULL);
@@ -1797,6 +1801,11 @@ flickcurl_photos_search_params(flickcurl* fc,
     parameters[count][0]  = "has_geo";
     parameters[count++][1]= "1";
   }
+  if(params->geo_context > 0 && params->geo_context < 3) {
+    parameters[count][0]  = "geo_context";
+    sprintf(geo_context_s, "%d", params->geo_context);
+    parameters[count++][1]= geo_context_s;
+  }
   if(params->radius) {
     if(params->lat) {
       sprintf(lat_s, "%f", params->lat);
@@ -1828,6 +1837,10 @@ flickcurl_photos_search_params(flickcurl* fc,
     sprintf(woe_id_s, "%d", params->woe_id);
     parameters[count][0]  = "woe_id";
     parameters[count++][1]= woe_id_s;
+  }
+  if(params->is_commons) {
+    parameters[count][0]  = "is_commons";
+    parameters[count++][1]= "";
   }
 
   /* Photos List parameters */
