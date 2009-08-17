@@ -2184,7 +2184,7 @@ flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
 
 
 
-#define EXTRAS_FORMAT_COUNT 13
+#define EXTRAS_FORMAT_COUNT 19
 static struct {
   const char* name;
   const char* label;
@@ -2201,7 +2201,13 @@ flickcurl_extras_format_info[EXTRAS_FORMAT_COUNT+1]={
   { "o_dims", "Original item dimensions"},
   { "original_format", "Original item secret and format"},
   { "owner_name", "Item owner ID"},
+  { "path_alias", "Alias for owner name??"},
   { "tags", "Item clean tags (safe for HTML, URLs)"},
+  { "url_m", "URL of medium size image"},
+  { "url_o", "URL of original size image"},
+  { "url_s", "URL of small size image"},
+  { "url_sq", "URL of square size image"},
+  { "url_t", "URL of thumbnail size image"},
   { "views", "Number of times item has been viewed"},
   { NULL, NULL }
 };
