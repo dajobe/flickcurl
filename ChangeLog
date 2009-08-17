@@ -1,3 +1,28 @@
+2009-08-17  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac:
+	Bump version to 1.14
+
+2009-08-17  Dave Beckett <dave@dajobe.org>
+
+	* src/photos-api.c:
+	(flickcurl_photos_search_params): Support geo_context and
+	is_comments search params.
+
+2009-08-17  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h:
+	flickcurl_search_params gains geo_context and
+	is_comments search params added to the API at some point
+
+2009-08-17  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	flickcurl_extras_format_info: add new (undocumented?) API
+	'extras': path_alias, url_m, url_o, url_s, url_sq, url_t
+	path_alias is the only one not totally clear; the rest provide
+	URLs of images.
+
 2009-08-01  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_13 for 1.13 release
