@@ -286,7 +286,7 @@ main(int argc, char *argv[])
   list_params.per_page = 10;
   list_params.page = 1;
   list_params.extras = strdup("original_format");
-//  params.user_id = strdup("me");
+  params.user_id = strdup("me");
   params.sort = strdup("interestingness-desc");
   params.tags = strdup(tag);
 
