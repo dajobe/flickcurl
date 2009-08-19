@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * list-photos - List my interesting photos about a TAG
+ * list-photos - List my interesting photos about a tag
  *
  * Copyright (C) 2009, David Beckett http://www.dajobe.org/
  * 
@@ -125,7 +125,7 @@ static struct option long_options[] =
 #endif
 
 
-static const char *title_format_string="list-photos - list interesting photos about a tag %s\n";
+static const char *title_format_string="list-photos - list my interesting photos about a tag %s\n";
 
 static const char* config_filename=".flickcurl.conf";
 static const char* config_section="flickr";
@@ -207,7 +207,7 @@ main(int argc, char *argv[])
     usage=2; /* Title and usage */
 
   if(!help && !argc) {
-    fprintf(stderr, "%s: No tag given\n", program);
+    fprintf(stderr, "%s: No tag given\nTry `%s kitten' or a tag you have used for your photos.\n", program, program);
     usage=1;
     goto usage;
   }
@@ -256,7 +256,7 @@ main(int argc, char *argv[])
 
   if(help) {
     printf(title_format_string, flickcurl_version_string);
-    puts("List Flickr photos.");
+    puts("List my intersting Flickr photos about a tag.");
     printf("Usage: %s [OPTIONS] TAG\n\n", program);
 
     fputs(flickcurl_copyright_string, stdout);
