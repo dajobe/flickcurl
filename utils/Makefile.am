@@ -17,7 +17,7 @@
 
 bin_PROGRAMS = flickcurl flickrdf
 
-EXTRA_PROGRAMS = codegen list-methods
+EXTRA_PROGRAMS = codegen list-methods list-photos
 
 CLEANFILES=$(EXTRA_PROGRAMS)
 
@@ -56,6 +56,12 @@ if GETOPT
 list_methods_SOURCES += getopt.c flickcurl_getopt.h
 endif
 list_methods_LDADD= $(top_builddir)/src/libflickcurl.la
+
+list_photos_SOURCES = list-photos.c
+if GETOPT
+list_photos_SOURCES += getopt.c flickcurl_getopt.h
+endif
+list_photos_LDADD= $(top_builddir)/src/libflickcurl.la
 
 $(top_builddir)/src/libflickcurl.la:
 	cd $(top_builddir)/src && $(MAKE) libflickcurl.la
