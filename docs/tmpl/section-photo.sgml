@@ -860,6 +860,8 @@ Photo.
 @radius_units: 
 @contacts: 
 @woe_id: 
+@geo_context: 
+@is_commons: 
 
 <!-- ##### FUNCTION flickcurl_search_params_init ##### -->
 <para>
