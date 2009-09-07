@@ -65,17 +65,3 @@ search_photos_LDADD= $(top_builddir)/src/libflickcurl.la
 
 $(top_builddir)/src/libflickcurl.la:
 	cd $(top_builddir)/src && $(MAKE) libflickcurl.la
-
-if MAINTAINER_MODE
-check-api: list-methods
-	@last=`ls -1t methods.lst-* |head -1`; \
-	today=`date '+%Y-%m-%d'`; \
-	latest="methods.lst-$$today"; \
-	./list-methods > $$latest; \
-	if cmp $$last $$latest >/dev/null; then \
-	  echo "No change since $$last"; \
-	else \
-	  echo "API changed since $$last"; \
-	  diff -u $$last $$latest; \
-	fi
-endif
