@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * list-photos - List my interesting photos about a tag
+ * search-photos - Search for my interesting photos about a tag
  *
  * Copyright (C) 2009, David Beckett http://www.dajobe.org/
  * 
@@ -17,8 +17,10 @@
  * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
  * 
  *
- * USAGE: list-photos [OPTIONS] TAG
+ * USAGE: search-photos [OPTIONS] TAG
  *
+ * This program is an example of how to use the search API to find
+ * photos with Flickcurl.
  *
  */
 
@@ -125,7 +127,7 @@ static struct option long_options[] =
 #endif
 
 
-static const char *title_format_string="list-photos - list my interesting photos about a tag %s\n";
+static const char *title_format_string="search-photos - search for my interesting photos about a tag %s\n";
 
 static const char* config_filename=".flickcurl.conf";
 static const char* config_section="flickr";
@@ -256,7 +258,7 @@ main(int argc, char *argv[])
 
   if(help) {
     printf(title_format_string, flickcurl_version_string);
-    puts("List my intersting Flickr photos about a tag.");
+    puts("Search for my intersting Flickr photos about a tag.");
     printf("Usage: %s [OPTIONS] TAG\n\n", program);
 
     fputs(flickcurl_copyright_string, stdout);
@@ -268,9 +270,9 @@ main(int argc, char *argv[])
     fputs("\n", stdout);
 
     puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
-    puts(HELP_TEXT("D", "debug           ", "Print lots of output"));
+    puts(HELP_TEXT("D", "debug           ", "Print debug messages"));
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
-    puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
+    puts(HELP_TEXT("v", "version         ", "Print the flickcurl library version"));
 
     rc=0;
     goto tidy;
@@ -280,26 +282,37 @@ main(int argc, char *argv[])
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
   
-  flickcurl_photos_list_params_init(&list_params);
+  /* Initialise the search parameters themselves
+   *  user_id: "me" - Search only photos of the calling user.
+   *  sort: "interestingness-desc" - return results with most interesting first
+   *  tag: TAG - search for photos about the TAG given on the command line
+   */
   flickcurl_search_params_init(&params);
-
-  list_params.per_page = 10;
-  list_params.page = 1;
-  list_params.extras = strdup("original_format");
   params.user_id = strdup("me");
   params.sort = strdup("interestingness-desc");
   params.tags = strdup(tag);
+
+  /* Initialise the search result (list) parameters:
+   *   per_page: 10 - ten results per-page
+   *   page: 1 - return 1 page
+   *   extras: "original_format" - want the returned photos to have the
+   *      original secret and format fields.
+   */
+  flickcurl_photos_list_params_init(&list_params);
+  list_params.per_page = 10;
+  list_params.page = 1;
+  list_params.extras = strdup("original_format");
 
   photos_list = flickcurl_photos_search_params(fc, &params, &list_params);
   if(!photos_list)
     goto tidy;
 
   if(debug)
-    fprintf(stderr, "%s: Returned %d photos\n", 
+    fprintf(stderr, "%s: Search returned %d photos\n", 
             program, photos_list->photos_count);
 
   for(i = 0; i < photos_list->photos_count; ++i) {
-    fprintf(stdout, "Photo #%d ", i);
+    fprintf(stdout, "Result #%d ", i);
     if(photos_list->photos[i]) { 
       char* uri = flickcurl_photo_as_source_uri(photos_list->photos[i], 'o');
       fprintf(stdout, "uri: %s\n", uri);
