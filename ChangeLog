@@ -1,3 +1,23 @@
+2009-08-26  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-photo.sgml:
+	Add generated docs for new search param fields
+
+2009-08-18  Dave Beckett <dave@dajobe.org>
+
+	* utils/list-photos.c:
+	usage
+
+2009-08-18  Dave Beckett <dave@dajobe.org>
+
+	* utils/list-photos.c:
+	photos for me (the user) only
+
+2009-08-18  Dave Beckett <dave@dajobe.org>
+
+	* utils/Makefile.am, utils/list-photos.c:
+	Add list-photos
+
 2009-08-17  Dave Beckett <dave@dajobe.org>
 
 	* NEWS.html, configure.ac:
