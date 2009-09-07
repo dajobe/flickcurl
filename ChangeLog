@@ -1,4 +1,35 @@
-2009-08-26  Dave Beckett <dave@dajobe.org>
+2009-09-06  Dave Beckett <dave@dajobe.org>
+
+	* src/video.c:
+	code style
+
+2009-09-06  Huge <mr.huge@seznam.cz>
+
+	* src/video.c:
+	Some small cleanup, but still don't like that goto;)
+	And consult the conversion in >> v=(flickcurl_video*)calloc(1,
+	sizeof(flickcurl_video)); << with bottom lines of this:
+	http://en.wikipedia.org/wiki/Malloc#Usage_example
+
+	Signed-off-by: Dave Beckett <dave@dajobe.org>
+	Original commit was 2009-08-04
+
+2009-09-06  Dave Beckett <dave@dajobe.org>
+
+	* utils/Makefile.am:
+	Remove list-methods rule for maintainer
+
+	* utils/search-photos.c:
+	Make this search API example code.  Rename list-photos to
+	search-photos throughout and adjust user messages.  Add more
+	comments about parameter uses.
+
+	* utils/.gitignore, utils/Makefile.am, utils/list-photos.c,
+	utils/search-photos.c:
+	Rename list-photos to search-photos
+
+	* utils/.gitignore:
+	Add list-photos to ignore
 
 	* docs/tmpl/section-photo.sgml:
 	Add generated docs for new search param fields
