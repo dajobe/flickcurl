@@ -81,7 +81,8 @@ flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count=xmlXPathNodeSetGetLength(nodes);
   
-  if( ! v=(flickcurl_video*)calloc(1, sizeof(flickcurl_video)) ) {
+  v = (flickcurl_video*)calloc(1, sizeof(flickcurl_video));
+  if(!v) {
     flickcurl_error(fc, "Unable to allocate the memory needed for video.");
     fc->failed=1;
     goto tidy;
