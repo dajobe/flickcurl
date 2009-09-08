@@ -4577,7 +4577,7 @@ main(int argc, char *argv[])
             fclose(fh);
             read_auth=0;
             fprintf(stdout, 
-                  "%s: Updated configuration file %s with authentication token",
+                  "%s: Updated configuration file %s with authentication token\n",
                     program, config_path);
             rc=0;
           }
