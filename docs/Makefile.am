@@ -1,7 +1,7 @@
 #
-# Makefile.am
+# Makefile.am - makefile for documentation
 #
-# Copyright (C) 2008, David Beckett http://www.dajobe.org/
+# Copyright (C) 2008-2009, David Beckett http://www.dajobe.org/
 # 
 # This file is licensed under the following three licenses as alternatives:
 #   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -74,7 +74,7 @@ if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
 	( cd $(top_builddir)/utils && $(MAKE) flickcurl ) && \
 	sed -ne '1,/SH COMMANDS/p' $(srcdir)/flickcurl.1.in > flickcurl.1.head && \
-	$(top_builddir)/utils/flickcurl -m > flickcurl.1.body && \
+	$(top_builddir)/utils/flickcurl -m0 > flickcurl.1.body && \
 	sed -ne '/SH SEE ALSO/,$$p' $(srcdir)/flickcurl.1.in > flickcurl.1.tail && \
 	cat flickcurl.1.head flickcurl.1.body flickcurl.1.tail > flickcurl.1 && \
 	rm -f flickcurl.1.head flickcurl.1.body flickcurl.1.tail

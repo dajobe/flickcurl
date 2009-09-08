@@ -1,7 +1,7 @@
 #
-# Makefile.am
+# Makefile.am - makefile for utilities
 #
-# Copyright (C) 2008, David Beckett http://www.dajobe.org/
+# Copyright (C) 2008-2009, David Beckett http://www.dajobe.org/
 # 
 # This file is licensed under the following three licenses as alternatives:
 #   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -29,7 +29,7 @@ flickcurl_SOURCES += getopt.c flickcurl_getopt.h
 endif
 flickcurl_CFLAGS=
 if MAINTAINER_MODE
-flickcurl_CFLAGS += -DFLICKCURL_MANPAGE
+flickcurl_CFLAGS += -DFLICKCURL_MAINTAINER
 endif
 flickcurl_LDADD= $(top_builddir)/src/libflickcurl.la
 
