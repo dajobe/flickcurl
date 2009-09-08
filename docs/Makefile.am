@@ -71,8 +71,6 @@ flickcurl.1.in \
 version.xml.in \
 flickcurl-extras.xml
 
-DISTCLEANFILES = flickcurl-extras.xml
-
 if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
 	( cd $(top_builddir)/utils && $(MAKE) flickcurl ) && \
