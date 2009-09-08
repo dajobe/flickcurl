@@ -1,3 +1,37 @@
+2009-09-08  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c:
+	Add newline to msg
+
+	* docs/flickcurl-authenticate.xml:
+	Update flickr website auth sequence
+
+2009-09-07  Dave Beckett <dave@dajobe.org>
+
+	* docs/Makefile.am:
+	Do not erase flickcurl-extras.xml after building it for dist.
+
+	* .gitignore: Ignore tarballs
+
+	* docs/.gitignore, docs/Makefile.am:
+	Generate flickcurl-extras.xml via ../utils/flickcurl -m1
+
+	* docs/.gitignore: Ignore xml dir here
+
+	* docs/Makefile.am, utils/Makefile.am, utils/flickcurl.c:
+	Adjust flickcurl utility -m maintainer option to generate
+	extras too The -m option now takes an int arg: 0 for the manpage
+	fragment and 1 for the docbook extras enumeration fragment - not
+	currently used.  This option remains only built when compiling
+	for maintainer mode.
+
+	* .gitignore, src/common.c:
+	Switch captured web service response dir to 'captured'
+
+	* .gitignore: Do not ignore xml/ in all dirs
+
+	* docs/flickcurl-docs.xml: Make this newer legal docbook
+
 2009-09-06  Dave Beckett <dave@dajobe.org>
 
 	* src/video.c:
