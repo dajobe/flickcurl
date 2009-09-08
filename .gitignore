@@ -12,6 +12,7 @@ config.cache
 config.log
 config.status
 configure
+flickcurl-*tar.gz
 flickcurl-config
 flickcurl.pc
 flickcurl.png
