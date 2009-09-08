@@ -14,10 +14,20 @@
 </programlisting>
 
 <para>
+Add the utils directory to your shell search path:
+</para>
+<programlisting>
+  $ PATH=`pwd`/utils:$PATH
+on bourne shells such as Bash or
+  $ setenv PATH `pwd`/utils:$PATH
+on c shells such as tcsh
+</programlisting>
+
+<para>
 You should get an error if you now try the utility:
 </para>
 <programlisting>
-  $ utils/flickcurl photos.getInfo 1234567
+  $ flickcurl photos.getInfo 1234567
   flickcurl: ERROR: No shared secret
   flickcurl: Command photos.getInfo failed
 </programlisting>
@@ -40,29 +50,25 @@ are obtained.
 <para>
 Go to
 <ulink url="http://www.flickr.com/services/api/keys/">http://www.flickr.com/services/api/keys/</ulink>
-and click on 'Apply for a new key online now'
+and click on either of the blue buttons:
+'Apply for a Non-Commercial Key' or 'Apply for a Commercial Key'
 </para>
 
 <para>
-Fill in the form and click Apply.  Flickr will give you a new key
-that looks something like:
+Fill in the form and click 'Submit Application'.  Flickr will give you
+a new <emphasis>API Key</emphasis> that looks something like:
 </para>
 <programlisting>
    0123456789abcdef0123456789abcdef
 </programlisting>
-<para>
-which is the <emphasis>API Key</emphasis>
-</para>
-
-<para>Then authenticate it to get the <emphasis>Shared
-Secret</emphasis> which looks something like:</para>
+<para>and <emphasis>Secret</emphasis> which looks something like:</para>
 <programlisting>
    fedcba9876543210
 </programlisting>
 
 <para>
-You need to choose the authentication type.  Here the type 'mobile'
-is recommended since no callback URL is usually appropriate for a
+You now need to change the key to be of type mobile with 'Edit key details'
+since no callback URL is usually appropriate for a
 command-line application or library.  Set the permissions to 'read',
 'write' or 'delete' as appropriate.
 </para>
@@ -74,6 +80,7 @@ and an <emphasis>authentication URL</emphasis> that looks like:
 <programlisting>
    Mobile (http://www.flickr.com/auth-11111111111111111 Read)
 </programlisting>
+
 
 </section>
 
@@ -102,12 +109,20 @@ secret=fedcba9876543210
 <programlisting>
   "[APP NAME] wants to link to your Flickr account"
 </programlisting>
-<para>with more information and a big blue button that reads:</para>
+<para>with more information and two blue buttons.  Locate the one
+below the text:</para>
 <programlisting>
-  [OK, I'll ALLOW IT]
+ If you arrived at this page because you specifically asked  to connect
+ to your Flickr account, click here:
+
+  [NEXT]
 </programlisting>
 
-<para>Click that button.</para>
+<para>Click that button and on the next page click the blue button
+</para>
+<programlisting>
+  [OK, I'LL AUTHORIZE IT]
+</programlisting>
 
 <para>Flickr will return on the next page a
 9-digit <emphasis>FROB</emphasis> that looks like this:</para>
@@ -119,14 +134,14 @@ secret=fedcba9876543210
 Switch back to the command line and run the flickcurl utility with that FROB:
 </para>
 <programlisting>
-$ utils/flickcurl -a 123-456-789
+$ flickcurl -a 123-456-789
 </programlisting>
 
 <para>and the result will be that an
 <emphasis>Authentication Token</emphasis> (auth token) is calculated
 and returned.</para>
 
-<para>The utils/flickcurl utility will automatically update the
+<para>The flickcurl utility will automatically update the
 <code>~/.flickcurl.conf</code> configuration file with
 the <code>auth_token</code> field to give something like:</para>
 
@@ -150,7 +165,7 @@ completed, the library and utility will work.
 </para>
 
 <programlisting>
-  $ utils/flickcurl photos.getInfo 1234567
+  $ flickcurl photos.getInfo 1234567
   flickcurl: Found photo with URI http://www.flickr.com/photos/yogi/1234567/ ID 1234567 and 1 tags
   ...
 </programlisting>
