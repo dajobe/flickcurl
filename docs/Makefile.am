@@ -68,7 +68,10 @@ include $(top_srcdir)/gtk-doc.make
 EXTRA_DIST+= \
 $(man_MANS) \
 flickcurl.1.in \
-version.xml.in
+version.xml.in \
+flickcurl-extras.xml
+
+DISTCLEANFILES = flickcurl-extras.xml
 
 if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
@@ -78,4 +81,8 @@ flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
 	sed -ne '/SH SEE ALSO/,$$p' $(srcdir)/flickcurl.1.in > flickcurl.1.tail && \
 	cat flickcurl.1.head flickcurl.1.body flickcurl.1.tail > flickcurl.1 && \
 	rm -f flickcurl.1.head flickcurl.1.body flickcurl.1.tail
+
+flickcurl-extras.xml: $(top_srcdir)/utils/flickcurl.c
+	( cd $(top_builddir)/utils && $(MAKE) flickcurl ) && \
+	$(top_builddir)/utils/flickcurl -m1 > flickcurl-extras.xml
 endif
