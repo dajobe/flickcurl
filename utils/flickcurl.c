@@ -4510,7 +4510,7 @@ main(int argc, char *argv[])
 "api_key=<API Key>\n"
 "secret=<Shared Secret>\n"
 "\n"
-"3. Visit the <Auhentication URL> in a browser to get a <FROB>\n"
+"3. Visit the <Authentication URL> in a browser to get a <FROB>\n"
 "\n"
 "4. Call this program with the frob:\n"
 "  %s -a <FROB>\n"
