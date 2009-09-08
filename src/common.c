@@ -1162,9 +1162,9 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 
   if(1) {
     if(fc->method)
-      sprintf(filename, "xml/%s.xml", fc->method+7); /* skip "flickr." */
+      sprintf(filename, "captured/%s.xml", fc->method+7); /* skip "flickr." */
     else
-      sprintf(filename, "xml/upload.xml");
+      sprintf(filename, "captured/upload.xml");
   }
 #endif
 
