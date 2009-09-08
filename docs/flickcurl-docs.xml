@@ -48,15 +48,16 @@
    <chapter id="introduction">
     <title>Flickcurl Overview</title>
     <para>
-<ulink url="http://librdf.org/flickcurl/">Flickcurl</ulink> is a
-C library for the Flickr web service API.
+      <ulink url="http://librdf.org/flickcurl/">Flickcurl</ulink> is a
+      C library for the Flickr web service API.
+    </para>
+
+    <para>
+      For the latest information, see the
+      <ulink url="http://librdf.org/flickcurl/">Flickcurl Home Page</ulink>.
     </para>
 
   </chapter>
-
-      <para>For the latest information, see the
-      <ulink url="http://librdf.org/flickcurl/">Flickcurl Home Page</ulink>.
-      </para>
 
     <xi:include href="xml/section-core.xml"/>
 
@@ -96,7 +97,7 @@ C library for the Flickr web service API.
 
     <!-- <xi:include href="xml/section-unused.xml"/> -->
 
-  <index>
+  <index id="indexes">
     <title>Index</title>
   </index>
 </book>
