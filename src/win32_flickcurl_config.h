@@ -2,7 +2,7 @@
  *
  * win32_flickcurl_config.h - Flickcurl WIN32 hard-coded config
  *
- * Copyright (C) 2008, David Beckett http://purl.org/net/dajobe/
+ * Copyright (C) 2008-2009, David Beckett http://www.dajobe.org/
  * 
  * It is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
