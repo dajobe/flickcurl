@@ -1,7 +1,7 @@
 #
-# Flickcurl Example Makefile.am
+# Flickcurl examples Makefile
 #
-# Copyright (C) 2008, David Beckett http://www.dajobe.org/
+# Copyright (C) 2008-2009, David Beckett http://www.dajobe.org/
 # 
 # This file is licensed under the following three licenses as alternatives:
 #   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -18,7 +18,9 @@
 EXTRA_DIST= \
 print-photo-info.c
 
-EXTRA_PROGRAMS = print-photo-info
+example_programs = print-photo-info search-photos
+
+EXTRA_PROGRAMS = $(example_programs)
 
 CLEANFILES = $(EXTRA_PROGRAMS)
 
@@ -30,5 +32,15 @@ print_photo_info_SOURCES = print-photo-info.c
 print_photo_info_LDADD=$(top_builddir)/src/libflickcurl.la
 print_photo_info_DEPENDENCIES = $(top_builddir)/src/libflickcurl.la
 
+search_photos_SOURCES = search-photos.c
+if GETOPT
+search_photos_SOURCES += $(srcdir)/../utils/getopt.c \
+  $(srcdir)/../utils/flickcurl_getopt.h
+search_photos_CPPFLAGS = -I$(srcdir)/../utils
+endif
+search_photos_LDADD= $(top_builddir)/src/libflickcurl.la
+
 $(top_builddir)/src/libflickcurl.la:
 	cd $(top_builddir)/src && $(MAKE) libflickcurl.la
+
+examples: $(example_programs)
