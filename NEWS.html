@@ -14,8 +14,33 @@
 
 <h2 id="D2009-XX-XX">2009-XX-XX Flickcurl 1.14</h2>
 
-<p>
+<p>Not yet released.</p>
+
+<p><code>flickcurl_search_params</code> gains geo_context and
+is_comments search parameters which were added to the search API at
+some time.
 </p>
+
+<p><code>flickcurl_extras_format_info</code> gains new
+(undocumented?) API 'extras': path_alias, url_m, url_o, url_s,
+url_sq, url_t. path_alias is the only one not totally clear about
+what it does, the others provide various computed URLs of sizes of
+photo images.
+</p>
+
+<p>Added example code to the sources of using Flickcurl to perform a
+search for photos and examining the results.  See
+<code>examples/search-photos.c</code>
+</p>
+
+<p>Apply a little resource leak to the video API when calloc fails -
+patch from github fork by 'mr.huge at seznam dot cz'.  Thanks.
+</p> 
+
+<p>Small typos and fixes to <code>flickcurl(1)</code> utility
+messages.
+</p>
+
 
 <h2 id="D2009-08-01">2009-08-01 Flickcurl 1.13</h2>
 
