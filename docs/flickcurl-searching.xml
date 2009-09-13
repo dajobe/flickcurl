@@ -1,6 +1,6 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="flickcurl-searching">
+<chapter id="flickcurl-searching" xmlns:xi="http://www.w3.org/2003/XInclude">
 
 <title>Searching for Photos with Flickcurl</title>
 
