@@ -16,12 +16,12 @@
 
 <p>Not yet released.</p>
 
-<p><code>flickcurl_search_params</code> gains geo_context and
-is_commons search parameters which were added to the search API at
-some time in the past (geo_context before 10 March 2009).
-geo_context can be set for photos with
-<code>flickcurl_photos_geo_setLocation()</code> corresponding to the
-flickr.photos.geo.setLocation API call.
+<p><code>flickcurl_search_params</code> structure gains
+<code>geo_context</code> and <code>is_commons</code> search
+parameters which were added to the search API at some time in the
+past (geo_context before 10 March 2009).  The Geo Context can be set
+for photos with <code>flickcurl_photos_geo_setLocation()</code>
+corresponding to the flickr.photos.geo.setLocation API call.
 </p>
 
 <p><code>flickcurl_extras_format_info</code> gains new
@@ -29,20 +29,20 @@ API 'extras': path_alias, url_m, url_o, url_s, url_sq, url_t as
 <a href="http://tech.groups.yahoo.com/group/yws-flickr/message/5053">announced 2009-06-29</a>.
 path_alias returns the user's Flickr URL as in <code>/photos/user</code>
 and the others provide various computed URLs and dimensions for the photos 
-of a given size.
+of a given size so that <code>flickcurl_photos_getSizes()</code>
+calls can be avoided directly after a search.
 </p>
 
 <p>Added example code to the sources of using Flickcurl to perform a
-search for photos and examining the results.  See
+search for photos and using the results.  See
 <code>examples/search-photos.c</code>
 </p>
 
-<p>Apply a little resource leak to the video API when calloc fails -
+<p>Apply a little resource leak fix to the video API when calloc fails -
 patch from github fork by 'mr.huge at seznam dot cz'.  Thanks.
 </p> 
 
-<p>Small typos and fixes to <code>flickcurl(1)</code> utility
-messages.
+<p>Small typos and fixes to <code>flickcurl(1)</code> utility messages.
 </p>
 
 
