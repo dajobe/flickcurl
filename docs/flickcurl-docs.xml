@@ -65,6 +65,8 @@
 
     <xi:include href="flickcurl-authenticate.xml"/>
 
+    <xi:include href="flickcurl-searching.xml"/>
+
     <xi:include href="xml/section-activity.xml"/>
     <xi:include href="xml/section-auth.xml"/>
     <xi:include href="xml/section-blogs.xml"/>

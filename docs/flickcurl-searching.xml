@@ -1,0 +1,179 @@
+<!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
+               "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
+<chapter id="flickcurl-searching">
+
+<title>Searching for Photos with Flickcurl</title>
+
+<section id="flickcurl-searching-intro">
+
+<title>Introduction</title>
+
+<para>
+This chapter describes how to use Flickcurl to search for photos -
+construct an API request, run it and get back the results.  The
+search API is very powerful and changes over time to add new
+features, parameters and result fields and formats so the interface
+in Flickcurl has several aspects that can be configured.
+</para>
+
+</section>
+
+
+<section id="flickcurl-searching-search-parameters">
+
+<title>Construct the search parameters</title>
+
+<para>
+The major search parameters should be put into a newly allocated
+and zeroed struct
+<link linkend="flickcurl-search-params">flickcurl_search_params</link>.
+It is recommended that 
+<link linkend="flickcurl-search-params-init">flickcurl_search_params_init()</link>
+is used to initialise this.
+This structure has fields for all of the API search parameters that are
+not specifically about the list of photos result - such as format,
+number of results and paging (see below).
+</para>
+
+<programlisting>
+  flickcurl_search_params params;
+
+  flickcurl_search_params_init(&amp;params);
+</programlisting>
+
+<para>
+There are, however, several constraints on the fields used in a
+search - some expensive query fields need additional fields added to
+make them sufficiently <emphasis>selective</emphasis>.  The restrictions
+are recorded in the API documentation for
+<link linkend="flickcurl-search-params">flickcurl_search_params</link>
+</para>
+
+<para>SPR parameters:
+flickcurl_photos_list_params: format, extras per_page, page
+</para>
+
+<programlisting>
+</programlisting>
+  flickcurl_photos_list_params list_params;
+
+  flickcurl_photos_list_params_init(&amp;list_params);
+
+  list_params.per_page = 10;
+  list_params.page = 1;
+</section>
+
+
+<section id="flickcurl-searching-search-extras">
+
+<title>Extras parameters</title>
+
+<para>Use
+<link linkend="flickcurl-get-extras-format-info">flickcurl_get_extras_format_info()</link>
+to enumerate the list of known extra values
+</para>
+
+    <xi:include href="flickcurl-extras.xml"/>
+
+<programlisting>
+  list_params.extras = strdup("original_format");
+</programlisting>
+
+</section>
+
+
+<section id="flickcurl-searching-search-result-formmats">
+
+<title>Choosing photos search result formats</title>
+
+<para>
+Flickr normally provides what is called a
+<emphasis>Standard Photo Response (SPR)</emphasis> which is a list of
+photos with lots of fields.  There are alternate syntax formats that
+may be returned and these can be requested by the Flickcurl
+<link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
+field <code>format</code>
+such as <code>feed-kml</code> for a KML 2.1 feed result.
+The exact result formats that are available are returned by
+<link linkend="flickcurl-get-feed-format-info">flickcurl_get_feed_format_info()</link>.
+</para>
+
+<programlisting>
+  list_params.format = strdup("feed-kml");
+</programlisting>
+
+</section>
+
+
+<section id="flickcurl-searching-search-run">
+
+<title>Run the photos search</title>
+
+<para>Use
+<link linkend="flickcurl-photos-search-params">flickcurl_photos_search_params()</link>
+to run the search with the given search parameters and list (result
+format) parameters.
+</para>
+
+<programlisting>
+  flickcurl_photos_list* photos_list;
+
+  photos_list = flickcurl_photos_search_params(fc, &amp;params, &amp;list_params);
+</programlisting>
+
+</section>
+
+
+<section id="flickcurl-searching-search-results">
+
+<title>Handling a list of photo search results</title>
+
+<para>
+If <link linkend="flickcurl-photos-search-params">flickcurl_photos_search_params()</link>
+returns an object (rather than NULL for failure) then there will be
+a photos list structure available to use.  This structure contains
+the format of the result, the number of photos and the photos objects
+themselves (for a SPR) or the raw content bytes (for XML/other results).
+The SPR format is "xml".
+</para>
+
+<programlisting>
+  if(photos_list->photos) {
+    int i;
+
+    /* if the result is SPR - print out the URLs of the photos */
+
+    printf("Search returned %d photos\n", photos_list->photos_count);
+    for(i = 0; i &lt; photos_list->photos_count; ++i) {
+      printf("Result #%d ", i);
+      if(photos_list->photos[i]) { 
+	char* uri = flickcurl_photo_as_source_uri(photos_list->photos[i], 'o');
+	printf("uri: %s\n", uri);
+	free(uri);
+      } else
+	fputc('\n', stdout);
+    }
+  } else if(photos_list->content) {
+    /* print out raw content */
+    fwrite(photos_list->content, 1, photos_list->content_length, stdout);
+  } else {
+    /* error */
+    fprintf(stderr, "Search returned neither photos nor raw content\n");
+  }
+</programlisting>
+
+<para>
+Fields, extras, paging.
+</para>
+
+</section>
+
+
+</chapter>
+
+<!--
+Local variables:
+mode: sgml
+sgml-parent-document: ("flickcurl-docs.xml" "book" "part")
+End:
+-->
