@@ -1,4 +1,27 @@
+2009-09-13  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html:
+	words
+
+	* NEWS.html:
+	Update is_commons and geo_context search params notes.
+
+	* NEWS.html:
+	Use path_alias description from
+	http://tech.groups.yahoo.com/group/yws-flickr/message/5053
+
+	* src/common.c:
+	Add path_alias description from
+	http://tech.groups.yahoo.com/group/yws-flickr/message/5053
+
 2009-09-08  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 1.14
+
+	* examples/Makefile.am, examples/search-photos.c,
+	utils/Makefile.am, utils/search-photos.c:
+	Move search-photos.c from
+	utils to examples dir.
 
 	* .gitignore:
 	do not ignore flickr.conf
