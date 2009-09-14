@@ -1198,8 +1198,8 @@ typedef struct {
  * @tags: A comma-delimited list of tags (or NULL)
  * @tag_mode: Either 'any' for an OR combination of tags, or 'all' for an AND combination. Defaults to 'any' if not specified (or NULL)
  * @text: Free text search (or NULL)
- * @min_upload_date: Minimum upload date as a unix timestamp (or NULL)
- * @max_upload_date: Maximum upload date as a unix timestamp (or NULL)
+ * @min_upload_date: Minimum upload date as a unix timestamp (or 0)
+ * @max_upload_date: Maximum upload date as a unix timestamp (or 0)
  * @min_taken_date: Minimum taken date in the form of a mysql datetime (or NULL)
  * @max_taken_date: Maximum taken date in the form of a mysql datetime (or NULL)
  * @license: Comma-separated list of photo licenses (or NULL)
@@ -1207,14 +1207,14 @@ typedef struct {
  * @privacy_filter: Return photos only matching a certain privacy level.
  * @bbox: A comma-delimited list of 4 values defining the Bounding Box of the area that will be searched.
  * @accuracy: Recorded accuracy level of the location information.  Current range is 1-16 
- * @safe_search: Safe search setting: 1 safe, 2 moderate, 3 restricted.
- * @content_type: Content Type setting: 1 for photos only, 2 for screenshots only, 3 for 'other' only, 4 for all types. (or NULL)
- * @machine_tags: Machine tag search syntax 
+ * @safe_search: Safe search setting: 1 safe, 2 moderate, 3 restricted (or 0).
+ * @content_type: Content Type setting: 1 for photos only, 2 for screenshots only, 3 for 'other' only, 4 for all types. (or 0)
+ * @machine_tags: Machine tag search syntax
  * @machine_tag_mode: Either 'any' for an OR combination of tags, or 'all' for an AND combination. Defaults to 'any' if not specified.
  * @group_id: The id of a group who's pool to search.  If specified, only matching photos posted to the group's pool will be returned. (or NULL)
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>, <code>o_dims</code>, <code>views</code>, <code>media</code>, <code>path_alias</code>, <code>url_sq</code>, <code>url_t</code>, <code>url_s</code>, <code>url_m</code>, <code>url_o</code>. (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or 0)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or 0)
  * @place_id: A Flickr place id. (only used if bbox argument isn't present). Experimental.  Geo queries require some sort of limiting agent in order to prevent the database from crying. This is basically like the check against "parameterless searches" for queries without a geo component.   A tag, for instance, is considered a limiting agent as are user defined min_date_taken and min_date_upload parameters - If no limiting factor is passed we return only photos added in the last 12 hours (though we may extend the limit in the future) (or NULL)
  * @media: "photos" or "videos" (or NULL)
  * @has_geo: non-0 if a photo has been geotagged (or 0)
@@ -1223,9 +1223,9 @@ typedef struct {
  * @radius: A valid radius used for geo queries, greater than zero and less than 20 miles (or 32 kilometers), for use with point-based geo queries. The default value is 5 (km) (or 0.0 for not used)
  * @radius_units: The unit of measure when doing radial geo queries. Valid options are "mi" (miles) and "km" (kilometers). The default is "km" (or NULL)
  * @contacts: (Experimental) Requires @user_id field be set and limits queries to photos beloing to that user's photos.  Valid arguments are 'all' or 'ff' for just friends and family.
- * @woe_id: A 32-bit identifier that uniquely represents spatial entities. (not used if bbox argument is present).  Same restrictions as @place_id (or <0)
- * @geo_context: A numeric value representing the photo's geotagginess beyond latitude and longitude. The current list of context IDs is 0: not defined, 1: indoors and 2: outdoors.  Geo queries require some sort of limiting agent in order to prevent the database from crying (or < 0)
- * @is_commons: Limit the scope of the search to only photos that are part of the Flickr Commons project. Default is false (0)
+ * @woe_id: A 32-bit identifier that uniquely represents spatial entities. (not used if bbox argument is present).  Same restrictions as @place_id (or 0)
+ * @geo_context: A numeric value representing the photo's geotagginess beyond latitude and longitude. The current list of context IDs is 0: not defined, 1: indoors and 2: outdoors.  Geo queries require some sort of limiting agent in order to prevent the database from crying (or 0)
+ * @is_commons: Limit the scope of the search to only photos that are part of the Flickr Commons project. Default is false (or 0)
  *
  * Search parameters for flickcurl_photos_search()
  */
