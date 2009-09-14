@@ -4655,7 +4655,7 @@ main(int argc, char *argv[])
           }
           rc = 0;
         } else if (rc == 1) {
-          puts("<para>The known search 'extras' parameter values are as follows (may be given as a , (comma) separated list like <code>foo,bar</code>:</para>\n<variablelist>");
+          puts("<variablelist>");
 
           for(i = 0; 1; i++) {
             const char* name;
