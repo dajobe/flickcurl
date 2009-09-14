@@ -4669,7 +4669,7 @@ main(int argc, char *argv[])
                    "  </varlistentry>\n", name, label);
           }
           
-          puts("</variablelist>\n");
+          puts("</variablelist>");
           rc = 0;
         } else {
           fprintf(stderr, "%s: Unknown maintainer info flag %s / %d", program, 
