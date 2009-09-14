@@ -2288,5 +2288,26 @@ flickcurl_search_params_init(flickcurl_search_params* params)
 {
   memset(params, '\0', sizeof(flickcurl_search_params));
 
+  /* These are the numeric fields and are all set to 0 or 0.0 by the memset() */
+#if 0
+  params->min_upload_date = 0;
+  params->max_upload_date = 0;
+  params->accuracy = 0;
+  params->safe_search = 0;
+  params->content_type = 0;
+  params->per_page = 0;
+  params->page= 0;
+  params->has_geo = 0;
+  /* strictly lat and lon are ignored if radius is 0.0 */
+  params->lat = 0.0;
+  params->lon = 0.0;
+  params->radius = 0.0;
+  params->woe_id = 0;
+  params->geo_context = 0;
+  params->is_commons = 0;
+#endif
+
+  /* The remaining fields are pointers and are set to NULL by the memset() */
+
   return 0;
 }
