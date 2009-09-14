@@ -62,12 +62,14 @@ request.  The <code>page</code> integer field records the
 particular page of results (each of size per_page) that should be
 returned, the first page is 1.</para>
 
+<para>The following code fragment initialises the list parameters to return
+the first page of results and for each page to contain 10 items max.
+</para>
 <programlisting>
   flickcurl_photos_list_params list_params;
 
   flickcurl_photos_list_params_init(&amp;list_params);
 
-  /* get the first page of results, 10 per page */
   list_params.per_page = 10;
   list_params.page = 1;
 </programlisting>
@@ -79,18 +81,33 @@ returned, the first page is 1.</para>
 
 <title>Extras parameters</title>
 
-<para>Use
-<link linkend="flickcurl-get-extras-format-info">flickcurl_get_extras_format_info()</link>
-to enumerate the list of known extra values
+<para>Extras are sets of options to trigger returning extra data
+fields in the results.
+The extra values are used to construct a , (comma) separated list
+like <code>foo,bar</code> which is then assigned to the
+<link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
+field <code>extras</code>.
 </para>
 
-<para>The known search 'extras' parameter values are as follows (may
-be given as a , (comma) separated list like <code>foo,bar</code>:
-</para>\n
+<para>The known search 'extras' parameter values at the time this
+documentation was built are as follows:</para>
 
 <xi:include href="flickcurl-extras.xml"/>
 
+<para>Use
+<link linkend="flickcurl-get-extras-format-info">flickcurl_get_extras_format_info()</link>
+to get the list of known <code>extra</code> parameter values at runtime.  
+</para>
+
+<para>The following code fragment sets the extra string to the single extra
+'original_format' which returns the original item secret and original
+item format fields in the result flickcurl_photo objects.
+</para>
 <programlisting>
+  flickcurl_photos_list_params list_params;
+
+  flickcurl_photos_list_params_init(&amp;list_params);
+
   list_params.extras = strdup("original_format");
 </programlisting>
 
@@ -109,11 +126,21 @@ may be returned and these can be requested by the Flickcurl
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
 field <code>format</code>
 such as <code>feed-kml</code> for a KML 2.1 feed result.
-The exact result formats that are available are returned by
-<link linkend="flickcurl-get-feed-format-info">flickcurl_get_feed_format_info()</link>.
 </para>
 
+<para>Use
+<link linkend="flickcurl-get-feed-format-info">flickcurl_get_feed_format_info()</link>
+to get list the list of code>format</code> parameters values at runtime.
+</para>
+
+<para>The following code fragment sets the result format
+to <code>feed-kml</code> for a KML 2.1 feed result.
+</para>
 <programlisting>
+  flickcurl_photos_list_params list_params;
+
+  flickcurl_photos_list_params_init(&amp;list_params);
+
   list_params.format = strdup("feed-kml");
 </programlisting>
 
@@ -152,6 +179,9 @@ themselves (for a SPR) or the raw content bytes (for XML/other results).
 The SPR format is "xml".
 </para>
 
+<para>The following code fragment takes a
+result <code>photos_list</code> result and prints it out for a
+standard photo list and raw content. Otherwise it prints an error.</para>
 <programlisting>
   if(photos_list->photos) {
     int i;
@@ -175,10 +205,6 @@ The SPR format is "xml".
     fprintf(stderr, "Search returned neither photos nor raw content\n");
   }
 </programlisting>
-
-<para>
-Fields, extras, paging.
-</para>
 
 </section>
 
