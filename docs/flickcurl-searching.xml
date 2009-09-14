@@ -56,9 +56,9 @@ result paging and 'extras' parameters are recorded in the
 structure as fields format, per_page, page and extras respectively.
 </para>
 
-<para>The <emphasis>per_page</emphasis> integer field records the
+<para>The <code>per_page</code> integer field records the
 number of photo results to return (for any format) in a single
-request.  The <emphasis>page</emphasis> integer field records the
+request.  The <code>page</code> integer field records the
 particular page of results (each of size per_page) that should be
 returned, the first page is 1.</para>
 
@@ -84,7 +84,11 @@ returned, the first page is 1.</para>
 to enumerate the list of known extra values
 </para>
 
-    <xi:include href="flickcurl-extras.xml"/>
+<para>The known search 'extras' parameter values are as follows (may
+be given as a , (comma) separated list like <code>foo,bar</code>:
+</para>\n
+
+<xi:include href="flickcurl-extras.xml"/>
 
 <programlisting>
   list_params.extras = strdup("original_format");
