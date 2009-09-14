@@ -73,7 +73,7 @@ version.xml.in \
 flickcurl-extras.xml
 
 dist-hook-local:
-	@file=$(builddir)/html/style.css; \
+	@file=$(srcdir)/html/style.css; \
 	$(ECHO) "Fixing CSS in $$file"; \
 	$(SED) -e '/position: fixed/d' $$file > $$file.new && \
 	mv $$file.new $$file
