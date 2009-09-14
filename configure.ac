@@ -309,6 +309,7 @@ AC_SUBST(STANDARD_CFLAGS)
 
 AC_SUBST(PKG_CONFIG_REQUIRES)
 
+AC_SUBST(ECHO)
 
 dnl Shave "make autotools output sane" - disabled by default
 dnl http://git.lespiau.name/cgit/shave/  git clone git://git.lespiau.name/shave

@@ -72,6 +72,12 @@ flickcurl.1.in \
 version.xml.in \
 flickcurl-extras.xml
 
+dist-hook-local:
+	@file=$(builddir)/html/style.css; \
+	$(ECHO) "Fixing CSS in $$file"; \
+	$(SED) -e '/position: fixed/d' $$file > $$file.new && \
+	mv $$file.new $$file
+
 if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
 	( cd $(top_builddir)/utils && $(MAKE) flickcurl ) && \
