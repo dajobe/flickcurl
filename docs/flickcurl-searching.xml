@@ -130,7 +130,7 @@ such as <code>feed-kml</code> for a KML 2.1 feed result.
 
 <para>Use
 <link linkend="flickcurl-get-feed-format-info">flickcurl_get_feed_format_info()</link>
-to get list the list of code>format</code> parameters values at runtime.
+to get list the list of <code>format</code> parameters values at runtime.
 </para>
 
 <para>The following code fragment sets the result format
