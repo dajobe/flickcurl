@@ -21,19 +21,41 @@ in Flickcurl has several aspects that can be configured.
 
 <section id="flickcurl-searching-search-parameters">
 
-<title>Construct the search parameters</title>
+<title>Search parameters</title>
 
 <para>
-The major search parameters are put into a newly allocated
-struct
+The first step is to choose the parameters for the photos search -
+such as search by tag, search by lat/long, search by license (or combinations).
+There are lots of parameters that may be chosen and some of the values
+are strings, some are numbers and some are from allowed sets (such as license
+IDs or photo type).
+</para>
+
+<para>The 
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
-that has all its fields set to C NULL (for strings) or 0 (for numerics).
-It is recommended that 
-<link linkend="flickcurl-search-params-init">flickcurl_search_params_init()</link>
-is used to initialise this.
+struct is used to store these parameters and the reference documentaiton
+contains all the details on the restrictions.
 This structure has fields for all of the API search parameters that are
 not specifically about the list of photos result - such as format,
 number of results and paging (see below).
+</para>
+
+<para>
+There are, however, several constraints on the fields used in a
+search - some expensive query fields need additional fields added to
+make them sufficiently <emphasis>selective</emphasis>.  The restrictions
+are recorded in the API documentation for the
+<link linkend="flickcurl-search-params">flickcurl_search_params</link>
+struct as well as in the documentation for the search API calls.
+</para>
+
+<para>
+Once the parameters are chosen, they must be put into a newly allocated
+<link linkend="flickcurl-search-params">flickcurl_search_params</link>
+struct that has all its fields set to C NULL (for strings) or 0 (for numerics).
+It is recommended that 
+<link linkend="flickcurl-search-params-init">flickcurl_search_params_init()</link>
+is used to initialise this struct.
 </para>
 
 <programlisting>
@@ -42,13 +64,12 @@ number of results and paging (see below).
   flickcurl_search_params_init(&amp;params);
 </programlisting>
 
-<para>
-There are, however, several constraints on the fields used in a
-search - some expensive query fields need additional fields added to
-make them sufficiently <emphasis>selective</emphasis>.  The restrictions
-are recorded in the API documentation for
-<link linkend="flickcurl-search-params">flickcurl_search_params</link>
-</para>
+</section>
+
+
+<section id="flickcurl-searching-search-paging">
+
+<title>Result paging parameters</title>
 
 <para>The choice of format of search result - SPR or otherwise,
 result paging and 'extras' parameters are recorded in the
