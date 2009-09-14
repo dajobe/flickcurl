@@ -24,9 +24,10 @@ in Flickcurl has several aspects that can be configured.
 <title>Construct the search parameters</title>
 
 <para>
-The major search parameters should be put into a newly allocated
-and zeroed struct
-<link linkend="flickcurl-search-params">flickcurl_search_params</link>.
+The major search parameters are put into a newly allocated
+struct
+<link linkend="flickcurl-search-params">flickcurl_search_params</link>
+that has all its fields set to C NULL (for strings) or 0 (for numerics).
 It is recommended that 
 <link linkend="flickcurl-search-params-init">flickcurl_search_params_init()</link>
 is used to initialise this.
@@ -49,18 +50,28 @@ are recorded in the API documentation for
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
 </para>
 
-<para>SPR parameters:
-flickcurl_photos_list_params: format, extras per_page, page
+<para>The choice of format of search result - SPR or otherwise,
+result paging and 'extras' parameters are recorded in the
+<link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
+structure as fields format, per_page, page and extras respectively.
 </para>
 
+<para>The <emphasis>per_page</emphasis> integer field records the
+number of photo results to return (for any format) in a single
+request.  The <emphasis>page</emphasis> integer field records the
+particular page of results (each of size per_page) that should be
+returned, the first page is 1.</para>
+
 <programlisting>
-</programlisting>
   flickcurl_photos_list_params list_params;
 
   flickcurl_photos_list_params_init(&amp;list_params);
 
+  /* get the first page of results, 10 per page */
   list_params.per_page = 10;
   list_params.page = 1;
+</programlisting>
+
 </section>
 
 
@@ -142,22 +153,21 @@ The SPR format is "xml".
     int i;
 
     /* if the result is SPR - print out the URLs of the photos */
-
     printf("Search returned %d photos\n", photos_list->photos_count);
     for(i = 0; i &lt; photos_list->photos_count; ++i) {
-      printf("Result #%d ", i);
-      if(photos_list->photos[i]) { 
-	char* uri = flickcurl_photo_as_source_uri(photos_list->photos[i], 'o');
-	printf("uri: %s\n", uri);
-	free(uri);
-      } else
-	fputc('\n', stdout);
+      printf("  Result #%d has ID %d\n", i, photos_list->photos[i]->id);
     }
+
   } else if(photos_list->content) {
-    /* print out raw content */
+
+    /* if the result is raw content - print it out */
+    fprintf(stderr, "Search returned %d bytes of content in format %s\n", 
+            photos_list->content_length, photos_list->format);
     fwrite(photos_list->content, 1, photos_list->content_length, stdout);
+
   } else {
-    /* error */
+
+    /* if the result is something else - throw an error */
     fprintf(stderr, "Search returned neither photos nor raw content\n");
   }
 </programlisting>
