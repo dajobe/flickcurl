@@ -1833,7 +1833,7 @@ flickcurl_photos_search_params(flickcurl* fc,
     parameters[count][0]  = "contacts";
     parameters[count++][1]= params->contacts;
   }
-  if(params->woe_id >= 0) {
+  if(params->woe_id > 0) {
     sprintf(woe_id_s, "%d", params->woe_id);
     parameters[count][0]  = "woe_id";
     parameters[count++][1]= woe_id_s;
