@@ -1,4 +1,75 @@
+2009-09-14  Dave Beckett <dave@dajobe.org>
+
+	* docs/Makefile.am:
+	adjust dist-hook-local rule
+
+	* docs/flickcurl-searching.xml:
+	shorter compile line; words
+
+	* examples/search-photos.c:
+	just print photo ID
+
+	* examples/search-photos.c:
+	restore errno.h
+
+	* examples/search-photos.c:
+	Even smaller - add usage/-h hard coded
+
+	* examples/search-photos.c:
+	remove conditional headers.
+
+	* examples/search-photos.c:
+	Simplify - remove options, to make a better example program.
+
+	* docs/Makefile.am:
+	Copy search.photos.c to docs
+
+	* docs/Makefile.am:
+	Filter search-photos.c to here and clean up after
+
+	* docs/flickcurl-searching.xml:
+	xml; more docs
+
+	* docs/Makefile.am:
+	Fix CSS in srcdir
+
+	* docs/flickcurl-searching.xml:
+	More searching docs
+
+	* configure.ac, docs/Makefile.am:
+	Fixup absolute positioning in
+	gtkdoc-mkhtml generated CSS
+
 2009-09-13  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-searching.xml:
+	xml; more words
+
+	* utils/flickcurl.c:
+	do not emit blank line at end
+
+	* docs/flickcurl-searching.xml:
+	typo in id
+
+	* docs/flickcurl-searching.xml:
+	move text here from generated code
+
+	* src/flickcurl.h:
+	flickcurl_search_params: correct autodocs to note
+	when 0 is taken as param is not present.
+
+	* src/common.c:
+	(flickcurl_search_params_init): Internal docs why memset to 0 is ok.
+
+	* src/photos-api.c:
+	(flickcurl_photos_search_params): Only set woe_id if >0
+
+	* docs/flickcurl-searching.xml:
+	add xi xmlns
+
+	* docs/Makefile.am, docs/flickcurl-docs.xml,
+	docs/flickcurl-searching.xml:
+	Added searching tutorial
 
 	* NEWS.html:
 	words
