@@ -65,7 +65,7 @@ The following code fragment initialises the search parameters to
 their defaults for the variable <code>params</code> which is stored
 on the stack, and is freed when the program execution leaves the
 current block or function.
-</code>
+</para>
 <programlisting>
   flickcurl_search_params params;
 
