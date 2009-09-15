@@ -9,11 +9,11 @@
 <title>Introduction</title>
 
 <para>
-This chapter describes how to use Flickcurl to search for photos -
-construct an API request, run it and get back the results.  The
-search API is very powerful and changes over time to add new
-features, parameters and result fields and formats so the interface
-in Flickcurl has several aspects that can be configured.
+This chapter describes how to use Flickcurl to call the Flickr API to
+search for photos - construct the request, run it and get back the
+results.  The search API is very powerful and changes over time to
+add new features, parameters, result fields and result formats so the
+interface in Flickcurl has several aspects that can be configured.
 </para>
 
 </section>
@@ -42,22 +42,30 @@ number of results and paging (see below).
 
 <para>
 There are, however, several constraints on the fields used in a
-search - some expensive query fields need additional fields added to
-make them sufficiently <emphasis>selective</emphasis>.  The restrictions
-are recorded in the API documentation for the
+search - some fields are cause expensive (i.e. slow) queries and
+Flickr require them to be used with need additional fields added to
+make the query sufficiently <emphasis>selective</emphasis>.  The
+restrictions are recorded in the API documentation for the
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
 struct as well as in the documentation for the search API calls.
 </para>
 
 <para>
-Once the parameters are chosen, they must be put into a newly allocated
+Once the search parameters are chosen, they must be put into a
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
-struct that has all its fields set to C NULL (for strings) or 0 (for numerics).
+struct that the unused fields set to C NULL (for strings) or 0 (for numerics).
 It is recommended that 
 <link linkend="flickcurl-search-params-init">flickcurl_search_params_init()</link>
-is used to initialise this struct.
+is used to initialise this struct from a previously allocated piece
+of memory (or on the stack)
 </para>
 
+<para>
+The following code fragment initialises the search parameters to
+their defaults for the variable <code>params</code> which is stored
+on the stack, and is freed when the program execution leaves the
+current block or function.
+</code>
 <programlisting>
   flickcurl_search_params params;
 
@@ -71,20 +79,27 @@ is used to initialise this struct.
 
 <title>Result paging parameters</title>
 
-<para>The choice of format of search result - SPR or otherwise,
-result paging and 'extras' parameters are recorded in the
+<para>
+A search request will return an ordered list of photos 
+(<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> struct)
+and these
+can be <emphasis>paged</emphasis> - returning some of the results
+in one page followed by more results on a second page and so on.
+The number of results per-page and the page to return are
+configured as fields in a
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
-structure as fields format, per_page, page and extras respectively.
+struct as fields per_page and page respectively.
 </para>
 
 <para>The <code>per_page</code> integer field records the
-number of photo results to return (for any format) in a single
+maximum number of photo results to return in a single
 request.  The <code>page</code> integer field records the
 particular page of results (each of size per_page) that should be
 returned, the first page is 1.</para>
 
-<para>The following code fragment initialises the list parameters to return
-the first page of results and for each page to contain 10 items max.
+<para>The following code fragment initialises the list parameters
+structure to the defaults and then sets it to return the first page
+of results and for each page to contain 10 items maximum.
 </para>
 <programlisting>
   flickcurl_photos_list_params list_params;
@@ -100,29 +115,33 @@ the first page of results and for each page to contain 10 items max.
 
 <section id="flickcurl-searching-search-extras">
 
-<title>Extras parameters</title>
+<title>Extra result fields</title>
 
-<para>Extras are sets of options to trigger returning extra data
-fields in the results.
-The extra values are used to construct a , (comma) separated list
-like <code>foo,bar</code> which is then assigned to the
+<para>Search results can be made to return additional fields in the
+photo results
+(<link linkend="flickcurl-photo">flickcurl_photo</link> struct)
+by using the <emphasis>extras</emphasis> configuration of the search
+API.  This is done by configuring the field <code>extras</code> in the
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
-field <code>extras</code>.
+structure containing a , (comma) separated list of the extra names
+like <code>name1,name2</code>.
 </para>
 
-<para>The known search 'extras' parameter values at the time this
-documentation was built are as follows:</para>
+<para>The known search 'extras' names and what they fields they
+return at the time this documentation was built are as
+follows:</para>
 
 <xi:include href="flickcurl-extras.xml"/>
 
 <para>Use
 <link linkend="flickcurl-get-extras-format-info">flickcurl_get_extras_format_info()</link>
-to get the list of known <code>extra</code> parameter values at runtime.  
+to get the list of known <code>extra</code> names at runtime.  
 </para>
 
-<para>The following code fragment sets the extra string to the single extra
-'original_format' which returns the original item secret and original
-item format fields in the result flickcurl_photo objects.
+<para>The following code fragment sets the extras field to the single
+extra name 'original_format' which makes the search result add the
+original item secret and original item format fields to the result
+<link linkend="flickcurl-photo">flickcurl_photo</link> objects.
 </para>
 <programlisting>
   flickcurl_photos_list_params list_params;
@@ -137,24 +156,28 @@ item format fields in the result flickcurl_photo objects.
 
 <section id="flickcurl-searching-search-result-formats">
 
-<title>Choosing photos search result formats</title>
+<title>Search result format</title>
 
 <para>
-Flickr normally provides what is called a
+Flickr normally returns fro a search what is called a
 <emphasis>Standard Photo Response (SPR)</emphasis> which is a list of
-photos with lots of fields.  There are alternate syntax formats that
-may be returned and these can be requested by the Flickcurl
+photos with lots of fields
+(<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> struct).
+There are alternate syntax formats that may be returned and these can
+be configured by setting the field <code>format</code> in the
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
-field <code>format</code>
-such as <code>feed-kml</code> for a KML 2.1 feed result.
+to a format name such as <code>feed-kml</code> for a KML 2.1 feed
+result.  The default SPR is either given by format NULL
+or <code>xml</code>.
 </para>
 
 <para>Use
 <link linkend="flickcurl-get-feed-format-info">flickcurl_get_feed_format_info()</link>
-to get list the list of <code>format</code> parameters values at runtime.
+to get list the list of <code>format</code> names at runtime.
 </para>
 
-<para>The following code fragment sets the result format
+<para>The following code fragment initialises a list parameters block
+on the stack and then configures the result format name
 to <code>feed-kml</code> for a KML 2.1 feed result.
 </para>
 <programlisting>
@@ -170,14 +193,22 @@ to <code>feed-kml</code> for a KML 2.1 feed result.
 
 <section id="flickcurl-searching-search-run">
 
-<title>Run the photos search</title>
+<title>Run the search for photos</title>
 
-<para>Use
+<para>The
 <link linkend="flickcurl-photos-search-params">flickcurl_photos_search_params()</link>
-to run the search with the given search parameters and list (result
-format) parameters.
+function runs the search with the given search and list parameters,
+returning a
+<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> struct
+containing either a list of photos or a raw syntax content, or returning
+NULL if the search failed.
 </para>
 
+<para>The following code fragment runs a search using serach parameters
+and list list parameters configured elsewhere and assigns the
+photos list result to the <code>photos_list</code> variable (which
+might be NULL if the search failed).
+</para>
 <programlisting>
   flickcurl_photos_list* photos_list;
 
@@ -189,15 +220,16 @@ format) parameters.
 
 <section id="flickcurl-searching-search-results">
 
-<title>Handling a list of photo search results</title>
+<title>Handling a photos search result</title>
 
 <para>
-If <link linkend="flickcurl-photos-search-params">flickcurl_photos_search_params()</link>
-returns an object (rather than NULL for failure) then there will be
-a photos list structure available to use.  This structure contains
-the format of the result, the number of photos and the photos objects
-themselves (for a SPR) or the raw content bytes (for XML/other results).
-The SPR format is "xml".
+If the photos search from
+<link linkend="flickcurl-photos-search-params">flickcurl_photos_search_params()</link>
+returns an object (rather than NULL for failure) then there will be a
+photos list structure available to use.  This structure contains the
+format name of the result, the number of photos and the photos objects
+themselves (for a SPR) or the raw content bytes (for XML / other
+format results).  The SPR format name is "xml".
 </para>
 
 <para>The following code fragment takes a
@@ -229,6 +261,32 @@ standard photo list and raw content. Otherwise it prints an error.</para>
 
 </section>
 
+
+<section id="flickcurl-searching-search-example">
+
+<title>Photos search example</title>
+
+<example id="raptor-example-rdfprint">
+<title><filename>search-photos.c</filename>: Search for my photos with a tag and print the resulting photos</title>
+<programlisting>
+<xi:include href="search-photos.c" parse="text"/>
+</programlisting>
+</example>
+
+<para>Compile it like this:
+<screen>
+$ gcc -o search-photos search-photos.c `pkg-config flickcurl --cflags` `pkg-config flickcurl --libs`
+</screen>
+and run it like this (assuming the flickcurl API configuration has
+already been performed):
+<screen>
+$ ./search-photos kitten
+
+...
+</screen>
+</para>
+
+</section>
 
 </chapter>
 
