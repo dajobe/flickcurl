@@ -56,7 +56,8 @@ MKTMPL_OPTIONS=
 content_files = \
 	flickcurl-authenticate.xml \
 	flickcurl-searching.xml \
-	version.xml
+	version.xml \
+	search-photos.c
 
 # Images to copy into HTML directory
 HTML_IMAGES =
@@ -74,12 +75,14 @@ flickcurl-extras.xml
 
 CLEANFILES+= search-photos.c
 
-dist-hook-local:
+dist-hook-local: search-photos.c
 	@file=$(srcdir)/html/style.css; \
 	$(ECHO) "Fixing CSS in $$file"; \
 	$(SED) -e '/position: fixed/d' $$file > $$file.new && \
 	mv $$file.new $$file
-	$(SED) -e '1,/^$$/d' $(srcdir)/../examples/search-photos.c > search-photos.c
+
+search-photos.c: $(srcdir)/../examples/search-photos.c
+	$(SED) -e '1,/^$$/d' $< > $@
 
 if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
