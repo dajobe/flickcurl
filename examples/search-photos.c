@@ -17,7 +17,7 @@
  * the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
  * 
  *
- * USAGE: search-photos [OPTIONS] TAG
+ * USAGE: search-photos TAG
  *
  * This program is an example of how to use the search API to find
  * photos with Flickcurl.
@@ -42,36 +42,18 @@
 #include <errno.h>
 #endif
 
-/* many places for getopt */
-#ifdef HAVE_GETOPT_H
-#include <getopt.h>
-#else
-#include <flickcurl_getopt.h>
-#endif
-
 #include <flickcurl.h>
 
-
-#ifdef NEED_OPTIND_DECLARATION
-extern int optind;
-extern char *optarg;
-#endif
-
-
 static const char* program;
-
-static int debug=0;
-
-
 
 static const char*
 my_basename(const char *name)
 {
   char *p;
-  if((p=strrchr(name, '/')))
-    name=p+1;
-  else if((p=strrchr(name, '\\')))
-    name=p+1;
+  if((p = strrchr(name, '/')))
+    name = p+1;
+  else if((p = strrchr(name, '\\')))
+    name = p+1;
 
   return name;
 }
@@ -87,7 +69,7 @@ my_message_handler(void *user_data, const char *message)
 static void
 my_set_config_var_handler(void* userdata, const char* key, const char* value)
 {
-  flickcurl *fc=(flickcurl *)userdata;
+  flickcurl *fc = (flickcurl *)userdata;
   
   if(!strcmp(key, "api_key"))
     flickcurl_set_api_key(fc, value);
@@ -98,131 +80,53 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 }
 
 
-#ifdef HAVE_GETOPT_LONG
-#define HELP_TEXT(short, long, description) "  -" short ", --" long "  " description
-#define HELP_TEXT_LONG(long, description) "      --" long "  " description
-#define HELP_ARG(short, long) "--" #long
-#define HELP_PAD "\n                          "
-#else
-#define HELP_TEXT(short, long, description) "  -" short "  " description
-#define HELP_TEXT_LONG(long, description)
-#define HELP_ARG(short, long) "-" #short
-#define HELP_PAD "\n      "
-#endif
+static const char *title_format_string = "search-photos - search for my interesting photos about a tag %s\n";
 
-
-#define GETOPT_STRING "Dd:ho:v"
-
-#ifdef HAVE_GETOPT_LONG
-static struct option long_options[] =
-{
-  /* name, has_arg, flag, val */
-  {"debug",   1, 0, 'D'},
-  {"delay",   1, 0, 'd'},
-  {"help",    0, 0, 'h'},
-  {"output",  1, 0, 'o'},
-  {"version", 0, 0, 'v'},
-  {NULL,      0, 0, 0}
-};
-#endif
-
-
-static const char *title_format_string="search-photos - search for my interesting photos about a tag %s\n";
-
-static const char* config_filename=".flickcurl.conf";
-static const char* config_section="flickr";
+static const char* config_filename = ".flickcurl.conf";
+static const char* config_section = "flickr";
 
 
 int
 main(int argc, char *argv[]) 
 {
-  flickcurl *fc=NULL;
-  int rc=0;
-  int usage=0;
-  int help=0;
+  flickcurl *fc = NULL;
+  int rc = 0;
+  int usage = 0;
   const char* home;
   char config_path[1024];
   char* tag = NULL;
-  int request_delay= -1;
   flickcurl_photos_list_params list_params;
   flickcurl_search_params params;
   flickcurl_photos_list* photos_list = NULL;
   int i;
   
-  program=my_basename(argv[0]);
+  program = my_basename(argv[0]);
 
   flickcurl_init();
 
-  home=getenv("HOME");
+  home = getenv("HOME");
   if(home)
     sprintf(config_path, "%s/%s", home, config_filename);
   else
     strcpy(config_path, config_filename);
   
-
-  while (!usage && !help)
-  {
-    int c;
-    
-#ifdef HAVE_GETOPT_LONG
-    int option_index = 0;
-
-    c = getopt_long (argc, argv, GETOPT_STRING, long_options, &option_index);
-#else
-    c = getopt (argc, argv, GETOPT_STRING);
-#endif
-    if (c == -1)
-      break;
-
-    switch (c) {
-      case 0:
-      case '?': /* getopt() - unknown option */
-        usage=1;
-        break;
-
-      case 'd':
-        if(optarg)
-          request_delay=atoi(optarg);
-        break;
-        
-      case 'D':
-        debug=1;
-        break;
-        
-      case 'h':
-        help=1;
-        break;
-
-      case 'v':
-        fputs(flickcurl_version_string, stdout);
-        fputc('\n', stdout);
-
-        exit(0);
-    }
-    
+  if(argc < 1){
+    usage = 2; /* Title and usage */
+    goto usage;
   }
-
-  argv+=optind;
-  argc-=optind;
   
-  if(!help && argc < 1)
-    usage=2; /* Title and usage */
-
-  if(!help && !argc) {
+  if(!argc) {
     fprintf(stderr, "%s: No tag given\nTry `%s kitten' or a tag you have used for your photos.\n", program, program);
-    usage=1;
+    usage = 1;
     goto usage;
   }
-
-  if(usage || help)
-    goto usage;
 
   tag = argv[0];
 
   /* Initialise the Flickcurl library */
-  fc=flickcurl_new();
+  fc = flickcurl_new();
   if(!fc) {
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -233,14 +137,14 @@ main(int argc, char *argv[])
                        my_set_config_var_handler)) {
       fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
               program, config_path, strerror(errno));
-      rc=1;
+      rc = 1;
       goto tidy;
     }
   }
   
  usage:
   if(usage) {
-    if(usage>1) {
+    if(usage > 1) {
       fprintf(stderr, title_format_string, flickcurl_version_string);
       fputs("Flickcurl home page: ", stderr);
       fputs(flickcurl_home_url_string, stderr);
@@ -250,38 +154,11 @@ main(int argc, char *argv[])
       fputs(flickcurl_license_string, stderr);
       fputs("\n\n", stderr);
     }
-    fprintf(stderr, "Try `%s " HELP_ARG(h, help) "' for more information.\n",
-            program);
-    rc=1;
-    goto tidy;
-  }
-
-  if(help) {
-    printf(title_format_string, flickcurl_version_string);
-    puts("Search for my intersting Flickr photos about a tag.");
-    printf("Usage: %s [OPTIONS] TAG\n\n", program);
-
-    fputs(flickcurl_copyright_string, stdout);
-    fputs("\nLicense: ", stdout);
-    puts(flickcurl_license_string);
-    fputs("Flickcurl home page: ", stdout);
-    puts(flickcurl_home_url_string);
-
-    fputs("\n", stdout);
-
-    puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
-    puts(HELP_TEXT("D", "debug           ", "Print debug messages"));
-    puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
-    puts(HELP_TEXT("v", "version         ", "Print the flickcurl library version"));
-
-    rc=0;
+    rc = 1;
     goto tidy;
   }
 
 
-  if(request_delay >= 0)
-    flickcurl_set_request_delay(fc, request_delay);
-  
   /* Initialise the search parameters themselves
    *  user_id: "me" - Search only photos of the calling user.
    *  sort: "interestingness-desc" - return results with most interesting first
@@ -307,9 +184,8 @@ main(int argc, char *argv[])
   if(!photos_list)
     goto tidy;
 
-  if(debug)
-    fprintf(stderr, "%s: Search returned %d photos\n", 
-            program, photos_list->photos_count);
+  fprintf(stderr, "%s: Search returned %d photos\n", 
+          program, photos_list->photos_count);
 
   for(i = 0; i < photos_list->photos_count; ++i) {
     fprintf(stdout, "Result #%d ", i);
