@@ -242,7 +242,7 @@ standard photo list and raw content. Otherwise it prints an error.</para>
     /* if the result is SPR - print out the URLs of the photos */
     printf("Search returned %d photos\n", photos_list->photos_count);
     for(i = 0; i &lt; photos_list->photos_count; ++i) {
-      printf("  Result #%d has ID %d\n", i, photos_list->photos[i]->id);
+      printf("  Result #%d has ID %s\n", i, photos_list->photos[i]->id);
     }
 
   } else if(photos_list->content) {
@@ -267,7 +267,7 @@ standard photo list and raw content. Otherwise it prints an error.</para>
 <title>Photos search example</title>
 
 <example id="raptor-example-rdfprint">
-<title><filename>search-photos.c</filename>: Search for my photos with a tag and print the resulting photos</title>
+<title><filename>search-photos.c</filename>: Search for my interesting photos with a given tag and print the resulting photo IDs</title>
 <programlisting>
 <xi:include href="search-photos.c" parse="text"/>
 </programlisting>
@@ -278,11 +278,12 @@ standard photo list and raw content. Otherwise it prints an error.</para>
 $ gcc -o search-photos search-photos.c `pkg-config flickcurl --cflags` `pkg-config flickcurl --libs`
 </screen>
 and run it like this (assuming the flickcurl API configuration has
-already been performed):
+already been created in <code>~/.flickcurl.conf</code>):
 <screen>
 $ ./search-photos kitten
-
-...
+search-photos: Search returned 2 photos
+  Result #0 has ID 1234567890
+  Result #1 has ID 2345678901
 </screen>
 </para>
 
