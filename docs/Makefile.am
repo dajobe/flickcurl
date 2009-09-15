@@ -75,7 +75,7 @@ flickcurl-extras.xml
 
 CLEANFILES+= search-photos.c
 
-dist-hook-local: search-photos.c
+dist-hook-local: html-build.stamp
 	@file=$(srcdir)/html/style.css; \
 	$(ECHO) "Fixing CSS in $$file"; \
 	$(SED) -e '/position: fixed/d' $$file > $$file.new && \
