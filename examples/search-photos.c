@@ -66,8 +66,6 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 }
 
 
-static const char *title_format_string = "search-photos - search for my interesting photos about a tag %s\n";
-
 static const char* config_filename = ".flickcurl.conf";
 static const char* config_section = "flickr";
 
@@ -77,7 +75,6 @@ main(int argc, char *argv[])
 {
   flickcurl *fc = NULL;
   int rc = 0;
-  int usage = 0;
   const char* home;
   char config_path[1024];
   char* tag = NULL;
@@ -96,18 +93,27 @@ main(int argc, char *argv[])
   else
     strcpy(config_path, config_filename);
   
-  if(argc < 1){
-    usage = 2; /* Title and usage */
-    goto usage;
-  }
-  
-  if(!argc) {
-    fprintf(stderr, "%s: No tag given\nTry `%s kitten' or a tag you have used for your photos.\n", program, program);
-    usage = 1;
-    goto usage;
+  if(argc != 2) {
+    fprintf(stderr, "%s: No tag given\n"
+                    "Try `%s -h for more information.\n", program, program);
+    rc = 1;
+    goto tidy;
   }
 
-  tag = argv[0];
+  if(!strcmp(argv[1], "-h")) {
+    printf("%s - search for my interesting photos about a tag\n"
+           "Usage: %s TAG\n\n", program, program);
+    
+    fputs("Flickcurl home page: ", stdout);
+    puts(flickcurl_home_url_string);
+    puts(flickcurl_copyright_string);
+    fputs("License: ", stdout);
+    puts(flickcurl_license_string);
+    rc = 1;
+    goto tidy;
+  }
+  
+  tag = argv[1];
 
   /* Initialise the Flickcurl library */
   fc = flickcurl_new();
@@ -128,22 +134,6 @@ main(int argc, char *argv[])
     }
   }
   
- usage:
-  if(usage) {
-    if(usage > 1) {
-      fprintf(stderr, title_format_string, flickcurl_version_string);
-      fputs("Flickcurl home page: ", stderr);
-      fputs(flickcurl_home_url_string, stderr);
-      fputc('\n', stderr);
-      fputs(flickcurl_copyright_string, stderr);
-      fputs("\nLicense: ", stderr);
-      fputs(flickcurl_license_string, stderr);
-      fputs("\n\n", stderr);
-    }
-    rc = 1;
-    goto tidy;
-  }
-
 
   /* Initialise the search parameters themselves
    *  user_id: "me" - Search only photos of the calling user.
