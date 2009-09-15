@@ -164,15 +164,8 @@ main(int argc, char *argv[])
   fprintf(stderr, "%s: Search returned %d photos\n", 
           program, photos_list->photos_count);
 
-  for(i = 0; i < photos_list->photos_count; ++i) {
-    fprintf(stdout, "Result #%d ", i);
-    if(photos_list->photos[i]) { 
-      char* uri = flickcurl_photo_as_source_uri(photos_list->photos[i], 'o');
-      fprintf(stdout, "uri: %s\n", uri);
-      free(uri);
-    } else
-      fputc('\n', stdout);
-  }
+  for(i = 0; i < photos_list->photos_count; ++i)
+    printf("  Result #%d has ID %s\n", i, photos_list->photos[i]->id);
   
  tidy:
   if(photos_list)
