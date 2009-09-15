@@ -275,10 +275,10 @@ standard photo list and raw content. Otherwise it prints an error.</para>
 
 <para>Compile it like this:
 <screen>
-$ gcc -o search-photos search-photos.c `pkg-config flickcurl --cflags` `pkg-config flickcurl --libs`
+$ gcc -o search-photos search-photos.c `pkg-config flickcurl --cflags --libs`
 </screen>
 and run it like this (assuming the flickcurl API configuration has
-already been created in <code>~/.flickcurl.conf</code>):
+already been created in <code>~/.flickcurl.conf</code> ):
 <screen>
 $ ./search-photos kitten
 search-photos: Search returned 2 photos
