@@ -72,11 +72,14 @@ flickcurl.1.in \
 version.xml.in \
 flickcurl-extras.xml
 
+CLEANFILES+= search-photos.c
+
 dist-hook-local:
 	@file=$(srcdir)/html/style.css; \
 	$(ECHO) "Fixing CSS in $$file"; \
 	$(SED) -e '/position: fixed/d' $$file > $$file.new && \
 	mv $$file.new $$file
+	$(SED) -e '1,/^$$/d' $(srcdir)/../examples/search-photos.c > search-photos.c
 
 if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
