@@ -89,9 +89,9 @@ the caller took first in the results.
 <title>Result paging parameters</title>
 
 <para>
-A search request will return an ordered list of photos 
-(<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> struct)
-and these
+A search request returns a structure
+<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> struct
+containing a list of results (in some format).  This list
 can be <emphasis>paged</emphasis> - returning some of the results
 in one page followed by more results on a second page and so on.
 The number of results per-page and the page to return are
@@ -177,18 +177,19 @@ fields for the original item secret and original item format
 <para>
 Searching normally returns what is called a
 <emphasis>Standard Photo Response (SPR)</emphasis> which is a list of
-photos with lots of fields, turned in a C array of pointers to
-<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> structs
+photos with lots of fields, turned into a C array of pointers to
+<link linkend="flickcurl-photo">flickcurl_photo</link> structs
 by Flickcurl.
 There are alternate syntax formats that may be returned and these can
 be configured by setting the field <code>format</code> in the
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
 to a format name such as <code>"feed-kml"</code> for a KML 2.1 feed
 result.  When this is done, Flickcurl will NOT return an array of
-<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> structs
+<link linkend="flickcurl-photo">flickcurl_photo</link> structs
 but will make available the raw content bytes from the web
-service in a single C string.  The default format is SPR and is either chosen
-by <code>format</code> field NULL or string <code>"xml"</code>.
+service result as a C string.  The default format is SPR and is
+either chosen by <code>format</code> field NULL or
+string <code>"xml"</code>.
 </para>
 
 <para>Use
@@ -247,18 +248,18 @@ might be NULL if the search failed).
 <title>Handling a photos search result</title>
 
 <para>
-If the photos search from
+If a photos search from
 <link linkend="flickcurl-photos-search-params">flickcurl_photos_search_params()</link>
-returns an object (rather than NULL for failure) then there will be a
-photos list structure available to use.  This structure contains the
-format name of the result, the number of photos and the photos objects
-themselves (for a SPR) or the raw content bytes (for XML / other
-format results).  The SPR format name is "xml".
+returns a <link linkend="flickcurl-photos-list">flickcurl_photos_list</link>
+object then there will be a result available to use.  This structure
+contains the format name of the result, the number of photos and the
+photos objects themselves (for a SPR) or the raw content bytes (for
+XML / other format results).  The SPR format name is "xml".
 </para>
 
-<para>The following code fragment takes a
-result <code>photos_list</code> result and prints it out for a
-standard photo list and raw content. Otherwise it prints an error.</para>
+<para>The following code fragment takes a search result in the variable
+<code>photos_list</code> and prints it out if a standard photo list
+or raw content are returned. Otherwise it prints an error.</para>
 <programlisting>
   if(photos_list->photos) {
     int i;
@@ -301,14 +302,15 @@ standard photo list and raw content. Otherwise it prints an error.</para>
 <screen>
 $ gcc -o search-photos search-photos.c `pkg-config flickcurl --cflags --libs`
 </screen>
-and run it like this (assuming the flickcurl API configuration has
-already been created in <code>~/.flickcurl.conf</code> ):
+and assuming the flickcurl API configuration has already been created
+in <code>~/.flickcurl.conf</code>, run the program like this:
 <screen>
 $ ./search-photos kitten
 search-photos: Search returned 2 photos
   Result #0 has ID 1234567890
   Result #1 has ID 2345678901
 </screen>
+Your kitten results may vary.
 </para>
 
 </section>
