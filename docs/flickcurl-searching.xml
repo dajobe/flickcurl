@@ -43,7 +43,7 @@ number of results and paging (see below).
 <para>
 There are, however, several constraints on the fields used in a
 search - some fields are cause expensive (i.e. slow) queries and
-Flickr require them to be used with need additional fields added to
+the web service requires them to be used with need additional fields added to
 make the query sufficiently <emphasis>selective</emphasis>.  The
 restrictions are recorded in the API documentation for the
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
@@ -53,7 +53,7 @@ struct as well as in the documentation for the search API calls.
 <para>
 Once the search parameters are chosen, they must be put into a
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
-struct.  This struct should be inialised to default values with
+struct.  This struct must be initialised to default values with
 <link linkend="flickcurl-search-params-init">flickcurl_search_params_init()</link>
 which initialises the struct from a previously
 allocated piece of memory (or on the stack).
@@ -98,8 +98,8 @@ The number of results per-page and the page to return are
 configured as fields in a
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
 struct as fields per_page and page respectively.
-This struct should be initialised to default values with
-<link linkend="flickcurl_photos_list_params_init">flickcurl_photos_list_params_init()</link>
+This struct must be initialised to default values with
+<link linkend="flickcurl-photos-list-params-init">flickcurl_photos_list_params_init()</link>
 which initialises the struct from a previously
 allocated piece of memory (or on the stack).
 </para>
@@ -131,37 +131,40 @@ of results and for each page to contain 10 items maximum.
 <title>Extra result fields</title>
 
 <para>Search results can be made to return additional fields in the
-photo results
-(<link linkend="flickcurl-photo">flickcurl_photo</link> struct)
-by using the <emphasis>extras</emphasis> configuration of the search
-API.  This is done by configuring the field <code>extras</code> in the
+photo results by using the <emphasis>extras</emphasis> configuration
+of the search API.
+(This applies to both results returning the 
+<link linkend="flickcurl-photo">flickcurl_photo</link> struct as
+well as syntax formats described in the next section.)
+This is done by configuring the field <code>extras</code> in the
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
 structure containing a , (comma) separated list of the extra names
 like <code>name1,name2</code>.
 </para>
 
 <para>The known search 'extras' names and what they fields they
-return at the time this documentation was built are as
-follows:</para>
+return are as follows (at the time this documentation was built):
+</para>
 
 <xi:include href="flickcurl-extras.xml"/>
 
 <para>Use
 <link linkend="flickcurl-get-extras-format-info">flickcurl_get_extras_format_info()</link>
-to get the list of known <code>extra</code> names at runtime.  
+to get the known <code>extra</code> names and descriptions at runtime.  
 </para>
 
 <para>The following code fragment sets the extras field to the single
-extra name 'original_format' which makes the search result add the
-original item secret and original item format fields to the result
-<link linkend="flickcurl-photo">flickcurl_photo</link> objects.
+extra name <code>original_format</code> which adds to the the search results
+<link linkend="flickcurl-photo">flickcurl_photo</link> objects
+fields for the original item secret and original item format
+(like <code>"jpg"</code>).
 </para>
 <programlisting>
   flickcurl_photos_list_params list_params;
 
   flickcurl_photos_list_params_init(&amp;list_params);
 
-  list_params.extras = strdup("original_format");
+  list_params.extras = "original_format";
 </programlisting>
 
 </section>
@@ -172,21 +175,21 @@ original item secret and original item format fields to the result
 <title>Search result format</title>
 
 <para>
-Flickr normally returns fro a search what is called a
+Searching normally returns from a search what is called a
 <emphasis>Standard Photo Response (SPR)</emphasis> which is a list of
-photos with lots of fields
-(<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> struct).
+photos with lots of fields, in a C array of pointers to
+<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> structs.
 There are alternate syntax formats that may be returned and these can
 be configured by setting the field <code>format</code> in the
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
-to a format name such as <code>feed-kml</code> for a KML 2.1 feed
-result.  The default SPR is either given by format NULL
-or <code>xml</code>.
+to a format name such as <code>"feed-kml"</code> for a KML 2.1 feed
+result.  The default format is SPR and is either chosen
+by <code>format</code> field NULL or string <code>"xml"</code>.
 </para>
 
 <para>Use
 <link linkend="flickcurl-get-feed-format-info">flickcurl_get_feed_format_info()</link>
-to get list the list of <code>format</code> names at runtime.
+to get list the known <code>format</code> names and descriptions at runtime.
 </para>
 
 <para>The following code fragment initialises a list parameters block
@@ -198,7 +201,7 @@ to <code>feed-kml</code> for a KML 2.1 feed result.
 
   flickcurl_photos_list_params_init(&amp;list_params);
 
-  list_params.format = strdup("feed-kml");
+  list_params.format = "feed-kml";
 </programlisting>
 
 </section>
