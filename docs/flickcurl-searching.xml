@@ -53,11 +53,10 @@ struct as well as in the documentation for the search API calls.
 <para>
 Once the search parameters are chosen, they must be put into a
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
-struct that the unused fields set to C NULL (for strings) or 0 (for numerics).
-It is recommended that 
+struct.  This struct should be inialised to default values with
 <link linkend="flickcurl-search-params-init">flickcurl_search_params_init()</link>
-is used to initialise this struct from a previously allocated piece
-of memory (or on the stack)
+which initialises the struct from a previously
+allocated piece of memory (or on the stack).
 </para>
 
 <para>
@@ -99,6 +98,10 @@ The number of results per-page and the page to return are
 configured as fields in a
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
 struct as fields per_page and page respectively.
+This struct should be initialised to default values with
+<link linkend="flickcurl_photos_list_params_init">flickcurl_photos_list_params_init()</link>
+which initialises the struct from a previously
+allocated piece of memory (or on the stack).
 </para>
 
 <para>The <code>per_page</code> integer field records the
