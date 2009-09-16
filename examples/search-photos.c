@@ -142,9 +142,11 @@ main(int argc, char *argv[])
    *  tag: TAG - search for photos about the TAG given on the command line
    */
   flickcurl_search_params_init(&params);
-  params.user_id = strdup("me");
-  params.sort = strdup("interestingness-desc");
-  params.tags = strdup(tag);
+  /* these strings are shared and not strdup()ed since they are stored 
+   * in 'params" on the stack */
+  params.user_id = (char*)"me";
+  params.sort = (char*)"interestingness-desc";
+  params.tags = tag;
 
   /* Initialise the search result (list) parameters:
    *   per_page: 10 - ten results per-page
@@ -155,7 +157,9 @@ main(int argc, char *argv[])
   flickcurl_photos_list_params_init(&list_params);
   list_params.per_page = 10;
   list_params.page = 1;
-  list_params.extras = strdup("original_format");
+  /* this string is shared and not strdup()ed since it is stored 
+   * in 'list_params" on the stack */
+  list_params.extras = "original_format";
 
   photos_list = flickcurl_photos_search_params(fc, &params, &list_params);
   if(!photos_list)
