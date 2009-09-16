@@ -1,3 +1,13 @@
+2009-09-15  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-searching.xml:
+	words and more words.
+	explain search params with kitten and spelcheck
+
+	* examples/search-photos.c:
+	do not strdup strings that are saved in a static struct that will
+	not be freed.
+
 2009-09-14  Dave Beckett <dave@dajobe.org>
 
 	* docs/Makefile.am:
