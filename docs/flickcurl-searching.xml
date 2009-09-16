@@ -33,7 +33,7 @@ IDs or photo type).
 
 <para>The 
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
-struct is used to store these parameters and the reference documentaiton
+struct is used to store these parameters and the reference documentation
 contains all the details on the restrictions.
 This structure has fields for all of the API search parameters that are
 not specifically about the list of photos result - such as format,
@@ -62,14 +62,24 @@ of memory (or on the stack)
 
 <para>
 The following code fragment initialises the search parameters to
-their defaults for the variable <code>params</code> which is stored
-on the stack, and is freed when the program execution leaves the
-current block or function.
+their defaults using the variable <code>params</code> which is stored
+on the stack.  This is freed when the program execution leaves the
+current block or function.  Then the code sets three search
+parameters - the <code>user_id</code> set to <code>me</code> which
+makes the search return photos only for the calling user, sets
+the <code>tags</code> field to <code>"kitten"</code> to perform a tag
+search and then sets the <code>sort</code>
+to <code>interestingness-desc</code> which asks that the results are
+sorted by interestingness with the most interesting kitten photos that
+the caller took first in the results.
 </para>
 <programlisting>
   flickcurl_search_params params;
 
   flickcurl_search_params_init(&amp;params);
+  params.user_id = "me";
+  params.tags = "kitten";
+  params.sort = "interestingness-desc";
 </programlisting>
 
 </section>
@@ -204,7 +214,7 @@ containing either a list of photos or a raw syntax content, or returning
 NULL if the search failed.
 </para>
 
-<para>The following code fragment runs a search using serach parameters
+<para>The following code fragment runs a search using search parameters
 and list list parameters configured elsewhere and assigns the
 photos list result to the <code>photos_list</code> variable (which
 might be NULL if the search failed).
