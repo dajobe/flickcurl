@@ -43,7 +43,7 @@ number of results and paging (see below).
 <para>
 There are, however, several constraints on the fields used in a
 search - some fields are cause expensive (i.e. slow) queries and
-the web service requires them to be used with need additional fields added to
+the web service requires them to be used with additional fields added to
 make the query sufficiently <emphasis>selective</emphasis>.  The
 restrictions are recorded in the API documentation for the
 <link linkend="flickcurl-search-params">flickcurl_search_params</link>
@@ -112,7 +112,7 @@ returned, the first page is 1.</para>
 
 <para>The following code fragment initialises the list parameters
 structure to the defaults and then sets it to return the first page
-of results and for each page to contain 10 items maximum.
+of results and for each page to contain 10 photos maximum.
 </para>
 <programlisting>
   flickcurl_photos_list_params list_params;
@@ -175,15 +175,19 @@ fields for the original item secret and original item format
 <title>Search result format</title>
 
 <para>
-Searching normally returns from a search what is called a
+Searching normally returns what is called a
 <emphasis>Standard Photo Response (SPR)</emphasis> which is a list of
-photos with lots of fields, in a C array of pointers to
-<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> structs.
+photos with lots of fields, turned in a C array of pointers to
+<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> structs
+by Flickcurl.
 There are alternate syntax formats that may be returned and these can
 be configured by setting the field <code>format</code> in the
 <link linkend="flickcurl-photos-list-params">flickcurl_photos_list_params</link>
 to a format name such as <code>"feed-kml"</code> for a KML 2.1 feed
-result.  The default format is SPR and is either chosen
+result.  When this is done, Flickcurl will NOT return an array of
+<link linkend="flickcurl-photos-list">flickcurl_photos_list</link> structs
+but will make available the raw content bytes from the web
+service in a single C string.  The default format is SPR and is either chosen
 by <code>format</code> field NULL or string <code>"xml"</code>.
 </para>
 
@@ -216,8 +220,8 @@ to <code>feed-kml</code> for a KML 2.1 feed result.
 function runs the search with the given search and list parameters,
 returning a
 <link linkend="flickcurl-photos-list">flickcurl_photos_list</link> struct
-containing either a list of photos or a raw syntax content, or returning
-NULL if the search failed.
+containing either a list of photos, raw syntax content or NULL if the
+search failed.
 </para>
 
 <para>The following code fragment runs a search using search parameters
@@ -229,6 +233,10 @@ might be NULL if the search failed).
   flickcurl_photos_list* photos_list;
 
   photos_list = flickcurl_photos_search_params(fc, &amp;params, &amp;list_params);
+  if(!photos_list) {
+    fprintf(stderr, "Search for photos failed :(\n");
+    goto tidy;
+  }
 </programlisting>
 
 </section>
