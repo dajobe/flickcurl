@@ -231,11 +231,11 @@ flickcurl_photo_as_page_uri(flickcurl_photo *photo)
 
 
 #define SHORT_URI_ALPHABET_SIZE 58
-static const char short_uri_alphabet[SHORT_URI_ALPHABET_SIZE]=
+static const char short_uri_alphabet[SHORT_URI_ALPHABET_SIZE+1]=
   "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 
 #define SHORT_URI_PREFIX_LEN 17
-static const char short_uri_prefix[SHORT_URI_PREFIX_LEN] = 
+static const char short_uri_prefix[SHORT_URI_PREFIX_LEN+1] = 
   "http://flic.kr/p/";
 
 
@@ -311,9 +311,9 @@ flickcurl_photo_as_short_uri(flickcurl_photo *photo)
 
 
 #define SOURCE_URI_MATCH1_LENGTH 11
-static const char const source_uri_match1[SOURCE_URI_MATCH1_LENGTH+1]="http://farm";
+static const char source_uri_match1[SOURCE_URI_MATCH1_LENGTH+1]="http://farm";
 #define SOURCE_URI_MATCH2_LENGTH 19
-static const char const source_uri_match2[SOURCE_URI_MATCH2_LENGTH+1]=".static.flickr.com/";
+static const char source_uri_match2[SOURCE_URI_MATCH2_LENGTH+1]=".static.flickr.com/";
 
 /**
  * flickcurl_source_uri_as_photo_id:
