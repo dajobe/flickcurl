@@ -1,3 +1,9 @@
+2009-09-18  Dave Beckett <dave@dajobe.org>
+
+	* src/photo.c: Add 1 to static strings short_uri_alphabet and
+	short_uri_prefix for NUL.  Remove extra const in other static
+	strings
+
 2009-09-15  Dave Beckett <dave@dajobe.org>
 
 	* docs/flickcurl-searching.xml:
