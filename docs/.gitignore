@@ -14,5 +14,6 @@ flickcurl.interfaces
 flickcurl.prerequisites
 flickcurl.signals
 html
+search-photos.c
 version.xml
 xml/
