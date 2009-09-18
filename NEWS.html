@@ -12,11 +12,16 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2009-XX-XX">2009-XX-XX Flickcurl 1.14</h2>
+<h2 id="D2009-09-18">2009-09-18 Flickcurl 1.14</h2>
 
-<p>Not yet released.</p>
+<p>Added a tutorial section to the documentation on how to use the
+search API - search parameters, result formats, extras and walking
+through the photos list results.  Added a new example program 
+<code>search-photos.c</code> to demonstrate a full working program
+searching for photos and using the results.
+</p>
 
-<p><code>flickcurl_search_params</code> structure gains
+<p>The <code>flickcurl_search_params</code> structure gains
 <code>geo_context</code> and <code>is_commons</code> search
 parameters which were added to the search API at some time in the
 past (geo_context before 10 March 2009).  The Geo Context can be set
@@ -24,7 +29,7 @@ for photos with <code>flickcurl_photos_geo_setLocation()</code>
 corresponding to the flickr.photos.geo.setLocation API call.
 </p>
 
-<p><code>flickcurl_extras_format_info</code> gains new
+<p>The <code>flickcurl_extras_format_info</code> gains new
 API 'extras': path_alias, url_m, url_o, url_s, url_sq, url_t as 
 <a href="http://tech.groups.yahoo.com/group/yws-flickr/message/5053">announced 2009-06-29</a>.
 path_alias returns the user's Flickr URL as in <code>/photos/user</code>
@@ -33,14 +38,12 @@ of a given size so that <code>flickcurl_photos_getSizes()</code>
 calls can be avoided directly after a search.
 </p>
 
-<p>Added example code to the sources of using Flickcurl to perform a
-search for photos and using the results.  See
-<code>examples/search-photos.c</code>
-</p>
-
 <p>Apply a little resource leak fix to the video API when calloc fails -
 patch from github fork by 'mr.huge at seznam dot cz'.  Thanks.
 </p> 
+
+<p>Fixed some off-by-1 errors in some static string allocation sizes.
+</p>
 
 <p>Small typos and fixes to <code>flickcurl(1)</code> utility messages.
 </p>
