@@ -1,3 +1,8 @@
+2009-09-20  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_14 for 1.14 release (GIT
+	34290b418097bb755dccdeaaf2fa45d125957c45)
+
 2009-09-18  Dave Beckett <dave@dajobe.org>
 
 	* src/photo.c: Add 1 to static strings short_uri_alphabet and
