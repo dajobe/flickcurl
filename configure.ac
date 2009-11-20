@@ -111,6 +111,9 @@ fi
 
 
 AC_CHECK_PROGS(PKG_CONFIG, pkg-config)
+if test "X$PKG_CONFIG" = X; then
+  AC_MSG_ERROR(Please install pkg-config from http://pkg-config.freedesktop.org/wiki/)
+fi
 
 PKG_CONFIG_REQUIRES=
 
