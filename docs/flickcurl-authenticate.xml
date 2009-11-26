@@ -49,14 +49,17 @@ are obtained.
 
 <para>
 Go to
-<ulink url="http://www.flickr.com/services/api/keys/">http://www.flickr.com/services/api/keys/</ulink>
-and click on either of the blue buttons:
+<ulink url="http://www.flickr.com/services/">http://www.flickr.com/services/</ulink>
+and click on 'Get an API key' which should take you to
+<ulink url="http://www.flickr.com/services/apps/create/apply/">http://www.flickr.com/services/apps/create/apply/</ulink>.
+Click on either of the blue buttons:
 'Apply for a Non-Commercial Key' or 'Apply for a Commercial Key'
 </para>
 
 <para>
-Fill in the form and click 'Submit Application'.  Flickr will give you
-a new <emphasis>API Key</emphasis> that looks something like:
+Fill in the form and click the blue 'Submit' button.  Flickr will return
+with a page containing both the
+API <emphasis>Key</emphasis> that looks something like:
 </para>
 <programlisting>
    0123456789abcdef0123456789abcdef
@@ -67,14 +70,19 @@ a new <emphasis>API Key</emphasis> that looks something like:
 </programlisting>
 
 <para>
-You now need to change the key to be of type mobile with 'Edit key details'
-since no callback URL is usually appropriate for a
-command-line application or library.  Set the permissions to 'read',
-'write' or 'delete' as appropriate.
+You now need to change the key to be of type mobile since no callback
+URL is usually appropriate for a command-line application or library.
 </para>
 
 <para>
-The result will be a new key with an 'Auth mode Mobile'
+Click the 'Edit the authentication flow' link on the right hand side
+to do this.  Change the 'App Type' to 'Mobile Application'
+then set the 'Mobile Permissions' to 'Read', 'Write' Or 'Delete' as
+appropriate. Click the blue 'Save Changes' button.
+</para>
+
+<para>
+This sequence will make the new key  'Auth mode Mobile'
 and an <emphasis>authentication URL</emphasis> that looks like:
 </para>
 <programlisting>
@@ -100,7 +108,7 @@ api_key=0123456789abcdef0123456789abcdef
 secret=fedcba9876543210
 </programlisting>
 
-
+<!-- FIXME: this is missing from appgarden version of services UI -->
 <para>Then visit the Authentication URL mentioned in the previous section
 (http://www.flickr.com/auth-11111111111111111) in a web browser.
 </para>
