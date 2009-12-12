@@ -47,18 +47,63 @@ are obtained.
 
 <title>Register application to get API Key and Shared Secret</title>
 
-<para>
-Go to
-<ulink url="http://www.flickr.com/services/">http://www.flickr.com/services/</ulink>
-and click on 'Get an API key' which should take you to
-<ulink url="http://www.flickr.com/services/apps/create/apply/">http://www.flickr.com/services/apps/create/apply/</ulink>.
-Click on either of the blue buttons:
-'Apply for a Non-Commercial Key' or 'Apply for a Commercial Key'
-</para>
+<para>NOTE: In the pictures below, the Flickr web site is shown in
+English and the screenshots taken in early December 2009.  Flickr
+upgrade the web site often so these instructions may not match the
+latest look.  Hopefully you can figure it out!</para>
+
 
 <para>
-Fill in the form and click the blue 'Submit' button.  Flickr will return
-with a page containing both the
+Start by navigating to the Flickr <emphasis>App Garden</emphasis> at
+<ulink url="http://www.flickr.com/services/">http://www.flickr.com/services/</ulink>
+and follow the link 'Create an App' taking you to 
+<ulink url="http://www.flickr.com/services/apps/create/">http://www.flickr.com/services/apps/create/</ulink>
+</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-get-your-api-key.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Get your API Key</para></caption>
+</mediaobject>
+
+<para>
+Select the link 'Request an API Key' taking you to
+<ulink url="http://www.flickr.com/services/apps/create/apply/">http://www.flickr.com/services/apps/create/apply/</ulink>
+</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-commercial-picker.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Commercial / Non-Commercial</para></caption>
+</mediaobject>
+
+<para>
+Select either of the two buttons:
+'Apply for a Non-Commercial Key' or 'Apply for a Commercial Key'
+as appropriate.
+</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-tell-us-about-your-app.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Describe application</para></caption>
+</mediaobject>
+
+<para>
+Fill in the form fields and submit it via the 'Submit' button.  
+</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-new-api-key-secret.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Key and Secret</para></caption>
+</mediaobject>
+
+<para>Flickr will return a page containing both the
 API <emphasis>Key</emphasis> that looks something like:
 </para>
 <programlisting>
@@ -75,20 +120,57 @@ URL is usually appropriate for a command-line application or library.
 </para>
 
 <para>
-Click the 'Edit the authentication flow' link on the right hand side
-to do this.  Change the 'App Type' to 'Mobile Application'
-then set the 'Mobile Permissions' to 'Read', 'Write' Or 'Delete' as
-appropriate. Click the blue 'Save Changes' button.
+Click the 'Edit auth flow for this app' link below the
+<emphasis>Key</emphasis> and <emphasis>Secret</emphasis>
 </para>
+
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-edit-auth-flow.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Edit authentication flow</para></caption>
+</mediaobject>
+
+<para>Change the 'App Type' to 'Mobile Application'
+then set the 'Mobile Permissions' to 'Read', 'Write' Or 'Delete' as
+appropriate.
+</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-edit-auth-flow-mobile.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Edit authentication flow: mobile</para></caption>
+</mediaobject>
 
 <para>
-This sequence will make the new key  'Auth mode Mobile'
-and an <emphasis>authentication URL</emphasis> that looks like:
+This sequence will make the new key 'Auth mode Mobile'
+and an <emphasis>authentication URL</emphasis> will appear on the
+same page and look something like:
 </para>
 <programlisting>
-   Mobile (http://www.flickr.com/auth-11111111111111111 Read)
+http://www.flickr.com/auth-11111111111111111
 </programlisting>
 
+<para>Finish with the 'Save Changes' button to confirm and return
+you to the application page.</para>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-test-app-page.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Application page</para></caption>
+</mediaobject>
+
+<para>
+If you ever need to alter or view the authentication, use the link
+'Edit the authentication flow' on right-hand side of the application page.
+</para>
+
+<para>All your Flickr applications are linked from
+<ulink url="http://www.flickr.com/services/apps/by/me">http://www.flickr.com/services/apps/by/me</ulink>
+</para>
 
 </section>
 
@@ -108,7 +190,6 @@ api_key=0123456789abcdef0123456789abcdef
 secret=fedcba9876543210
 </programlisting>
 
-<!-- FIXME: this is missing from appgarden version of services UI -->
 <para>Then visit the Authentication URL mentioned in the previous section
 (http://www.flickr.com/auth-11111111111111111) in a web browser.
 </para>
@@ -117,7 +198,7 @@ secret=fedcba9876543210
 <programlisting>
   "[APP NAME] wants to link to your Flickr account"
 </programlisting>
-<para>with more information and two blue buttons.  Locate the one
+<para>with more information and two buttons.  Locate the one
 below the text:</para>
 <programlisting>
  If you arrived at this page because you specifically asked  to connect
@@ -126,7 +207,7 @@ below the text:</para>
   [NEXT]
 </programlisting>
 
-<para>Click that button and on the next page click the blue button
+<para>Click that button and on the next page click the button
 </para>
 <programlisting>
   [OK, I'LL AUTHORIZE IT]
