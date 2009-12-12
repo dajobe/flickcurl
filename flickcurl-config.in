@@ -1,28 +1,22 @@
 #!/bin/sh
 #
-# Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+# Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
 # 
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-
-if test "@includedir@" != /usr/include ; then
-  includes="-I@includedir@"
-else
-  includes=
-fi
-
+PACKAGE=@PACKAGE@
+PKGCONFIG=pkg-config
 
 usage()
 {
 	cat<<EOF
-Usage: flickcurl-config [OPTION]
+Usage: $PACKAGE-config [OPTION]
 
-known values for OPTION are:
+Known values for OPTION are:
 
-  --prefix[=DIR]        change flickcurl prefix [default $prefix]
+  --prefix              print installation prefix path
+  --prefix=DIR          IGNORED
   --libs                print library linking information
-  --libtool-libs        print linking information for use with libtool
+  --libtool-libs        IGNORED
   --private-libs        print library private/static linking information
   --cflags		print pre-processor and compiler flags
   --help                display this help and exit
@@ -38,6 +32,14 @@ if test $# -eq 0; then
 fi
 
 
+if $PKGCONFIG $PACKAGE --exists; then
+  : # exists
+else
+  echo "$0: $PKGCONFIG does not know about package $PACKAGE"
+  exit 1
+fi
+
+args=""
 while test $# -gt 0; do
   case "$1" in
     -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
@@ -45,37 +47,33 @@ while test $# -gt 0; do
   esac
 
   case $1 in
-    --prefix=*)
-        prefix=$optarg
-        ;;
-    --prefix)
-      echo_prefix=yes
-      ;;
-    --version)
-      echo @VERSION@
-      exit 0
-      ;;
-    --version-decimal)
-      echo @FLICKCURL_VERSION_DECIMAL@
-      exit 0
-      ;;
-    --cflags)
-      echo_cflags=yes
-      ;;
-    --libs)
-      echo_libs=yes
-      ;;
-    --libtool-libs)
-      echo_libtool_libs=yes
-      ;;
-    --private-libs)
-      echo_private_libs=yes
-      ;;
+# GNU standards require this
     --help|--usage)
       usage 0
       ;;
-    *)
-      usage 1 1>&2
+# Ignored options
+    --libtool-libs|--prefix=*)
+      echo "$0: $1 option ignored" 1>&2
+      ;;
+# Altered options
+    --prefix)
+      args="$args --variable=prefix";
+      ;;
+    --version)
+      args="$args --modversion";
+      ;;
+    --private-libs)
+      args="$args --static --libs";
+      ;;
+# Computed here
+    --version-decimal)
+      version_expr=`$PKGCONFIG $PACKAGE --modversion | sed -e 's/\./ \\\\* 10000 + /' -e 's/\./ \\\\* 100 + /'`
+      eval expr $version_expr
+      exit 0
+      ;;
+# Other options are passed through
+      *)
+      args="$args $1"
       ;;
   esac
 
@@ -83,18 +81,4 @@ while test $# -gt 0; do
 done
   
 
-if test "$echo_prefix" = "yes"; then
-  echo $prefix
-fi
-if test "$echo_cflags" = "yes"; then
-  echo $includes
-fi
-if test "$echo_libs" = "yes"; then
-  echo -L@libdir@ -lflickcurl
-fi
-if test "$echo_libtool_libs" = "yes"; then
-  echo @libdir@/@FLICKCURL_LIBTOOLLIBS@
-fi
-if test "$echo_private_libs" = "yes"; then
-  echo @LIBS@
-fi
+$PKGCONFIG $PACKAGE $args
