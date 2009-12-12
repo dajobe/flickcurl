@@ -1,4 +1,25 @@
-2009-09-20  Dave Beckett  <dave@dajobe.org>
+2009-12-11  Dave Beckett <dave@dajobe.org>
+
+	* Update authentication docs to use screen shots
+
+	* Add screen dumps to dist
+
+	* Added App Garden screen dumps for auth flow
+
+2009-11-26  Dave Beckett <dave@dajobe.org>
+
+	* appgarden changes
+
+2009-11-20  Dave Beckett <dave@dajobe.org>
+
+	* prune wiki suffix for pkgconfig url
+
+2009-11-19  Dave Beckett <dave@dajobe.org>
+
+	* Fail configure if pkg-config is missing to prevent cascading
+	errors for libxml and curl checks.
+
+2009-09-20  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_14 for 1.14 release (GIT
 	34290b418097bb755dccdeaaf2fa45d125957c45)
@@ -232,7 +253,7 @@
 	path_alias is the only one not totally clear; the rest provide
 	URLs of images.
 
-2009-08-01  Dave Beckett  <dave@dajobe.org>
+2009-08-01  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_13 for 1.13 release
 
