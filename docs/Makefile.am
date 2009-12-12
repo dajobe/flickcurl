@@ -60,7 +60,16 @@ content_files = \
 	search-photos.c
 
 # Images to copy into HTML directory
-HTML_IMAGES =
+HTML_IMAGES = \
+	appgarden-get-your-api-key.png \
+	appgarden-commercial-picker.png \
+	appgarden-tell-us-about-your-app.png \
+	appgarden-new-api-key-secret.png \
+	appgarden-edit-auth-flow.png \
+	appgarden-edit-auth-flow-mobile.png \
+	appgarden-test-app-page.png
+
+
 
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
