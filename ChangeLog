@@ -1,5 +1,45 @@
 2009-12-20  Dave Beckett <dave@dajobe.org>
 
+	* docs/tmpl/section-photo.sgml: Update templates
+
+2009-12-20  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: remove final nl from photos.search help
+
+2009-12-20  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: photos.search add geo-context is-commons and
+	is-gallery args Add recent changes to flickcurl_search_params to
+	the photos.search command: geo-context 1-2, is-commons and
+	is-gallery args.
+
+2009-12-20  Dave Beckett <dave@dajobe.org>
+
+	* src/activity-api.c, src/activity.c, src/args.c, src/auth-api.c,
+	src/blog.c, src/blogs-api.c, src/category.c, src/collection.c,
+	src/comments.c, src/common.c, src/commons-api.c, src/config.c,
+	src/contacts-api.c, src/contacts.c, src/context.c, src/exif.c,
+	src/favorites-api.c, src/group.c, src/groups-api.c,
+	src/groups-members-api.c, src/groups-pools-api.c,
+	src/institution.c, src/interestingness-api.c, src/location.c,
+	src/machinetags-api.c, src/machinetags.c, src/md5.c, src/members.c,
+	src/method.c, src/panda-api.c, src/people-api.c, src/perms.c,
+	src/person.c, src/photo.c, src/photos-api.c,
+	src/photos-comments-api.c, src/photos-geo-api.c,
+	src/photos-licenses-api.c, src/photos-notes-api.c,
+	src/photos-transform-api.c, src/photos-upload-api.c,
+	src/photoset.c, src/photosets-api.c, src/photosets-comments-api.c,
+	src/place.c, src/places-api.c, src/prefs-api.c,
+	src/reflection-api.c, src/serializer.c, src/shape.c, src/size.c,
+	src/tags-api.c, src/tags.c, src/test-api.c, src/ticket.c,
+	src/upload-api.c, src/user_upload_status.c, src/video.c,
+	src/vsnprintf.c, utils/codegen.c, utils/flickcurl.c,
+	utils/flickrdf.c, utils/list-methods.c:
+	Code style - add whitespace around assignments (=, +=, -=)
+	and comparators	(==, <=, >=)
+
+2009-12-20  Dave Beckett <dave@dajobe.org>
+
 	* autogen.sh, build/.gitignore, build/shave-libtool.in,
 	build/shave.in, build/shave.m4, configure.ac:
 	Switch from SHAVE to automake 1.11 AM_SILENT_RULES Remove SHAVE
