@@ -862,6 +862,7 @@ Photo.
 @woe_id: 
 @geo_context: 
 @is_commons: 
+@in_gallery: 
 
 <!-- ##### FUNCTION flickcurl_search_params_init ##### -->
 <para>
