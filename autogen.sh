@@ -45,20 +45,23 @@ CONFIG_DIR=${CONFIG_DIR-../config}
 # Set an envariable of the same name in uppercase, to override scan
 #
 programs="automake aclocal autoconf autoheader libtoolize"
-confs=`find . -name configure.ac -print`
+confs=`find . -name configure.ac -print | grep -v /releases/`
+
+gtkdoc_args=
 if grep "^GTK_DOC_CHECK" $confs >/dev/null; then
   programs="$programs gtkdocize"
+  gtkdoc_args="--enable-gtk-doc"
 fi
 if grep "^AC_CHECK_PROGS.SWIG" $confs >/dev/null; then
   programs="$programs swig"
 fi
-ltdl=
+ltdl_args=
 if grep "^AC_LIBLTDL_" $confs >/dev/null; then
-  ltdl="--ltdl"
+  ltdl_args="--ltdl"
 fi
-silent=
+silent_args=
 if grep "^AM_SILENT_RULES" $confs >/dev/null; then
-  silent="--enable-silent-rules"
+  silent_args="--enable-silent-rules"
 fi
 
 # Some dependencies for autotools:
@@ -75,10 +78,10 @@ swig_min_vers=010324
 automake_args="--gnu --add-missing --force --copy -Wall"
 aclocal_args=
 autoconf_args=
-libtoolize_args="$ltdl --force --copy --automake"
+libtoolize_args="--force --copy --automake $ltdl_args"
 gtkdocize_args="--copy"
 # --enable-gtk-doc does no harm if it's not available
-configure_args="--enable-maintainer-mode --enable-gtk-doc $silent"
+configure_args="--enable-maintainer-mode $gtkdoc_args $silent_args"
 
 
 # You should not need to edit below here
