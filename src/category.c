@@ -74,7 +74,7 @@ flickcurl_free_categories(flickcurl_category **categories_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(categories_object, flickcurl_category);
 
-  for(i=0; categories_object[i]; i++)
+  for(i = 0; categories_object[i]; i++)
     flickcurl_free_category(categories_object[i]);
   
   free(categories_object);
@@ -85,54 +85,54 @@ flickcurl_category**
 flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                            const xmlChar* xpathExpr, int* category_count_p)
 {
-  flickcurl_category** categories=NULL;
+  flickcurl_category** categories = NULL;
   int nodes_count;
   int category_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  categories=(flickcurl_category**)calloc(sizeof(flickcurl_category*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  categories = (flickcurl_category**)calloc(sizeof(flickcurl_category*), nodes_count+1);
   
-  for(i=0, category_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, category_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_category* c;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    c=(flickcurl_category*)calloc(sizeof(flickcurl_category), 1);
+    c = (flickcurl_category*)calloc(sizeof(flickcurl_category), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "id"))
-        c->id=attr_value;
+        c->id = attr_value;
       else if(!strcmp(attr_name, "name"))
-        c->name=attr_value;
+        c->name = attr_value;
       else if(!strcmp(attr_name, "path"))
-        c->path=attr_value;
+        c->path = attr_value;
       else if(!strcmp(attr_name, "count")) {
-        c->count=atoi(attr_value);
+        c->count = atoi(attr_value);
         free(attr_value);
       }
     }
@@ -143,11 +143,11 @@ flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             c->id, c->name, c->path, c->count);
 #endif
     
-    categories[category_count++]=c;
+    categories[category_count++] = c;
   } /* for nodes */
 
   if(category_count_p)
-    *category_count_p=category_count;
+    *category_count_p = category_count;
   
  tidy:
   if(xpathObj)

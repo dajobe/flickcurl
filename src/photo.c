@@ -35,7 +35,7 @@
 #include <flickcurl_internal.h>
 
 
-static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1]={
+static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1] = {
   "(none)",
   "dateuploaded",
   "farm",
@@ -126,12 +126,12 @@ flickcurl_free_photo(flickcurl_photo *photo)
 
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photo, flickcurl_photo);
 
-  for(i=0; i <= PHOTO_FIELD_LAST; i++) {
+  for(i = 0; i <= PHOTO_FIELD_LAST; i++) {
     if(photo->fields[i].string)
       free(photo->fields[i].string);
   }
   
-  for(i=0; i < photo->tags_count; i++)
+  for(i = 0; i < photo->tags_count; i++)
     flickcurl_free_tag(photo->tags[i]);
   free(photo->tags);
 
@@ -197,8 +197,8 @@ flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
             photo->id,
             photo->fields[PHOTO_FIELD_secret].string);
   }
-  len=strlen(buf);
-  result=(char*)malloc(len+1);
+  len = strlen(buf);
+  result = (char*)malloc(len+1);
   strcpy(result, buf);
   return result;
 }
@@ -311,9 +311,9 @@ flickcurl_photo_as_short_uri(flickcurl_photo *photo)
 
 
 #define SOURCE_URI_MATCH1_LENGTH 11
-static const char source_uri_match1[SOURCE_URI_MATCH1_LENGTH+1]="http://farm";
+static const char source_uri_match1[SOURCE_URI_MATCH1_LENGTH+1] = "http://farm";
 #define SOURCE_URI_MATCH2_LENGTH 19
-static const char source_uri_match2[SOURCE_URI_MATCH2_LENGTH+1]=".static.flickr.com/";
+static const char source_uri_match2[SOURCE_URI_MATCH2_LENGTH+1] = ".static.flickr.com/";
 
 /**
  * flickcurl_source_uri_as_photo_id:
@@ -440,7 +440,7 @@ static struct {
   const xmlChar* xpath;
   flickcurl_photo_field_type field;
   flickcurl_field_value_type type;
-} photo_fields_table[]={
+} photo_fields_table[] = {
   {
     (const xmlChar*)"./@id",
     PHOTO_FIELD_none,
@@ -448,7 +448,7 @@ static struct {
   }
   ,
   {
-    (const xmlChar*)"./urls/url[@type=\"photopage\"]",
+    (const xmlChar*)"./urls/url[@type = \"photopage\"]",
     PHOTO_FIELD_none,
     VALUE_TYPE_PHOTO_URI
   }
@@ -929,50 +929,50 @@ flickcurl_photo**
 flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                        const xmlChar* xpathExpr, int* photo_count_p)
 {
-  flickcurl_photo** photos=NULL;
+  flickcurl_photo** photos = NULL;
   int nodes_count;
   int photo_count;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   xmlChar full_xpath[512];
   size_t xpathExpr_len;
   int i;
   
-  xpathExpr_len=strlen((const char*)xpathExpr);
+  xpathExpr_len = strlen((const char*)xpathExpr);
   strncpy((char*)full_xpath, (const char*)xpathExpr, xpathExpr_len+1);
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  photos=(flickcurl_photo**)calloc(sizeof(flickcurl_photo*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  photos = (flickcurl_photo**)calloc(sizeof(flickcurl_photo*), nodes_count+1);
 
-  for(i=0, photo_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, photo_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     flickcurl_photo* photo;
     int expri;
-    xmlXPathContextPtr xpathNodeCtx=NULL;
+    xmlXPathContextPtr xpathNodeCtx = NULL;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    photo=(flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
+    photo = (flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
     xpathNodeCtx->node = node;
     
-    for(expri=0; expri <= PHOTO_FIELD_LAST; expri++) {
+    for(expri = 0; expri <= PHOTO_FIELD_LAST; expri++) {
       if(photo->fields[expri].string)
         free(photo->fields[expri].string);
       photo->fields[expri].string = NULL;
@@ -980,15 +980,15 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       photo->fields[expri].type   = VALUE_TYPE_NONE;
     }
 
-    for(expri=0; photo_fields_table[expri].xpath; expri++) {
+    for(expri = 0; photo_fields_table[expri].xpath; expri++) {
       char *string_value;
-      flickcurl_field_value_type datatype=photo_fields_table[expri].type;
+      flickcurl_field_value_type datatype = photo_fields_table[expri].type;
       int int_value= -1;
-      flickcurl_photo_field_type field=photo_fields_table[expri].field;
+      flickcurl_photo_field_type field = photo_fields_table[expri].field;
       time_t unix_time;
       int special = 0;
       
-      string_value=flickcurl_xpath_eval(fc, xpathNodeCtx,
+      string_value = flickcurl_xpath_eval(fc, xpathNodeCtx,
                                         photo_fields_table[expri].xpath);
       if(!string_value)
         continue;
@@ -999,33 +999,33 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 #endif
       switch(datatype) {
         case VALUE_TYPE_PHOTO_ID:
-          photo->id=string_value;
-          string_value=NULL;
-          datatype=VALUE_TYPE_NONE;
+          photo->id = string_value;
+          string_value = NULL;
+          datatype = VALUE_TYPE_NONE;
           break;
 
         case VALUE_TYPE_PHOTO_URI:
-          photo->uri=string_value;
-          string_value=NULL;
-          datatype=VALUE_TYPE_NONE;
+          photo->uri = string_value;
+          string_value = NULL;
+          datatype = VALUE_TYPE_NONE;
           break;
 
         case VALUE_TYPE_MEDIA_TYPE:
-          photo->media_type=string_value;
-          string_value=NULL;
-          datatype=VALUE_TYPE_NONE;
+          photo->media_type = string_value;
+          string_value = NULL;
+          datatype = VALUE_TYPE_NONE;
           break;
 
         case VALUE_TYPE_UNIXTIME:
         case VALUE_TYPE_DATETIME:
 
           if(datatype == VALUE_TYPE_UNIXTIME)
-            unix_time=atoi(string_value);
+            unix_time = atoi(string_value);
           else
-            unix_time=curl_getdate((const char*)string_value, NULL);
+            unix_time = curl_getdate((const char*)string_value, NULL);
 
           if(unix_time >= 0) {
-            char* new_value=flickcurl_unixtime_to_isotime(unix_time);
+            char* new_value = flickcurl_unixtime_to_isotime(unix_time);
 #if FLICKCURL_DEBUG > 1
             fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
                     string_value, (long)unix_time, new_value);
@@ -1033,15 +1033,15 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             free(string_value);
             string_value= new_value;
             int_value= (int)unix_time;
-            datatype=VALUE_TYPE_DATETIME;
+            datatype = VALUE_TYPE_DATETIME;
           } else
             /* failed to convert, make it a string */
-            datatype=VALUE_TYPE_STRING;
+            datatype = VALUE_TYPE_STRING;
           break;
 
         case VALUE_TYPE_INTEGER:
         case VALUE_TYPE_BOOLEAN:
-          int_value=atoi(string_value);
+          int_value = atoi(string_value);
           break;
 
         case VALUE_TYPE_TAG_STRING:
@@ -1083,36 +1083,36 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     } /* end for */
 
     if(!photo->tags)
-      photo->tags=flickcurl_build_tags(fc, photo, xpathNodeCtx, 
+      photo->tags = flickcurl_build_tags(fc, photo, xpathNodeCtx, 
                                        (const xmlChar*)"./tags/tag",
                                        &photo->tags_count);
 
     if(!photo->place)
-      photo->place=flickcurl_build_place(fc, xpathNodeCtx,
+      photo->place = flickcurl_build_place(fc, xpathNodeCtx,
                                          (const xmlChar*)"./location");
 
-    photo->video=flickcurl_build_video(fc, xpathNodeCtx,
+    photo->video = flickcurl_build_video(fc, xpathNodeCtx,
                                        (const xmlChar*)"./video");
     
     if(!photo->media_type) {
-      photo->media_type=(char*)malloc(6);
+      photo->media_type = (char*)malloc(6);
       strncpy(photo->media_type, "photo", 6);
     }
 
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);
 
-    photos[photo_count++]=photo;
+    photos[photo_count++] = photo;
   } /* for photos */
   
   if(photo_count_p)
-    *photo_count_p=photo_count;
+    *photo_count_p = photo_count;
 
   tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   if(fc->failed)
-    photos=NULL;
+    photos = NULL;
 
   return photos;
 }
@@ -1122,12 +1122,12 @@ flickcurl_photo*
 flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx)
 {
   flickcurl_photo** photos;
-  flickcurl_photo* result=NULL;
+  flickcurl_photo* result = NULL;
 
-  photos=flickcurl_build_photos(fc, xpathCtx,
+  photos = flickcurl_build_photos(fc, xpathCtx,
                                 (const xmlChar*)"/rsp/photo", NULL);
   if(photos) {
-    result=photos[0];
+    result = photos[0];
     free(photos);
   }
   
@@ -1148,7 +1148,7 @@ flickcurl_free_photos(flickcurl_photo** photos)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photos, flickcurl_photo_array);
 
-  for(i=0; photos[i]; i++)
+  for(i = 0; photos[i]; i++)
     flickcurl_free_photo(photos[i]);
   free(photos);
 }
@@ -1158,58 +1158,58 @@ flickcurl_photos_list*
 flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
                              const char* format)
 {
-  flickcurl_photos_list* photos_list=NULL;
-  xmlXPathContextPtr xpathCtx=NULL;
+  flickcurl_photos_list* photos_list = NULL;
+  xmlXPathContextPtr xpathCtx = NULL;
   const char *nformat;
   size_t format_len;
 
-  photos_list=(flickcurl_photos_list*)calloc(1, sizeof(flickcurl_photos_list));
+  photos_list = (flickcurl_photos_list*)calloc(1, sizeof(flickcurl_photos_list));
   if(!photos_list) {
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
   if(format) {
-    nformat=format;
-    format_len=strlen(format);
+    nformat = format;
+    format_len = strlen(format);
   
-    photos_list->content=flickcurl_invoke_get_content(fc,
+    photos_list->content = flickcurl_invoke_get_content(fc,
                                                       &photos_list->content_length);
     if(!photos_list->content) {
-      fc->failed=1;
+      fc->failed = 1;
       goto tidy;
     }
 
   } else {
-    xmlDocPtr doc=NULL;
+    xmlDocPtr doc = NULL;
 
-    nformat="xml";
-    format_len=3;
+    nformat = "xml";
+    format_len = 3;
     
-    doc=flickcurl_invoke(fc);
+    doc = flickcurl_invoke(fc);
     if(!doc)
       goto tidy;
 
     xpathCtx = xmlXPathNewContext(doc);
     if(!xpathCtx) {
       flickcurl_error(fc, "Failed to create XPath context for document");
-      fc->failed=1;
+      fc->failed = 1;
       goto tidy;
     }
 
-    photos_list->photos=flickcurl_build_photos(fc, xpathCtx, xpathExpr,
+    photos_list->photos = flickcurl_build_photos(fc, xpathCtx, xpathExpr,
                                                &photos_list->photos_count);
     if(!photos_list->photos) {
-      fc->failed=1;
+      fc->failed = 1;
       goto tidy;
     }
 
   }
 
 
-  photos_list->format=(char*)malloc(format_len+1);
+  photos_list->format = (char*)malloc(format_len+1);
   if(!photos_list->format) {
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   memcpy(photos_list->format, nformat, format_len+1);
@@ -1221,7 +1221,7 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;

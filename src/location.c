@@ -53,10 +53,10 @@ flickcurl_location*
 flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                          const xmlChar* xpathExpr)
 {
-  flickcurl_location* location=NULL;
+  flickcurl_location* location = NULL;
   int nodes_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do location */
@@ -64,39 +64,39 @@ flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
   
-  for(i=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    location=(flickcurl_location*)calloc(sizeof(flickcurl_location), 1);
+    location = (flickcurl_location*)calloc(sizeof(flickcurl_location), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "latitude"))
-        location->latitude=atoi(attr_value);
+        location->latitude = atoi(attr_value);
       else if(!strcmp(attr_name, "longitude"))
-        location->longitude=atoi(attr_value);
+        location->longitude = atoi(attr_value);
       else if(!strcmp(attr_name, "accuracy"))
-        location->accuracy=atoi(attr_value);
+        location->accuracy = atoi(attr_value);
     }
 
     
@@ -117,7 +117,7 @@ flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 }
 
 
-static const char* flickcurl_accuracy_labels[16]={
+static const char* flickcurl_accuracy_labels[16] = {
   "world",   "world",  "country", "country",
   "country", "region", "region",  "region",
   "region",  "region", "city",    "city",
@@ -136,7 +136,7 @@ static const char* flickcurl_accuracy_labels[16]={
 const char*
 flickcurl_get_location_accuracy_label(int accuracy)
 {
-  if(accuracy >=1 && accuracy <= 16)
+  if(accuracy >= 1 && accuracy <= 16)
     return flickcurl_accuracy_labels[accuracy-1];
   return NULL;
 }

@@ -81,7 +81,7 @@ flickcurl_free_shapes(flickcurl_shapedata **shapes_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(shapes_object, flickcurl_shapedata_array);
 
-  for(i=0; shapes_object[i]; i++)
+  for(i = 0; shapes_object[i]; i++)
     flickcurl_free_shape(shapes_object[i]);
   
   free(shapes_object);
@@ -118,7 +118,7 @@ typedef enum {
 static struct {
   const xmlChar* xpath;
   shape_field_type shape_field;
-} shape_fields_table[SHAPE_FIELDS_TABLE_SIZE+1]={
+} shape_fields_table[SHAPE_FIELDS_TABLE_SIZE+1] = {
   {
     (const xmlChar*)"./@created",
     SHAPE_CREATED,
@@ -172,10 +172,10 @@ flickcurl_shapedata**
 flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                        const xmlChar* xpathExpr, int* shape_count_p)
 {
-  flickcurl_shapedata** shapes=NULL;
+  flickcurl_shapedata** shapes = NULL;
   int nodes_count;
   int shape_count;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   int i;
   
@@ -183,24 +183,24 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  shapes=(flickcurl_shapedata**)calloc(sizeof(flickcurl_shapedata*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  shapes = (flickcurl_shapedata**)calloc(sizeof(flickcurl_shapedata*), nodes_count+1);
 
-  for(i=0, shape_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, shape_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     int expri;
-    xmlXPathContextPtr xpathNodeCtx=NULL;
+    xmlXPathContextPtr xpathNodeCtx = NULL;
     flickcurl_shapedata* shape;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
@@ -210,8 +210,8 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
     xpathNodeCtx->node = node;
 
-    for(expri=0; shape_fields_table[expri].xpath; expri++) {
-      shape_field_type shape_field=shape_fields_table[expri].shape_field;
+    for(expri = 0; shape_fields_table[expri].xpath; expri++) {
+      shape_field_type shape_field = shape_fields_table[expri].shape_field;
       const xmlChar* shape_xpathExpr = shape_fields_table[expri].xpath;
       char *value = NULL;
       
@@ -234,32 +234,32 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       switch(shape_field) {
         case SHAPE_CREATED:
           shape->created = atoi(value);
-          free(value); value=NULL;
+          free(value); value = NULL;
           break;
           
         case SHAPE_ALPHA:
           shape->alpha = atof(value);
-          free(value); value=NULL;
+          free(value); value = NULL;
           break;
 
         case SHAPE_POINTS:
           shape->points = atoi(value);
-          free(value); value=NULL;
+          free(value); value = NULL;
           break;
 
         case SHAPE_EDGES:
           shape->edges = atoi(value);
-          free(value); value=NULL;
+          free(value); value = NULL;
           break;
 
         case SHAPE_IS_DONUTHOLE:
           shape->is_donuthole = atoi(value);
-          free(value); value=NULL;
+          free(value); value = NULL;
           break;
 
         case SHAPE_HAS_DONUTHOLE:
           shape->has_donuthole = atoi(value);
-          free(value); value=NULL;
+          free(value); value = NULL;
           break;
 
         case SHAPE_DATA:
@@ -285,7 +285,7 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
               fc->failed = 1;
 
             if(value) {
-              free(value); value=NULL;
+              free(value); value = NULL;
             }
           }
           break;
@@ -293,7 +293,7 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case SHAPE_NONE:
         default:
           flickcurl_error(fc, "Unknown shape field %d",  shape_field);
-          fc->failed=1;
+          fc->failed = 1;
       }
       
       if(fc->failed)
@@ -304,18 +304,18 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);
 
-    shapes[shape_count++]=shape;
+    shapes[shape_count++] = shape;
   } /* for shapes */
   
   if(shape_count_p)
-    *shape_count_p=shape_count;
+    *shape_count_p = shape_count;
   
  tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
   if(fc->failed)
-    shapes=NULL;
+    shapes = NULL;
 
   return shapes;
 }
@@ -326,12 +326,12 @@ flickcurl_build_shape(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                       const xmlChar* xpathExpr)
 {
   flickcurl_shapedata** shapes;
-  flickcurl_shapedata* result=NULL;
+  flickcurl_shapedata* result = NULL;
 
-  shapes=flickcurl_build_shapes(fc, xpathCtx, xpathExpr, NULL);
+  shapes = flickcurl_build_shapes(fc, xpathCtx, xpathExpr, NULL);
 
   if(shapes) {
-    result=shapes[0];
+    result = shapes[0];
     free(shapes);
   }
   

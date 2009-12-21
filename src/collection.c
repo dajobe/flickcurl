@@ -98,7 +98,7 @@ static struct {
   const xmlChar* xpath;
   flickcurl_collection_field_type field;
   flickcurl_field_value_type type;
-} collection_fields_table[PHOTO_FIELD_LAST + 4]={
+} collection_fields_table[PHOTO_FIELD_LAST + 4] = {
   {
     (const xmlChar*)"./@id",
     COLLECTION_FIELD_id,
@@ -214,9 +214,9 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
     xpathNodeCtx->node = node;
 
-    for(expri=0; collection_fields_table[expri].xpath; expri++) {
-      flickcurl_collection_field_type field=collection_fields_table[expri].field;
-      flickcurl_field_value_type datatype=collection_fields_table[expri].type;
+    for(expri = 0; collection_fields_table[expri].xpath; expri++) {
+      flickcurl_collection_field_type field = collection_fields_table[expri].field;
+      flickcurl_field_value_type datatype = collection_fields_table[expri].type;
       const xmlChar *field_xpath = collection_fields_table[expri].xpath;
       char *string_value;
       int int_value= -1;
@@ -229,7 +229,7 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         continue;
       }
       
-      string_value=flickcurl_xpath_eval(fc, xpathNodeCtx, field_xpath);
+      string_value = flickcurl_xpath_eval(fc, xpathNodeCtx, field_xpath);
       if(!string_value)
         continue;
       
@@ -238,12 +238,12 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case VALUE_TYPE_DATETIME:
           
           if(datatype == VALUE_TYPE_UNIXTIME)
-            unix_time=atoi(string_value);
+            unix_time = atoi(string_value);
           else
-            unix_time=curl_getdate((const char*)string_value, NULL);
+            unix_time = curl_getdate((const char*)string_value, NULL);
           
           if(unix_time >= 0) {
-            char* new_value=flickcurl_unixtime_to_isotime(unix_time);
+            char* new_value = flickcurl_unixtime_to_isotime(unix_time);
 #if FLICKCURL_DEBUG > 1
             fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
                     value, (long)unix_time, new_value);
@@ -251,15 +251,15 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             free(string_value);
             string_value= new_value;
             int_value= (int)unix_time;
-            datatype=VALUE_TYPE_DATETIME;
+            datatype = VALUE_TYPE_DATETIME;
           } else
             /* failed to convert, make it a string */
-            datatype=VALUE_TYPE_STRING;
+            datatype = VALUE_TYPE_STRING;
           break;
           
         case VALUE_TYPE_INTEGER:
         case VALUE_TYPE_BOOLEAN:
-          int_value=atoi(string_value);
+          int_value = atoi(string_value);
           break;
           
         case VALUE_TYPE_COLLECTION_ID:
@@ -336,18 +336,18 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             collection->iconlarge, collection->iconsmall);
 #endif
 
-    collections[collection_count++]=collection;
+    collections[collection_count++] = collection;
   } /* for collections */
   
   if(collection_count_p)
-    *collection_count_p=collection_count;
+    *collection_count_p = collection_count;
 
  tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
   if(fc->failed)
-    collections=NULL;
+    collections = NULL;
 
   return collections;
 }
@@ -360,7 +360,7 @@ flickcurl_build_collection(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   flickcurl_collection** collections;
   flickcurl_collection* result = NULL;
 
-  collections=flickcurl_build_collections(fc, xpathCtx, root_xpathExpr, NULL);
+  collections = flickcurl_build_collections(fc, xpathCtx, root_xpathExpr, NULL);
   if(collections) {
     result = collections[0];
     free(collections);
@@ -383,7 +383,7 @@ flickcurl_free_collections(flickcurl_collection** collections)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(collections, flickcurl_collection_array);
 
-  for(i=0; collections[i]; i++)
+  for(i = 0; collections[i]; i++)
     flickcurl_free_collection(collections[i]);
   free(collections);
 }

@@ -45,8 +45,8 @@
 static int
 compare_licenses(const void *a, const void *b)
 {
-  flickcurl_license* l_a=*(flickcurl_license**)a;
-  flickcurl_license* l_b=*(flickcurl_license**)b;
+  flickcurl_license* l_a = *(flickcurl_license**)a;
+  flickcurl_license* l_b = *(flickcurl_license**)b;
   return l_a->id - l_b->id;
 }
 
@@ -61,12 +61,12 @@ static void
 flickcurl_read_licenses(flickcurl *fc)
 {
   const char * parameters[5][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  xmlXPathObjectPtr xpathObj=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
-  const xmlChar* xpathExpr=NULL;
+  const xmlChar* xpathExpr = NULL;
   int i;
   int size;
   
@@ -75,58 +75,58 @@ flickcurl_read_licenses(flickcurl *fc)
   if(flickcurl_prepare(fc, "flickr.photos.licenses.getInfo", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  xpathExpr=(const xmlChar*)"/rsp/licenses/license";
+  xpathExpr = (const xmlChar*)"/rsp/licenses/license";
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  nodes=xpathObj->nodesetval;
-  size=xmlXPathNodeSetGetLength(nodes);
-  fc->licenses=(flickcurl_license**)calloc(1+size, sizeof(flickcurl_license*));
+  nodes = xpathObj->nodesetval;
+  size = xmlXPathNodeSetGetLength(nodes);
+  fc->licenses = (flickcurl_license**)calloc(1+size, sizeof(flickcurl_license*));
 
-  for(i=0; i < size; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0; i < size; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_license* l;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    l=(flickcurl_license*)calloc(sizeof(flickcurl_license), 1);
+    l = (flickcurl_license*)calloc(sizeof(flickcurl_license), 1);
 
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
       
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "id")) {
-        l->id=atoi(attr_value);
+        l->id = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "name"))
-        l->name=attr_value;
+        l->name = attr_value;
       else if(!strcmp(attr_name, "url")) {
         if(strlen(attr_value))
-          l->url=attr_value;
+          l->url = attr_value;
         else
           free(attr_value);
       }
@@ -137,7 +137,7 @@ flickcurl_read_licenses(flickcurl *fc)
             l->id, l->name, (l->url ? l->url : "(none)"));
 #endif
     
-    fc->licenses[i]=l;
+    fc->licenses[i] = l;
   } /* for nodes */
 
   qsort(fc->licenses, size, sizeof(flickcurl_license*), compare_licenses);
@@ -192,7 +192,7 @@ flickcurl_photos_licenses_getInfo_by_id(flickcurl *fc, int id)
   if(!fc->licenses)
     return NULL;
   
-  for(i=0; fc->licenses[i]; i++) {
+  for(i = 0; fc->licenses[i]; i++) {
     if(fc->licenses[i]->id == id)
       return fc->licenses[i];
     
@@ -220,9 +220,9 @@ flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id,
                                      int license_id)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   char license_id_s[5];
   
   if(!photo_id)
@@ -243,15 +243,15 @@ flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }

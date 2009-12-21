@@ -77,7 +77,7 @@ flickcurl_free_photosets(flickcurl_photoset **photosets_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(photosets_object, flickcurl_photoset_array);
 
-  for(i=0; photosets_object[i]; i++)
+  for(i = 0; photosets_object[i]; i++)
     flickcurl_free_photoset(photosets_object[i]);
   
   free(photosets_object);
@@ -88,77 +88,77 @@ flickcurl_photoset**
 flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                           const xmlChar* xpathExpr, int* photoset_count_p)
 {
-  flickcurl_photoset** photosets=NULL;
+  flickcurl_photoset** photosets = NULL;
   int nodes_count;
   int photoset_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  photosets=(flickcurl_photoset**)calloc(sizeof(flickcurl_photoset*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  photosets = (flickcurl_photoset**)calloc(sizeof(flickcurl_photoset*), nodes_count+1);
   
-  for(i=0, photoset_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, photoset_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_photoset* ps;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    ps=(flickcurl_photoset*)calloc(sizeof(flickcurl_photoset), 1);
+    ps = (flickcurl_photoset*)calloc(sizeof(flickcurl_photoset), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "id"))
-        ps->id=attr_value;
+        ps->id = attr_value;
       else if(!strcmp(attr_name, "primary"))
-        ps->primary=attr_value;
+        ps->primary = attr_value;
       else if(!strcmp(attr_name, "secret")) {
-        ps->secret=attr_value;
+        ps->secret = attr_value;
       } else if(!strcmp(attr_name, "server")) {
-        ps->server=atoi(attr_value);
+        ps->server = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "farm")) {
-        ps->farm=atoi(attr_value);
+        ps->farm = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "photos")) {
-        ps->photos_count=atoi(attr_value);
+        ps->photos_count = atoi(attr_value);
         free(attr_value);
       }
     }
 
     /* Walk children nodes for <title> or <description> elements */
-    for(chnode=node->children; chnode; chnode=chnode->next) {
-      const char *chnode_name=(const char*)chnode->name;
+    for(chnode = node->children; chnode; chnode = chnode->next) {
+      const char *chnode_name = (const char*)chnode->name;
       if(chnode->type == XML_ELEMENT_NODE) {
         if(!strcmp(chnode_name, "title")) {
           if(chnode->children) {
-            ps->title=(char*)malloc(strlen((const char*)chnode->children->content)+1);
+            ps->title = (char*)malloc(strlen((const char*)chnode->children->content)+1);
             strcpy(ps->title, (const char*)chnode->children->content);
           }
         } else if(!strcmp(chnode_name, "description")) {
           if(chnode->children) {
-            ps->description=(char*)malloc(strlen((const char*)chnode->children->content)+1);
+            ps->description = (char*)malloc(strlen((const char*)chnode->children->content)+1);
             strcpy(ps->description, (const char*)chnode->children->content);
           }
         }
@@ -174,11 +174,11 @@ flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             (ps->description ? ps->description : "(No description)"));
 #endif
     
-    photosets[photoset_count++]=ps;
+    photosets[photoset_count++] = ps;
   } /* for nodes */
 
   if(photoset_count_p)
-    *photoset_count_p=photoset_count;
+    *photoset_count_p = photoset_count;
   
  tidy:
   if(xpathObj)
@@ -192,12 +192,12 @@ flickcurl_photoset*
 flickcurl_build_photoset(flickcurl* fc, xmlXPathContextPtr xpathCtx)
 {
   flickcurl_photoset** photosets;
-  flickcurl_photoset* result=NULL;
+  flickcurl_photoset* result = NULL;
 
-  photosets=flickcurl_build_photosets(fc, xpathCtx,
+  photosets = flickcurl_build_photosets(fc, xpathCtx,
                                       (const xmlChar*)"/rsp/photoset", NULL);
   if(photosets) {
-    result=photosets[0];
+    result = photosets[0];
     free(photosets);
   }
   

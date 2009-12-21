@@ -60,10 +60,10 @@ char*
 flickcurl_auth_checkToken(flickcurl* fc, const char* token)
 {
   const char * parameters[6][2];
-  int count=0;
-  char *perms=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  char *perms = NULL;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
 
   if(!token)
     return NULL;
@@ -78,13 +78,13 @@ flickcurl_auth_checkToken(flickcurl* fc, const char* token)
   if(flickcurl_prepare(fc, "flickr.auth.checkToken", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
   
   xpathCtx = xmlXPathNewContext(doc);
   if(xpathCtx) {
-    perms=flickcurl_xpath_eval(fc, xpathCtx,
+    perms = flickcurl_xpath_eval(fc, xpathCtx,
                                     (const xmlChar*)"/rsp/auth/perms");
     xmlXPathFreeContext(xpathCtx);
   }
@@ -110,10 +110,10 @@ char*
 flickcurl_auth_getFrob(flickcurl* fc)
 {
   const char * parameters[5][2];
-  int count=0;
-  char *frob=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  char *frob = NULL;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   
   parameters[count][0]   = NULL;
 
@@ -122,13 +122,13 @@ flickcurl_auth_getFrob(flickcurl* fc)
   if(flickcurl_prepare(fc, "flickr.auth.getFrob", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
   
   xpathCtx = xmlXPathNewContext(doc);
   if(xpathCtx) {
-    frob=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/frob");
+    frob = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/frob");
     xmlXPathFreeContext(xpathCtx);
   }
 
@@ -154,10 +154,10 @@ char*
 flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
 {
   const char * parameters[6][2];
-  int count=0;
-  char *auth_token=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  char *auth_token = NULL;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   
   parameters[count][0]   = "mini_token";
   parameters[count++][1] = (char*)frob;
@@ -169,13 +169,13 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
   if(flickcurl_prepare(fc, "flickr.auth.getFullToken", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
   
   xpathCtx = xmlXPathNewContext(doc);
   if(xpathCtx) {
-    auth_token=flickcurl_xpath_eval(fc, xpathCtx,
+    auth_token = flickcurl_xpath_eval(fc, xpathCtx,
                                     (const xmlChar*)"/rsp/auth/token");
     xmlXPathFreeContext(xpathCtx);
   }
@@ -202,10 +202,10 @@ char*
 flickcurl_auth_getToken(flickcurl* fc, const char* frob)
 {
   const char * parameters[6][2];
-  int count=0;
-  char *auth_token=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  char *auth_token = NULL;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   
   parameters[count][0]   = "frob";
   parameters[count++][1] = (char*)frob;
@@ -217,13 +217,13 @@ flickcurl_auth_getToken(flickcurl* fc, const char* frob)
   if(flickcurl_prepare(fc, "flickr.auth.getToken", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
   
   xpathCtx = xmlXPathNewContext(doc);
   if(xpathCtx) {
-    auth_token=flickcurl_xpath_eval(fc, xpathCtx,
+    auth_token = flickcurl_xpath_eval(fc, xpathCtx,
                                     (const xmlChar*)"/rsp/auth/token");
     xmlXPathFreeContext(xpathCtx);
   }

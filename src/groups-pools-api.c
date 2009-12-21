@@ -59,9 +59,9 @@ flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id,
                            const char* group_id)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   
   if(!photo_id || !group_id)
     return 1;
@@ -79,15 +79,15 @@ flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -111,9 +111,9 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
                                   const char* group_id)
 {
   const char * parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  flickcurl_context** contexts=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  flickcurl_context** contexts = NULL;
   
   if(!photo_id || !group_id)
     return NULL;
@@ -129,15 +129,15 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.groups.pools.getContext", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  contexts=flickcurl_build_contexts(fc, doc);
+  contexts = flickcurl_build_contexts(fc, doc);
 
  tidy:
   if(fc->failed)
-    contexts=NULL;
+    contexts = NULL;
 
   return contexts;
 }
@@ -159,10 +159,10 @@ flickcurl_group**
 flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_group** groups=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_group** groups = NULL;
   char per_page_s[10];
   char page_s[10];
   
@@ -178,7 +178,7 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
   if(flickcurl_prepare(fc, "flickr.groups.pools.getGroups", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -186,11 +186,11 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  groups=flickcurl_build_groups(fc, xpathCtx,
+  groups = flickcurl_build_groups(fc, xpathCtx,
                                 (const xmlChar*)"/rsp/groups/group", NULL);
 
   tidy:
@@ -198,7 +198,7 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    groups=NULL;
+    groups = NULL;
 
   return groups;
 }
@@ -218,7 +218,7 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
  * date_taken, owner_name, icon_server, original_format,
  * last_update, geo, tags, machine_tags.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -229,9 +229,9 @@ flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id,
                                         flickcurl_photos_list_params* list_params)
 {
   const char* parameters[14][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
   
   if(!group_id)
     return NULL;
@@ -256,7 +256,7 @@ flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id,
   if(flickcurl_prepare(fc, "flickr.groups.pools.getPhotos", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -264,7 +264,7 @@ flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -305,12 +305,12 @@ flickcurl_groups_pools_getPhotos(flickcurl* fc, const char* group_id,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_groups_pools_getPhotos_params(fc, group_id, tags,
+  photos_list = flickcurl_groups_pools_getPhotos_params(fc, group_id, tags,
                                                       user_id, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -336,9 +336,9 @@ flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id,
                               const char* group_id)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   
   if(!photo_id || !group_id)
     return 1;
@@ -356,15 +356,15 @@ flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }

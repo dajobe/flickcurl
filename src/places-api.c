@@ -68,10 +68,10 @@ flickcurl_place**
 flickcurl_places_find(flickcurl* fc, const char* query)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place** places=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place** places = NULL;
   
   if(!query)
     return NULL;
@@ -84,7 +84,7 @@ flickcurl_places_find(flickcurl* fc, const char* query)
   if(flickcurl_prepare(fc, "flickr.places.find", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -92,18 +92,18 @@ flickcurl_places_find(flickcurl* fc, const char* query)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  places=flickcurl_build_places(fc, xpathCtx, (const xmlChar*)"/rsp/places/place", NULL);
+  places = flickcurl_build_places(fc, xpathCtx, (const xmlChar*)"/rsp/places/place", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    places=NULL;
+    places = NULL;
 
   return places;
 }
@@ -135,16 +135,16 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
                               int accuracy)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place* place=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place* place = NULL;
   char lat_str[20];
   char lon_str[20];
   char accuracy_str[4];
   
   if(accuracy < 0 || accuracy > 16)
-    accuracy=16;
+    accuracy = 16;
   
   sprintf(lat_str, "%f", lat);
   parameters[count][0]  = "lat";
@@ -161,7 +161,7 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
   if(flickcurl_prepare(fc, "flickr.places.findByLatLon", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -169,11 +169,11 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  place=flickcurl_build_place(fc, xpathCtx,
+  place = flickcurl_build_place(fc, xpathCtx,
                               (const xmlChar*)"/rsp/places/place");
 
   tidy:
@@ -181,7 +181,7 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    place=NULL;
+    place = NULL;
 
   return place;
 }
@@ -233,10 +233,10 @@ flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
                                               const char* place_id, int woe_id)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place** places=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place** places = NULL;
   char woe_id_str[10];
 
   if(place_id) {
@@ -255,7 +255,7 @@ flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
                        parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -263,11 +263,11 @@ flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  places=flickcurl_build_places(fc, xpathCtx,
+  places = flickcurl_build_places(fc, xpathCtx,
                                 (const xmlChar*)"/rsp/places/place", NULL);
 
   tidy:
@@ -275,7 +275,7 @@ flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    places=NULL;
+    places = NULL;
 
   return places;
 }
@@ -331,10 +331,10 @@ flickcurl_place*
 flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place* place=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place* place = NULL;
   char woe_id_str[10];
 
   if(place_id) {
@@ -352,7 +352,7 @@ flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
   if(flickcurl_prepare_noauth(fc, "flickr.places.getInfo", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -360,18 +360,18 @@ flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/place");
+  place = flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/place");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    place=NULL;
+    place = NULL;
 
   return place;
 }
@@ -397,10 +397,10 @@ flickcurl_place*
 flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place* place=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place* place = NULL;
   
   if(!url)
     return NULL;
@@ -413,7 +413,7 @@ flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
   if(flickcurl_prepare(fc, "flickr.places.getInfoByUrl", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -421,18 +421,18 @@ flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/place");
+  place = flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/place");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    place=NULL;
+    place = NULL;
 
   return place;
 }
@@ -452,17 +452,17 @@ flickcurl_place_type_info**
 flickcurl_places_getPlaceTypes(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place_type_info** place_types=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place_type_info** place_types = NULL;
   
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.places.getPlaceTypes", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -470,7 +470,7 @@ flickcurl_places_getPlaceTypes(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -515,10 +515,10 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
                                  int woe_id)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_shapedata** shapes=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_shapedata** shapes = NULL;
   char woe_id_str[20];
   
   if(!place_id && woe_id < 0)
@@ -528,7 +528,7 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
     parameters[count][0]  = "place_id";
     parameters[count++][1]= place_id;
   }
-  if(woe_id >=0) {
+  if(woe_id >= 0) {
     parameters[count][0]  = "woe_id";
     sprintf(woe_id_str, "%d", woe_id);
     parameters[count++][1]= woe_id_str;
@@ -539,7 +539,7 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
   if(flickcurl_prepare(fc, "flickr.places.getShapeHistory", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -547,7 +547,7 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -587,8 +587,8 @@ flickcurl_places_getTopPlacesList(flickcurl* fc,
                                   const char* place_id)
 {
   const char* parameters[11][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
   char woe_id_str[10];
@@ -629,7 +629,7 @@ flickcurl_places_getTopPlacesList(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -677,10 +677,10 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
                                       double maximum_latitude)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place** places=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place** places = NULL;
   char place_type_id_str[3];
   int place_type_id = -1;
   char bbox[255];
@@ -708,7 +708,7 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
                        count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -716,7 +716,7 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -769,10 +769,10 @@ flickcurl_places_placesForContacts(flickcurl* fc,
                                    int max_taken_date)
 {
   const char* parameters[17][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place** places=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place** places = NULL;
   char place_type_id_str[3];
   int place_type_id;
   char min_upload_date_s[20];
@@ -841,7 +841,7 @@ flickcurl_places_placesForContacts(flickcurl* fc,
                        count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -849,7 +849,7 @@ flickcurl_places_placesForContacts(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -892,12 +892,12 @@ flickcurl_places_placesForContacts(flickcurl* fc,
  *
  * <itemizedlist>
  *   <listitem>Find photos using the 'dc' namespace : <literal>"machine_tags" => "dc:"</literal></listitem>
- *   <listitem> Find photos with a title in the 'dc' namespace : <literal>"machine_tags" => "dc:title="</literal></listitem>
- *   <listitem>Find photos titled "mr. camera" in the 'dc' namespace : <literal>"machine_tags" => "dc:title=\"mr. camera\"</literal></listitem>
- *   <listitem>Find photos whose value is "mr. camera" : <literal>"machine_tags" => "*:*=\"mr. camera\""</literal></listitem>
- *   <listitem>Find photos that have a title, in any namespace : <literal>"machine_tags" => "*:title="</literal></listitem>
- *   <listitem>Find photos that have a title, in any namespace, whose value is "mr. camera" : <literal>"machine_tags" => "*:title=\"mr. camera\""</literal></listitem>
- *   <listitem>Find photos, in the 'dc' namespace whose value is "mr. camera" : <literal>"machine_tags" => "dc:*=\"mr. camera\""</literal></listitem>
+ *   <listitem> Find photos with a title in the 'dc' namespace : <literal>"machine_tags" => "dc:title = "</literal></listitem>
+ *   <listitem>Find photos titled "mr. camera" in the 'dc' namespace : <literal>"machine_tags" => "dc:title = \"mr. camera\"</literal></listitem>
+ *   <listitem>Find photos whose value is "mr. camera" : <literal>"machine_tags" => "*:* = \"mr. camera\""</literal></listitem>
+ *   <listitem>Find photos that have a title, in any namespace : <literal>"machine_tags" => "*:title = "</literal></listitem>
+ *   <listitem>Find photos that have a title, in any namespace, whose value is "mr. camera" : <literal>"machine_tags" => "*:title = \"mr. camera\""</literal></listitem>
+ *   <listitem>Find photos, in the 'dc' namespace whose value is "mr. camera" : <literal>"machine_tags" => "dc:* = \"mr. camera\""</literal></listitem>
  *  </itemizedlist>
  * 
  * Implements flickr.places.placesForTags (1.8)
@@ -916,10 +916,10 @@ flickcurl_places_placesForTags(flickcurl* fc,
                                const char* min_taken_date, const char* max_taken_date)
 {
   const char* parameters[19][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  void* result = NULL;
   char place_type_id_str[3];
   int place_type_id;
   char woe_id_str[10];
@@ -960,7 +960,7 @@ flickcurl_places_placesForTags(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.places.placesForTags", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -968,18 +968,18 @@ flickcurl_places_placesForTags(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  result = NULL; /* your code here */
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    result = NULL;
 
   return (result == NULL);
 }
@@ -1000,10 +1000,10 @@ flickcurl_place*
 flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place* place=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place* place = NULL;
   
   if(!place_id)
     return NULL;
@@ -1017,7 +1017,7 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
                               parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -1025,11 +1025,11 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  place=flickcurl_build_place(fc, xpathCtx,
+  place = flickcurl_build_place(fc, xpathCtx,
                               (const xmlChar*)"/rsp/location");
 
   tidy:
@@ -1037,7 +1037,7 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    place=NULL;
+    place = NULL;
 
   return place;
 }
@@ -1058,10 +1058,10 @@ flickcurl_place*
 flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place* place=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place* place = NULL;
   
   if(!url)
     return NULL;
@@ -1075,7 +1075,7 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
                               parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -1083,18 +1083,18 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  place=flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/location");
+  place = flickcurl_build_place(fc, xpathCtx, (const xmlChar*)"/rsp/location");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    place=NULL;
+    place = NULL;
 
   return place;
 }
@@ -1124,15 +1124,15 @@ flickcurl_places_placesForUser(flickcurl* fc,
                                int threshold)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_place** places=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_place** places = NULL;
   const char* place_type_str;
   char woe_id_str[20];
   char threshold_str[4];
 
-  place_type_str=flickcurl_get_place_type_label(place_type);
+  place_type_str = flickcurl_get_place_type_label(place_type);
   if(!place_type_str) {
     flickcurl_error(fc, "Invalid place type %d", place_type);
     return NULL;
@@ -1161,7 +1161,7 @@ flickcurl_places_placesForUser(flickcurl* fc,
     parameters[count++][1]= place_id;
   }
 
-  if(threshold >=0) {
+  if(threshold >= 0) {
     sprintf(threshold_str, "%d", threshold);
     parameters[count][0]  = "threshold";
     parameters[count++][1]= threshold_str;
@@ -1172,7 +1172,7 @@ flickcurl_places_placesForUser(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.places.placesForUser", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -1180,18 +1180,18 @@ flickcurl_places_placesForUser(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  places=flickcurl_build_places(fc, xpathCtx, (const xmlChar*)"/rsp/places/place", NULL);
+  places = flickcurl_build_places(fc, xpathCtx, (const xmlChar*)"/rsp/places/place", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    places=NULL;
+    places = NULL;
 
   return places;
 }
@@ -1245,15 +1245,15 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
                               int min_taken_date, int max_taken_date)
 {
   const char* parameters[13][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char woe_id_str[20];
   char min_upload_date_str[20];
   char max_upload_date_str[20];
   char min_taken_date_str[20];
   char max_taken_date_str[20];
-  flickcurl_tag** tags=NULL;
+  flickcurl_tag** tags = NULL;
   
   if(woe_id < 0 && !place_id)
     return NULL;
@@ -1293,7 +1293,7 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
   if(flickcurl_prepare(fc, "flickr.places.tagsForPlace", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -1301,11 +1301,11 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tags=flickcurl_build_tags(fc, NULL,
+  tags = flickcurl_build_tags(fc, NULL,
                             xpathCtx, 
                             (xmlChar*)"/rsp/tags/tag", 
                             NULL);
@@ -1315,7 +1315,7 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tags=NULL;
+    tags = NULL;
 
   return tags;
 }

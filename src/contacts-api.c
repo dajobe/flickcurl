@@ -62,11 +62,11 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
                            int page, int per_page)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_contact** contacts=NULL;
-  int contacts_count=0;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_contact** contacts = NULL;
+  int contacts_count = 0;
   char page_str[10];
   char per_page_str[10];
 
@@ -93,7 +93,7 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -101,11 +101,11 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  contacts=flickcurl_build_contacts(fc, xpathCtx, 
+  contacts = flickcurl_build_contacts(fc, xpathCtx, 
                                     (xmlChar*)"/rsp/contacts/contact", 
                                     &contacts_count);
 
@@ -115,7 +115,7 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    contacts=NULL;
+    contacts = NULL;
 
   return contacts;
 }
@@ -143,11 +143,11 @@ flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
                                            const char* filter)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_contact** contacts=NULL;
-  int contacts_count=0;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_contact** contacts = NULL;
+  int contacts_count = 0;
   char date_lastupload_str[20];
   
   if(date_lastupload >= 0) {
@@ -166,7 +166,7 @@ flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
                        parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -174,11 +174,11 @@ flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  contacts=flickcurl_build_contacts(fc, xpathCtx, 
+  contacts = flickcurl_build_contacts(fc, xpathCtx, 
                                     (xmlChar*)"/rsp/contacts/contact", 
                                     &contacts_count);
 
@@ -211,11 +211,11 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
                                  int page, int per_page)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_contact** contacts=NULL;
-  int contacts_count=0;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_contact** contacts = NULL;
+  int contacts_count = 0;
   char page_str[10];
   char per_page_str[10];
  
@@ -245,18 +245,18 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  contacts=flickcurl_build_contacts(fc, xpathCtx, 
+  contacts = flickcurl_build_contacts(fc, xpathCtx, 
                                     (xmlChar*)"/rsp/contacts/contact", 
                                     &contacts_count);
 
@@ -266,7 +266,7 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    contacts=NULL;
+    contacts = NULL;
 
   return contacts;
 }

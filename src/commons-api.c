@@ -59,17 +59,17 @@ flickcurl_institution**
 flickcurl_commons_getInstitutions(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_institution** institutions=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_institution** institutions = NULL;
   
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.commons.getInstitutions", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -77,7 +77,7 @@ flickcurl_commons_getInstitutions(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 

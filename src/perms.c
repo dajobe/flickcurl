@@ -53,10 +53,10 @@ flickcurl_perms*
 flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                       const xmlChar* xpathExpr)
 {
-  flickcurl_perms* perms=NULL;
+  flickcurl_perms* perms = NULL;
   int nodes_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do perms */
@@ -64,47 +64,47 @@ flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
   
-  for(i=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    perms=(flickcurl_perms*)calloc(sizeof(flickcurl_perms), 1);
+    perms = (flickcurl_perms*)calloc(sizeof(flickcurl_perms), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "id"))
-        ; /* perms->id=attr_value; */
+        ; /* perms->id = attr_value; */
       else if(!strcmp(attr_name, "ispublic"))
-        perms->is_public=atoi(attr_value);
+        perms->is_public = atoi(attr_value);
       else if(!strcmp(attr_name, "iscontact"))
-        perms->is_contact=atoi(attr_value);
+        perms->is_contact = atoi(attr_value);
       else if(!strcmp(attr_name, "isfriend"))
-        perms->is_friend=atoi(attr_value);
+        perms->is_friend = atoi(attr_value);
       else if(!strcmp(attr_name, "isfamily"))
-        perms->is_family=atoi(attr_value);
+        perms->is_family = atoi(attr_value);
       else if(!strcmp(attr_name, "permcomment"))
-        perms->perm_comment=atoi(attr_value);
+        perms->perm_comment = atoi(attr_value);
       else if(!strcmp(attr_name, "permaddmeta"))
-        perms->perm_addmeta=atoi(attr_value);
+        perms->perm_addmeta = atoi(attr_value);
     }
 
     

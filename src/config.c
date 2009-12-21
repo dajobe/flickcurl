@@ -65,7 +65,7 @@ read_ini_config(const char* filename, const char* application,
   if(access((const char*)filename, R_OK))
     return 1;
   
-  fh=fopen(filename, "r");
+  fh = fopen(filename, "r");
   if(!fh)
     return 1;
 
@@ -154,7 +154,7 @@ read_ini_config(const char* filename, const char* application,
     fprintf(stderr, "Line 4 >>%s<<\n", line);
 #endif
 
-    p = strchr(line, '=');
+    p = strchr(line, ' = ');
     if(p) {
       *p = '\0';
 #ifdef CONFIG_DEBUG    

@@ -42,7 +42,7 @@
  * "reuse of args inside the while(1) loop is in violation of the
  * specs and only happens to work by accident on other systems."
  *
- * http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=104325 
+ * http://bugs.debian.org/cgi-bin/bugreport.cgi?bug = 104325 
  */
 
 #ifndef va_copy
@@ -63,19 +63,19 @@ my_vsnprintf(const char *message, va_list arguments)
   char empty_buffer[1];
 #endif
   int len;
-  char *buffer=NULL;
+  char *buffer = NULL;
   va_list args_copy;
 
 #ifdef HAVE_C99_VSNPRINTF
   /* copy for re-use */
   va_copy(args_copy, arguments);
-  len=vsnprintf(empty_buffer, 1, message, args_copy)+1;
+  len = vsnprintf(empty_buffer, 1, message, args_copy)+1;
   va_end(args_copy);
 
-  if(len<=0)
+  if(len <= 0)
     return NULL;
   
-  buffer=(char*)malloc(len);
+  buffer = (char*)malloc(len);
   if(buffer) {
     /* copy for re-use */
     va_copy(args_copy, arguments);
@@ -84,22 +84,22 @@ my_vsnprintf(const char *message, va_list arguments)
   }
 #else
   /* This vsnprintf doesn't return number of bytes required */
-  int size=2;
+  int size = 2;
       
   while(1) {
-    buffer=(char*)malloc(size+1);
+    buffer = (char*)malloc(size+1);
     if(!buffer)
       break;
     
     /* copy for re-use */
     va_copy(args_copy, arguments);
-    len=vsnprintf(buffer, size, message, args_copy);
+    len = vsnprintf(buffer, size, message, args_copy);
     va_end(args_copy);
 
-    if(len>=0)
+    if(len> = 0)
       break;
     free(buffer);
-    size+=4;
+    size+ = 4;
   }
 #endif
 

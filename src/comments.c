@@ -73,7 +73,7 @@ flickcurl_free_comments(flickcurl_comment **comments_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(comments_object, flickcurl_comment_array);
 
-  for(i=0; comments_object[i]; i++)
+  for(i = 0; comments_object[i]; i++)
     flickcurl_free_comment(comments_object[i]);
   
   free(comments_object);
@@ -85,11 +85,11 @@ flickcurl_build_comments(flickcurl* fc,
                          xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr,
                          int* comment_count_p)
 {
-  flickcurl_comment** comments=NULL;
+  flickcurl_comment** comments = NULL;
   int nodes_count;
   int comment_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do comments */
@@ -97,55 +97,55 @@ flickcurl_build_comments(flickcurl* fc,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  comments=(flickcurl_comment**)calloc(sizeof(flickcurl_comment*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  comments = (flickcurl_comment**)calloc(sizeof(flickcurl_comment*), nodes_count+1);
   
-  for(i=0, comment_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, comment_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_comment* comment_object;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    comment_object=(flickcurl_comment*)calloc(sizeof(flickcurl_comment), 1);
+    comment_object = (flickcurl_comment*)calloc(sizeof(flickcurl_comment), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
       
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "id"))
-        comment_object->id=attr_value;
+        comment_object->id = attr_value;
       else if(!strcmp(attr_name, "author"))
-        comment_object->author=attr_value;
+        comment_object->author = attr_value;
       else if(!strcmp(attr_name, "authorname"))
-        comment_object->authorname=attr_value;
+        comment_object->authorname = attr_value;
       else if(!strcmp(attr_name, "datecreate")) {
-        comment_object->datecreate=atoi((const char*)attr_value);
+        comment_object->datecreate = atoi((const char*)attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "permalink"))
-        comment_object->permalink=attr_value;
+        comment_object->permalink = attr_value;
       else
         free(attr_value);
     }
 
     /* Walk children nodes for comment text */
-    for(chnode=node->children; chnode; chnode=chnode->next) {
+    for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        comment_object->text=(char*)malloc(strlen((const char*)chnode->content)+1);
+        comment_object->text = (char*)malloc(strlen((const char*)chnode->content)+1);
         strcpy(comment_object->text, (const char*)chnode->content);
         break;
       }
@@ -161,11 +161,11 @@ flickcurl_build_comments(flickcurl* fc,
             comment_object->text);
 #endif
     
-    comments[comment_count++]=comment_object;
+    comments[comment_count++] = comment_object;
   } /* for nodes */
 
   if(comment_count_p)
-    *comment_count_p=comment_count;
+    *comment_count_p = comment_count;
   
  tidy:
   if(xpathObj)

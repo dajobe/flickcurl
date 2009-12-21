@@ -56,60 +56,60 @@ char**
 flickcurl_reflection_getMethods(flickcurl* fc)
 {
   const char * parameters[5][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  xmlXPathObjectPtr xpathObj=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
-  const xmlChar* xpathExpr=NULL;
+  const xmlChar* xpathExpr = NULL;
   int i;
   int size;
-  char **methods=NULL;
+  char **methods = NULL;
   
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.reflection.getMethods", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  xpathExpr=(const xmlChar*)"/rsp/methods/method";
+  xpathExpr = (const xmlChar*)"/rsp/methods/method";
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  nodes=xpathObj->nodesetval;
-  size=xmlXPathNodeSetGetLength(nodes);
-  methods=(char**)calloc(1+size, sizeof(char*));
+  nodes = xpathObj->nodesetval;
+  size = xmlXPathNodeSetGetLength(nodes);
+  methods = (char**)calloc(1+size, sizeof(char*));
 
-  count=0;
-  for(i=0; i < size; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  count = 0;
+  for(i = 0; i < size; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
 
     /* Walk children nodes for description text */
-    for(chnode=node->children; chnode; chnode=chnode->next) {
+    for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        methods[count]=(char*)malloc(strlen((const char*)chnode->content)+1);
+        methods[count] = (char*)malloc(strlen((const char*)chnode->content)+1);
         strcpy(methods[count], (const char*)chnode->content);
         count++;
         break;
@@ -117,7 +117,7 @@ flickcurl_reflection_getMethods(flickcurl* fc)
     }
     
   } /* for nodes */
-  methods[count]=NULL;
+  methods[count] = NULL;
   
   tidy:
   if(xpathCtx)
@@ -145,10 +145,10 @@ flickcurl_method*
 flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_method* method=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_method* method = NULL;
   
   parameters[count][0]  = "method_name";
   parameters[count++][1]= name;
@@ -158,7 +158,7 @@ flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name)
   if(flickcurl_prepare(fc, "flickr.reflection.getMethodInfo", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -166,18 +166,18 @@ flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  method=flickcurl_build_method(fc, xpathCtx);
+  method = flickcurl_build_method(fc, xpathCtx);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    method=NULL;
+    method = NULL;
 
   return method;
 }

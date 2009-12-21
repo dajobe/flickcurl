@@ -108,7 +108,7 @@ flickcurl_groups_members_getList(flickcurl* fc, const char* group_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 

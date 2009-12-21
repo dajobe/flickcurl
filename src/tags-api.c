@@ -64,9 +64,9 @@ flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
                                 flickcurl_photos_list_params* list_params)
 {
   const char* parameters[10][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
   
   if(!tag || !cluster_id)
     return NULL;
@@ -81,14 +81,14 @@ flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
   if(flickcurl_prepare(fc, "flickr.tags.getClusterPhotos", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
   tidy:
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -118,10 +118,10 @@ flickcurl_tag_clusters*
 flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_tag_clusters* clusters=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag_clusters* clusters = NULL;
   
   if(!tag)
     return NULL;
@@ -134,7 +134,7 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
   if(flickcurl_prepare(fc, "flickr.tags.getClusters", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -142,7 +142,7 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -178,10 +178,10 @@ flickcurl_tag**
 flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_tag** tags=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag** tags = NULL;
   char tag_count_str[10];
   
   if(period) {
@@ -203,18 +203,18 @@ flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
   if(flickcurl_prepare(fc, "flickr.tags.getHotList", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tags=flickcurl_build_tags(fc, NULL,
+  tags = flickcurl_build_tags(fc, NULL,
                             xpathCtx, 
                             (xmlChar*)"/rsp/hottags/tag", 
                             NULL);
@@ -224,7 +224,7 @@ flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tags=NULL;
+    tags = NULL;
 
   return tags;
 }
@@ -245,10 +245,10 @@ flickcurl_tag**
 flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_tag** tags=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag** tags = NULL;
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
@@ -258,18 +258,18 @@ flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.tags.getListPhoto", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tags=flickcurl_build_tags(fc, NULL,
+  tags = flickcurl_build_tags(fc, NULL,
                             xpathCtx, 
                             (xmlChar*)"/rsp/photo/tags/tag", 
                             NULL);
@@ -279,7 +279,7 @@ flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tags=NULL;
+    tags = NULL;
 
   return tags;
 }
@@ -302,10 +302,10 @@ flickcurl_tag**
 flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
 {
   const char* parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_tag** tags=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag** tags = NULL;
 
   if(user_id) {
     parameters[count][0]  = "user_id";
@@ -317,18 +317,18 @@ flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
   if(flickcurl_prepare(fc, "flickr.tags.getListUser", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tags=flickcurl_build_tags(fc, NULL,
+  tags = flickcurl_build_tags(fc, NULL,
                             xpathCtx, 
                             (xmlChar*)"/rsp/who/tags/tag", 
                             NULL);
@@ -338,7 +338,7 @@ flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tags=NULL;
+    tags = NULL;
 
   return tags;
 }
@@ -362,10 +362,10 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
 {
   const char* parameters[7][2];
   char pop_count_str[10];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_tag** tags=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag** tags = NULL;
 
   if(user_id) {
     parameters[count][0]  = "user_id";
@@ -382,18 +382,18 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.tags.getListUserPopular", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tags=flickcurl_build_tags(fc, NULL,
+  tags = flickcurl_build_tags(fc, NULL,
                             xpathCtx, 
                             (xmlChar*)"/rsp/who/tags/tag", 
                             NULL);
@@ -403,7 +403,7 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tags=NULL;
+    tags = NULL;
 
   return tags;
 }
@@ -424,10 +424,10 @@ flickcurl_tag**
 flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
 {
   const char* parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_tag** tags=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag** tags = NULL;
 
   if(tag) {
     parameters[count][0]  = "tag";
@@ -439,18 +439,18 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
   if(flickcurl_prepare(fc, "flickr.tags.getListUserRaw", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tags=flickcurl_build_tags(fc, NULL,
+  tags = flickcurl_build_tags(fc, NULL,
                             xpathCtx, 
                             (xmlChar*)"/rsp/who/tags/tag", 
                             NULL);
@@ -460,7 +460,7 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tags=NULL;
+    tags = NULL;
 
   return tags;
 }
@@ -481,10 +481,10 @@ flickcurl_tag**
 flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
 {
   const char* parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_tag** tags=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_tag** tags = NULL;
 
   if(!tag)
     return NULL;
@@ -497,18 +497,18 @@ flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
   if(flickcurl_prepare(fc, "flickr.tags.getRelated", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tags=flickcurl_build_tags(fc, NULL,
+  tags = flickcurl_build_tags(fc, NULL,
                             xpathCtx, 
                             (xmlChar*)"/rsp/tags/tag", 
                             NULL);
@@ -518,7 +518,7 @@ flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tags=NULL;
+    tags = NULL;
 
   return tags;
 }

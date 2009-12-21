@@ -61,9 +61,9 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
                                     int per_page, int page)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_namespace** tag_namespaces = NULL;
@@ -83,7 +83,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
                        count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -91,7 +91,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -135,9 +135,9 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
                                int per_page, int page)
 {
   const char* parameters[11][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
@@ -158,7 +158,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
   if(flickcurl_prepare(fc, "flickr.machinetags.getPairs", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -166,7 +166,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -209,9 +209,9 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
                                     int per_page, int page)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
@@ -231,7 +231,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
                        count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -239,7 +239,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -284,9 +284,9 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
                                 int per_page, int page)
 {
   const char* parameters[11][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
@@ -310,7 +310,7 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
   if(flickcurl_prepare(fc, "flickr.machinetags.getValues", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -318,7 +318,7 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -386,7 +386,7 @@ flickcurl_machinetags_getRecentValues(flickcurl* fc,
                        parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 

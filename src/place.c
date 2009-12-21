@@ -42,7 +42,7 @@
 #include <flickcurl_internal.h>
 
 
-static const char* flickcurl_place_type_label[FLICKCURL_PLACE_LAST+1]={
+static const char* flickcurl_place_type_label[FLICKCURL_PLACE_LAST+1] = {
   "location",
   "neighbourhood",
   "locality",
@@ -82,7 +82,7 @@ flickcurl_place_type
 flickcurl_get_place_type_by_label(const char* place_label)
 {
   int i;
-  for(i=0; flickcurl_place_type_label[i]; i++) {
+  for(i = 0; flickcurl_place_type_label[i]; i++) {
     if(!strcmp(flickcurl_place_type_label[i], place_label))
       return (flickcurl_place_type)i;
   }
@@ -104,7 +104,7 @@ flickcurl_free_place(flickcurl_place *place)
 
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(place, flickcurl_place);
 
-  for(i=0; i <= FLICKCURL_PLACE_LAST; i++) {
+  for(i = 0; i <= FLICKCURL_PLACE_LAST; i++) {
     if(place->names[i])
       free(place->names[i]);
     if(place->ids[i])
@@ -138,7 +138,7 @@ flickcurl_free_places(flickcurl_place **places_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(places_object, flickcurl_place_array);
 
-  for(i=0; places_object[i]; i++)
+  for(i = 0; places_object[i]; i++)
     flickcurl_free_place(places_object[i]);
   
   free(places_object);
@@ -182,7 +182,7 @@ static struct {
   const xmlChar* xpath;
   flickcurl_place_type place_type;
   place_field_type place_field;
-} place_fields_table[PLACE_FIELDS_TABLE_SIZE+1]={
+} place_fields_table[PLACE_FIELDS_TABLE_SIZE+1] = {
   {
     (const xmlChar*)"./@name",
     FLICKCURL_PLACE_LOCATION,
@@ -407,10 +407,10 @@ flickcurl_place**
 flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                        const xmlChar* xpathExpr, int* place_count_p)
 {
-  flickcurl_place** places=NULL;
+  flickcurl_place** places = NULL;
   int nodes_count;
   int place_count;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   int i;
   
@@ -418,52 +418,52 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  places=(flickcurl_place**)calloc(sizeof(flickcurl_place*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  places = (flickcurl_place**)calloc(sizeof(flickcurl_place*), nodes_count+1);
 
-  for(i=0, place_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, place_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     int expri;
-    xmlXPathContextPtr xpathNodeCtx=NULL;
+    xmlXPathContextPtr xpathNodeCtx = NULL;
     flickcurl_place* place;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    place=(flickcurl_place*)calloc(sizeof(flickcurl_place), 1);
-    place->type=FLICKCURL_PLACE_LOCATION;
+    place = (flickcurl_place*)calloc(sizeof(flickcurl_place), 1);
+    place->type = FLICKCURL_PLACE_LOCATION;
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
     xpathNodeCtx->node = node;
 
-    for(expri=0; expri <= FLICKCURL_PLACE_LAST; expri++) {
+    for(expri = 0; expri <= FLICKCURL_PLACE_LAST; expri++) {
       if(place->names[expri]) {
         free(place->names[expri]);
-        place->names[expri]=NULL;
+        place->names[expri] = NULL;
       }
       if(place->ids[expri]) {
         free(place->ids[expri]);
-        place->ids[expri]=NULL;
+        place->ids[expri] = NULL;
       }
       if(place->urls[expri]) {
         free(place->urls[expri]);
-        place->urls[expri]=NULL;
+        place->urls[expri] = NULL;
       }
     }
 
-    for(expri=0; place_fields_table[expri].xpath; expri++) {
-      flickcurl_place_type place_type=place_fields_table[expri].place_type;
-      place_field_type place_field=place_fields_table[expri].place_field;
+    for(expri = 0; place_fields_table[expri].xpath; expri++) {
+      flickcurl_place_type place_type = place_fields_table[expri].place_type;
+      place_field_type place_field = place_fields_table[expri].place_field;
       const xmlChar* place_xpathExpr = place_fields_table[expri].xpath;
       char *value = NULL;
       
@@ -490,41 +490,41 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       
       switch(place_field) {
         case PLACE_NAME:
-          place->names[(int)place_type]=value;
+          place->names[(int)place_type] = value;
           break;
           
         case PLACE_ID:
-          place->ids[(int)place_type]=value;
+          place->ids[(int)place_type] = value;
           break;
 
         case PLACE_WOE_ID:
-          place->woe_ids[(int)place_type]=value;
+          place->woe_ids[(int)place_type] = value;
           break;
 
         case PLACE_URL:
-          place->urls[(int)place_type]=value;
+          place->urls[(int)place_type] = value;
           break;
 
         case PLACE_TYPE:
-          place->type=flickcurl_get_place_type_by_label(value);
-          free(value); value=NULL;
+          place->type = flickcurl_get_place_type_by_label(value);
+          free(value); value = NULL;
           break;
 
         case PLACE_LATITUDE:
           place->location.accuracy= -1;
-          place->location.latitude=atof(value);
-          free(value); value=NULL;
+          place->location.latitude = atof(value);
+          free(value); value = NULL;
           break;
 
         case PLACE_LONGITUDE:
           place->location.accuracy= -1;
-          place->location.longitude=atof(value);
-          free(value); value=NULL;
+          place->location.longitude = atof(value);
+          free(value); value = NULL;
           break;
 
         case PLACE_PHOTO_COUNT:
-          place->count=atoi(value);
-          free(value); value=NULL;
+          place->count = atoi(value);
+          free(value); value = NULL;
           break;
 
         case PLACE_TIMEZONE:
@@ -538,7 +538,7 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case PLACE_NONE:
         default:
           flickcurl_error(fc, "Unknown place type %d",  (int)place_field);
-          fc->failed=1;
+          fc->failed = 1;
       }
       
       if(fc->failed)
@@ -549,18 +549,18 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     if(xpathNodeCtx)
       xmlXPathFreeContext(xpathNodeCtx);
 
-    places[place_count++]=place;
+    places[place_count++] = place;
   } /* for places */
   
   if(place_count_p)
-    *place_count_p=place_count;
+    *place_count_p = place_count;
   
  tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
   if(fc->failed)
-    places=NULL;
+    places = NULL;
 
   return places;
 }
@@ -571,12 +571,12 @@ flickcurl_build_place(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                       const xmlChar* xpathExpr)
 {
   flickcurl_place** places;
-  flickcurl_place* result=NULL;
+  flickcurl_place* result = NULL;
 
-  places=flickcurl_build_places(fc, xpathCtx, xpathExpr, NULL);
+  places = flickcurl_build_places(fc, xpathCtx, xpathExpr, NULL);
 
   if(places) {
-    result=places[0];
+    result = places[0];
     free(places);
   }
   
@@ -648,11 +648,11 @@ flickcurl_place_type_info**
 flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                             const xmlChar* xpathExpr, int* place_type_count_p)
 {
-  flickcurl_place_type_info** place_types=NULL;
+  flickcurl_place_type_info** place_types = NULL;
   int nodes_count;
   int place_type_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do place_types */
@@ -660,24 +660,24 @@ flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
   place_types = (flickcurl_place_type_info**)calloc(sizeof(flickcurl_place_type*), nodes_count + 1);
   
-  for(i=0, place_type_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, place_type_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_place_type_info* pt;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
@@ -698,7 +698,7 @@ flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     }
 
     /* Walk children nodes for name text */
-    for(chnode=node->children; chnode; chnode=chnode->next) {
+    for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
         pt->name = (char*)malloc(strlen((const char*)chnode->content)+1);
         strcpy(pt->name, (const char*)chnode->content);
@@ -738,7 +738,7 @@ flickcurl_free_place_type_infos(flickcurl_place_type_info **ptis_object)
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(ptis_object,
                                          flickcurl_place_type_info);
 
-  for(i=0; ptis_object[i]; i++) {
+  for(i = 0; ptis_object[i]; i++) {
     flickcurl_place_type_info *pti = ptis_object[i];
     char * n = pti->name;
     if(n)

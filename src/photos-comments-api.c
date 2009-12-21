@@ -59,10 +59,10 @@ flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
                                      const char* comment_text)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  char* id=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  char* id = NULL;
   
   if(!photo_id || !comment_text)
     return NULL;
@@ -81,25 +81,25 @@ flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  id=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/comment/@id");
+  id = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/comment/@id");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    id=NULL;
+    id = NULL;
 
   return id;
 }
@@ -120,9 +120,9 @@ int
 flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   
   if(!comment_id)
     return 1;
@@ -139,15 +139,15 @@ flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -170,9 +170,9 @@ flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
                                       const char* comment_text)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   
   if(!comment_id || !comment_text)
     return 1;
@@ -191,15 +191,15 @@ flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -220,11 +220,11 @@ flickcurl_comment**
 flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_comment** comments=NULL;
-  int comments_count=0;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_comment** comments = NULL;
+  int comments_count = 0;
   
   if(!photo_id)
     return NULL;
@@ -237,7 +237,7 @@ flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.comments.getList", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -245,11 +245,11 @@ flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  comments=flickcurl_build_comments(fc, xpathCtx, 
+  comments = flickcurl_build_comments(fc, xpathCtx, 
                                     (xmlChar*)"/rsp/comments/comment", 
                                     &comments_count);
 
@@ -258,7 +258,7 @@ flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    comments=NULL;
+    comments = NULL;
 
   return comments;
 }
@@ -286,7 +286,7 @@ flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc,
 {
   const char* parameters[12][2];
   int count = 0;
-  flickcurl_photos_list* photos_list=NULL;
+  flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   char date_lastcomment_str[20];
   

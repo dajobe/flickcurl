@@ -57,9 +57,9 @@ int
 flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   
   if(!photo_id)
     return 1;
@@ -75,7 +75,7 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -83,7 +83,7 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -110,7 +110,7 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
  *
  * Only photos which the calling user has permission to see are returned.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -120,9 +120,9 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
                                    flickcurl_photos_list_params* list_params)
 {
   const char* parameters[12][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
    
   /* API parameters */
   if(user_id) {
@@ -137,7 +137,7 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.favorites.getList", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -145,7 +145,7 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -182,11 +182,11 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_favorites_getList_params(fc, user_id, &list_params);
+  photos_list = flickcurl_favorites_getList_params(fc, user_id, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -203,7 +203,7 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
  * 
  * Returns a list of favorite public photos for the given user.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -213,9 +213,9 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
                                          flickcurl_photos_list_params* list_params)
 {
   const char* parameters[13][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
   
   if(!user_id)
     return NULL;
@@ -232,7 +232,7 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.favorites.getPublicList", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -240,7 +240,7 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -278,12 +278,12 @@ flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_favorites_getPublicList_params(fc, user_id,
+  photos_list = flickcurl_favorites_getPublicList_params(fc, user_id,
                                                        &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -307,9 +307,9 @@ int
 flickcurl_favorites_remove(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   
   if(!photo_id)
     return 1;
@@ -325,7 +325,7 @@ flickcurl_favorites_remove(flickcurl* fc, const char* photo_id)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -333,7 +333,7 @@ flickcurl_favorites_remove(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 

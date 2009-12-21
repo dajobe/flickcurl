@@ -60,9 +60,9 @@ int
 flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int rc=0;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int rc = 0;
   
   parameters[count][0]  = key;
   parameters[count++][1]= value;
@@ -70,13 +70,13 @@ flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.test.echo", parameters, count)) {
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc) {
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -103,17 +103,17 @@ char*
 flickcurl_test_login(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  char* username=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  char* username = NULL;
   
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.test.login", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -121,18 +121,18 @@ flickcurl_test_login(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  username=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/user/username");
+  username = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/user/username");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    username=NULL;
+    username = NULL;
 
   return username;
 }
@@ -152,16 +152,16 @@ int
 flickcurl_test_null(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.test.null", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -169,7 +169,7 @@ flickcurl_test_null(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 

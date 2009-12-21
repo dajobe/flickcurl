@@ -74,7 +74,7 @@ flickcurl_free_sizes(flickcurl_size **sizes_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(sizes_object, flickcurl_size_array);
 
-  for(i=0; sizes_object[i]; i++)
+  for(i = 0; sizes_object[i]; i++)
     flickcurl_free_size(sizes_object[i]);
   
   free(sizes_object);
@@ -85,60 +85,60 @@ flickcurl_size**
 flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                       const xmlChar* xpathExpr, int* size_count_p)
 {
-  flickcurl_size** sizes=NULL;
+  flickcurl_size** sizes = NULL;
   int nodes_count;
   int size_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  sizes=(flickcurl_size**)calloc(sizeof(flickcurl_size*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  sizes = (flickcurl_size**)calloc(sizeof(flickcurl_size*), nodes_count+1);
   
-  for(i=0, size_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, size_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_size* s;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    s=(flickcurl_size*)calloc(sizeof(flickcurl_size), 1);
+    s = (flickcurl_size*)calloc(sizeof(flickcurl_size), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "label"))
-        s->label=attr_value;
+        s->label = attr_value;
       else if(!strcmp(attr_name, "width")) {
-        s->width=atoi(attr_value);
+        s->width = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "height")) {
-        s->height=atoi(attr_value);
+        s->height = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "source")) {
-        s->source=attr_value;
+        s->source = attr_value;
       } else if(!strcmp(attr_name, "url")) {
-        s->url=attr_value;
+        s->url = attr_value;
       } else if(!strcmp(attr_name, "media")) {
-        s->media=attr_value;
+        s->media = attr_value;
       }
     }
 
@@ -147,11 +147,11 @@ flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             s->label, s->width, s->height, s->source, s->url);
 #endif
     
-    sizes[size_count++]=s;
+    sizes[size_count++] = s;
   } /* for nodes */
 
   if(size_count_p)
-    *size_count_p=size_count;
+    *size_count_p = size_count;
   
  tidy:
   if(xpathObj)

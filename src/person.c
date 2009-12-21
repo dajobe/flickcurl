@@ -42,7 +42,7 @@
 #include <flickcurl_internal.h>
 
 
-static const char* flickcurl_person_field_label[PERSON_FIELD_LAST+1]={
+static const char* flickcurl_person_field_label[PERSON_FIELD_LAST+1] = {
   "(none)",
   "isadmin",
   "ispro",
@@ -93,7 +93,7 @@ flickcurl_free_person(flickcurl_person *person)
 
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(person, flickcurl_person);
 
-  for(i=0; i <= PERSON_FIELD_LAST; i++) {
+  for(i = 0; i <= PERSON_FIELD_LAST; i++) {
     if(person->fields[i].string)
       free(person->fields[i].string);
   }
@@ -112,7 +112,7 @@ static struct {
   const xmlChar* xpath;
   flickcurl_person_field_type field;
   flickcurl_field_value_type type;
-} person_fields_table[PHOTO_FIELD_LAST + 4]={
+} person_fields_table[PHOTO_FIELD_LAST + 4] = {
   {
     (const xmlChar*)"./@nsid",
     PERSON_FIELD_none,
@@ -234,50 +234,50 @@ flickcurl_person**
 flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                         const xmlChar* xpathExpr, int* person_count_p)
 {
-  flickcurl_person** persons=NULL;
+  flickcurl_person** persons = NULL;
   int nodes_count;
   int person_count;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   xmlChar full_xpath[512];
   size_t xpathExpr_len;
   int i;
   
-  xpathExpr_len=strlen((const char*)xpathExpr);
+  xpathExpr_len = strlen((const char*)xpathExpr);
   strncpy((char*)full_xpath, (const char*)xpathExpr, xpathExpr_len+1);
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  persons=(flickcurl_person**)calloc(sizeof(flickcurl_person*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  persons = (flickcurl_person**)calloc(sizeof(flickcurl_person*), nodes_count+1);
 
-  for(i=0, person_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, person_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     flickcurl_person* person;
     int expri;
-    xmlXPathContextPtr xpathNodeCtx=NULL;
+    xmlXPathContextPtr xpathNodeCtx = NULL;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    person=(flickcurl_person*)calloc(sizeof(flickcurl_person), 1);
+    person = (flickcurl_person*)calloc(sizeof(flickcurl_person), 1);
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
     xpathNodeCtx->node = node;
 
-    for(expri=0; expri <= PERSON_FIELD_LAST; expri++) {
+    for(expri = 0; expri <= PERSON_FIELD_LAST; expri++) {
       if(person->fields[expri].string)
         free(person->fields[expri].string);
       person->fields[expri].string = NULL;
@@ -285,14 +285,14 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       person->fields[expri].type   = VALUE_TYPE_NONE;
     }
 
-    for(expri=0; person_fields_table[expri].xpath; expri++) {
-      flickcurl_person_field_type field=person_fields_table[expri].field;
-      flickcurl_field_value_type datatype=person_fields_table[expri].type;
+    for(expri = 0; person_fields_table[expri].xpath; expri++) {
+      flickcurl_person_field_type field = person_fields_table[expri].field;
+      flickcurl_field_value_type datatype = person_fields_table[expri].type;
       char *string_value;
       int int_value= -1;
       time_t unix_time;
       
-      string_value=flickcurl_xpath_eval(fc, xpathNodeCtx,
+      string_value = flickcurl_xpath_eval(fc, xpathNodeCtx,
                                         person_fields_table[expri].xpath);
       if(!string_value) {
         person->fields[field].string = NULL;
@@ -303,21 +303,21 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       
       switch(datatype) {
         case VALUE_TYPE_PERSON_ID:
-          person->nsid=string_value;
-          string_value=NULL;
-          datatype=VALUE_TYPE_NONE;
+          person->nsid = string_value;
+          string_value = NULL;
+          datatype = VALUE_TYPE_NONE;
           break;
           
         case VALUE_TYPE_UNIXTIME:
         case VALUE_TYPE_DATETIME:
           
           if(datatype == VALUE_TYPE_UNIXTIME)
-            unix_time=atoi(string_value);
+            unix_time = atoi(string_value);
           else
-            unix_time=curl_getdate((const char*)string_value, NULL);
+            unix_time = curl_getdate((const char*)string_value, NULL);
           
           if(unix_time >= 0) {
-            char* new_value=flickcurl_unixtime_to_isotime(unix_time);
+            char* new_value = flickcurl_unixtime_to_isotime(unix_time);
 #if FLICKCURL_DEBUG > 1
             fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
                     value, (long)unix_time, new_value);
@@ -325,15 +325,15 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             free(string_value);
             string_value= new_value;
             int_value= (int)unix_time;
-            datatype=VALUE_TYPE_DATETIME;
+            datatype = VALUE_TYPE_DATETIME;
           } else
             /* failed to convert, make it a string */
-            datatype=VALUE_TYPE_STRING;
+            datatype = VALUE_TYPE_STRING;
           break;
           
         case VALUE_TYPE_INTEGER:
         case VALUE_TYPE_BOOLEAN:
-          int_value=atoi(string_value);
+          int_value = atoi(string_value);
           break;
           
         case VALUE_TYPE_NONE:
@@ -365,18 +365,18 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         goto tidy;
     }
 
-    persons[person_count++]=person;
+    persons[person_count++] = person;
   } /* for persons */
   
   if(person_count_p)
-    *person_count_p=person_count;
+    *person_count_p = person_count;
 
  tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
   if(fc->failed)
-    persons=NULL;
+    persons = NULL;
 
   return persons;
 }
@@ -387,11 +387,11 @@ flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                        const xmlChar* root_xpathExpr)
 {
   flickcurl_person** persons;
-  flickcurl_person* result=NULL;
+  flickcurl_person* result = NULL;
 
-  persons=flickcurl_build_persons(fc, xpathCtx, root_xpathExpr, NULL);
+  persons = flickcurl_build_persons(fc, xpathCtx, root_xpathExpr, NULL);
   if(persons) {
-    result=persons[0];
+    result = persons[0];
     free(persons);
   }
   
@@ -412,7 +412,7 @@ flickcurl_free_persons(flickcurl_person** persons)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(persons, flickcurl_person_array);
 
-  for(i=0; persons[i]; i++)
+  for(i = 0; persons[i]; i++)
     flickcurl_free_person(persons[i]);
   free(persons);
 }

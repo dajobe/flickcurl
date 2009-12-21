@@ -57,10 +57,10 @@ flickcurl_category*
 flickcurl_groups_browse(flickcurl* fc, int cat_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_category* category=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_category* category = NULL;
   char cat_id_str[10];
   
   if(cat_id >= 0) {
@@ -74,7 +74,7 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
   if(flickcurl_prepare(fc, "flickr.groups.browse", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -82,14 +82,14 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  category=(flickcurl_category*)calloc(sizeof(flickcurl_category), 1);
-  category->categories=flickcurl_build_categories(fc, xpathCtx,
+  category = (flickcurl_category*)calloc(sizeof(flickcurl_category), 1);
+  category->categories = flickcurl_build_categories(fc, xpathCtx,
      (const xmlChar*)"/rsp/category/subcat", &category->categories_count);
-  category->groups=flickcurl_build_groups(fc, xpathCtx,
+  category->groups = flickcurl_build_groups(fc, xpathCtx,
      (const xmlChar*)"/rsp/category/group", &category->groups_count);
 
   tidy:
@@ -97,7 +97,7 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    category=NULL;
+    category = NULL;
 
   return category;
 }
@@ -119,11 +119,11 @@ flickcurl_group*
 flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_group **groups=NULL;
-  flickcurl_group *group=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_group **groups = NULL;
+  flickcurl_group *group = NULL;
   
   if(!group_id)
     return NULL;
@@ -140,7 +140,7 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
   if(flickcurl_prepare(fc, "flickr.groups.getInfo", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -148,16 +148,16 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  groups=flickcurl_build_groups(fc, xpathCtx,
+  groups = flickcurl_build_groups(fc, xpathCtx,
                                 (const xmlChar*)"/rsp/group", NULL);
   if(groups) {
-    group=groups[0];
+    group = groups[0];
     free(groups);
-    groups=NULL;
+    groups = NULL;
   }
 
   tidy:
@@ -165,7 +165,7 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    group=NULL;
+    group = NULL;
 
   return group;
 }
@@ -189,10 +189,10 @@ flickcurl_group**
 flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_group **groups=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_group **groups = NULL;
   char per_page_s[10];
   char page_s[10];
   
@@ -213,7 +213,7 @@ flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
   if(flickcurl_prepare(fc, "flickr.groups.search", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -221,11 +221,11 @@ flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  groups=flickcurl_build_groups(fc, xpathCtx,
+  groups = flickcurl_build_groups(fc, xpathCtx,
                                 (const xmlChar*)"/rsp/groups/group", NULL);
 
   tidy:
@@ -233,7 +233,7 @@ flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    groups=NULL;
+    groups = NULL;
 
   return groups;
 }

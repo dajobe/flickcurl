@@ -56,7 +56,7 @@ flickcurl_free_method(flickcurl_method *method)
   if(method->explanation)
     free(method->explanation);
   
-  for(i=0; i < method->args_count; i++)
+  for(i = 0; i < method->args_count; i++)
     flickcurl_free_arg(method->args[i]);
 
   free(method);
@@ -75,7 +75,7 @@ typedef enum
 static struct {
   const xmlChar* xpath;
   flickcurl_method_field_type field;
-} method_fields_table[METHOD_FIELD_LAST + 3]={
+} method_fields_table[METHOD_FIELD_LAST + 3] = {
   {
     (const xmlChar*)"/rsp/method/@name",
     METHOD_FIELD_name
@@ -112,32 +112,32 @@ flickcurl_method*
 flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
 {
   int expri;
-  flickcurl_method* method=NULL;
+  flickcurl_method* method = NULL;
   
-  method=(flickcurl_method*)calloc(sizeof(flickcurl_method), 1);
+  method = (flickcurl_method*)calloc(sizeof(flickcurl_method), 1);
   
-  for(expri=0; method_fields_table[expri].xpath; expri++) {
-    char *string_value=flickcurl_xpath_eval(fc, xpathCtx, 
+  for(expri = 0; method_fields_table[expri].xpath; expri++) {
+    char *string_value = flickcurl_xpath_eval(fc, xpathCtx, 
                                             method_fields_table[expri].xpath);
     switch(method_fields_table[expri].field) {
       case METHOD_FIELD_name:
-        method->name=string_value;
+        method->name = string_value;
         break;
         
       case METHOD_FIELD_needslogin:
-        method->needslogin=atoi(string_value);
+        method->needslogin = atoi(string_value);
         break;
         
       case METHOD_FIELD_description:
-        method->description=string_value;
+        method->description = string_value;
         break;
         
       case METHOD_FIELD_response:
-        method->response=string_value;
+        method->response = string_value;
         break;
         
       case METHOD_FIELD_explanation:
-        method->explanation=string_value;
+        method->explanation = string_value;
         break;
 
       default:
@@ -151,13 +151,13 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
   /* As of 2007-04-15 - the response is different from the docs
    * There is no /method/arguments element
    */
-  method->args=flickcurl_build_args(fc, xpathCtx, 
+  method->args = flickcurl_build_args(fc, xpathCtx, 
                                     (xmlChar*)"/rsp/arguments/argument", 
                                     &method->args_count);
 
   tidy:
   if(fc->failed)
-    method=NULL;
+    method = NULL;
 
   return method;
 }

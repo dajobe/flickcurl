@@ -59,10 +59,10 @@ flickcurl_photos_transform_rotate(flickcurl* fc, const char* photo_id,
                                   int degrees)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   char degrees_str[4];
-  int result=0;
+  int result = 0;
   
   if(!photo_id || !(degrees == 90 || degrees == 180 || degrees == 270))
     return 1;
@@ -78,15 +78,15 @@ flickcurl_photos_transform_rotate(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.transform.rotate", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }

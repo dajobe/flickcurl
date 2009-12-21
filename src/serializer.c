@@ -89,7 +89,7 @@ struct flickrdf_nspace_s
 };
 typedef struct flickrdf_nspace_s flickrdf_nspace;
 
-flickrdf_nspace namespace_table[]={
+flickrdf_nspace namespace_table[] = {
   { (char*)"a",        (char*)"http://www.w3.org/2000/10/annotation-ns" },
   { (char*)"acl",      (char*)"http://www.w3.org/2001/02/acls#" },
   { (char*)"blue",     (char*)BLUE_NS, },
@@ -125,7 +125,7 @@ static struct {
   const char* nspace_uri;
   const char* name;
   int flags;
-} field_table[]={
+} field_table[] = {
   /* dc:available -- date that the resource will become/did become available.*/
   /* dc:dateSubmitted - Date of submission of resource (e.g. thesis, articles)*/
   { PHOTO_FIELD_dateuploaded,       DCTERMS_NS, "dateSubmitted" },
@@ -151,9 +151,9 @@ flickcurl_serializer_init(void)
 {
   int i;
 
-  for(i=0; namespace_table[i].prefix != NULL; i++) {
-    namespace_table[i].uri_len=strlen(namespace_table[i].uri);
-    namespace_table[i].prefix_len=strlen(namespace_table[i].prefix);
+  for(i = 0; namespace_table[i].prefix != NULL; i++) {
+    namespace_table[i].uri_len = strlen(namespace_table[i].uri);
+    namespace_table[i].prefix_len = strlen(namespace_table[i].prefix);
   }
 }
 
@@ -188,13 +188,13 @@ flickcurl_new_serializer(flickcurl* fc,
   if(!factory || (factory && factory->version != 1))
     return NULL;
   
-  serializer=(flickcurl_serializer*)malloc(sizeof(flickcurl_serializer));
+  serializer = (flickcurl_serializer*)malloc(sizeof(flickcurl_serializer));
   if(!serializer)
     return NULL;
   
-  serializer->fc=fc;
-  serializer->data=data;
-  serializer->factory=factory;
+  serializer->fc = fc;
+  serializer->data = data;
+  serializer->factory = factory;
   return serializer;
 }
 
@@ -219,17 +219,17 @@ nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri)
 {
   flickrdf_nspace* ns;
 
-  ns=(flickrdf_nspace*)malloc(sizeof(flickrdf_nspace));
-  ns->prefix_len=strlen(prefix);
-  ns->uri_len=strlen(uri);
+  ns = (flickrdf_nspace*)malloc(sizeof(flickrdf_nspace));
+  ns->prefix_len = strlen(prefix);
+  ns->uri_len = strlen(uri);
 
-  ns->prefix=(char*)malloc(ns->prefix_len+1);
+  ns->prefix = (char*)malloc(ns->prefix_len+1);
   strcpy(ns->prefix, prefix);
 
-  ns->uri=(char*)malloc(ns->uri_len+1);
+  ns->uri = (char*)malloc(ns->uri_len+1);
   strcpy(ns->uri, uri);
 
-  ns->next=list;
+  ns->next = list;
   return ns;
 }
 
@@ -240,10 +240,10 @@ nspace_add_if_not_declared(flickrdf_nspace* list,
 {
   int n;
   flickrdf_nspace* ns;
-  size_t prefix_len=prefix ? strlen(prefix) : 0;
-  size_t uri_len=nspace_uri ? strlen(nspace_uri) : 0;
+  size_t prefix_len = prefix ? strlen(prefix) : 0;
+  size_t uri_len = nspace_uri ? strlen(nspace_uri) : 0;
   
-  for(ns=list; ns; ns=ns->next) {
+  for(ns = list; ns; ns = ns->next) {
     if(nspace_uri && ns->uri_len == uri_len && !strcmp(ns->uri, nspace_uri))
       break;
     if(prefix && ns->prefix_len == prefix_len && !strcmp(ns->prefix, prefix))
@@ -252,16 +252,16 @@ nspace_add_if_not_declared(flickrdf_nspace* list,
   if(ns)
     return list;
 
-  ns=NULL;
-  for(n=0; namespace_table[n].uri; n++) {
+  ns = NULL;
+  for(n = 0; namespace_table[n].uri; n++) {
     if(prefix && namespace_table[n].prefix_len == prefix_len && 
        !strcmp(namespace_table[n].prefix, prefix)) {
-      ns=&namespace_table[n];
+      ns = &namespace_table[n];
       break;
     }
     if(nspace_uri && namespace_table[n].uri_len == uri_len && 
        !strcmp(namespace_table[n].uri, nspace_uri)) {
-      ns=&namespace_table[n];
+      ns = &namespace_table[n];
       break;
     }
   }
@@ -277,9 +277,9 @@ static flickrdf_nspace*
 nspace_get_by_prefix(flickrdf_nspace* list, const char *prefix)
 {
   flickrdf_nspace* ns;
-  size_t prefix_len=strlen(prefix);
+  size_t prefix_len = strlen(prefix);
   
-  for(ns=list; ns; ns=ns->next) {
+  for(ns = list; ns; ns = ns->next) {
     if(ns->prefix_len == prefix_len && !strcmp(ns->prefix, prefix))
       break;
   }
@@ -293,7 +293,7 @@ print_nspaces(FILE* fh, const char* label, flickrdf_nspace* list)
 {
   flickrdf_nspace* ns;
 
-  for(ns=list; ns; ns=ns->next) {
+  for(ns = list; ns; ns = ns->next) {
     fprintf(fh, "%s: Declaring namespace prefix %s URI %s\n",
             label, (ns->prefix ? ns->prefix : ":"),
             (ns->uri ? ns->uri : "\"\""));
@@ -307,8 +307,8 @@ free_nspaces(flickrdf_nspace* list)
 {
   flickrdf_nspace* next;
 
-  for(; list; list=next) {
-    next=list->next;
+  for(; list; list = next) {
+    next = list->next;
     if(list->prefix)
       free(list->prefix);
     free(list->uri);
@@ -330,106 +330,106 @@ int
 flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 {
   int i;
-  int need_person=0;
-  int need_foaf=0;
-  int need_rdfs=0;
-  flickrdf_nspace* nspaces=NULL;
+  int need_person = 0;
+  int need_foaf = 0;
+  int need_rdfs = 0;
+  flickrdf_nspace* nspaces = NULL;
   flickrdf_nspace* ns;
-  flickcurl_serializer_factory* fsf=fcs->factory;
-  flickcurl* fc=fcs->fc;
+  flickcurl_serializer_factory* fsf = fcs->factory;
+  flickcurl* fc = fcs->fc;
 #if FLICKCURL_DEBUG > 1
-  FILE* fh=stderr;
-  const char* label="libflickcurl";
+  FILE* fh = stderr;
+  const char* label = "libflickcurl";
 #endif
-  flickcurl_size** sizes=NULL;
+  flickcurl_size** sizes = NULL;
 
   if(!photo)
     return 1;
 
   /* Always add XSD, RDF and Flickr namespaces */
-  nspaces=nspace_add_if_not_declared(nspaces, NULL, XSD_NS);
-  nspaces=nspace_add_if_not_declared(nspaces, "rdf", RDF_NS);
-  nspaces=nspace_add_if_not_declared(nspaces, "flickr", FLICKR_NS);
+  nspaces = nspace_add_if_not_declared(nspaces, NULL, XSD_NS);
+  nspaces = nspace_add_if_not_declared(nspaces, "rdf", RDF_NS);
+  nspaces = nspace_add_if_not_declared(nspaces, "flickr", FLICKR_NS);
 
   if(photo->place)
-    nspaces=nspace_add_if_not_declared(nspaces, "places", PLACES_NS);
+    nspaces = nspace_add_if_not_declared(nspaces, "places", PLACES_NS);
 
-  sizes=flickcurl_photos_getSizes(fc, photo->id);
+  sizes = flickcurl_photos_getSizes(fc, photo->id);
   if(sizes) {
-    need_foaf=1;
-    need_rdfs=1;
+    need_foaf = 1;
+    need_rdfs = 1;
   }
 
   /* mark namespaces used in fields */
-  for(i=PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
-    flickcurl_photo_field_type field=(flickcurl_photo_field_type)i;
-    flickcurl_field_value_type datatype=photo->fields[field].type;
+  for(i = PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
+    flickcurl_photo_field_type field = (flickcurl_photo_field_type)i;
+    flickcurl_field_value_type datatype = photo->fields[field].type;
     int f;
 
     if(datatype == VALUE_TYPE_NONE)
       continue;
 
-    for(f=0; field_table[f].field != PHOTO_FIELD_none; f++) {
+    for(f = 0; field_table[f].field != PHOTO_FIELD_none; f++) {
       if(field_table[f].field != field) 
         continue;
 
       if(field_table[f].flags & FIELD_FLAGS_PERSON)
-        need_person=1;
+        need_person = 1;
 
-      nspaces=nspace_add_if_not_declared(nspaces, NULL, field_table[f].nspace_uri);
+      nspaces = nspace_add_if_not_declared(nspaces, NULL, field_table[f].nspace_uri);
       break;
     }
 
   }
   
 
-  /* in tags look for xmlns:PREFIX="URI" otherwise look for PREFIX: */
-  for(i=0; i < photo->tags_count; i++) {
+  /* in tags look for xmlns:PREFIX = "URI" otherwise look for PREFIX: */
+  for(i = 0; i < photo->tags_count; i++) {
     char* prefix;
     char *p;
-    flickcurl_tag* tag=photo->tags[i];
+    flickcurl_tag* tag = photo->tags[i];
 
     if(!strncmp(tag->raw, "xmlns:", 6)) {
-      prefix=&tag->raw[6];
-      for(p=prefix; *p && *p != '='; p++)
+      prefix = &tag->raw[6];
+      for(p = prefix; *p && *p != ' = '; p++)
         ;
       if(!*p) /* "xmlns:PREFIX" seen */
         continue;
 
-      /* "xmlns:PREFIX=" seen */
-      *p='\0';
-      nspaces=nspace_add_new(nspaces, prefix, p+1);
+      /* "xmlns:PREFIX = " seen */
+      *p = '\0';
+      nspaces = nspace_add_new(nspaces, prefix, p+1);
 #if FLICKCURL_DEBUG > 1
         fprintf(fh,
                 "%s: Found declaration of namespace prefix %s uri %s in tag '%s'\n",
                 label, prefix, p+1, tag->raw);
 #endif
-      *p='=';
+      *p = ' = ';
       continue;
     }
 
-    prefix=tag->raw;
-    for(p=prefix; *p && *p != ':'; p++)
+    prefix = tag->raw;
+    for(p = prefix; *p && *p != ':'; p++)
       ;
     if(!*p) /* "PREFIX:" seen */
       continue;
 
-    *p='\0';
-    nspaces=nspace_add_if_not_declared(nspaces, prefix, NULL);
-    *p=':';
+    *p = '\0';
+    nspaces = nspace_add_if_not_declared(nspaces, prefix, NULL);
+    *p = ':';
   }
 
 
   if(need_person) {
-    need_foaf=1;
-    nspaces=nspace_add_if_not_declared(nspaces, "dc", DCTERMS_NS);
+    need_foaf = 1;
+    nspaces = nspace_add_if_not_declared(nspaces, "dc", DCTERMS_NS);
   }
   
   if(need_foaf)
-    nspaces=nspace_add_if_not_declared(nspaces, "foaf", FOAF_NS);
+    nspaces = nspace_add_if_not_declared(nspaces, "foaf", FOAF_NS);
 
   if(need_rdfs)
-    nspaces=nspace_add_if_not_declared(nspaces, "rdfs", RDFS_NS);
+    nspaces = nspace_add_if_not_declared(nspaces, "rdfs", RDFS_NS);
 
 
 #if FLICKCURL_DEBUG > 1
@@ -437,7 +437,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 #endif
 
   /* generate seen namespace declarations */
-  for(ns=nspaces; ns; ns=ns->next)
+  for(ns = nspaces; ns; ns = ns->next)
     fsf->emit_namespace(fcs->data,
                         ns->prefix, ns->prefix_len, ns->uri, ns->uri_len);
   
@@ -463,18 +463,18 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   
 
   /* generate triples from fields */
-  for(i=PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
-    flickcurl_photo_field_type field=(flickcurl_photo_field_type)i;
-    flickcurl_field_value_type datatype=photo->fields[field].type;
+  for(i = PHOTO_FIELD_FIRST; i <= PHOTO_FIELD_LAST; i++) {
+    flickcurl_photo_field_type field = (flickcurl_photo_field_type)i;
+    flickcurl_field_value_type datatype = photo->fields[field].type;
     int f;
 
     if(datatype == VALUE_TYPE_NONE)
       continue;
 
-    for(f=0; field_table[f].field != PHOTO_FIELD_none; f++) {
-      const char* datatype_uri=NULL;
-      char* object=NULL;
-      char* new_object=NULL;
+    for(f = 0; field_table[f].field != PHOTO_FIELD_none; f++) {
+      const char* datatype_uri = NULL;
+      char* object = NULL;
+      char* new_object = NULL;
       int type= FLICKCURL_TERM_TYPE_LITERAL;
       
       if(field_table[f].field != field) 
@@ -490,31 +490,31 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
                 field_table[f].nspace_uri, field_table[f].name);
 #endif
 
-      object=photo->fields[field].string;
+      object = photo->fields[field].string;
 
       if(field_table[f].flags & FIELD_FLAGS_STRING) {
-        datatype=VALUE_TYPE_STRING;
+        datatype = VALUE_TYPE_STRING;
       } else if(field_table[f].flags & FIELD_FLAGS_FLOAT) {
-        datatype=VALUE_TYPE_FLOAT;
+        datatype = VALUE_TYPE_FLOAT;
       } else if(field_table[f].flags & FIELD_FLAGS_SQL_DATE) {
-        new_object=flickcurl_sqltimestamp_to_isotime(object);
-        object=new_object;
-        datatype=VALUE_TYPE_DATETIME;
+        new_object = flickcurl_sqltimestamp_to_isotime(object);
+        object = new_object;
+        datatype = VALUE_TYPE_DATETIME;
       }
 
       if(field == PHOTO_FIELD_license) {
         flickcurl_license* license;
-        license=flickcurl_photos_licenses_getInfo_by_id(fc, 
+        license = flickcurl_photos_licenses_getInfo_by_id(fc, 
                                                         photo->fields[field].integer);
         if(!license)
           continue;
 
         if(license->url) {
-          datatype=VALUE_TYPE_URI;
-          object=license->url;
+          datatype = VALUE_TYPE_URI;
+          object = license->url;
         } else {
-          datatype=VALUE_TYPE_STRING;
-          object=license->name;
+          datatype = VALUE_TYPE_STRING;
+          object = license->name;
         }
       }
       
@@ -577,44 +577,44 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
   
 
   /* generate triples from tags */
-  for(i=0; i < photo->tags_count; i++) {
-    flickcurl_tag* tag=photo->tags[i];
+  for(i = 0; i < photo->tags_count; i++) {
+    flickcurl_tag* tag = photo->tags[i];
     char* prefix;
     char *p;
     char *f;
     char *v;
     size_t value_len;
     
-    prefix=&tag->raw[0];
+    prefix = &tag->raw[0];
 
     if(!strncmp(prefix, "xmlns:", 6))
       continue;
     
-    for(p=prefix; *p && *p != ':'; p++)
+    for(p = prefix; *p && *p != ':'; p++)
       ;
     if(!*p) /* No ':' found */
       continue;
     
     /* ":" seen */
-    *p='\0';
+    *p = '\0';
 
-    f=p+1;
+    f = p+1;
     
-    for(v=f; *v && *v != '='; v++)
+    for(v = f; *v && *v != ' = '; v++)
       ;
     if(!*v) /* "prefix:name" seen with no value */
       continue;
     /* zap = */
-    *v++='\0';
+    *v++ = '\0';
 
-    value_len=strlen(v);
+    value_len = strlen(v);
     if(*v == '"') {
       v++;
-      if(v[value_len-1]=='"')
-        v[--value_len]='\0';
+      if(v[value_len-1] == '"')
+        v[--value_len] = '\0';
     }
         
-    ns=nspace_get_by_prefix(nspaces, prefix);
+    ns = nspace_get_by_prefix(nspaces, prefix);
     
 #if FLICKCURL_DEBUG > 1
       fprintf(fh,
@@ -636,19 +636,19 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
   /* generate triples from places */
   if(photo->place) {
-    char place_bnode[7]={'p', 'l', 'a', 'c', 'e', 'X', '\0'};
-    flickcurl_place* place=photo->place;
+    char place_bnode[7] = {'p', 'l', 'a', 'c', 'e', 'X', '\0'};
+    flickcurl_place* place = photo->place;
     
-    for(i=(int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
-      char* name=place->names[i];
-      char* id=place->ids[i];
-      char* url=place->urls[i];
-      char* woe_id=place->woe_ids[i];
+    for(i = (int)0; i <= (int)FLICKCURL_PLACE_LAST; i++) {
+      char* name = place->names[i];
+      char* id = place->ids[i];
+      char* url = place->urls[i];
+      char* woe_id = place->woe_ids[i];
       
       if(!name && !id && !url && !woe_id)
         continue;
       
-      place_bnode[5]='0'+i;
+      place_bnode[5] = '0'+i;
       
       fsf->emit_triple(fcs->data,
                        photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,
@@ -698,16 +698,16 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
   /* generate triples from sizes */
   if(sizes) {
-    for(i=0; sizes[i]; i++) {
-      flickcurl_size* size=sizes[i];
+    for(i = 0; sizes[i]; i++) {
+      flickcurl_size* size = sizes[i];
       char buf[10];
       int is_photo;
       const char* sizePredicate;
       const char* sizeClass;
 
-      is_photo=(!strcmp(size->media, "photo"));
-      sizePredicate=is_photo ? "photo" : "video";
-      sizeClass=is_photo ? FOAF_NS "Image" : FLICKR_NS "Video";
+      is_photo = (!strcmp(size->media, "photo"));
+      sizePredicate = is_photo ? "photo" : "video";
+      sizeClass = is_photo ? FOAF_NS "Image" : FLICKR_NS "Video";
 
       fsf->emit_triple(fcs->data,
                        photo->uri, FLICKCURL_TERM_TYPE_RESOURCE,

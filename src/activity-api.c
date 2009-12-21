@@ -58,10 +58,10 @@ flickcurl_activity**
 flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_activity** activities=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_activity** activities = NULL;
   char page_str[10];
   char per_page_str[10];
   
@@ -81,7 +81,7 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
   if(flickcurl_prepare(fc, "flickr.activity.userComments", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -89,11 +89,11 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  activities=flickcurl_build_activities(fc, xpathCtx,
+  activities = flickcurl_build_activities(fc, xpathCtx,
                                         (const xmlChar*)"/rsp/items/item", NULL);
 
   tidy:
@@ -101,7 +101,7 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    activities=NULL;
+    activities = NULL;
 
   return activities;
 }
@@ -125,10 +125,10 @@ flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
                               int per_page, int page)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_activity** activities=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_activity** activities = NULL;
   char page_str[10];
   char per_page_str[10];
 
@@ -152,7 +152,7 @@ flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
   if(flickcurl_prepare(fc, "flickr.activity.userPhotos", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -160,11 +160,11 @@ flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  activities=flickcurl_build_activities(fc, xpathCtx,
+  activities = flickcurl_build_activities(fc, xpathCtx,
                                         (const xmlChar*)"/rsp/items/item", NULL);
 
   tidy:
@@ -172,7 +172,7 @@ flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    activities=NULL;
+    activities = NULL;
 
   return activities;
 }

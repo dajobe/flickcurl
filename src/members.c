@@ -67,7 +67,7 @@ flickcurl_free_members(flickcurl_member **members_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(members_object, flickcurl_member);
 
-  for(i=0; members_object[i]; i++)
+  for(i = 0; members_object[i]; i++)
     flickcurl_free_member(members_object[i]);
   
   free(members_object);
@@ -101,8 +101,8 @@ flickcurl_build_members(flickcurl* fc,
   members = (flickcurl_member**)calloc(sizeof(flickcurl_member*),
                                        nodes_count+1);
   
-  for(i=0, member_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, member_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_member* member_object;
     
@@ -122,9 +122,9 @@ flickcurl_build_members(flickcurl* fc,
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "nsid"))
-        member_object->nsid=attr_value;
+        member_object->nsid = attr_value;
       else if(!strcmp(attr_name, "username"))
-        member_object->username=attr_value;
+        member_object->username = attr_value;
       else if(!strcmp(attr_name, "iconserver")) {
         member_object->iconserver = atoi((const char*)attr_value);
         free(attr_value);

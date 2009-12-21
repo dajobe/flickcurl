@@ -100,10 +100,10 @@ flickcurl_person*
 flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_person* person=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_person* person = NULL;
   
   parameters[count][0]  = "user_id";
   parameters[count++][1]= user_id;
@@ -113,24 +113,24 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
   if(flickcurl_prepare(fc, "flickr.people.getInfo", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  person=flickcurl_build_person(fc, xpathCtx, (const xmlChar*)"/rsp/person");
+  person = flickcurl_build_person(fc, xpathCtx, (const xmlChar*)"/rsp/person");
 
  tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
   if(fc->failed)
-    person=NULL;
+    person = NULL;
 
   return person;
 }
@@ -151,10 +151,10 @@ flickcurl_group**
 flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_group** groups=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_group** groups = NULL;
   
   if(!user_id)
     return NULL;
@@ -167,7 +167,7 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
   if(flickcurl_prepare(fc, "flickr.people.getPublicGroups", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -175,11 +175,11 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  groups=flickcurl_build_groups(fc, xpathCtx,
+  groups = flickcurl_build_groups(fc, xpathCtx,
                                 (const xmlChar*)"/rsp/groups/group", NULL);
 
   tidy:
@@ -187,7 +187,7 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    groups=NULL;
+    groups = NULL;
 
   return groups;
 }
@@ -205,7 +205,7 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
  * date_taken, owner_name, icon_server, original_format,
  * last_update, geo, tags, machine_tags.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -215,9 +215,9 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
                                         flickcurl_photos_list_params* list_params)
 {
   const char* parameters[12][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
   
   if(!user_id)
     return NULL;
@@ -234,7 +234,7 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.people.getPublicPhotos", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -242,7 +242,7 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -280,11 +280,11 @@ flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_people_getPublicPhotos_params(fc, user_id, &list_params);
+  photos_list = flickcurl_people_getPublicPhotos_params(fc, user_id, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -307,17 +307,17 @@ flickcurl_user_upload_status*
 flickcurl_people_getUploadStatus(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_user_upload_status* status=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_user_upload_status* status = NULL;
   
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.people.getUploadStatus", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -325,18 +325,18 @@ flickcurl_people_getUploadStatus(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  status=flickcurl_build_user_upload_status(fc, xpathCtx, (const xmlChar*)"/rsp/user/*");
+  status = flickcurl_build_user_upload_status(fc, xpathCtx, (const xmlChar*)"/rsp/user/*");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    status=NULL;
+    status = NULL;
 
   return status;
 }

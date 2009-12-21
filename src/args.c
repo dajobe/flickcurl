@@ -52,11 +52,11 @@ flickcurl_build_args(flickcurl* fc,
                      xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr,
                      int* arg_count_p)
 {
-  flickcurl_arg** args=NULL;
+  flickcurl_arg** args = NULL;
   int nodes_count;
   int arg_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do args */
@@ -64,42 +64,42 @@ flickcurl_build_args(flickcurl* fc,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  args=(flickcurl_arg**)calloc(sizeof(flickcurl_arg*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  args = (flickcurl_arg**)calloc(sizeof(flickcurl_arg*), nodes_count+1);
   
-  for(i=0, arg_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, arg_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_arg* arg;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    arg=(flickcurl_arg*)calloc(sizeof(flickcurl_arg), 1);
+    arg = (flickcurl_arg*)calloc(sizeof(flickcurl_arg), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       if(!strcmp(attr_name, "name")) {
-        arg->name=(char*)malloc(strlen((const char*)attr->children->content)+1);
+        arg->name = (char*)malloc(strlen((const char*)attr->children->content)+1);
         strcpy(arg->name, (const char*)attr->children->content);
       } else if(!strcmp(attr_name, "optional"))
-        arg->optional=atoi((const char*)attr->children->content);
+        arg->optional = atoi((const char*)attr->children->content);
     }
 
     /* Walk children nodes for description text */
-    for(chnode=node->children; chnode; chnode=chnode->next) {
+    for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        arg->description=(char*)malloc(strlen((const char*)chnode->content)+1);
+        arg->description = (char*)malloc(strlen((const char*)chnode->content)+1);
         strcpy(arg->description, (const char*)chnode->content);
         break;
       }
@@ -110,11 +110,11 @@ flickcurl_build_args(flickcurl* fc,
             arg->name, (arg->optional? "" : "(required)"), arg->description);
 #endif
     
-    args[arg_count++]=arg;
+    args[arg_count++] = arg;
   } /* for nodes */
 
   if(arg_count_p)
-    *arg_count_p=arg_count;
+    *arg_count_p = arg_count;
   
  tidy:
   if(xpathObj)

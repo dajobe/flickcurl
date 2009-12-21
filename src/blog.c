@@ -62,7 +62,7 @@ flickcurl_free_blogs(flickcurl_blog **blogs_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(blogs_object, flickcurl_blog_array);
 
-  for(i=0; blogs_object[i]; i++)
+  for(i = 0; blogs_object[i]; i++)
     flickcurl_free_blog(blogs_object[i]);
   
   free(blogs_object);
@@ -73,55 +73,55 @@ flickcurl_blog**
 flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                       const xmlChar* xpathExpr, int* blog_count_p)
 {
-  flickcurl_blog** blogs=NULL;
+  flickcurl_blog** blogs = NULL;
   int nodes_count;
   int blog_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  blogs=(flickcurl_blog**)calloc(sizeof(flickcurl_blog*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  blogs = (flickcurl_blog**)calloc(sizeof(flickcurl_blog*), nodes_count+1);
   
-  for(i=0, blog_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, blog_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_blog* b;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    b=(flickcurl_blog*)calloc(sizeof(flickcurl_blog), 1);
+    b = (flickcurl_blog*)calloc(sizeof(flickcurl_blog), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "id"))
-        b->id=attr_value;
+        b->id = attr_value;
       else if(!strcmp(attr_name, "name"))
-        b->name=attr_value;
+        b->name = attr_value;
       else if(!strcmp(attr_name, "needspassword")) {
-        b->needs_password=atoi(attr_value);
+        b->needs_password = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "url"))
-        b->url=attr_value;
+        b->url = attr_value;
     } /* end attributes */
 
 
@@ -131,11 +131,11 @@ flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             b->id, b->name, b->needs_password, b->url);
 #endif
     
-    blogs[blog_count++]=b;
+    blogs[blog_count++] = b;
   } /* for nodes */
 
   if(blog_count_p)
-    *blog_count_p=blog_count;
+    *blog_count_p = blog_count;
   
  tidy:
   if(xpathObj)

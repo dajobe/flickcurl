@@ -58,16 +58,16 @@ flickcurl_photos_upload_checkTickets(flickcurl* fc,
                                      const char** tickets_ids)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_ticket** tickets=NULL;
-  char* tickets_ids_string=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_ticket** tickets = NULL;
+  char* tickets_ids_string = NULL;
   
   if(!tickets_ids)
     return NULL;
 
-  tickets_ids_string=flickcurl_array_join(tickets_ids, ',');
+  tickets_ids_string = flickcurl_array_join(tickets_ids, ',');
   parameters[count][0]  = "tickets";
   parameters[count++][1]= tickets_ids_string;
 
@@ -76,7 +76,7 @@ flickcurl_photos_upload_checkTickets(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.photos.upload.checkTickets", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -84,11 +84,11 @@ flickcurl_photos_upload_checkTickets(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  tickets=flickcurl_build_tickets(fc, xpathCtx,
+  tickets = flickcurl_build_tickets(fc, xpathCtx,
                                   (const xmlChar*)"/rsp/uploader/ticket",
                                   NULL);
 
@@ -97,7 +97,7 @@ flickcurl_photos_upload_checkTickets(flickcurl* fc,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    tickets=NULL;
+    tickets = NULL;
   if(tickets_ids_string)
     free(tickets_ids_string);
 

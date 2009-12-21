@@ -56,17 +56,17 @@ flickcurl_blog**
 flickcurl_blogs_getList(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_blog** blogs=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_blog** blogs = NULL;
   
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.blogs.getList", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -74,16 +74,16 @@ flickcurl_blogs_getList(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  blogs=flickcurl_build_blogs(fc, xpathCtx,
+  blogs = flickcurl_build_blogs(fc, xpathCtx,
                               (const xmlChar*)"/rsp/blogs/blog", NULL);
 
   tidy:
   if(fc->failed)
-    blogs=NULL;
+    blogs = NULL;
 
   return blogs;
 }
@@ -113,7 +113,7 @@ flickcurl_blogs_getServices(flickcurl* fc)
   if(flickcurl_prepare(fc, "flickr.blogs.getServices", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -121,7 +121,7 @@ flickcurl_blogs_getServices(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -160,9 +160,9 @@ flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id,
                           const char* description, const char* blog_password)
 {
   const char* parameters[12][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   
   if(!blog_id || !photo_id || !title || !description)
     return 1;
@@ -185,7 +185,7 @@ flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id,
   if(flickcurl_prepare(fc, "flickr.blogs.postPhoto", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -193,7 +193,7 @@ flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 

@@ -61,43 +61,43 @@ flickcurl_video*
 flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                       const xmlChar* xpathExpr)
 {
-  flickcurl_video* v=NULL;
+  flickcurl_video* v = NULL;
   int nodes_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
-  int count=0;
+  int count = 0;
   
   /* Now do video */
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
   
   v = (flickcurl_video*)calloc(1, sizeof(flickcurl_video));
   if(!v) {
     flickcurl_error(fc, "Unable to allocate the memory needed for video.");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
   
 
-  for(i=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
-    const char *node_name=(const char*)node->name;
+    const char *node_name = (const char*)node->name;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
@@ -106,28 +106,28 @@ flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     
     count++;
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
-      int attr_value=atoi((const char*)attr->children->content);
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
+      int attr_value = atoi((const char*)attr->children->content);
       if(!strcmp(attr_name, "ready"))
-        v->ready=attr_value;
+        v->ready = attr_value;
       else if(!strcmp(attr_name, "failed"))
-        v->failed=attr_value;
+        v->failed = attr_value;
       else if(!strcmp(attr_name, "pending"))
-        v->pending=attr_value;
+        v->pending = attr_value;
       else if(!strcmp(attr_name, "duration"))
-        v->duration=attr_value;
+        v->duration = attr_value;
       else if(!strcmp(attr_name, "width"))
-        v->width=attr_value;
+        v->width = attr_value;
       else if(!strcmp(attr_name, "height"))
-        v->height=attr_value;
+        v->height = attr_value;
     }
 
   } /* for nodes */
 
   if(!count) {
     flickcurl_free_video(v);
-    v=NULL;
+    v = NULL;
   } 
 #if FLICKCURL_DEBUG > 1
 else {

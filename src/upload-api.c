@@ -58,10 +58,10 @@ flickcurl_upload_status*
 flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
 {
   const char* parameters[12][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_upload_status* status=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_upload_status* status = NULL;
   char is_public_s[2];
   char is_friend_s[2];
   char is_family_s[2];
@@ -77,22 +77,22 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
     return NULL;
   }
 
-  is_public_s[0]=params->is_public ? '1' : '0';
-  is_public_s[1]='\0';
-  is_friend_s[0]=params->is_friend ? '1' : '0';
-  is_friend_s[1]='\0';
-  is_family_s[0]=params->is_family ? '1' : '0';
-  is_family_s[1]='\0';
+  is_public_s[0] = params->is_public ? '1' : '0';
+  is_public_s[1] = '\0';
+  is_friend_s[0] = params->is_friend ? '1' : '0';
+  is_friend_s[1] = '\0';
+  is_family_s[0] = params->is_family ? '1' : '0';
+  is_family_s[1] = '\0';
 
   if(params->safety_level >= 1 && params->safety_level <= 3) {
-    safety_level_s[0]='0' + params->safety_level;
-    safety_level_s[1]='\0';
+    safety_level_s[0] = '0' + params->safety_level;
+    safety_level_s[1] = '\0';
   } else
     params->safety_level= -1;
   
   if(params->content_type >= 1 && params->content_type <= 3) {
-    content_type_s[0]='0' + params->content_type;
-    content_type_s[1]='\0';
+    content_type_s[0] = '0' + params->content_type;
+    content_type_s[1] = '\0';
   } else
     params->content_type= -1;
   
@@ -132,7 +132,7 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
                               parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -140,21 +140,21 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  status=(flickcurl_upload_status*)calloc(1, sizeof(flickcurl_upload_status));
-  status->photoid=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid");
+  status = (flickcurl_upload_status*)calloc(1, sizeof(flickcurl_upload_status));
+  status->photoid = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid");
   /* when async is true */
-  status->ticketid=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/ticketid");
+  status->ticketid = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/ticketid");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    status=NULL;
+    status = NULL;
 
   return status;
 }
@@ -191,13 +191,13 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
 
   memset(&params, '\0', sizeof(flickcurl_upload_params));
 
-  params.photo_file=photo_file;
-  params.title=title;
-  params.description=description;
-  params.tags=tags;  
-  params.is_public=is_public;
-  params.is_friend=is_friend;
-  params.is_family=is_family;  
+  params.photo_file = photo_file;
+  params.title = title;
+  params.description = description;
+  params.tags = tags;  
+  params.is_public = is_public;
+  params.is_friend = is_friend;
+  params.is_family = is_family;  
   params.safety_level= -1;
   params.content_type= -1;
   
@@ -224,10 +224,10 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
                          const char *photo_id, int async)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_upload_status* status=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_upload_status* status = NULL;
   char async_s[2];
   
   if(!photo_file || !photo_id)
@@ -239,8 +239,8 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
     return NULL;
   }
 
-  async_s[0]=async ? '1' : '0';
-  async_s[1]='\0';
+  async_s[0] = async ? '1' : '0';
+  async_s[1] = '\0';
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
@@ -255,29 +255,29 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
                               parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  status=(flickcurl_upload_status*)calloc(1, sizeof(flickcurl_upload_status));
-  status->secret=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid/@secret");
-  status->originalsecret=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid/@originalsecret");
+  status = (flickcurl_upload_status*)calloc(1, sizeof(flickcurl_upload_status));
+  status->secret = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid/@secret");
+  status->originalsecret = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid/@originalsecret");
   /* when async is true */
-  status->ticketid=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/ticketid");
+  status->ticketid = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/ticketid");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    status=NULL;
+    status = NULL;
 
   return status;
 }

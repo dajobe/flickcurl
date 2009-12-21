@@ -83,7 +83,7 @@ flickcurl_error_varargs(flickcurl* fc, const char *message,
                         va_list arguments)
 {
   if(fc->error_handler) {
-    char *buffer=my_vsnprintf(message, arguments);
+    char *buffer = my_vsnprintf(message, arguments);
     if(!buffer) {
       fprintf(stderr, "flickcurl: Out of memory\n");
       return;
@@ -113,9 +113,9 @@ static size_t
 flickcurl_write_callback(void *ptr, size_t size, size_t nmemb, 
                          void *userdata) 
 {
-  flickcurl* fc=(flickcurl*)userdata;
-  int len=size*nmemb;
-  int rc=0;
+  flickcurl* fc = (flickcurl*)userdata;
+  int len = size*nmemb;
+  int rc = 0;
   
   if(fc->failed)
     return 0;
@@ -126,17 +126,17 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
     char *b;
     flickcurl_chunk *chunk;
     
-    b=(char*)malloc(len);
-    chunk=(flickcurl_chunk*)malloc(sizeof(*chunk));
+    b = (char*)malloc(len);
+    chunk = (flickcurl_chunk*)malloc(sizeof(*chunk));
     if(b && chunk) {
       fc->chunks_count++;
 
       memcpy(b, ptr, len);
-      chunk->content=b;
-      chunk->size=len;
+      chunk->content = b;
+      chunk->size = len;
       chunk->prev= fc->chunks;
 
-      fc->chunks=chunk;
+      fc->chunks = chunk;
     } else {
       if(b)
         free(b);
@@ -155,14 +155,14 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
                                    (const char*)ptr, len,
                                    (const char*)fc->uri);
       if(!xc)
-        rc=1;
+        rc = 1;
       else {
         xc->replaceEntities = 1;
         xc->loadsubset = 1;
       }
-      fc->xc=xc;
+      fc->xc = xc;
     } else
-      rc=xmlParseChunk(fc->xc, (const char*)ptr, len, 0);
+      rc = xmlParseChunk(fc->xc, (const char*)ptr, len, 0);
 
 #if FLICKCURL_DEBUG > 2
     fprintf(stderr, "Got >>%s<< (%d bytes)\n", (const char*)ptr, len);
@@ -192,7 +192,7 @@ flickcurl_new(void)
 {
   flickcurl* fc;
 
-  fc=(flickcurl*)calloc(1, sizeof(flickcurl));
+  fc = (flickcurl*)calloc(1, sizeof(flickcurl));
   if(!fc)
     return NULL;
 
@@ -201,11 +201,11 @@ flickcurl_new(void)
   fc->replace_service_uri = strdup(flickcurl_flickr_replace_service_uri);
 
   /* DEFAULT delay between requests is 1000ms i.e 1 request/second max */
-  fc->request_delay=1000;
+  fc->request_delay = 1000;
   
   if(!fc->curl_handle) {
-    fc->curl_handle=curl_easy_init();
-    fc->curl_init_here=1;
+    fc->curl_handle = curl_easy_init();
+    fc->curl_init_here = 1;
   }
 
 #ifndef CURLOPT_WRITEDATA
@@ -245,7 +245,7 @@ flickcurl_free(flickcurl *fc)
   if(fc->xc) {
     if(fc->xc->myDoc) {
       xmlFreeDoc(fc->xc->myDoc);
-      fc->xc->myDoc=NULL;
+      fc->xc->myDoc = NULL;
     }
     xmlFreeParserCtxt(fc->xc); 
   }
@@ -262,7 +262,7 @@ flickcurl_free(flickcurl *fc)
   /* only tidy up if we did all the work */
   if(fc->curl_init_here && fc->curl_handle) {
     curl_easy_cleanup(fc->curl_handle);
-    fc->curl_handle=NULL;
+    fc->curl_handle = NULL;
   }
 
   if(fc->error_msg)
@@ -272,7 +272,7 @@ flickcurl_free(flickcurl *fc)
     int i;
     flickcurl_license *license;
     
-    for(i=0; (license=fc->licenses[i]); i++) {
+    for(i = 0; (license = fc->licenses[i]); i++) {
       free(license->name);
       if(license->url)
         free(license->url);
@@ -290,15 +290,15 @@ flickcurl_free(flickcurl *fc)
   if(fc->param_fields) {
     int i;
     
-    for(i=0; fc->param_fields[i]; i++) {
+    for(i = 0; fc->param_fields[i]; i++) {
       free(fc->param_fields[i]);
       free(fc->param_values[i]);
     }
     free(fc->param_fields);
     free(fc->param_values);
-    fc->param_fields=NULL;
-    fc->param_values=NULL;
-    fc->parameter_count=0;
+    fc->param_fields = NULL;
+    fc->param_values = NULL;
+    fc->parameter_count = 0;
   }
   if(fc->upload_field)
     free(fc->upload_field);
@@ -366,8 +366,8 @@ flickcurl_set_error_handler(flickcurl* fc,
                             flickcurl_message_handler error_handler, 
                             void *error_data)
 {
-  fc->error_handler=error_handler;
-  fc->error_data=error_data;
+  fc->error_handler = error_handler;
+  fc->error_data = error_data;
 }
 
 
@@ -384,8 +384,8 @@ flickcurl_set_tag_handler(flickcurl* fc,
                           flickcurl_tag_handler tag_handler, 
                           void *tag_data)
 {
-  fc->tag_handler=tag_handler;
-  fc->tag_data=tag_data;
+  fc->tag_handler = tag_handler;
+  fc->tag_data = tag_data;
 }
 
 
@@ -399,12 +399,12 @@ flickcurl_set_tag_handler(flickcurl* fc,
 void
 flickcurl_set_user_agent(flickcurl* fc, const char *user_agent)
 {
-  char *ua_copy=(char*)malloc(strlen(user_agent)+1);
+  char *ua_copy = (char*)malloc(strlen(user_agent)+1);
   if(!ua_copy)
     return;
   strcpy(ua_copy, user_agent);
   
-  fc->user_agent=ua_copy;
+  fc->user_agent = ua_copy;
 }
 
 
@@ -418,12 +418,12 @@ flickcurl_set_user_agent(flickcurl* fc, const char *user_agent)
 void
 flickcurl_set_proxy(flickcurl* fc, const char *proxy)
 {
-  char *proxy_copy=(char*)malloc(strlen(proxy)+1);
+  char *proxy_copy = (char*)malloc(strlen(proxy)+1);
   if(!proxy_copy)
     return;
   strcpy(proxy_copy, proxy);
   
-  fc->proxy=proxy_copy;
+  fc->proxy = proxy_copy;
 }
 
 
@@ -438,20 +438,20 @@ void
 flickcurl_set_http_accept(flickcurl* fc, const char *value)
 {
   char *value_copy;
-  size_t len=8; /* strlen("Accept:")+1 */
+  size_t len = 8; /* strlen("Accept:")+1 */
   
   if(value)
-    len+=1+strlen(value); /* " "+value */
+    len += 1+strlen(value); /* " "+value */
   
-  value_copy=(char*)malloc(len);
+  value_copy = (char*)malloc(len);
   if(!value_copy)
     return;
-  fc->http_accept=value_copy;
+  fc->http_accept = value_copy;
 
   strcpy(value_copy, "Accept:");
-  value_copy+=7;
+  value_copy += 7;
   if(value) {
-    *value_copy++=' ';
+    *value_copy++ = ' ';
     strcpy(value_copy, value);
   }
 
@@ -547,7 +547,7 @@ flickcurl_set_api_key(flickcurl* fc, const char *api_key)
 #endif
   if(fc->api_key)
     free(fc->api_key);
-  fc->api_key=strdup(api_key);
+  fc->api_key = strdup(api_key);
 }
 
 
@@ -581,7 +581,7 @@ flickcurl_set_shared_secret(flickcurl* fc, const char *secret)
 #endif
   if(fc->secret)
     free(fc->secret);
-  fc->secret=strdup(secret);
+  fc->secret = strdup(secret);
 }
 
 
@@ -615,7 +615,7 @@ flickcurl_set_auth_token(flickcurl *fc, const char* auth_token)
 #endif
   if(fc->auth_token)
     free(fc->auth_token);
-  fc->auth_token=strdup(auth_token);
+  fc->auth_token = strdup(auth_token);
 }
 
 
@@ -643,7 +643,7 @@ flickcurl_get_auth_token(flickcurl *fc)
 void
 flickcurl_set_sign(flickcurl *fc)
 {
-  fc->sign=1;
+  fc->sign = 1;
 }
 
 
@@ -658,7 +658,7 @@ void
 flickcurl_set_request_delay(flickcurl *fc, long delay_msec)
 {
   if(delay_msec >= 0)
-    fc->request_delay=delay_msec;
+    fc->request_delay = delay_msec;
 }
 
 
@@ -685,8 +685,8 @@ flickcurl_prepare_common(flickcurl *fc,
                          int parameters_in_url, int need_auth)
 {
   int i;
-  char *md5_string=NULL;
-  size_t* values_len=NULL;
+  char *md5_string = NULL;
+  size_t* values_len = NULL;
   unsigned int fc_uri_len = 0;
   
   if(!url || !parameters)
@@ -696,40 +696,40 @@ flickcurl_prepare_common(flickcurl *fc,
   if((upload_field || upload_value) && (!upload_field || !upload_value))
     return 1;
   
-  fc->failed=0;
-  fc->error_code=0;
+  fc->failed = 0;
+  fc->error_code = 0;
   if(fc->error_msg) {
     free(fc->error_msg);
-    fc->error_msg=NULL;
+    fc->error_msg = NULL;
   }
   /* Default to read */
-  fc->is_write=0;
+  fc->is_write = 0;
   /* Default to no data */
   if(fc->data) {
     if(fc->data_is_xml)
       xmlFree(fc->data);
-    fc->data=NULL;
-    fc->data_length=0;
-    fc->data_is_xml=0;
+    fc->data = NULL;
+    fc->data_length = 0;
+    fc->data_is_xml = 0;
   }
   if(fc->param_fields) {
-    for(i=0; fc->param_fields[i]; i++) {
+    for(i = 0; fc->param_fields[i]; i++) {
       free(fc->param_fields[i]);
       free(fc->param_values[i]);
     }
     free(fc->param_fields);
     free(fc->param_values);
-    fc->param_fields=NULL;
-    fc->param_values=NULL;
-    fc->parameter_count=0;
+    fc->param_fields = NULL;
+    fc->param_values = NULL;
+    fc->parameter_count = 0;
   }
   if(fc->upload_field) {
     free(fc->upload_field);
-    fc->upload_field=NULL;
+    fc->upload_field = NULL;
   }
   if(fc->upload_value) {
     free(fc->upload_value);
-    fc->upload_value=NULL;
+    fc->upload_value = NULL;
   }
   
   if(!fc->secret) {
@@ -745,9 +745,9 @@ flickcurl_prepare_common(flickcurl *fc,
   if(fc->method)
     free(fc->method);
   if(method)
-    fc->method=strdup(method);
+    fc->method = strdup(method);
   else
-    fc->method=NULL;
+    fc->method = NULL;
 
   if(fc->method) {
     parameters[count][0]  = "method";
@@ -765,9 +765,9 @@ flickcurl_prepare_common(flickcurl *fc,
   parameters[count][0]  = NULL;
 
   /* +1 for api_sig +1 for NULL terminating pointer */
-  fc->param_fields=(char**)calloc(count+2, sizeof(char*));
-  fc->param_values=(char**)calloc(count+2, sizeof(char*));
-  values_len=(size_t*)calloc(count+2, sizeof(size_t));
+  fc->param_fields = (char**)calloc(count+2, sizeof(char*));
+  fc->param_values = (char**)calloc(count+2, sizeof(char*));
+  values_len = (size_t*)calloc(count+2, sizeof(size_t));
 
   if((need_auth && fc->auth_token) || fc->sign)
     flickcurl_sort_args(fc, parameters, count);
@@ -775,18 +775,18 @@ flickcurl_prepare_common(flickcurl *fc,
   fc_uri_len = strlen(url);
   
   /* Save away the parameters and calculate the value lengths */
-  for(i=0; parameters[i][0]; i++) {
-    size_t param_len=strlen(parameters[i][0]);
+  for(i = 0; parameters[i][0]; i++) {
+    size_t param_len = strlen(parameters[i][0]);
 
     if(parameters[i][1])
-      values_len[i]=strlen(parameters[i][1]);
+      values_len[i] = strlen(parameters[i][1]);
     else {
       values_len[i] = 0;
       parameters[i][1] = "";
     }
-    fc->param_fields[i]=(char*)malloc(param_len+1);
+    fc->param_fields[i] = (char*)malloc(param_len+1);
     strcpy(fc->param_fields[i], parameters[i][0]);
-    fc->param_values[i]=(char*)malloc(values_len[i]+1);
+    fc->param_values[i] = (char*)malloc(values_len[i]+1);
     strcpy(fc->param_values[i], parameters[i][1]);
 
     /* 3x value len is conservative URI %XX escaping on every char */
@@ -794,24 +794,24 @@ flickcurl_prepare_common(flickcurl *fc,
   }
 
   if(upload_field) {
-    fc->upload_field=(char*)malloc(strlen(upload_field)+1);
+    fc->upload_field = (char*)malloc(strlen(upload_field)+1);
     strcpy(fc->upload_field, upload_field);
 
-    fc->upload_value=(char*)malloc(strlen(upload_value)+1);
+    fc->upload_value = (char*)malloc(strlen(upload_value)+1);
     strcpy(fc->upload_value, upload_value);
   }
 
   if((need_auth && fc->auth_token) || fc->sign) {
-    size_t buf_len=0;
+    size_t buf_len = 0;
     char *buf;
     
-    buf_len=strlen(fc->secret);
-    for(i=0; parameters[i][0]; i++)
+    buf_len = strlen(fc->secret);
+    for(i = 0; parameters[i][0]; i++)
       buf_len += strlen(parameters[i][0]) + values_len[i];
 
-    buf=(char*)malloc(buf_len+1);
+    buf = (char*)malloc(buf_len+1);
     strcpy(buf, fc->secret);
-    for(i=0; parameters[i][0]; i++) {
+    for(i = 0; parameters[i][0]; i++) {
       strcat(buf, parameters[i][0]);
       strcat(buf, parameters[i][1]);
     }
@@ -819,16 +819,16 @@ flickcurl_prepare_common(flickcurl *fc,
 #ifdef FLICKCURL_DEBUG
     fprintf(stderr, "MD5 Buffer '%s'\n", buf);
 #endif
-    md5_string=MD5_string(buf);
+    md5_string = MD5_string(buf);
     
     parameters[count][0]  = "api_sig";
     parameters[count][1]= md5_string;
 
     /* Add a new parameter pair */
-    values_len[count]=32; /* MD5 is always 32 */
-    fc->param_fields[count]=(char*)malloc(7+1); /* 7=strlen(api_sig) */
+    values_len[count] = 32; /* MD5 is always 32 */
+    fc->param_fields[count] = (char*)malloc(7+1); /* 7 = strlen(api_sig) */
     strcpy(fc->param_fields[count], parameters[count][0]);
-    fc->param_values[count]=(char*)malloc(32+1); /* 32=MD5 */
+    fc->param_values[count] = (char*)malloc(32+1); /* 32 = MD5 */
     strcpy(fc->param_values[count], parameters[count][1]);
 
     fc_uri_len += 7 /* "api_sig" */ + 1 /* = */ + 32 /* MD5 value: never escaped */;
@@ -856,19 +856,19 @@ flickcurl_prepare_common(flickcurl *fc,
   strcpy(fc->uri, url);
 
   if(parameters_in_url) {
-    for(i=0; parameters[i][0]; i++) {
-      char *value=(char*)parameters[i][1];
-      char *escaped_value=NULL;
+    for(i = 0; parameters[i][0]; i++) {
+      char *value = (char*)parameters[i][1];
+      char *escaped_value = NULL;
 
       if(!parameters[i][1])
         continue;
 
       strcat(fc->uri, parameters[i][0]);
-      strcat(fc->uri, "=");
+      strcat(fc->uri, " = ");
       if(!strcmp(parameters[i][0], "method")) {
         /* do not touch method name */
       } else
-        escaped_value=curl_escape(value, values_len[i]);
+        escaped_value = curl_escape(value, values_len[i]);
 
       if(escaped_value) {
         strcat(fc->uri, escaped_value);
@@ -965,7 +965,7 @@ int gettimeofday(struct timeval* tp, void *tzp);
 /* seconds between 1 Jan 1601 (windows epoch) and 1 Jan 1970 (unix epoch) */
 #define EPOCH_WIN_UNIX_DELTA 11644473600.0
 
-/* 100 nano-seconds (=1/10 usec) in seconds */
+/* 100 nano-seconds ( = 1/10 usec) in seconds */
 #define NSEC100 (1e-7)
 
 /* factor to convert high-dword count into seconds = NSEC100 * (2<<32) */
@@ -1021,7 +1021,7 @@ nanosleep(const struct timespec *rqtp, struct timespec *rmtp)
 #ifdef WIN32
   msec += 1000 * sec;
   if(!msec)
-    msec=1;
+    msec = 1;
 
   Sleep(msec);
 #else
@@ -1031,7 +1031,7 @@ nanosleep(const struct timespec *rqtp, struct timespec *rmtp)
   else {
     /* 0 seconds so ensure msec is at least 1 */
     if(!msec)
-      msec=1;
+      msec = 1;
   }
 #ifdef HAVE_USLEEP
   /* use usleep() for fractions of a second only (when available)
@@ -1054,8 +1054,8 @@ static size_t
 flickcurl_curl_header_callback(void* ptr,  size_t  size, size_t nmemb,
                                void *userdata) 
 {
-  flickcurl* fc=(flickcurl*)userdata;
-  int bytes=size*nmemb;
+  flickcurl* fc = (flickcurl*)userdata;
+  int bytes = size*nmemb;
 
   /* If flickcurl has already failed, return nothing so that
    * libcurl will abort the transfer
@@ -1067,16 +1067,16 @@ flickcurl_curl_header_callback(void* ptr,  size_t  size, size_t nmemb,
 #define EM_HEADER_LEN 20
 
   if(!strncmp((char*)ptr, "X-FlickrErrCode: ", EC_HEADER_LEN)) {
-    fc->error_code=atoi((char*)ptr+EC_HEADER_LEN);
+    fc->error_code = atoi((char*)ptr+EC_HEADER_LEN);
   } else if(!strncmp((char*)ptr, "X-FlickrErrMessage: ", EM_HEADER_LEN)) {
-    int len=bytes-EM_HEADER_LEN;
+    int len = bytes-EM_HEADER_LEN;
     if(fc->error_msg)
       free(fc->error_msg);
-    fc->error_msg=(char*)malloc(len+1);
+    fc->error_msg = (char*)malloc(len+1);
     strncpy(fc->error_msg, (char*)ptr+EM_HEADER_LEN, len);
-    fc->error_msg[len]='\0';
-    while(fc->error_msg[len-1]=='\r' || fc->error_msg[len-1]=='\n') {
-      fc->error_msg[len-1]='\0';
+    fc->error_msg[len] = '\0';
+    while(fc->error_msg[len-1] == '\r' || fc->error_msg[len-1] == '\n') {
+      fc->error_msg[len-1] = '\0';
       len--;
     }
   }
@@ -1150,13 +1150,13 @@ static int
 flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
                         xmlDocPtr* docptr_p)
 {
-  struct curl_slist *slist=NULL;
-  xmlDocPtr doc=NULL;
+  struct curl_slist *slist = NULL;
+  xmlDocPtr doc = NULL;
   struct timeval now;
 #if defined(OFFLINE) || defined(CAPTURE)
   char filename[200];
 #endif
-  int rc=0;
+  int rc = 0;
   
 #if defined(OFFLINE) || defined(CAPTURE)
 
@@ -1180,7 +1180,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
       return 1;
     }
 #ifdef HAVE_RAPTOR
-    uri_string=raptor_uri_filename_to_uri_string(filename);
+    uri_string = raptor_uri_filename_to_uri_string(filename);
     strcpy(fc->uri, uri_string);
     raptor_free_memory(uri_string);
 #else
@@ -1197,9 +1197,9 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   }
 
   if(content_p)
-    fc->save_content=1;
+    fc->save_content = 1;
   else
-    fc->xml_parse_content=1;
+    fc->xml_parse_content = 1;
   
   gettimeofday(&now, NULL);
 #ifndef OFFLINE
@@ -1267,7 +1267,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 
 #ifdef CAPTURE
   if(1) {
-    fc->fh=fopen(filename, "wb");
+    fc->fh = fopen(filename, "wb");
     if(!fc->fh)
       flickcurl_error(fc, "Capture failed to write to %s - %s",
                       filename, strerror(errno));
@@ -1277,10 +1277,10 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   if(fc->xc) {
     if(fc->xc->myDoc) {
       xmlFreeDoc(fc->xc->myDoc);
-      fc->xc->myDoc=NULL;
+      fc->xc->myDoc = NULL;
     }
     xmlFreeParserCtxt(fc->xc); 
-    fc->xc=NULL;
+    fc->xc = NULL;
   }
 
   if(fc->proxy)
@@ -1291,12 +1291,12 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 
   /* Insert HTTP Accept: header */
   if(fc->http_accept)
-    slist=curl_slist_append(slist, (const char*)fc->http_accept);
+    slist = curl_slist_append(slist, (const char*)fc->http_accept);
 
   /* specify URL to call */
   curl_easy_setopt(fc->curl_handle, CURLOPT_URL, fc->uri);
 
-  fc->total_bytes=0;
+  fc->total_bytes = 0;
 
   /* default: read with no data: GET */
   curl_easy_setopt(fc->curl_handle, CURLOPT_NOBODY, 1);
@@ -1304,18 +1304,18 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 
   if(fc->data) {
     /* write with some data: POST */
-    /* CURLOPT_NOBODY=0 sets http request to HEAD - do it first to override */
+    /* CURLOPT_NOBODY = 0 sets http request to HEAD - do it first to override */
     curl_easy_setopt(fc->curl_handle, CURLOPT_NOBODY, 0);
     /* this function only resets no-body flag for curl >= 7.14.1 */
     curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 1);
     curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDS, fc->data);
     curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDSIZE, fc->data_length);
     /* Replace default POST content type 'application/x-www-form-urlencoded' */
-    slist=curl_slist_append(slist, (const char*)"Content-Type: application/xml");
+    slist = curl_slist_append(slist, (const char*)"Content-Type: application/xml");
     /* curl_easy_setopt(fc->curl_handle, CURLOPT_CUSTOMREQUEST, fc->verb); */
   } else if(fc->is_write) {
     /* write with no data: POST */
-    /* CURLOPT_NOBODY=0 sets http request to HEAD - do it first to override */
+    /* CURLOPT_NOBODY = 0 sets http request to HEAD - do it first to override */
     curl_easy_setopt(fc->curl_handle, CURLOPT_NOBODY, 0);
     /* this function only resets no-body flag for curl >= 7.14.1 */
     curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 1);
@@ -1338,7 +1338,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     int i;
     
     /* Main parameters */
-    for(i=0; fc->param_fields[i]; i++) {
+    for(i = 0; fc->param_fields[i]; i++) {
       curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->param_fields[i],
                    CURLFORM_PTRCONTENTS, fc->param_values[i],
                    CURLFORM_END);
@@ -1360,7 +1360,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   
   if(curl_easy_perform(fc->curl_handle)) {
     /* failed */
-    fc->failed=1;
+    fc->failed = 1;
     flickcurl_error(fc, fc->error_buffer);
   } else {
     long lstatus;
@@ -1372,7 +1372,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     /* Requires pointer to a long */
     if(CURLE_OK == 
        curl_easy_getinfo(fc->curl_handle, CURLINFO_RESPONSE_CODE, &lstatus) ) {
-      fc->status_code=lstatus;
+      fc->status_code = lstatus;
       if(fc->status_code != 200) {
         if(fc->method)
           flickcurl_error(fc, "Method %s failed with error %d - %s (HTTP %d)", 
@@ -1382,7 +1382,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
           flickcurl_error(fc, "Call failed with error %d - %s (HTTP %d)", 
                           fc->error_code, fc->error_msg,
                           fc->status_code);
-        fc->failed=1;
+        fc->failed = 1;
       }
     }
 
@@ -1398,21 +1398,21 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     char* c;
     flickcurl_chunk** chunks;
 
-    c=(char*)malloc(fc->total_bytes+1); /* +1 for NUL */
-    chunks=(flickcurl_chunk**)malloc(sizeof(flickcurl_chunk*) * fc->chunks_count);
+    c = (char*)malloc(fc->total_bytes+1); /* +1 for NUL */
+    chunks = (flickcurl_chunk**)malloc(sizeof(flickcurl_chunk*) * fc->chunks_count);
     if(c && chunks) {
-      flickcurl_chunk* chunk=fc->chunks;
+      flickcurl_chunk* chunk = fc->chunks;
       int i;
       char *p;
 
       /* create the ordered list of chunks */
-      for(i=fc->chunks_count-1; i >= 0; i--) {
-        chunks[i]=chunk;
-        chunk=chunk->prev;
+      for(i = fc->chunks_count-1; i >= 0; i--) {
+        chunks[i] = chunk;
+        chunk = chunk->prev;
       }
 
-      p=c;
-      for(i=0; i < fc->chunks_count; i++) {
+      p = c;
+      for(i = 0; i < fc->chunks_count; i++) {
         memcpy(p, chunks[i]->content, chunks[i]->size);
         p += chunks[i]->size;
 
@@ -1423,17 +1423,17 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
       free(chunks);
 
       /* saved chunks list is now freed */
-      fc->chunks=NULL; 
-      fc->chunks_count=0;
+      fc->chunks = NULL; 
+      fc->chunks_count = 0;
 
-      *p='\0';
+      *p = '\0';
       
       if(content_p)
-        *content_p=c;
+        *content_p = c;
       else
         free(c);
       if(size_p)
-        *size_p=fc->total_bytes;
+        *size_p = fc->total_bytes;
       
     } else {
       if(c)
@@ -1447,7 +1447,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   if(fc->xml_parse_content) {
     xmlNodePtr xnp;
     xmlAttr* attr;
-    int failed=0;
+    int failed = 0;
     
     xmlParseChunk(fc->xc, NULL, 0, 1);
 
@@ -1456,41 +1456,41 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
             fc->total_bytes, fc->uri);
 #endif
 
-    doc=fc->xc->myDoc;
+    doc = fc->xc->myDoc;
     if(!doc) {
       flickcurl_error(fc, "Failed to create XML DOM for document");
-      fc->failed=1;
+      fc->failed = 1;
       goto tidy;
     }
 
     xnp = xmlDocGetRootElement(doc);
     if(!xnp) {
       flickcurl_error(fc, "Failed to parse XML");
-      fc->failed=1;
+      fc->failed = 1;
       goto tidy;
     }
 
-    for(attr=xnp->properties; attr; attr=attr->next) {
+    for(attr = xnp->properties; attr; attr = attr->next) {
       if(!strcmp((const char*)attr->name, "stat")) {
-        const char *attr_value=(const char*)attr->children->content;
+        const char *attr_value = (const char*)attr->children->content;
 #ifdef FLICKCURL_DEBUG
         fprintf(stderr, "Request returned stat '%s'\n", attr_value);
 #endif
         if(strcmp(attr_value, "ok"))
-          failed=1;
+          failed = 1;
         break;
       }
     }
 
     if(failed) {
-      xmlNodePtr err=xnp->children->next;
-      for(attr=err->properties; attr; attr=attr->next) {
-        const char *attr_name=(const char*)attr->name;
-        const char *attr_value=(const char*)attr->children->content;
+      xmlNodePtr err = xnp->children->next;
+      for(attr = err->properties; attr; attr = attr->next) {
+        const char *attr_name = (const char*)attr->name;
+        const char *attr_value = (const char*)attr->children->content;
         if(!strcmp(attr_name, "code"))
-          fc->error_code=atoi(attr_value);
+          fc->error_code = atoi(attr_value);
         else if(!strcmp(attr_name, "msg"))
-          fc->error_msg=strdup(attr_value);
+          fc->error_msg = strdup(attr_value);
       }
       if(fc->method)
         flickcurl_error(fc, "Method %s failed with error %d - %s", 
@@ -1498,17 +1498,17 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
       else
         flickcurl_error(fc, "Call failed with error %d - %s", 
                         fc->error_code, fc->error_msg);
-      fc->failed=1;
+      fc->failed = 1;
     } else {
       /* pass DOM as an output parameter */
       if(docptr_p)
-        *docptr_p=doc;
+        *docptr_p = doc;
     }
   }
 
   tidy:
   if(fc->failed)
-    rc=1;
+    rc = 1;
   
 #ifdef CAPTURE
   if(1) {
@@ -1518,7 +1518,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 #endif
 
   /* reset special flags */
-  fc->sign=0;
+  fc->sign = 0;
   
   return rc;
 }
@@ -1527,7 +1527,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 xmlDocPtr
 flickcurl_invoke(flickcurl *fc)
 {
-  xmlDocPtr docptr=NULL;
+  xmlDocPtr docptr = NULL;
   if(!flickcurl_invoke_common(fc, NULL, NULL, &docptr))
     return docptr;
   return NULL;
@@ -1537,7 +1537,7 @@ flickcurl_invoke(flickcurl *fc)
 char*
 flickcurl_invoke_get_content(flickcurl *fc, size_t* size_p)
 {
-  char* content=NULL;
+  char* content = NULL;
   if(!flickcurl_invoke_common(fc, &content, size_p, NULL))
     return content;
   return NULL;
@@ -1552,13 +1552,13 @@ flickcurl_unixtime_to_isotime(time_t unix_time)
 #define ISO_DATE_LEN 20
   static char date_buffer[ISO_DATE_LEN + 1];
   size_t len;
-  char *value=NULL;
+  char *value = NULL;
   
-  structured_time=(struct tm*)gmtime(&unix_time);
-  len=ISO_DATE_LEN;
+  structured_time = (struct tm*)gmtime(&unix_time);
+  len = ISO_DATE_LEN;
   strftime(date_buffer, len+1, ISO_DATE_FORMAT, structured_time);
   
-  value=(char*)malloc(len + 1);
+  value = (char*)malloc(len + 1);
   strncpy((char*)value, date_buffer, len+1);
   return value;
 }
@@ -1572,13 +1572,13 @@ flickcurl_unixtime_to_sqltimestamp(time_t unix_time)
 #define SQL_DATETIME_LEN 19
   static char date_buffer[SQL_DATETIME_LEN + 1];
   size_t len;
-  char *value=NULL;
+  char *value = NULL;
   
-  structured_time=(struct tm*)gmtime(&unix_time);
-  len=ISO_DATE_LEN;
+  structured_time = (struct tm*)gmtime(&unix_time);
+  len = ISO_DATE_LEN;
   strftime(date_buffer, len+1, SQL_DATETIME_FORMAT, structured_time);
   
-  value=(char*)malloc(len + 1);
+  value = (char*)malloc(len + 1);
   strncpy((char*)value, date_buffer, len+1);
   return value;
 }
@@ -1590,18 +1590,18 @@ flickcurl_sqltimestamp_to_isotime(const char* timestamp)
 /* SQL DATETIME FORMAT "%Y %m %d %H:%M:%S"  (19 chars) */
 /* ISO DATE FORMAT     "%Y-%m-%dT%H:%M:%SZ" (20 chars) */
 #define ISO_DATE_LEN 20
-  size_t len=ISO_DATE_LEN;
-  char *value=NULL;
+  size_t len = ISO_DATE_LEN;
+  char *value = NULL;
   
-  value=(char*)malloc(len + 1);
+  value = (char*)malloc(len + 1);
   strncpy((char*)value, timestamp, len);
-  value[4]='-';
-  value[7]='-';
-  value[10]='T';
-  value[13]=':';
-  value[16]=':';
-  value[19]='Z';
-  value[20]='\0';
+  value[4] = '-';
+  value[7] = '-';
+  value[10] = 'T';
+  value[13] = ':';
+  value[16] = ':';
+  value[19] = 'Z';
+  value[20] = '\0';
   
   return value;
 }
@@ -1611,16 +1611,16 @@ char*
 flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
                      const xmlChar* xpathExpr) 
 {
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   int i;
-  char* value=NULL;
+  char* value = NULL;
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
     
@@ -1628,17 +1628,17 @@ flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
   if(xmlXPathNodeSetIsEmpty(nodes))
     goto tidy;
   
-  for(i=0; i < xmlXPathNodeSetGetLength(nodes); i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0; i < xmlXPathNodeSetGetLength(nodes); i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     
     if(node->type != XML_ATTRIBUTE_NODE &&
        node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     if(node->children)
-      value=strdup((char*)node->children->content);
+      value = strdup((char*)node->children->content);
     break;
   }
 
@@ -1667,7 +1667,7 @@ flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
@@ -1718,7 +1718,7 @@ flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
 void
 flickcurl_set_write(flickcurl *fc, int is_write)
 {
-  fc->is_write=is_write;
+  fc->is_write = is_write;
 }
 
 
@@ -1738,9 +1738,9 @@ flickcurl_set_data(flickcurl *fc, void* data, size_t data_length)
       xmlFree(fc->data);
   }
   
-  fc->data=data;
-  fc->data_length=data_length;
-  fc->data_is_xml=0;
+  fc->data = data;
+  fc->data_length = data_length;
+  fc->data_is_xml = 0;
 }
 
 
@@ -1764,13 +1764,13 @@ flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc)
 
   xmlDocDumpFormatMemory(doc, &mem, &size, 1); /* format 1 means indent */
   
-  fc->data=mem;
-  fc->data_length=(size_t)size;
-  fc->data_is_xml=1;
+  fc->data = mem;
+  fc->data_length = (size_t)size;
+  fc->data_is_xml = 1;
 }
 
 
-static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1]={
+static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1] = {
   "(none)",
   "photo id",
   "photo URI",
@@ -1811,10 +1811,10 @@ flickcurl_call_get_one_string_field(flickcurl* fc,
                                     const xmlChar* xpathExpr)
 {
   const char * parameters[6][2];
-  int count=0;
-  char *result=NULL;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  char *result = NULL;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
 
   if(key && value) {
     parameters[count][0]  = key;
@@ -1826,13 +1826,13 @@ flickcurl_call_get_one_string_field(flickcurl* fc,
   if(flickcurl_prepare(fc, method, parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
   xpathCtx = xmlXPathNewContext(doc);
   if(xpathCtx)
-    result=flickcurl_xpath_eval(fc, xpathCtx, xpathExpr);
+    result = flickcurl_xpath_eval(fc, xpathCtx, xpathExpr);
   
   xmlXPathFreeContext(xpathCtx);
 
@@ -1856,27 +1856,27 @@ flickcurl_array_join(const char *array[], char delim)
 {
   int i;
   int array_size;
-  size_t len=0;
+  size_t len = 0;
   char* str;
   char* p;
   
-  for(i=0; array[i]; i++)
+  for(i = 0; array[i]; i++)
     len += strlen(array[i])+1;
-  array_size=i;
+  array_size = i;
   
-  str=(char*)malloc(len+1);
+  str = (char*)malloc(len+1);
   if(!str)
     return NULL;
   
-  p=str;
-  for(i=0; array[i]; i++) {
-    size_t item_len=strlen(array[i]);
+  p = str;
+  for(i = 0; array[i]; i++) {
+    size_t item_len = strlen(array[i]);
     strncpy(p, array[i], item_len);
     p+= item_len;
     if(i < array_size)
       *p++ = delim;
   }
-  *p='\0';
+  *p = '\0';
 
   return str;
 }
@@ -1895,38 +1895,38 @@ char**
 flickcurl_array_split(const char *str, char delim)
 {
   int i;
-  int array_size=1;
+  int array_size = 1;
   char** array;
   
-  for(i=0; str[i]; i++) {
+  for(i = 0; str[i]; i++) {
     if(str[i] == delim)
       array_size++;
   }
   
-  array=(char**)malloc(sizeof(char*)*(array_size+1));
+  array = (char**)malloc(sizeof(char*)*(array_size+1));
   if(!array)
     return NULL;
 
-  for(i=0; *str; i++) {
+  for(i = 0; *str; i++) {
     size_t item_len;
     const char* p;
 
-    for(p=str; *p && *p != delim; p++)
+    for(p = str; *p && *p != delim; p++)
       ;
-    item_len=p-str;
-    array[i]=(char*)malloc(item_len+1);
+    item_len = p-str;
+    array[i] = (char*)malloc(item_len+1);
     if(!array[i]) {
       while(--i >= 0)
         free(array[i]);
       return NULL;
     }
     strncpy(array[i], str, item_len);
-    array[i][item_len]='\0';
+    array[i][item_len] = '\0';
     str+= item_len;
     if(*str == delim)
       str++;
   }
-  array[i]=NULL;
+  array[i] = NULL;
   
   return array;
 }
@@ -1943,7 +1943,7 @@ flickcurl_array_free(char* array[])
 {
   int i;
   
-  for(i=0; array[i]; i++)
+  for(i = 0; array[i]; i++)
     free(array[i]);
 
   free(array);
@@ -1986,18 +1986,18 @@ flickcurl_get_content_type_label(int content_type)
 int
 flickcurl_get_content_type_from_string(const char* content_type_string)
 {
-  char* endptr=NULL;
+  char* endptr = NULL;
   int content_type = -1;
 
-  content_type=(int)strtol(content_type_string, &endptr, 10);
+  content_type = (int)strtol(content_type_string, &endptr, 10);
   /* If not all of string was used - fail */
   if(endptr && *endptr)
     content_type= -1;
   if(content_type < 1 || content_type > CONTENT_TYPE_COUNT) {
     int i;
-    for(i=1; i< CONTENT_TYPE_COUNT; i++)
+    for(i = 1; i< CONTENT_TYPE_COUNT; i++)
       if(!strcmp(flickcurl_content_type_labels[i], content_type_string)) {
-        content_type=i;
+        content_type = i;
         break;
       }
   }
@@ -2042,18 +2042,18 @@ flickcurl_get_safety_level_label(int safety_level)
 int
 flickcurl_get_safety_level_from_string(const char* safety_level_string)
 {
-  char* endptr=NULL;
+  char* endptr = NULL;
   int safety_level= -1;
 
-  safety_level=(int)strtol(safety_level_string, &endptr, 10);
+  safety_level = (int)strtol(safety_level_string, &endptr, 10);
   /* If not all of string was used - fail */
   if(endptr && *endptr)
     safety_level= -1;
   if(safety_level < 1 || safety_level > SAFETY_LEVEL_COUNT) {
     int i;
-    for(i=1; i< SAFETY_LEVEL_COUNT; i++)
+    for(i = 1; i< SAFETY_LEVEL_COUNT; i++)
       if(!strcmp(flickcurl_safety_level_labels[i], safety_level_string)) {
-        safety_level=i;
+        safety_level = i;
         break;
       }
   }
@@ -2068,7 +2068,7 @@ static struct {
   const char* label;
   const char* mime_type;
 }
-flickcurl_feed_format_info[FEED_FORMAT_COUNT+1]={
+flickcurl_feed_format_info[FEED_FORMAT_COUNT+1] = {
   { "feed-rss_100", "RSS 1.0", "application/rdf+xml" },
   { "feed-rss_200", "RSS 2.0", "application/rss+xml" },
   { "feed-atom_10", "Atom 1.0", "application/atom+xml" },
@@ -2105,13 +2105,13 @@ flickcurl_get_feed_format_info(int feed_format,
     return 1;
 
   if(name_p)
-    *name_p=flickcurl_feed_format_info[feed_format].name;
+    *name_p = flickcurl_feed_format_info[feed_format].name;
 
   if(label_p)
-    *label_p=flickcurl_feed_format_info[feed_format].label;
+    *label_p = flickcurl_feed_format_info[feed_format].label;
 
   if(mime_type_p)
-    *mime_type_p=flickcurl_feed_format_info[feed_format].mime_type;
+    *mime_type_p = flickcurl_feed_format_info[feed_format].mime_type;
 
   return 0;
 }
@@ -2137,10 +2137,10 @@ flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
    * build the URL */
   static char per_page_s[4];
   static char page_s[4];
-  int this_count=0;
+  int this_count = 0;
   
   if(format_p)
-    *format_p=NULL;
+    *format_p = NULL;
 
   if(!list_params)
     return 0;
@@ -2176,7 +2176,7 @@ flickcurl_append_photos_list_params(flickcurl_photos_list_params* list_params,
     this_count++;
 
     if(format_p)
-      *format_p=list_params->format;
+      *format_p = list_params->format;
   }
 
   return this_count;
@@ -2189,7 +2189,7 @@ static struct {
   const char* name;
   const char* label;
 }
-flickcurl_extras_format_info[EXTRAS_FORMAT_COUNT+1]={
+flickcurl_extras_format_info[EXTRAS_FORMAT_COUNT+1] = {
   { "date_taken", "Date item was taken"},
   { "date_upload", "Date item was uploaded"},
   { "geo", "Geotagging latitude, longitude and accuracy"},
@@ -2240,10 +2240,10 @@ flickcurl_get_extras_format_info(int extras_format,
     return 1;
 
   if(name_p)
-    *name_p=flickcurl_extras_format_info[extras_format].name;
+    *name_p = flickcurl_extras_format_info[extras_format].name;
 
   if(label_p)
-    *label_p=flickcurl_extras_format_info[extras_format].label;
+    *label_p = flickcurl_extras_format_info[extras_format].label;
 
   return 0;
 }
@@ -2264,10 +2264,10 @@ flickcurl_photos_list_params_init(flickcurl_photos_list_params* list_params)
     return 1;
   
   memset(list_params, '\0', sizeof(list_params));
-  list_params->version=1;
+  list_params->version = 1;
 
-  list_params->extras=NULL;
-  list_params->format=NULL;
+  list_params->extras = NULL;
+  list_params->format = NULL;
   list_params->page= -1;
   list_params->per_page= -1;
 

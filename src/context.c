@@ -35,7 +35,7 @@
 
 
 /* This is the element name and the label - lazy */
-static const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2]={
+static const char* flickcurl_context_type_element[FLICKCURL_CONTEXT_LAST+2] = {
   "---",
   "set",
   "pool",
@@ -100,7 +100,7 @@ flickcurl_free_contexts(flickcurl_context** contexts)
 
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(contexts, flickcurl_context_array);
 
-  for(i=0; contexts[i]; i++)
+  for(i = 0; contexts[i]; i++)
     flickcurl_free_context(contexts[i]);
   free(contexts);
 }
@@ -109,32 +109,32 @@ flickcurl_free_contexts(flickcurl_context** contexts)
 flickcurl_context**
 flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
 {
-  flickcurl_context** contexts=NULL;
+  flickcurl_context** contexts = NULL;
   xmlNodePtr xnp;
   xmlNodePtr node;
   int i;
-  int count=0;
-  int nodes_count=0;
+  int count = 0;
+  int nodes_count = 0;
   
   xnp = xmlDocGetRootElement(doc);
 
   /* count root element children */
-  for(i=0, node=xnp->children; node; node=node->next) {
+  for(i = 0, node = xnp->children; node; node = node->next) {
     if(node->type == XML_ELEMENT_NODE)
       nodes_count++;
   }
 
-  contexts=(flickcurl_context**)calloc(sizeof(flickcurl_context**),
+  contexts = (flickcurl_context**)calloc(sizeof(flickcurl_context**),
                                        nodes_count+1);
 
   /* walk children elements of root element */
   xnp = xmlDocGetRootElement(doc);
-  for(i=0, node=xnp->children;
+  for(i = 0, node = xnp->children;
       node;
-      i++, node=node->next) {
+      i++, node = node->next) {
     xmlAttr* attr;
     flickcurl_context* context;
-    flickcurl_context_type type=FLICKCURL_CONTEXT_NONE;
+    flickcurl_context_type type = FLICKCURL_CONTEXT_NONE;
     int j;
     
 #if FLICKCURL_DEBUG > 1
@@ -144,41 +144,41 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
     if(node->type != XML_ELEMENT_NODE)
       continue;
 
-    for(j=0; j <= FLICKCURL_CONTEXT_LAST; j++) {
+    for(j = 0; j <= FLICKCURL_CONTEXT_LAST; j++) {
       if(!strcmp((const char*)node->name, flickcurl_context_type_element[j])) {
-        type=(flickcurl_context_type)j;
+        type = (flickcurl_context_type)j;
         break;
       }
     }
     if(type == FLICKCURL_CONTEXT_NONE)
       continue;
     
-    context=(flickcurl_context*)calloc(sizeof(flickcurl_context), 1);
-    context->type=type;
+    context = (flickcurl_context*)calloc(sizeof(flickcurl_context), 1);
+    context->type = type;
 
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
       
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "id"))
-        context->id=attr_value;
+        context->id = attr_value;
       else if(!strcmp(attr_name, "secret"))
-        context->secret=attr_value;
+        context->secret = attr_value;
       else if(!strcmp(attr_name, "server")) {
-        context->server=atoi(attr_value);
+        context->server = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "farm")) {
-        context->farm=atoi(attr_value);
+        context->farm = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "title"))
-        context->title=attr_value;
+        context->title = attr_value;
       else if(!strcmp(attr_name, "url"))
-        context->url=attr_value;
+        context->url = attr_value;
       else if(!strcmp(attr_name, "thumb"))
-        context->thumb=attr_value;
+        context->thumb = attr_value;
     } /* for attributes */
     
 #if FLICKCURL_DEBUG > 1
@@ -192,10 +192,10 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
             );
 #endif
     
-    contexts[count++]=context;
+    contexts[count++] = context;
   } /* for nodes */
 
-  contexts[count]=NULL;
+  contexts[count] = NULL;
 
   return contexts;
 }

@@ -58,8 +58,8 @@ int
 flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags)
 {
   const char * parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   
   if(!photo_id || !tags)
     return 1;
@@ -78,7 +78,7 @@ flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -103,9 +103,9 @@ int
 flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   
   if(!photo_id)
     return 1;
@@ -121,15 +121,15 @@ flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
  tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -153,9 +153,9 @@ flickcurl_context**
 flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  flickcurl_context** contexts=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  flickcurl_context** contexts = NULL;
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
@@ -165,15 +165,15 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.getAllContexts", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  contexts=flickcurl_build_contexts(fc, doc);
+  contexts = flickcurl_build_contexts(fc, doc);
 
  tidy:
   if(fc->failed)
-    contexts=NULL;
+    contexts = NULL;
 
   return contexts;
 }
@@ -193,7 +193,7 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
  * Currently supported extras fields are: license, date_upload,
  * date_taken, owner_name, icon_server, original_format, last_update
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -205,10 +205,10 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
                                           flickcurl_photos_list_params* list_params)
 {
   const char* parameters[13][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  char true_s[2]="1";
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  char true_s[2] = "1";
+  const char* format = NULL;
 
   /* API parameters */
   if(contact_count > 1) {
@@ -239,7 +239,7 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
                        count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -247,7 +247,7 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -287,7 +287,7 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
   list_params.per_page = -1;
   list_params.page     = -1;
 
-  photos_list=flickcurl_photos_getContactsPhotos_params(fc, contact_count,
+  photos_list = flickcurl_photos_getContactsPhotos_params(fc, contact_count,
                                                         just_friends,
                                                         single_photo, 
                                                         include_self,
@@ -295,7 +295,7 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -320,7 +320,7 @@ flickcurl_photos_getContactsPhotos(flickcurl* fc,
  * date_upload, date_taken, owner_name, icon_server, original_format,
  * last_update.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: a list of photos or NULL on failure
@@ -335,11 +335,11 @@ flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
                                                 flickcurl_photos_list_params* list_params)
 {
   const char* parameters[14][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  char true_s[2]="1";
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  char true_s[2] = "1";
   char photo_count_s[10];
-  const char* format=NULL;
+  const char* format = NULL;
   
   if(!user_id)
     return NULL;
@@ -372,7 +372,7 @@ flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
                        count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -380,7 +380,7 @@ flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -422,7 +422,7 @@ flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
   list_params.per_page = -1;
   list_params.page     = -1;
 
-  photos_list=flickcurl_photos_getContactsPublicPhotos_params(fc, user_id,
+  photos_list = flickcurl_photos_getContactsPublicPhotos_params(fc, user_id,
                                                               photo_count,
                                                               just_friends, 
                                                               single_photo,
@@ -431,7 +431,7 @@ flickcurl_photos_getContactsPublicPhotos(flickcurl* fc, const char* user_id,
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -458,9 +458,9 @@ flickcurl_context**
 flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  flickcurl_context** contexts=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  flickcurl_context** contexts = NULL;
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
@@ -470,15 +470,15 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.getContext", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  contexts=flickcurl_build_contexts(fc, doc);
+  contexts = flickcurl_build_contexts(fc, doc);
 
  tidy:
   if(fc->failed)
-    contexts=NULL;
+    contexts = NULL;
 
   return contexts;
 }
@@ -488,59 +488,59 @@ static int**
 flickcurl_build_photocounts(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                             const xmlChar* xpathExpr, int* photocount_count_p)
 {
-  int** photocounts=NULL;
+  int** photocounts = NULL;
   int nodes_count;
   int photocount_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
-  const int row_size=3;
+  const int row_size = 3;
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
 
-  photocounts=(int**)calloc(sizeof(int*), nodes_count+1);
+  photocounts = (int**)calloc(sizeof(int*), nodes_count+1);
   
-  for(i=0, photocount_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, photocount_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     int* row;
     int j;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    row=(int*)calloc(sizeof(int), row_size);
-    for(j=0; j < row_size; j++)
+    row = (int*)calloc(sizeof(int), row_size);
+    for(j = 0; j < row_size; j++)
       row[j]= -1;
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "count")) {
-        row[0]=atoi(attr_value);
+        row[0] = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "fromdate")) {
-        row[1]=atoi(attr_value);
+        row[1] = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "todate")) {
-        row[2]=atoi(attr_value);
+        row[2] = atoi(attr_value);
         free(attr_value);
       }
     }
@@ -550,11 +550,11 @@ flickcurl_build_photocounts(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             row[0], row[1], row[2]);
 #endif
     
-    photocounts[photocount_count++]=row;
+    photocounts[photocount_count++] = row;
   } /* for nodes */
 
   if(photocount_count_p)
-    *photocount_count_p=photocount_count;
+    *photocount_count_p = photocount_count;
   
  tidy:
   if(xpathObj)
@@ -587,24 +587,24 @@ flickcurl_photos_getCounts(flickcurl* fc,
                            const char** taken_dates_array)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  int** counts=NULL;
-  char* dates=NULL;
-  char* taken_dates=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  int** counts = NULL;
+  char* dates = NULL;
+  char* taken_dates = NULL;
   
   /* one must be not empty */
   if(!dates_array && !taken_dates_array)
     return NULL;
   
   if(dates_array) {
-    dates=flickcurl_array_join(dates_array, ',');
+    dates = flickcurl_array_join(dates_array, ',');
     parameters[count][0] = "dates";
     parameters[count++][1] = dates;
   }
   if(taken_dates_array) {
-    taken_dates=flickcurl_array_join(taken_dates_array, ',');
+    taken_dates = flickcurl_array_join(taken_dates_array, ',');
     parameters[count][0] = "taken_dates";
     parameters[count++][1] = taken_dates;
   }
@@ -614,7 +614,7 @@ flickcurl_photos_getCounts(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.photos.getCounts", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -622,11 +622,11 @@ flickcurl_photos_getCounts(flickcurl* fc,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  counts=flickcurl_build_photocounts(fc, xpathCtx,
+  counts = flickcurl_build_photocounts(fc, xpathCtx,
                                      (const xmlChar*)"/rsp/photocounts/photocount",
                                      NULL);
 
@@ -635,7 +635,7 @@ flickcurl_photos_getCounts(flickcurl* fc,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    counts=NULL;
+    counts = NULL;
 
   if(dates)
     free(dates);
@@ -667,10 +667,10 @@ flickcurl_photos_getExif(flickcurl* fc, const char* photo_id,
                          const char* secret)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_exif** exifs=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_exif** exifs = NULL;
   
   if(!photo_id)
     return NULL;
@@ -687,7 +687,7 @@ flickcurl_photos_getExif(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.getExif", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -695,11 +695,11 @@ flickcurl_photos_getExif(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  exifs=flickcurl_build_exifs(fc, xpathCtx,
+  exifs = flickcurl_build_exifs(fc, xpathCtx,
                               (const xmlChar*)"/rsp/photo/exif", NULL);
 
   tidy:
@@ -707,7 +707,7 @@ flickcurl_photos_getExif(flickcurl* fc, const char* photo_id,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    exifs=NULL;
+    exifs = NULL;
 
   return exifs;
 }
@@ -731,10 +731,10 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
                               int page, int per_page)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_person** persons=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_person** persons = NULL;
   char per_page_s[4];
   char page_s[4];
   
@@ -755,7 +755,7 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.getFavorites", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -763,11 +763,11 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  persons=flickcurl_build_persons(fc, xpathCtx,
+  persons = flickcurl_build_persons(fc, xpathCtx,
                                   (const xmlChar*)"/rsp/photo/person", NULL);
 
   tidy:
@@ -775,7 +775,7 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    persons=NULL;
+    persons = NULL;
 
   return persons;
 }
@@ -796,10 +796,10 @@ flickcurl_photo*
 flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_photo* photo=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_photo* photo = NULL;
   
   parameters[count][0]  = "photo_id";
   parameters[count++][1]= photo_id;
@@ -809,7 +809,7 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.getInfo", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -817,18 +817,18 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  photo=flickcurl_build_photo(fc, xpathCtx);
+  photo = flickcurl_build_photo(fc, xpathCtx);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    photo=NULL;
+    photo = NULL;
 
   return photo;
 }
@@ -844,12 +844,12 @@ flickcurl_get_photoslist_params(flickcurl* fc,
                                 flickcurl_photos_list_params* list_params)
 {
   const char* parameters[16][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
   char min_upload_date_s[20];
   char max_upload_date_s[20];
   char privacy_filter_s[20];
-  const char* format=NULL;
+  const char* format = NULL;
 
   /* API parameters */
   if(min_upload_date > 0) {
@@ -870,7 +870,7 @@ flickcurl_get_photoslist_params(flickcurl* fc,
     parameters[count][0]  = "max_taken_date";
     parameters[count++][1]= max_taken_date;
   }
-  if(privacy_filter >=1 && privacy_filter <= 5) {
+  if(privacy_filter >= 1 && privacy_filter <= 5) {
     parameters[count][0]  = "privacy_filter";
     sprintf(privacy_filter_s, "%d", privacy_filter);
     parameters[count++][1]= privacy_filter_s;
@@ -884,7 +884,7 @@ flickcurl_get_photoslist_params(flickcurl* fc,
   if(flickcurl_prepare(fc, method, parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -892,7 +892,7 @@ flickcurl_get_photoslist_params(flickcurl* fc,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -973,14 +973,14 @@ flickcurl_photos_getNotInSet(flickcurl* fc,
   list_params.page     = page;
 
 
-  photos_list=flickcurl_get_photoslist_params(fc, "flickr.photos.getNotInSet",
+  photos_list = flickcurl_get_photoslist_params(fc, "flickr.photos.getNotInSet",
                                               min_upload_date, max_upload_date,
                                               min_taken_date, max_taken_date,
                                               privacy_filter, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -1004,10 +1004,10 @@ flickcurl_perms*
 flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_perms* perms=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_perms* perms = NULL;
   
   if(!photo_id)
     return NULL;
@@ -1020,7 +1020,7 @@ flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.getPerms", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -1028,18 +1028,18 @@ flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  perms=flickcurl_build_perms(fc, xpathCtx, (const xmlChar*)"/rsp/perms");
+  perms = flickcurl_build_perms(fc, xpathCtx, (const xmlChar*)"/rsp/perms");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    perms=NULL;
+    perms = NULL;
 
   return perms;
 }
@@ -1056,7 +1056,7 @@ flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
  * owner_name, icon_server, original_format, last_update, geo, tags,
  * machine_tags.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -1066,9 +1066,9 @@ flickcurl_photos_getRecent_params(flickcurl* fc,
                                   flickcurl_photos_list_params* list_params)
 {
   const char* parameters[11][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
 
   /* No API parameters */
 
@@ -1080,7 +1080,7 @@ flickcurl_photos_getRecent_params(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.photos.getRecent", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -1088,7 +1088,7 @@ flickcurl_photos_getRecent_params(flickcurl* fc,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -1124,11 +1124,11 @@ flickcurl_photos_getRecent(flickcurl* fc, const char* extras,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_photos_getRecent_params(fc, &list_params);
+  photos_list = flickcurl_photos_getRecent_params(fc, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -1152,10 +1152,10 @@ flickcurl_size**
 flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_size** sizes=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_size** sizes = NULL;
   
   if(!photo_id)
     return NULL;
@@ -1168,7 +1168,7 @@ flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.getSizes", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -1176,11 +1176,11 @@ flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  sizes=flickcurl_build_sizes(fc, xpathCtx, (const xmlChar*)"/rsp/sizes/size",
+  sizes = flickcurl_build_sizes(fc, xpathCtx, (const xmlChar*)"/rsp/sizes/size",
                               NULL);
 
   tidy:
@@ -1188,7 +1188,7 @@ flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    sizes=NULL;
+    sizes = NULL;
 
   return sizes;
 }
@@ -1270,14 +1270,14 @@ flickcurl_photos_getUntagged(flickcurl* fc,
   list_params.page     = page;
 
 
-  photos_list=flickcurl_get_photoslist_params(fc, "flickr.photos.getUntagged",
+  photos_list = flickcurl_get_photoslist_params(fc, "flickr.photos.getUntagged",
                                               min_upload_date, max_upload_date,
                                               min_taken_date, max_taken_date,
                                               privacy_filter, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -1363,7 +1363,7 @@ flickcurl_photos_getWithGeoData(flickcurl* fc,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_photos_getWithGeoData_params(fc, min_upload_date,
+  photos_list = flickcurl_photos_getWithGeoData_params(fc, min_upload_date,
                                                      max_upload_date,
                                                      min_taken_date,
                                                      max_taken_date,
@@ -1372,7 +1372,7 @@ flickcurl_photos_getWithGeoData(flickcurl* fc,
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -1460,7 +1460,7 @@ flickcurl_photos_getWithoutGeoData(flickcurl* fc,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_photos_getWithoutGeoData_params(fc, min_upload_date,
+  photos_list = flickcurl_photos_getWithoutGeoData_params(fc, min_upload_date,
                                                         max_upload_date,
                                                         min_taken_date,
                                                         max_taken_date,
@@ -1469,7 +1469,7 @@ flickcurl_photos_getWithoutGeoData(flickcurl* fc,
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -1494,7 +1494,7 @@ flickcurl_photos_getWithoutGeoData(flickcurl* fc,
  * owner_name, icon_server, original_format, last_update, geo, tags,
  * machine_tags.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -1504,12 +1504,12 @@ flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
                                          flickcurl_photos_list_params* list_params)
 {
   const char* parameters[12][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
   char min_date_s[20];
-  const char* format=NULL;
+  const char* format = NULL;
   
-  if(min_date <=0)
+  if(min_date <= 0)
     return NULL;
 
   /* API parameters */
@@ -1527,7 +1527,7 @@ flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
   if(flickcurl_prepare(fc, "flickr.photos.recentlyUpdated", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -1535,7 +1535,7 @@ flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -1573,12 +1573,12 @@ flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_photos_recentlyUpdated_params(fc, min_date,
+  photos_list = flickcurl_photos_recentlyUpdated_params(fc, min_date,
                                                       &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -1604,8 +1604,8 @@ int
 flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
 {
   const char * parameters[6][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   
   if(!tag_id)
     return 1;
@@ -1621,7 +1621,7 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -1691,8 +1691,8 @@ flickcurl_photos_search_params(flickcurl* fc,
                                flickcurl_photos_list_params* list_params)
 {
   const char* parameters[40][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
   char min_upload_date_s[15];
   char max_upload_date_s[15];
   char accuracy_s[3];
@@ -1703,7 +1703,7 @@ flickcurl_photos_search_params(flickcurl* fc,
   char radius_s[32];
   char woe_id_s[32];
   char geo_context_s[2];
-  const char* format=NULL;
+  const char* format = NULL;
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(params, flickcurl_search_params, NULL);
   
@@ -1759,21 +1759,21 @@ flickcurl_photos_search_params(flickcurl* fc,
     parameters[count++][1]= params->bbox;
   }
   if(params->accuracy) {
-    if(params->accuracy >=0 && params->accuracy <=16) {
+    if(params->accuracy >= 0 && params->accuracy <= 16) {
       sprintf(accuracy_s, "%d", params->accuracy);
       parameters[count][0]  = "accuracy";
       parameters[count++][1]= accuracy_s;
     }
   }
   if(params->safe_search) {
-    if(params->safe_search >=0 && params->safe_search <=3) {
+    if(params->safe_search >= 0 && params->safe_search <= 3) {
       sprintf(safe_search_s, "%d", params->safe_search);
       parameters[count][0]  = "safe_search";
       parameters[count++][1]= safe_search_s;
     }
   }
   if(params->content_type) {
-    if(params->content_type >=0 && params->content_type <=4) {
+    if(params->content_type >= 0 && params->content_type <= 4) {
       sprintf(content_type_s, "%d", params->content_type);
       parameters[count][0]  = "content_type";
       parameters[count++][1]= content_type_s;
@@ -1857,7 +1857,7 @@ flickcurl_photos_search_params(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.photos.search", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -1865,7 +1865,7 @@ flickcurl_photos_search_params(flickcurl* fc,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -1910,11 +1910,11 @@ flickcurl_photos_search(flickcurl* fc, flickcurl_search_params* params)
   list_params.per_page = params->per_page;
   list_params.page     = params->page;
 
-  photos_list=flickcurl_photos_search_params(fc, params, &list_params);
+  photos_list = flickcurl_photos_search_params(fc, params, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);
@@ -1940,9 +1940,9 @@ flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id,
                                 int content_type)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   char content_type_str[2];
 
   if(!photo_id || !content_type)
@@ -1965,15 +1965,15 @@ flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -1999,12 +1999,12 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
                           int date_taken_granularity)
 {
   const char* parameters[11][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  int result = 1;
   char date_posted_str[20];
-  char* date_taken_str=NULL;
+  char* date_taken_str = NULL;
   char date_taken_granularity_str[3];
   
   if(!photo_id)
@@ -2028,7 +2028,7 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
   if(date_taken >= 0) {
     parameters[count][0]  = "date_taken";
     /* taken date is always a SQL timestamp */
-    date_taken_str=flickcurl_unixtime_to_sqltimestamp(date_taken);
+    date_taken_str = flickcurl_unixtime_to_sqltimestamp(date_taken);
   }
   if(date_taken_granularity >= 0) {
     parameters[count][0]  = "date_taken_granularity";
@@ -2044,7 +2044,7 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -2052,18 +2052,18 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  result=0;
+  result = 0;
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=1;
+    result = 1;
 
   if(date_taken_str)
     free(date_taken_str);
@@ -2090,10 +2090,10 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
                          const char* title, const char* description)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  int result = 1;
   
   if(!photo_id || !title || !description)
     return 1;
@@ -2113,7 +2113,7 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -2121,18 +2121,18 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  result=0;
+  result = 0;
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -2155,10 +2155,10 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
                           flickcurl_perms* perms)
 {
   const char* parameters[13][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  int result = 1;
   char is_public_str[2];
   char is_friend_str[2];
   char is_family_str[2];
@@ -2202,7 +2202,7 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -2210,18 +2210,18 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  result=0;
+  result = 0;
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -2245,17 +2245,17 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
                                 int safety_level, int hidden)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  int result = 1;
   char safety_level_str[2];
   char hidden_str[2];
   
   if(!photo_id)
     return 1;
 
-  if(safety_level <=0 && hidden <0)
+  if(safety_level <= 0 && hidden <0)
     return 0;
 
   parameters[count][0]  = "photo_id";
@@ -2265,7 +2265,7 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
     sprintf(safety_level_str, "%d", safety_level);
     parameters[count++][1]= safety_level_str;
   }
-  if(hidden >=0) {
+  if(hidden >= 0) {
     parameters[count][0]  = "hidden";
     sprintf(hidden_str, "%d", hidden ? 1 : 0);
     parameters[count++][1]= hidden_str;
@@ -2279,7 +2279,7 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -2287,18 +2287,18 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  result=0;
+  result = 0;
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -2322,8 +2322,8 @@ int
 flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags)
 {
   const char * parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   
   if(!photo_id || !tags)
     return 1;
@@ -2342,7 +2342,7 @@ flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 

@@ -72,7 +72,7 @@ flickcurl_free_contacts(flickcurl_contact **contacts_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(contacts_object, flickcurl_contact);
 
-  for(i=0; contacts_object[i]; i++)
+  for(i = 0; contacts_object[i]; i++)
     flickcurl_free_contact(contacts_object[i]);
   
   free(contacts_object);
@@ -84,11 +84,11 @@ flickcurl_build_contacts(flickcurl* fc,
                          xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr,
                          int* contact_count_p)
 {
-  flickcurl_contact** contacts=NULL;
+  flickcurl_contact** contacts = NULL;
   int nodes_count;
   int contact_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do contacts */
@@ -96,55 +96,55 @@ flickcurl_build_contacts(flickcurl* fc,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  contacts=(flickcurl_contact**)calloc(sizeof(flickcurl_contact*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  contacts = (flickcurl_contact**)calloc(sizeof(flickcurl_contact*), nodes_count+1);
   
-  for(i=0, contact_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, contact_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_contact* contact_object;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    contact_object=(flickcurl_contact*)calloc(sizeof(flickcurl_contact), 1);
+    contact_object = (flickcurl_contact*)calloc(sizeof(flickcurl_contact), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
       
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "nsid"))
-        contact_object->nsid=attr_value;
+        contact_object->nsid = attr_value;
       else if(!strcmp(attr_name, "username"))
-        contact_object->username=attr_value;
+        contact_object->username = attr_value;
       else if(!strcmp(attr_name, "iconserver")) {
-        contact_object->iconserver=atoi((const char*)attr_value);
+        contact_object->iconserver = atoi((const char*)attr_value);
         free(attr_value);
       }
       else if(!strcmp(attr_name, "realname"))
-        contact_object->realname=attr_value;
+        contact_object->realname = attr_value;
       else if(!strcmp(attr_name, "friend")) {
-        contact_object->is_friend=atoi((const char*)attr_value);
+        contact_object->is_friend = atoi((const char*)attr_value);
         free(attr_value);
       }
       else if(!strcmp(attr_name, "family")) {
-        contact_object->is_family=atoi((const char*)attr_value);
+        contact_object->is_family = atoi((const char*)attr_value);
         free(attr_value);
       }
       else if(!strcmp(attr_name, "ignored")) {
-        contact_object->ignored=atoi((const char*)attr_value);
+        contact_object->ignored = atoi((const char*)attr_value);
         free(attr_value);
       }
       else if(!strcmp(attr_name, "uploaded")) {
@@ -167,11 +167,11 @@ flickcurl_build_contacts(flickcurl* fc,
             contact_object->uploaded);
 #endif
     
-    contacts[contact_count++]=contact_object;
+    contacts[contact_count++] = contact_object;
   } /* for nodes */
 
   if(contact_count_p)
-    *contact_count_p=contact_count;
+    *contact_count_p = contact_count;
   
  tidy:
   if(xpathObj)

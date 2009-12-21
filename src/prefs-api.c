@@ -52,10 +52,10 @@ int
 flickcurl_prefs_getContentType(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  char* content_type_str=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  char* content_type_str = NULL;
   int content_type= -1;
   
   parameters[count][0]  = NULL;
@@ -63,7 +63,7 @@ flickcurl_prefs_getContentType(flickcurl* fc)
   if(flickcurl_prepare(fc, "flickr.prefs.getContentType", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -71,13 +71,13 @@ flickcurl_prefs_getContentType(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  content_type_str=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@content_type");
+  content_type_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@content_type");
   if(content_type_str) {
-    content_type=atoi(content_type_str);
+    content_type = atoi(content_type_str);
     free(content_type_str);
   }
   
@@ -111,11 +111,11 @@ flickcurl_prefs_getGeoPerms(flickcurl* fc)
   char* v;
   int r= -1;
 
-  v=flickcurl_call_get_one_string_field(fc, NULL, NULL,
+  v = flickcurl_call_get_one_string_field(fc, NULL, NULL,
                                         "flickr.prefs.getGeoPerms",
                                         (const xmlChar*)"/rsp/person/@geoperms");
   if(v) {
-    r=atoi(v);
+    r = atoi(v);
     free(v);
   }
 
@@ -137,10 +137,10 @@ int
 flickcurl_prefs_getHidden(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  char* hidden_str=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  char* hidden_str = NULL;
   int hidden= -1;
   
   parameters[count][0]  = NULL;
@@ -148,7 +148,7 @@ flickcurl_prefs_getHidden(flickcurl* fc)
   if(flickcurl_prepare(fc, "flickr.prefs.getHidden", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -156,13 +156,13 @@ flickcurl_prefs_getHidden(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  hidden_str=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@hidden");
+  hidden_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@hidden");
   if(hidden_str) {
-    hidden=atoi(hidden_str);
+    hidden = atoi(hidden_str);
     free(hidden_str);
   }
 
@@ -194,9 +194,9 @@ int
 flickcurl_prefs_getPrivacy(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char* privacy_level_str= NULL;
   int privacy_level= -1;
   
@@ -205,7 +205,7 @@ flickcurl_prefs_getPrivacy(flickcurl* fc)
   if(flickcurl_prepare(fc, "flickr.prefs.getPrivacy", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -213,13 +213,13 @@ flickcurl_prefs_getPrivacy(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  privacy_level_str=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@privacy");
+  privacy_level_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@privacy");
   if(privacy_level_str) {
-    privacy_level=atoi(privacy_level_str);
+    privacy_level = atoi(privacy_level_str);
     free(privacy_level_str);
   }
 
@@ -249,9 +249,9 @@ int
 flickcurl_prefs_getSafetyLevel(flickcurl* fc)
 {
   const char* parameters[7][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char* safety_level_str= NULL;
   int safety_level= -1;
 
@@ -260,7 +260,7 @@ flickcurl_prefs_getSafetyLevel(flickcurl* fc)
   if(flickcurl_prepare(fc, "flickr.prefs.getSafetyLevel", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -268,13 +268,13 @@ flickcurl_prefs_getSafetyLevel(flickcurl* fc)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  safety_level_str=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@safety_level");
+  safety_level_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@safety_level");
   if(safety_level_str) {
-    safety_level=atoi(safety_level_str);
+    safety_level = atoi(safety_level_str);
     free(safety_level_str);
   }
 

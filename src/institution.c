@@ -85,7 +85,7 @@ flickcurl_free_institutions(flickcurl_institution **institutions_object)
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(institutions_object,
                                          flickcurl_institution_array);
 
-  for(i=0; institutions_object[i]; i++)
+  for(i = 0; institutions_object[i]; i++)
     flickcurl_free_institution(institutions_object[i]);
   
   free(institutions_object);
@@ -115,7 +115,7 @@ static struct {
   const xmlChar* xpath;
   flickcurl_institution_url_type institution_url_type;
   institution_field_type institution_field;
-} institution_fields_table[INSTITUTION_FIELDS_TABLE_SIZE+1]={
+} institution_fields_table[INSTITUTION_FIELDS_TABLE_SIZE+1] = {
   {
     (const xmlChar*)"./@nsid",
     FLICKCURL_INSTITUTION_URL_NONE,
@@ -135,19 +135,19 @@ static struct {
   }
   ,
   {
-    (const xmlChar*)"./urls/url[@type='site']",
+    (const xmlChar*)"./urls/url[@type = 'site']",
     FLICKCURL_INSTITUTION_URL_SITE,
     INSTITUTION_URL
   }
   ,
   {
-    (const xmlChar*)"./urls/url[@type='license']",
+    (const xmlChar*)"./urls/url[@type = 'license']",
     FLICKCURL_INSTITUTION_URL_LICENSE,
     INSTITUTION_URL
   }
   ,
   {
-    (const xmlChar*)"./urls/url[@type='flickr']",
+    (const xmlChar*)"./urls/url[@type = 'flickr']",
     FLICKCURL_INSTITUTION_URL_FLICKR,
     INSTITUTION_URL
   }
@@ -178,11 +178,11 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
   institutions = (flickcurl_institution**)calloc(sizeof(flickcurl_institution*), nodes_count+1);
@@ -195,7 +195,7 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
@@ -214,9 +214,9 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       }
     }
 
-    for(expri=0; institution_fields_table[expri].xpath; expri++) {
-      flickcurl_institution_url_type institution_url_type=institution_fields_table[expri].institution_url_type;
-      institution_field_type institution_field=institution_fields_table[expri].institution_field;
+    for(expri = 0; institution_fields_table[expri].xpath; expri++) {
+      flickcurl_institution_url_type institution_url_type = institution_fields_table[expri].institution_url_type;
+      institution_field_type institution_field = institution_fields_table[expri].institution_field;
       const xmlChar* institution_xpathExpr = institution_fields_table[expri].xpath;
       char *value = NULL;
       
@@ -246,7 +246,7 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         default:
           flickcurl_error(fc, "Unknown institution URL type %d",
                           (int)institution_url_type);
-          fc->failed=1;
+          fc->failed = 1;
       }
       
       if(fc->failed)
@@ -281,7 +281,7 @@ flickcurl_build_institution(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   flickcurl_institution** institutions;
   flickcurl_institution* result = NULL;
 
-  institutions=flickcurl_build_institutions(fc, xpathCtx, xpathExpr, NULL);
+  institutions = flickcurl_build_institutions(fc, xpathCtx, xpathExpr, NULL);
 
   if(institutions) {
     result = institutions[0];
@@ -292,7 +292,7 @@ flickcurl_build_institution(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 }
 
 
-static const char* flickcurl_institution_url_type_label[FLICKCURL_INSTITUTION_URL_LAST+1]={
+static const char* flickcurl_institution_url_type_label[FLICKCURL_INSTITUTION_URL_LAST+1] = {
   "(none)",
   "site",
   "license",

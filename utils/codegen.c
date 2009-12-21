@@ -62,10 +62,10 @@ static const char*
 my_basename(const char *name)
 {
   char *p;
-  if((p=strrchr(name, '/')))
-    name=p+1;
-  else if((p=strrchr(name, '\\')))
-    name=p+1;
+  if((p = strrchr(name, '/')))
+    name = p+1;
+  else if((p = strrchr(name, '\\')))
+    name = p+1;
 
   return name;
 }
@@ -81,7 +81,7 @@ my_message_handler(void *user_data, const char *message)
 static void
 my_set_config_var_handler(void* userdata, const char* key, const char* value)
 {
-  flickcurl *fc=(flickcurl *)userdata;
+  flickcurl *fc = (flickcurl *)userdata;
   
   if(!strcmp(key, "api_key"))
     flickcurl_set_api_key(fc, value);
@@ -119,33 +119,33 @@ static struct option long_options[] =
 #endif
 
 
-static const char *title_format_string="Skeleton code generator utility %s\n";
+static const char *title_format_string = "Skeleton code generator utility %s\n";
 
-static const char* config_filename=".flickcurl.conf";
-static const char* config_section="flickr";
+static const char* config_filename = ".flickcurl.conf";
+static const char* config_section = "flickr";
 
 
 int
 main(int argc, char *argv[]) 
 {
-  flickcurl *fc=NULL;
-  int rc=0;
-  int usage=0;
-  int help=0;
-  int read_auth=1;
+  flickcurl *fc = NULL;
+  int rc = 0;
+  int usage = 0;
+  int help = 0;
+  int read_auth = 1;
   int i;
   const char* home;
   char config_path[1024];
   int request_delay= -1;
   char section[50];
   size_t section_len;
-  char** methods=NULL;
+  char** methods = NULL;
   
   flickcurl_init();
   
-  program=my_basename(argv[0]);
+  program = my_basename(argv[0]);
 
-  home=getenv("HOME");
+  home = getenv("HOME");
   if(home)
     sprintf(config_path, "%s/%s", home, config_filename);
   else
@@ -168,16 +168,16 @@ main(int argc, char *argv[])
     switch (c) {
       case 0:
       case '?': /* getopt() - unknown option */
-        usage=1;
+        usage = 1;
         break;
 
       case 'd':
         if(optarg)
-          request_delay=atoi(optarg);
+          request_delay = atoi(optarg);
         break;
         
       case 'h':
-        help=1;
+        help = 1;
         break;
 
       case 'v':
@@ -194,7 +194,7 @@ main(int argc, char *argv[])
   
   if(argc < 2) {
     fprintf(stderr, "%s: No API section given\n", program);
-    usage=1;
+    usage = 1;
   }
 
   if(usage) {
@@ -210,7 +210,7 @@ main(int argc, char *argv[])
     }
     fprintf(stderr, "Try `%s " HELP_ARG(h, help) "' for more information.\n",
             program);
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -232,15 +232,15 @@ main(int argc, char *argv[])
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
-    rc=0;
+    rc = 0;
     goto tidy;
   }
 
 
   /* Initialise the Flickcurl library */
-  fc=flickcurl_new();
+  fc = flickcurl_new();
   if(!fc) {
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -251,7 +251,7 @@ main(int argc, char *argv[])
                        my_set_config_var_handler)) {
       fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
               program, config_path, strerror(errno));
-      rc=1;
+      rc = 1;
       goto tidy;
     }
   }
@@ -263,21 +263,21 @@ main(int argc, char *argv[])
   strcpy(section+7, argv[1]);
   
   /* allow old format commands to work */
-  for(i=0; section[i]; i++) {
+  for(i = 0; section[i]; i++) {
     if(section[i] == '-')
-      section[i]='.';
+      section[i] = '.';
   }
   
   if(!strncmp(section, "flickr.flickr", 13))
     strcpy(section, section+7);
-  section_len=strlen(section);
+  section_len = strlen(section);
   
   fprintf(stderr, "%s: section '%s'\n", program, section);
     
-  methods=flickcurl_reflection_getMethods(fc);
+  methods = flickcurl_reflection_getMethods(fc);
   if(!methods) {
     fprintf(stderr, "%s: getMethods failed\n", program);
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -328,24 +328,24 @@ main(int argc, char *argv[])
           );
 
   
-  for(i=0; methods[i]; i++) {
+  for(i = 0; methods[i]; i++) {
     flickcurl_method* method;
     char* method_name;
     char function_name[100];
     int c, j;
-    int is_write=0;
+    int is_write = 0;
     
     if(strncmp(methods[i], section, section_len))
       continue;
     
-    method=flickcurl_reflection_getMethodInfo(fc, methods[i]);
+    method = flickcurl_reflection_getMethodInfo(fc, methods[i]);
     if(!method) {
       fprintf(stderr, "%s: getMethodInfo(%s) failed\n", program, methods[i]);
-      rc=1;
+      rc = 1;
       break;
     }
 
-    method_name=method->name;
+    method_name = method->name;
 
     if(
       strstr(method_name, ".add") ||
@@ -355,15 +355,15 @@ main(int argc, char *argv[])
       strstr(method_name, ".remove") ||
       strstr(method_name, ".set")
        )
-      is_write=1;
+      is_write = 1;
     
     strcpy(function_name, "flickcurl_");
-    for(j=0; (c=methods[i][j+7]); j++) {
-      if(c=='.')
-        c='_';
-      function_name[j+10]=c;
+    for(j = 0; (c = methods[i][j+7]); j++) {
+      if(c == '.')
+        c = '_';
+      function_name[j+10] = c;
     }
-    function_name[j+10]='\0';
+    function_name[j+10] = '\0';
 
     fprintf(stdout, "/**\n * %s:\n", function_name);
 
@@ -372,8 +372,8 @@ main(int argc, char *argv[])
 
     if(method->args_count) {
       int argi;
-      for(argi=0; method->args[argi]; argi++) {
-        flickcurl_arg* arg=method->args[argi];
+      for(argi = 0; method->args[argi]; argi++) {
+        flickcurl_arg* arg = method->args[argi];
         if(!strcmp(arg->name, "api_key"))
           continue;
 
@@ -399,8 +399,8 @@ main(int argc, char *argv[])
     fprintf(stdout, "int\n%s(flickcurl* fc", function_name);
     if(method->args_count) {
       int argi;
-      for(argi=0; method->args[argi]; argi++) {
-        flickcurl_arg* arg=method->args[argi];
+      for(argi = 0; method->args[argi]; argi++) {
+        flickcurl_arg* arg = method->args[argi];
         if(!strcmp(arg->name, "api_key"))
           continue;
         
@@ -411,20 +411,20 @@ main(int argc, char *argv[])
 
     fprintf(stdout,
 "  const char* parameters[%d][2];\n"
-"  int count=0;\n"
-"  xmlDocPtr doc=NULL;\n"
-"  xmlXPathContextPtr xpathCtx=NULL; \n"
-"  void* result=NULL;\n"
+"  int count = 0;\n"
+"  xmlDocPtr doc = NULL;\n"
+"  xmlXPathContextPtr xpathCtx = NULL; \n"
+"  void* result = NULL;\n"
 "  \n",
   6+method->args_count);
 
     if(method->args_count) {
       int argi;
-      int print_or=0;
+      int print_or = 0;
       
       fprintf(stdout, "  if(");
-      for(argi=0; method->args[argi]; argi++) {
-        flickcurl_arg* arg=method->args[argi];
+      for(argi = 0; method->args[argi]; argi++) {
+        flickcurl_arg* arg = method->args[argi];
         if(!strcmp(arg->name, "api_key"))
           continue;
         
@@ -433,7 +433,7 @@ main(int argc, char *argv[])
             fprintf(stdout, " || ");
           
           fprintf(stdout, "!%s", arg->name);
-          print_or=1;
+          print_or = 1;
         }
       }
       fprintf(stdout,
@@ -445,8 +445,8 @@ main(int argc, char *argv[])
 
     if(method->args_count) {
       int argi;
-      for(argi=0; method->args[argi]; argi++) {
-        flickcurl_arg* arg=method->args[argi];
+      for(argi = 0; method->args[argi]; argi++) {
+        flickcurl_arg* arg = method->args[argi];
         if(!strcmp(arg->name, "api_key"))
           continue;
         
@@ -477,7 +477,7 @@ main(int argc, char *argv[])
 );
 
     fprintf(stdout,
-"  doc=flickcurl_invoke(fc);\n"
+"  doc = flickcurl_invoke(fc);\n"
 "  if(!doc)\n"
 "    goto tidy;\n"
 "\n"
@@ -485,18 +485,18 @@ main(int argc, char *argv[])
 "  xpathCtx = xmlXPathNewContext(doc);\n"
 "  if(!xpathCtx) {\n"
 "    flickcurl_error(fc, \"Failed to create XPath context for document\");\n"
-"    fc->failed=1;\n"
+"    fc->failed = 1;\n"
 "    goto tidy;\n"
 "  }\n"
 "\n"
-"  result=NULL; /* your code here */\n"
+"  result = NULL; /* your code here */\n"
 "\n"
 "  tidy:\n"
 "  if(xpathCtx)\n"
 "    xmlXPathFreeContext(xpathCtx);\n"
 "\n"
 "  if(fc->failed)\n"
-"    result=NULL;\n"
+"    result = NULL;\n"
 "\n"
 "  return (result == NULL);\n"
 "}\n"
@@ -509,10 +509,10 @@ main(int argc, char *argv[])
 
  tidy:
   if(methods) {
-    for(i=0; methods[i]; i++)
+    for(i = 0; methods[i]; i++)
       free(methods[i]);
     free(methods);
-    methods=NULL;
+    methods = NULL;
   }
 
   if(fc)

@@ -68,8 +68,8 @@ flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
                                           const char* place_id, int woe_id)
 {
   const char* parameters[12][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   char latitude_s[50];
   char longitude_s[50];
   char accuracy_s[50];
@@ -118,11 +118,11 @@ flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
@@ -152,10 +152,10 @@ flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id,
                                      const char* place_id, int woe_id)
 {
   const char* parameters[10][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  void* result=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  void* result = NULL;
   char woe_id_str[10];
   
   if(!photo_id)
@@ -176,7 +176,7 @@ flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id,
                        count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -184,18 +184,18 @@ flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  result = NULL; /* your code here */
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    result = NULL;
 
   return (result == NULL);
 }
@@ -216,10 +216,10 @@ flickcurl_location*
 flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_location* location=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_location* location = NULL;
   
   if(!photo_id)
     return NULL;
@@ -232,7 +232,7 @@ flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.geo.getLocation", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -240,11 +240,11 @@ flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  location=flickcurl_build_location(fc, xpathCtx,
+  location = flickcurl_build_location(fc, xpathCtx,
                                     (const xmlChar*)"/rsp/photo/location");
 
   tidy:
@@ -252,7 +252,7 @@ flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    location=NULL;
+    location = NULL;
 
   return location;
 }
@@ -273,10 +273,10 @@ flickcurl_perms*
 flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  flickcurl_perms* perms=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_perms* perms = NULL;
   
   if(!photo_id)
     return NULL;
@@ -289,7 +289,7 @@ flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.geo.getPerms", parameters, count))
     goto tidy;
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -297,11 +297,11 @@ flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id)
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  perms=flickcurl_build_perms(fc, xpathCtx,
+  perms = flickcurl_build_perms(fc, xpathCtx,
                               (const xmlChar*)"/rsp/perms");
 
   tidy:
@@ -309,7 +309,7 @@ flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    perms=NULL;
+    perms = NULL;
 
   return perms;
 }
@@ -332,12 +332,12 @@ flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
                                               flickcurl_photos_list_params* list_params)
 {
   const char* parameters[13][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
   char latitude_s[50];
   char longitude_s[50];
   char accuracy_s[50];
-  const char* format=NULL;
+  const char* format = NULL;
 
   if(!location)
     return NULL;
@@ -381,7 +381,7 @@ flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -448,8 +448,8 @@ int
 flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   
   if(!photo_id)
     return 1;
@@ -466,7 +466,7 @@ flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -496,11 +496,11 @@ flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id,
                                 int context)
 {
   const char* parameters[9][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
   char context_str[3];
-  void* result=NULL;
+  void* result = NULL;
   
   if(!photo_id || context < 0 || context > 2)
     return 1;
@@ -519,7 +519,7 @@ flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -527,18 +527,18 @@ flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  result=NULL; /* your code here */
+  result = NULL; /* your code here */
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result=NULL;
+    result = NULL;
 
   return (result == NULL);
 }
@@ -562,12 +562,12 @@ flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
                                  flickcurl_location* location)
 {
   const char* parameters[11][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   char latitude_s[50];
   char longitude_s[50];
   char accuracy_s[50];
-  int result=1;
+  int result = 1;
   
   if(!photo_id)
     return 1;
@@ -606,15 +606,15 @@ flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -637,13 +637,13 @@ flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id,
                               flickcurl_perms* perms)
 {
   const char* parameters[12][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
   char is_public_str[2];
   char is_contact_str[2];
   char is_friend_str[2];
   char is_family_str[2];
-  int result=1;
+  int result = 1;
   
   if(!photo_id || !perms)
     return 1;
@@ -671,15 +671,15 @@ flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }

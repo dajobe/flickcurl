@@ -67,10 +67,10 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
                            const char* note_text)
 {
   const char* parameters[13][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  xmlXPathContextPtr xpathCtx=NULL; 
-  char *id=NULL;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  char *id = NULL;
   char note_x_s[10];
   char note_y_s[10];
   char note_w_s[10];
@@ -104,7 +104,7 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
@@ -112,18 +112,18 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
   xpathCtx = xmlXPathNewContext(doc);
   if(!xpathCtx) {
     flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
 
-  id=flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/note/@id");
+  id = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/note/@id");
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    id=NULL;
+    id = NULL;
 
   return id;
 }
@@ -144,9 +144,9 @@ int
 flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id)
 {
   const char* parameters[8][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   
   if(!note_id)
     return 1;
@@ -162,15 +162,15 @@ flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id)
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }
@@ -200,9 +200,9 @@ flickcurl_photos_notes_edit(flickcurl* fc,
                             const char* note_text)
 {
   const char* parameters[13][2];
-  int count=0;
-  xmlDocPtr doc=NULL;
-  int result=1;
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
   char note_x_s[10];
   char note_y_s[10];
   char note_w_s[10];
@@ -236,15 +236,15 @@ flickcurl_photos_notes_edit(flickcurl* fc,
   flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
-  doc=flickcurl_invoke(fc);
+  doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
 
-  result=0;
+  result = 0;
 
   tidy:
   if(fc->failed)
-    result=1;
+    result = 1;
 
   return result;
 }

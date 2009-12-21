@@ -72,7 +72,7 @@ flickcurl_free_exifs(flickcurl_exif **exifs_object)
   
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(exifs_object, flickcurl_exif_array);
 
-  for(i=0; exifs_object[i]; i++)
+  for(i = 0; exifs_object[i]; i++)
     flickcurl_free_exif(exifs_object[i]);
   
   free(exifs_object);
@@ -83,11 +83,11 @@ flickcurl_exif**
 flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                       const xmlChar* xpathExpr, int* exif_count_p)
 {
-  flickcurl_exif** exifs=NULL;
+  flickcurl_exif** exifs = NULL;
   int nodes_count;
   int exif_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do exifs */
@@ -95,57 +95,57 @@ flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
-  exifs=(flickcurl_exif**)calloc(sizeof(flickcurl_exif*), nodes_count+1);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
+  exifs = (flickcurl_exif**)calloc(sizeof(flickcurl_exif*), nodes_count+1);
   
-  for(i=0, exif_count=0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, exif_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_exif* e;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
-    e=(flickcurl_exif*)calloc(sizeof(flickcurl_exif), 1);
+    e = (flickcurl_exif*)calloc(sizeof(flickcurl_exif), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "tagspace"))
-        e->tagspace=attr_value;
+        e->tagspace = attr_value;
       else if(!strcmp(attr_name, "tagspaceid")) {
-        e->tagspaceid=atoi(attr_value);
+        e->tagspaceid = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "tag")) {
-        e->tag=atoi(attr_value);
+        e->tag = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "label"))
-        e->label=attr_value;
+        e->label = attr_value;
     }
 
     /* Walk children nodes for <raw> or <clean> elements */
-    for(chnode=node->children; chnode; chnode=chnode->next) {
-      const char *chnode_name=(const char*)chnode->name;
+    for(chnode = node->children; chnode; chnode = chnode->next) {
+      const char *chnode_name = (const char*)chnode->name;
       if(chnode->type == XML_ELEMENT_NODE) {
         if(!strcmp(chnode_name, "raw")) {
-          e->raw=(char*)malloc(strlen((const char*)chnode->children->content)+1);
+          e->raw = (char*)malloc(strlen((const char*)chnode->children->content)+1);
           strcpy(e->raw, (const char*)chnode->children->content);
         } else if(!strcmp(chnode_name, "clean")) {
-          e->clean=(char*)malloc(strlen((const char*)chnode->children->content)+1);
+          e->clean = (char*)malloc(strlen((const char*)chnode->children->content)+1);
           strcpy(e->clean, (const char*)chnode->children->content);
         }
       }
@@ -156,11 +156,11 @@ flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             e->tagspace, e->tagspaceid, e->tag, e->label, e->raw, e->clean);
 #endif
     
-    exifs[exif_count++]=e;
+    exifs[exif_count++] = e;
   } /* for nodes */
 
   if(exif_count_p)
-    *exif_count_p=exif_count;
+    *exif_count_p = exif_count;
   
  tidy:
   if(xpathObj)

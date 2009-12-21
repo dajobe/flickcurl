@@ -50,7 +50,7 @@
  * 
  * Returns the list of interesting photos for the most recent day or a user-specified date.
  *
- * Optional extra type 'media' that will return an extra media=VALUE
+ * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
  * Return value: non-0 on failure
@@ -60,9 +60,9 @@ flickcurl_interestingness_getList_params(flickcurl* fc, const char* date,
                                          flickcurl_photos_list_params* list_params)
 {
   const char* parameters[12][2];
-  int count=0;
-  flickcurl_photos_list* photos_list=NULL;
-  const char* format=NULL;
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
 
   /* API parameters */
   if(date) {
@@ -78,7 +78,7 @@ flickcurl_interestingness_getList_params(flickcurl* fc, const char* date,
   if(flickcurl_prepare(fc, "flickr.interestingness.getList", parameters, count))
     goto tidy;
 
-  photos_list=flickcurl_invoke_photos_list(fc,
+  photos_list = flickcurl_invoke_photos_list(fc,
                                            (const xmlChar*)"/rsp/photos/photo",
                                            format);
 
@@ -86,7 +86,7 @@ flickcurl_interestingness_getList_params(flickcurl* fc, const char* date,
   if(fc->failed) {
     if(photos_list)
       flickcurl_free_photos_list(photos_list);
-    photos_list=NULL;
+    photos_list = NULL;
   }
 
   return photos_list;
@@ -122,11 +122,11 @@ flickcurl_interestingness_getList(flickcurl* fc, const char* date, const char* e
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list=flickcurl_interestingness_getList_params(fc, date, &list_params);
+  photos_list = flickcurl_interestingness_getList_params(fc, date, &list_params);
   if(!photos_list)
     return NULL;
 
-  photos=photos_list->photos; photos_list->photos=NULL;  
+  photos = photos_list->photos; photos_list->photos = NULL;  
   /* photos array is now owned by this function */
 
   flickcurl_free_photos_list(photos_list);

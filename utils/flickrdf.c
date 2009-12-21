@@ -62,7 +62,7 @@ extern char *optarg;
 
 static const char* program;
 
-static int debug=0;
+static int debug = 0;
 
 
 
@@ -70,10 +70,10 @@ static const char*
 my_basename(const char *name)
 {
   char *p;
-  if((p=strrchr(name, '/')))
-    name=p+1;
-  else if((p=strrchr(name, '\\')))
-    name=p+1;
+  if((p = strrchr(name, '/')))
+    name = p+1;
+  else if((p = strrchr(name, '\\')))
+    name = p+1;
 
   return name;
 }
@@ -89,7 +89,7 @@ my_message_handler(void *user_data, const char *message)
 static void
 my_set_config_var_handler(void* userdata, const char* key, const char* value)
 {
-  flickcurl *fc=(flickcurl *)userdata;
+  flickcurl *fc = (flickcurl *)userdata;
   
   if(!strcmp(key, "api_key"))
     flickcurl_set_api_key(fc, value);
@@ -165,8 +165,8 @@ raptor_uri* raptor_new_uri(const unsigned char* uri)
   size_t len;
   raptor_uri* u;
 
-  len=strlen((const char*)uri);
-  u=(raptor_uri*)malloc(len+1);
+  len = strlen((const char*)uri);
+  u = (raptor_uri*)malloc(len+1);
   strncpy((char*)u, (const char*)uri, len+1);
   return u;
 }
@@ -180,10 +180,10 @@ raptor_uri* raptor_new_uri_from_uri_local_name(raptor_uri* u,
   size_t len2;
   raptor_uri* newu;
   
-  len1=strlen((const char*)u);
-  len2=strlen((const char*)name);
+  len1 = strlen((const char*)u);
+  len2 = strlen((const char*)name);
 
-  newu=(raptor_uri*)malloc(len1+len2+1);
+  newu = (raptor_uri*)malloc(len1+len2+1);
   strncpy((char*)newu, (const char*)u, len1);
   strncpy((char*)(newu+len1), (const char*)name, len2+1);
 
@@ -214,7 +214,7 @@ raptor_serializer_syntax_name_check(const char* name)
 {
   int i;
   
-  for(i=0; i < NSERIALIZERS; i++) {
+  for(i = 0; i < NSERIALIZERS; i++) {
     if(strcmp(serializers[i].name, name))
        return 1;
   }
@@ -231,9 +231,9 @@ raptor_serializers_enumerate(const unsigned int counter,
   if(counter > (NSERIALIZERS-1))
     return 1;
   if(name_p)
-    *name_p=serializers[counter].name;
+    *name_p = serializers[counter].name;
   if(label_p)
-    *label_p=serializers[counter].label;
+    *label_p = serializers[counter].label;
   return 0;
 }
 
@@ -242,8 +242,8 @@ static raptor_serializer*
 raptor_new_serializer(const char* serializer_name)
 {
   raptor_serializer* s;
-  s=(raptor_serializer*)calloc(sizeof(raptor_serializer), 1);
-  s->output_turtle=!strcmp((const char*)serializer_name, "turtle");
+  s = (raptor_serializer*)calloc(sizeof(raptor_serializer), 1);
+  s->output_turtle = !strcmp((const char*)serializer_name, "turtle");
   return s;
 }
 
@@ -259,7 +259,7 @@ static void
 raptor_serialize_set_namespace(raptor_serializer* serializer,
                                raptor_uri* uri, const unsigned char* prefix)
 {
-  FILE* fh=serializer->fh;
+  FILE* fh = serializer->fh;
   if(serializer->output_turtle)
     fprintf(fh, "@prefix %s: <%s> .\n", (const char*)prefix, (const char*)uri);
 }
@@ -269,7 +269,7 @@ static void
 raptor_serialize_start_to_file_handle(raptor_serializer* serializer,
                                       raptor_uri* base_uri, FILE* fh)
 {
-  serializer->fh=fh;
+  serializer->fh = fh;
   if(base_uri && serializer->output_turtle)
     fprintf(fh, "@base <%s>\n", (char*)base_uri);
 }
@@ -278,7 +278,7 @@ raptor_serialize_start_to_file_handle(raptor_serializer* serializer,
 static void
 raptor_serialize_statement(raptor_serializer* serializer, raptor_statement* s)
 {
-  FILE *fh=serializer->fh;
+  FILE *fh = serializer->fh;
 
   if(s->subject_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
     fprintf(fh, "<%s>", (const char*)s->subject);
@@ -292,7 +292,7 @@ raptor_serialize_statement(raptor_serializer* serializer, raptor_statement* s)
     char c;
     
     fputc('"', fh);
-    for(p=(const char*)s->object; (c=*p); p++) {
+    for(p = (const char*)s->object; (c = *p); p++) {
       if(c == '\n') {
         fputs("\\\n", fh);
         continue;
@@ -335,10 +335,10 @@ ser_emit_namespace(void* user_data,
                    const char *prefix, size_t prefix_len,
                    const char* uri, size_t uri_len)
 {
-  raptor_serializer* serializer=(raptor_serializer*)user_data;
-  raptor_uri *ns_uri=NULL;
+  raptor_serializer* serializer = (raptor_serializer*)user_data;
+  raptor_uri *ns_uri = NULL;
 
-  ns_uri=raptor_new_uri((const unsigned char*)uri);
+  ns_uri = raptor_new_uri((const unsigned char*)uri);
   raptor_serialize_set_namespace(serializer, ns_uri, 
                                  (const unsigned char*)prefix);
   raptor_free_uri(ns_uri);
@@ -352,32 +352,32 @@ ser_emit_triple(void* user_data,
                 const char *object, int object_type,
                 const char *datatype_uri)
 {
-  raptor_serializer* serializer=(raptor_serializer*)user_data;
+  raptor_serializer* serializer = (raptor_serializer*)user_data;
   raptor_statement s;
   raptor_uri* predicate_ns_uri;
   
   s.subject_type = (raptor_identifier_type)subject_type;
   if((flickcurl_term_type)s.subject_type == FLICKCURL_TERM_TYPE_RESOURCE)
-    s.subject=(void*)raptor_new_uri((const unsigned char*)subject);
+    s.subject = (void*)raptor_new_uri((const unsigned char*)subject);
   else /* blank node */
-    s.subject=(void*)subject;
+    s.subject = (void*)subject;
 
-  predicate_ns_uri=raptor_new_uri((const unsigned char*)predicate_nspace);
-  s.predicate=(void*)raptor_new_uri_from_uri_local_name(predicate_ns_uri,
+  predicate_ns_uri = raptor_new_uri((const unsigned char*)predicate_nspace);
+  s.predicate = (void*)raptor_new_uri_from_uri_local_name(predicate_ns_uri,
                                                         (const unsigned char*)predicate_name);
   raptor_free_uri(predicate_ns_uri);
-  s.predicate_type=RAPTOR_IDENTIFIER_TYPE_RESOURCE;
+  s.predicate_type = RAPTOR_IDENTIFIER_TYPE_RESOURCE;
 
   s.object_type = (raptor_identifier_type)object_type;
   if((flickcurl_term_type)s.object_type == FLICKCURL_TERM_TYPE_RESOURCE)
-    s.object=(void*)raptor_new_uri((const unsigned char*)object);
+    s.object = (void*)raptor_new_uri((const unsigned char*)object);
   else /* literal or blank node */
-    s.object=(void*)object;
+    s.object = (void*)object;
   if(datatype_uri)
-    s.object_literal_datatype=raptor_new_uri((const unsigned char*)datatype_uri);
+    s.object_literal_datatype = raptor_new_uri((const unsigned char*)datatype_uri);
   else
-    s.object_literal_datatype=NULL;
-  s.object_literal_language=NULL;
+    s.object_literal_datatype = NULL;
+  s.object_literal_language = NULL;
 
   raptor_serialize_statement(serializer, &s);
 
@@ -394,48 +394,48 @@ ser_emit_triple(void* user_data,
 static void
 ser_emit_finish(void* user_data)
 {
-  raptor_serializer* serializer=(raptor_serializer*)user_data;
+  raptor_serializer* serializer = (raptor_serializer*)user_data;
   raptor_serialize_end(serializer);
 }
 
 
-static flickcurl_serializer_factory flickrdf_serializer_factory={
+static flickcurl_serializer_factory flickrdf_serializer_factory = {
   1, ser_emit_namespace, ser_emit_triple, ser_emit_finish
 };
 
 
-static const char *title_format_string="Flickrdf - triples from flickrs %s\n";
+static const char *title_format_string = "Flickrdf - triples from flickrs %s\n";
 
-static const char* config_filename=".flickcurl.conf";
-static const char* config_section="flickr";
+static const char* config_filename = ".flickcurl.conf";
+static const char* config_section = "flickr";
 
 
 int
 main(int argc, char *argv[]) 
 {
-  flickcurl *fc=NULL;
-  int rc=0;
-  int usage=0;
-  int help=0;
+  flickcurl *fc = NULL;
+  int rc = 0;
+  int usage = 0;
+  int help = 0;
   const char* home;
   char config_path[1024];
-  char* photo_id=NULL;
-  const char* prefix_uri="http://www.flickr.com/photos/";
-  size_t prefix_uri_len=strlen(prefix_uri);
-  const char *serializer_syntax_name="ntriples";
-  raptor_uri* base_uri=NULL;
-  raptor_serializer* serializer=NULL;
+  char* photo_id = NULL;
+  const char* prefix_uri = "http://www.flickr.com/photos/";
+  size_t prefix_uri_len = strlen(prefix_uri);
+  const char *serializer_syntax_name = "ntriples";
+  raptor_uri* base_uri = NULL;
+  raptor_serializer* serializer = NULL;
   int request_delay= -1;
-  flickcurl_serializer* fs=NULL;
-  flickcurl_photo* photo=NULL;
+  flickcurl_serializer* fs = NULL;
+  flickcurl_photo* photo = NULL;
 
-  program=my_basename(argv[0]);
+  program = my_basename(argv[0]);
 
   flickcurl_init();
 
   raptor_init();
 
-  home=getenv("HOME");
+  home = getenv("HOME");
   if(home)
     sprintf(config_path, "%s/%s", home, config_filename);
   else
@@ -459,26 +459,26 @@ main(int argc, char *argv[])
     switch (c) {
       case 0:
       case '?': /* getopt() - unknown option */
-        usage=1;
+        usage = 1;
         break;
 
       case 'd':
         if(optarg)
-          request_delay=atoi(optarg);
+          request_delay = atoi(optarg);
         break;
         
       case 'D':
-        debug=1;
+        debug = 1;
         break;
         
       case 'h':
-        help=1;
+        help = 1;
         break;
 
       case 'o':
         if(optarg) {
           if(raptor_serializer_syntax_name_check(optarg))
-            serializer_syntax_name=optarg;
+            serializer_syntax_name = optarg;
           else {
             int i;
             
@@ -486,14 +486,14 @@ main(int argc, char *argv[])
                     "%s: invalid argument `%s' for `" HELP_ARG(o, output) "'\n",
                     program, optarg);
             fprintf(stderr, "Valid arguments are:\n");
-            for(i=0; 1; i++) {
+            for(i = 0; 1; i++) {
               const char *help_name;
               const char *help_label;
               if(raptor_serializers_enumerate(i, &help_name, &help_label, NULL, NULL))
                 break;
               printf("  %-12s for %s\n", help_name, help_label);
             }
-            usage=1;
+            usage = 1;
             break;
             
           }
@@ -509,39 +509,39 @@ main(int argc, char *argv[])
     
   }
 
-  argv+=optind;
-  argc-=optind;
+  argv+= optind;
+  argc-= optind;
   
   if(!help && argc < 1)
-    usage=2; /* Title and usage */
+    usage = 2; /* Title and usage */
 
   if(!help && !argc) {
     fprintf(stderr, "%s: No photo URI given\n", program);
-    usage=1;
+    usage = 1;
     goto usage;
   }
 
   if(usage || help)
     goto usage;
 
-  photo_id=argv[0];
+  photo_id = argv[0];
   if(strncmp(photo_id, prefix_uri, prefix_uri_len))
-    usage=1;
+    usage = 1;
   else {
     size_t len;
 
-    photo_id+=prefix_uri_len;
-    len=strlen(photo_id);
+    photo_id+= prefix_uri_len;
+    len = strlen(photo_id);
     if(!len)
-      usage=1;
+      usage = 1;
     else {
       if(photo_id[len-1] == '/')
-        photo_id[--len]='\0';
+        photo_id[--len] = '\0';
       
       while(*photo_id && *photo_id != '/')
         photo_id++;
       if(!*photo_id)
-        usage=1;
+        usage = 1;
       else
         photo_id++;
     }
@@ -556,7 +556,7 @@ main(int argc, char *argv[])
   }
 
 
-  serializer=raptor_new_serializer(serializer_syntax_name);
+  serializer = raptor_new_serializer(serializer_syntax_name);
   if(!serializer) {
     fprintf(stderr, 
             "%s: Failed to create raptor serializer type %s\n", program,
@@ -564,15 +564,15 @@ main(int argc, char *argv[])
     return(1);
   }
 
-  /* base_uri=raptor_new_uri((const unsigned char*)argv[0]); */
+  /* base_uri = raptor_new_uri((const unsigned char*)argv[0]); */
 
   raptor_serialize_start_to_file_handle(serializer, base_uri, stdout);
 
 
   /* Initialise the Flickcurl library */
-  fc=flickcurl_new();
+  fc = flickcurl_new();
   if(!fc) {
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -583,7 +583,7 @@ main(int argc, char *argv[])
                        my_set_config_var_handler)) {
       fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
               program, config_path, strerror(errno));
-      rc=1;
+      rc = 1;
       goto tidy;
     }
   }
@@ -602,7 +602,7 @@ main(int argc, char *argv[])
     }
     fprintf(stderr, "Try `%s " HELP_ARG(h, help) "' for more information.\n",
             program);
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -625,7 +625,7 @@ main(int argc, char *argv[])
     puts(HELP_TEXT("D", "debug           ", "Print lots of output"));
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("o", "output FORMAT   ", "Set output format to one of:"));
-    for(i=0; 1; i++) {
+    for(i = 0; 1; i++) {
       const char *help_name;
       const char *help_label;
       if(raptor_serializers_enumerate(i, &help_name, &help_label, NULL, NULL))
@@ -642,7 +642,7 @@ main(int argc, char *argv[])
 #endif
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
-    rc=0;
+    rc = 0;
     goto tidy;
   }
 
@@ -650,13 +650,13 @@ main(int argc, char *argv[])
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
   
-  fs=flickcurl_new_serializer(fc, serializer, &flickrdf_serializer_factory);
+  fs = flickcurl_new_serializer(fc, serializer, &flickrdf_serializer_factory);
   if(!fs) {
     fprintf(stderr, "%s: Failed to create Flickcurl serializer\n", program);
     goto tidy;
   }
   
-  photo=flickcurl_photos_getInfo(fc, photo_id);
+  photo = flickcurl_photos_getInfo(fc, photo_id);
 
   if(!photo)
     goto tidy;
@@ -665,7 +665,7 @@ main(int argc, char *argv[])
     fprintf(stderr, "%s: Photo with URI %s ID %s has %d tags\n",
             program, photo->uri, photo->id, photo->tags_count);
 
-  rc=flickcurl_serialize_photo(fs, photo);
+  rc = flickcurl_serialize_photo(fs, photo);
 
  tidy:
   if(photo)

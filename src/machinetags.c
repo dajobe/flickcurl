@@ -66,7 +66,7 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   int nodes_count;
   int tag_namespace_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do namespaces */
@@ -74,34 +74,34 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
   tag_namespaces = (flickcurl_tag_namespace**)calloc(sizeof(flickcurl_tag_namespace*), nodes_count + 1);
   
-  for(i=0, tag_namespace_count = 0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, tag_namespace_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_tag_namespace* tn;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
     tn = (flickcurl_tag_namespace*)calloc(sizeof(flickcurl_tag_namespace), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "usage")) {
@@ -215,7 +215,7 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   int nodes_count;
   int tag_predicate_value_count;
   int i;
-  xmlXPathObjectPtr xpathObj=NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
   
   /* Now do predicate_values */
@@ -223,34 +223,34 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(!xpathObj) {
     flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
                     xpathExpr);
-    fc->failed=1;
+    fc->failed = 1;
     goto tidy;
   }
   
-  nodes=xpathObj->nodesetval;
+  nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
-  nodes_count=xmlXPathNodeSetGetLength(nodes);
+  nodes_count = xmlXPathNodeSetGetLength(nodes);
   tag_pvs = (flickcurl_tag_predicate_value**)calloc(sizeof(flickcurl_tag_predicate_value*), nodes_count + 1);
   
-  for(i=0, tag_predicate_value_count = 0; i < nodes_count; i++) {
-    xmlNodePtr node=nodes->nodeTab[i];
+  for(i = 0, tag_predicate_value_count = 0; i < nodes_count; i++) {
+    xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     flickcurl_tag_predicate_value* tpv;
     xmlNodePtr chnode;
     
     if(node->type != XML_ELEMENT_NODE) {
       flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed=1;
+      fc->failed = 1;
       break;
     }
     
     tpv = (flickcurl_tag_predicate_value*)calloc(sizeof(flickcurl_tag_predicate_value), 1);
     
-    for(attr=node->properties; attr; attr=attr->next) {
-      const char *attr_name=(const char*)attr->name;
+    for(attr = node->properties; attr; attr = attr->next) {
+      const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value=(char*)malloc(strlen((const char*)attr->children->content)+1);
+      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
       strcpy(attr_value, (const char*)attr->children->content);
       
       if(!strcmp(attr_name, "usage")) {
@@ -260,13 +260,13 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         tpv->used_in_namespace_count = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "predicate")) {
-        tpv->predicate=attr_value;
+        tpv->predicate = attr_value;
       } else if(!strcmp(attr_name, "value")) {
-        tpv->value=attr_value;
+        tpv->value = attr_value;
       }
     }
 
-    if(content_mode >=1 && content_mode <= 2) {
+    if(content_mode >= 1 && content_mode <= 2) {
       /* Walk children for predicate */
       for(chnode = node->children; chnode; chnode = chnode->next) {
         if(chnode->type == XML_TEXT_NODE) {

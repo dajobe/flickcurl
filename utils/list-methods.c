@@ -62,10 +62,10 @@ static const char*
 my_basename(const char *name)
 {
   char *p;
-  if((p=strrchr(name, '/')))
-    name=p+1;
-  else if((p=strrchr(name, '\\')))
-    name=p+1;
+  if((p = strrchr(name, '/')))
+    name = p+1;
+  else if((p = strrchr(name, '\\')))
+    name = p+1;
 
   return name;
 }
@@ -81,7 +81,7 @@ my_message_handler(void *user_data, const char *message)
 static void
 my_set_config_var_handler(void* userdata, const char* key, const char* value)
 {
-  flickcurl *fc=(flickcurl *)userdata;
+  flickcurl *fc = (flickcurl *)userdata;
   
   if(!strcmp(key, "api_key"))
     flickcurl_set_api_key(fc, value);
@@ -118,10 +118,10 @@ static struct option long_options[] =
 #endif
 
 
-static const char *title_format_string="List Flickr API methods utility %s\n";
+static const char *title_format_string = "List Flickr API methods utility %s\n";
 
-static const char* config_filename=".flickcurl.conf";
-static const char* config_section="flickr";
+static const char* config_filename = ".flickcurl.conf";
+static const char* config_section = "flickr";
 
 
 static
@@ -134,22 +134,22 @@ int compare_strings(const void *a, const void *b)
 int
 main(int argc, char *argv[]) 
 {
-  flickcurl *fc=NULL;
-  int rc=0;
-  int usage=0;
-  int help=0;
-  int read_auth=1;
+  flickcurl *fc = NULL;
+  int rc = 0;
+  int usage = 0;
+  int help = 0;
+  int read_auth = 1;
   int i;
   const char* home;
   char config_path[1024];
-  char** methods=NULL;
-  int count=0;
+  char** methods = NULL;
+  int count = 0;
   
   flickcurl_init();
   
-  program=my_basename(argv[0]);
+  program = my_basename(argv[0]);
 
-  home=getenv("HOME");
+  home = getenv("HOME");
   if(home)
     sprintf(config_path, "%s/%s", home, config_filename);
   else
@@ -172,11 +172,11 @@ main(int argc, char *argv[])
     switch (c) {
       case 0:
       case '?': /* getopt() - unknown option */
-        usage=1;
+        usage = 1;
         break;
 
       case 'h':
-        help=1;
+        help = 1;
         break;
 
       case 'v':
@@ -193,7 +193,7 @@ main(int argc, char *argv[])
   
   if(argc != 1) {
     fprintf(stderr, "%s: Extra arguments given\n", program);
-    usage=1;
+    usage = 1;
   }
 
   if(usage) {
@@ -209,7 +209,7 @@ main(int argc, char *argv[])
     }
     fprintf(stderr, "Try `%s " HELP_ARG(h, help) "' for more information.\n",
             program);
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -230,15 +230,15 @@ main(int argc, char *argv[])
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
 
-    rc=0;
+    rc = 0;
     goto tidy;
   }
 
 
   /* Initialise the Flickcurl library */
-  fc=flickcurl_new();
+  fc = flickcurl_new();
   if(!fc) {
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
@@ -249,28 +249,28 @@ main(int argc, char *argv[])
                        my_set_config_var_handler)) {
       fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
               program, config_path, strerror(errno));
-      rc=1;
+      rc = 1;
       goto tidy;
     }
   }
 
-  methods=flickcurl_reflection_getMethods(fc);
+  methods = flickcurl_reflection_getMethods(fc);
   if(!methods) {
     fprintf(stderr, "%s: getMethods failed\n", program);
-    rc=1;
+    rc = 1;
     goto tidy;
   }
 
-  for(i=0; methods[i]; i++)
+  for(i = 0; methods[i]; i++)
     ;
-  count=i;
+  count = i;
   
   fprintf(stderr, "%s: Found %d API methods\n", program, count);
   
   /* it seems to be sorted when returned but ensure it anyway */
   qsort(methods, count, sizeof(char*), compare_strings);
   
-  for(i=0; methods[i]; i++) {
+  for(i = 0; methods[i]; i++) {
     fputs((const char*)methods[i], stdout);
     fputc('\n', stdout);
   }
@@ -278,10 +278,10 @@ main(int argc, char *argv[])
 
  tidy:
   if(methods) {
-    for(i=0; methods[i]; i++)
+    for(i = 0; methods[i]; i++)
       free(methods[i]);
     free(methods);
-    methods=NULL;
+    methods = NULL;
   }
 
   if(fc)
