@@ -391,7 +391,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
     if(!strncmp(tag->raw, "xmlns:", 6)) {
       prefix = &tag->raw[6];
-      for(p = prefix; *p && *p != ' = '; p++)
+      for(p = prefix; *p && *p != '='; p++)
         ;
       if(!*p) /* "xmlns:PREFIX" seen */
         continue;
@@ -404,7 +404,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
                 "%s: Found declaration of namespace prefix %s uri %s in tag '%s'\n",
                 label, prefix, p+1, tag->raw);
 #endif
-      *p = ' = ';
+      *p = '=';
       continue;
     }
 
@@ -600,7 +600,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
 
     f = p+1;
     
-    for(v = f; *v && *v != ' = '; v++)
+    for(v = f; *v && *v != '='; v++)
       ;
     if(!*v) /* "prefix:name" seen with no value */
       continue;
