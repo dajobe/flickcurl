@@ -154,7 +154,7 @@ read_ini_config(const char* filename, const char* application,
     fprintf(stderr, "Line 4 >>%s<<\n", line);
 #endif
 
-    p = strchr(line, ' = ');
+    p = strchr(line, '=');
     if(p) {
       *p = '\0';
 #ifdef CONFIG_DEBUG    
