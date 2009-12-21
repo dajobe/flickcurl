@@ -56,20 +56,16 @@ ltdl=
 if grep "^AC_LIBLTDL_" $confs >/dev/null; then
   ltdl="--ltdl"
 fi
-shave=
-if grep "^SHAVE_INIT" $confs >/dev/null; then
-  shave="--enable-shave"
+silent=
+if grep "^AM_SILENT_RULES" $confs >/dev/null; then
+  silent="--enable-silent-rules"
 fi
 
 # Some dependencies for autotools:
-# automake 1.11 requires autoconf 2.62
-# automake 1.10 requires autoconf 2.60
-# automake 1.9 requires autoconf 2.58
-# automake 1.8 requires autoconf 2.58
-# automake 1.7 requires autoconf 2.54
-automake_min_vers=010700
+# automake 1.11 requires autoconf 2.62 (needed for AM_SILENT_RULES)
+automake_min_vers=011100
 aclocal_min_vers=$automake_min_vers
-autoconf_min_vers=025400
+autoconf_min_vers=026200
 autoheader_min_vers=$autoconf_min_vers
 libtoolize_min_vers=020200
 gtkdocize_min_vers=010300
@@ -82,7 +78,7 @@ autoconf_args=
 libtoolize_args="$ltdl --force --copy --automake"
 gtkdocize_args="--copy"
 # --enable-gtk-doc does no harm if it's not available
-configure_args="--enable-maintainer-mode --enable-gtk-doc $shave"
+configure_args="--enable-maintainer-mode --enable-gtk-doc $silent"
 
 
 # You should not need to edit below here
@@ -170,7 +166,13 @@ update_prog_version() {
   cd "$dir"
   PATH=".:$PATH"
 
-  names=`ls $prog* 2>/dev/null`
+  nameglob="$prog*"
+  if [ -x /usr/bin/uname ]; then
+    if [ `/usr/bin/uname` = 'Darwin' -a $prog = 'libtoolize' ] ; then
+      nameglob="g$nameglob"
+    fi
+  fi
+  names=`ls $nameglob 2>/dev/null`
   if [ "X$names" != "X" ]; then
     for name in $names; do
       vers=`perl $autogen_get_version $dir/$name $prog`
