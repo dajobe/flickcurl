@@ -1226,6 +1226,7 @@ typedef struct {
  * @woe_id: A 32-bit identifier that uniquely represents spatial entities. (not used if bbox argument is present).  Same restrictions as @place_id (or 0)
  * @geo_context: A numeric value representing the photo's geotagginess beyond latitude and longitude. The current list of context IDs is 0: not defined, 1: indoors and 2: outdoors.  Geo queries require some sort of limiting agent in order to prevent the database from crying (or 0)
  * @is_commons: Limit the scope of the search to only photos that are part of the Flickr Commons project. Default is false (or 0)
+ * @in_gallery: Limit the scope of the search to only photos that are in a gallery. Default is false, search all photos.
  *
  * Search parameters for flickcurl_photos_search()
  */
@@ -1262,6 +1263,7 @@ typedef struct {
   int woe_id;
   int geo_context;
   int is_commons;
+  int in_gallery;
 } flickcurl_search_params;
   
 
