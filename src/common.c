@@ -864,7 +864,7 @@ flickcurl_prepare_common(flickcurl *fc,
         continue;
 
       strcat(fc->uri, parameters[i][0]);
-      strcat(fc->uri, " = ");
+      strcat(fc->uri, "=");
       if(!strcmp(parameters[i][0], "method")) {
         /* do not touch method name */
       } else
