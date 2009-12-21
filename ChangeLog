@@ -1,10 +1,15 @@
 2009-12-20  Dave Beckett <dave@dajobe.org>
 
+	* autogen.sh, build/.gitignore, build/shave-libtool.in,
+	build/shave.in, build/shave.m4, configure.ac:
+	Switch from SHAVE to automake 1.11 AM_SILENT_RULES Remove SHAVE
+	files.  Depend on automake 1.11 and it's dependencies.  Add
+	--enable-silent-rules to configure; only enabled for maintainer
+	builds via autogen.sh Make autogen.sh pick glibtoolize on OSX.
+
 	* src/photos-api.c:
 	(flickcurl_photos_search): Support #flickcurl_search_params
 	in_gallery field.
-
-2009-12-20  Dave Beckett <dave@dajobe.org>
 
 	* src/flickcurl.h:
 	flickcurl_search_params gains in_gallery field added to the API
@@ -15,8 +20,6 @@
 	* flickcurl-config.in:
 	Try computing the decimal version another way
 
-2009-12-12  Dave Beckett <dave@dajobe.org>
-
 	* flickcurl-config.in:
 	Make flickcurl-config be a wrapper around pkg-config flickcurl.
 	The --prefix=DIR and --libtool-libs options are no longer
@@ -26,8 +29,6 @@
 
 	* NEWS.html, configure.ac:
 	Bump version to 1.15
-
-2009-12-11  Dave Beckett <dave@dajobe.org>
 
 	* Update authentication docs to use screen shots
 
