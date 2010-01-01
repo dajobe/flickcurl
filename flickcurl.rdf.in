@@ -30,7 +30,6 @@
     </release>
 
     <download-page rdf:resource="http://download.librdf.org/sources/"/>
-    <download-mirror rdf:resource="http://sourceforge.net/projects/librdf/" />
 
     <!-- Licensing details -->
     <license rdf:resource="http://usefulinc.com/doap/licenses/gpl"/>
@@ -39,10 +38,10 @@
 
     <!-- source repository -->
     <repository>
-      <SVNRepository>
-	<location rdf:resource="http://svn.librdf.org/repository/flickcurl/" />
-	<browse rdf:resource="http://svn.librdf.org/view/flickcurl/" />
-      </SVNRepository>
+      <GITRepository>
+	<location rdf:resource="git://github.com/dajobe/flickcurl.git" />
+	<browse rdf:resource="http://github.com/dajobe/flickcurl/tree/master" />
+      </GITRepository>
     </repository>
   </Project>
 
