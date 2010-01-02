@@ -152,7 +152,7 @@ flickcurl_read_licenses(flickcurl *fc)
 
 
 /**
- * flickcurl_photos_licenses_getInfo - 
+ * flickcurl_photos_licenses_getInfo:
  * @fc: flickcurl context
  * 
  * Get a list of available photo licenses for Flickr.
@@ -172,7 +172,7 @@ flickcurl_photos_licenses_getInfo(flickcurl *fc)
 
 
 /**
- * flickcurl_photos_licenses_getInfo_by_id - 
+ * flickcurl_photos_licenses_getInfo_by_id:
  * @fc: flickcurl context
  * @id: license ID
  * 
