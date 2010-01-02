@@ -1,3 +1,8 @@
+2010-01-02  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_15 for 1.15 release (GIT
+	1131dbef927ac920d8b85cee571650293c17015f)
+
 2010-01-02  Dave Beckett <dave@dajobe.org>
 
 	* docs/flickcurl-sections.txt: remove flickcurl_set - never
