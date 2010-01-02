@@ -83,7 +83,7 @@ flickcurl_people_findByUsername(flickcurl* fc, const char* username)
 
 
 /**
- * flickcurl_people_getInfo - 
+ * flickcurl_people_getInfo:
  * @fc: flickcurl context
  * @user_id: user NSID
  * 
