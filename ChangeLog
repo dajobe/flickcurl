@@ -1,19 +1,32 @@
+2010-01-02  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt: remove flickcurl_set - never
+	existed
+
+2009-12-31  Dave Beckett <dave@dajobe.org>
+
+	* flickcurl.rdf.in: Flickcurl is in GIT
+
+2009-12-21  Dave Beckett <dave@dajobe.org>
+
+	* autogen.sh: Tidying autogen.
+	Ignore configure.ac in release dirs.
+	Add gtkdoc_args iff gtk-doc is present.
+	Rename ltdl to ltdl_args
+	Rename silent to silent_args
+
 2009-12-20  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: restore "=" character constant
 
 	* docs/tmpl/section-photo.sgml: Update templates
 
-2009-12-20  Dave Beckett <dave@dajobe.org>
-
 	* utils/flickcurl.c: remove final nl from photos.search help
-
-2009-12-20  Dave Beckett <dave@dajobe.org>
 
 	* utils/flickcurl.c: photos.search add geo-context is-commons and
 	is-gallery args Add recent changes to flickcurl_search_params to
 	the photos.search command: geo-context 1-2, is-commons and
 	is-gallery args.
-
-2009-12-20  Dave Beckett <dave@dajobe.org>
 
 	* src/activity-api.c, src/activity.c, src/args.c, src/auth-api.c,
 	src/blog.c, src/blogs-api.c, src/category.c, src/collection.c,
@@ -37,8 +50,6 @@
 	utils/flickrdf.c, utils/list-methods.c:
 	Code style - add whitespace around assignments (=, +=, -=)
 	and comparators	(==, <=, >=)
-
-2009-12-20  Dave Beckett <dave@dajobe.org>
 
 	* autogen.sh, build/.gitignore, build/shave-libtool.in,
 	build/shave.in, build/shave.m4, configure.ac:
