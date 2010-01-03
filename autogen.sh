@@ -276,7 +276,7 @@ if test -d $CONFIG_DIR; then
 fi
 
 
-for coin in `find $SRCDIR -name configure.ac -print`
+for coin in `find $SRCDIR -name configure.ac -print | grep -v /releases/`
 do 
   dir=`dirname $coin`
   if test -f "$dir/NO-AUTO-GEN"; then
