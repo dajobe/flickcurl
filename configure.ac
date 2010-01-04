@@ -19,10 +19,10 @@ fi
 
 dnl need to change quotes to allow square brackets
 changequote(<<, >>)dnl
-VERSION="$PACKAGE_VERSION.0"
-version_major=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\1/'`
-version_minor=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\2/'`
-version_release=`echo $VERSION | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\3/'`
+version="$PACKAGE_VERSION.0"
+version_major=`echo $version | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\1/'`
+version_minor=`echo $version | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\2/'`
+version_release=`echo $version | sed -e 's/^\([^\.]*\)\.\([^\.]*\)\.\(.*\)$/\3/'`
 changequote([, ])dnl
 
 version_decimal=`expr $version_major \* 10000 + $version_minor \* 100 + $version_release`
