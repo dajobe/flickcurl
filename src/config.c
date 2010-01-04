@@ -2,7 +2,7 @@
  *
  * config.c - INI configuration file handling
  *
- * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2010, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -156,12 +157,25 @@ read_ini_config(const char* filename, const char* application,
 
     p = strchr(line, '=');
     if(p) {
+      char *kchar;
+      
       *p = '\0';
+
+      /* remove trailing spaces at end of key */
+      kchar = (p-1);
+      while(kchar >= line && isspace(*kchar))
+        *kchar-- = '\0';
+
+      /* remove leading spaces at start of value */
+      p++;
+      while(*p && isspace(*p))
+        p++;
+
 #ifdef CONFIG_DEBUG    
-      fprintf(stderr, "Found key '%s' value '%s'\n", line, p+1);
+      fprintf(stderr, "Found key '%s' value '%s'\n", line, p);
 #endif
       if(handler)
-        handler(user_data, line, p+1);
+        handler(user_data, line, p);
     }
   }
   fclose(fh);
