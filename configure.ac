@@ -9,8 +9,6 @@ AC_CONFIG_AUX_DIR(build)
 AC_CONFIG_MACRO_DIR(build)
 AM_INIT_AUTOMAKE([1.11 check-news std-options -Wall])
 
-AC_REVISION($Revision: $)dnl
-
 AM_MAINTAINER_MODE
 
 if test "$USE_MAINTAINER_MODE" = yes; then 
@@ -34,8 +32,6 @@ AC_DEFINE_UNQUOTED(FLICKCURL_VERSION_DECIMAL, $version_decimal, [Release version
 FLICKCURL_VERSION_DECIMAL=$version_decimal
 AC_SUBST(FLICKCURL_VERSION_DECIMAL)
 
-
-AM_INIT_AUTOMAKE([1.7 check-news std-options -Wobsolete -Wportability -Wsyntax -Wunsupported])
 
 # Checks for programs.
 AM_PROG_CC_C_O
