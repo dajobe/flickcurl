@@ -4575,11 +4575,11 @@ main(int argc, char *argv[])
                     program, config_path, strerror(errno));
             rc = 1;
           } else {
-            fputs("[flickr]\nauth_token = ", fh);
+            fputs("[flickr]\nauth_token=", fh);
             fputs(flickcurl_get_auth_token(fc), fh);
-            fputs("\napi_key = ", fh);
+            fputs("\napi_key=", fh);
             fputs(flickcurl_get_api_key(fc), fh);
-            fputs("\nsecret = ", fh);
+            fputs("\nsecret=", fh);
             fputs(flickcurl_get_shared_secret(fc), fh);
             fputs("\n", fh);
             fclose(fh);
