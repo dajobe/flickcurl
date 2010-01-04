@@ -86,6 +86,8 @@ flickcurl_internal.h
 AM_CFLAGS=
 libflickcurl_la_LIBADD=
 
+libflickcurl_la_LDFLAGS = -version-info @LIBFLICKCURL_LIBTOOL_VERSION@
+
 if OFFLINE
 if RAPTOR
 AM_CFLAGS += @RAPTOR_CFLAGS@
