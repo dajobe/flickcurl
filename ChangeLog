@@ -1,9 +1,22 @@
-2010-01-02  Dave Beckett  <dave@dajobe.org>
+2010-01-03  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac, src/Makefile.am:
+	Add LIBFLICKCURL_LIBTOOL_VERSION and use to explicitly set libtool
+	library version
+
+	* configure.ac:
+	Remove duplicate AM_INIT_AUTOMAKE call and AC_REVISION
+
+2010-01-02  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac:
+	automake 1.11 requires autoconf 2.62
+
+	* autogen.sh:
+	Make autogen.sh skip configuring in release dirs
 
 	* Snapshotted flickcurl_1_15 for 1.15 release (GIT
 	1131dbef927ac920d8b85cee571650293c17015f)
-
-2010-01-02  Dave Beckett <dave@dajobe.org>
 
 	* docs/flickcurl-sections.txt: remove flickcurl_set - never
 	existed
