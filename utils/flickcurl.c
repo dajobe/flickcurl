@@ -2,7 +2,7 @@
  *
  * flickcurl utility - Invoke the Flickcurl library
  *
- * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2010, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -21,9 +21,9 @@
  *
  * ~/.flickcurl.conf should contain the authentication details in the form:
  * [flickr]
- * auth_token = 1234567-8901234567890123
- * api_key = 0123456789abcdef0123456789abcdef
- * secret = fedcba9876543210
+ * auth_token=1234567-8901234567890123
+ * api_key=0123456789abcdef0123456789abcdef
+ * secret=fedcba9876543210
  *
  * To authenticate from a FROB - to generate an auth_token from a FROB use:
  *   flickcurl -a FROB
@@ -4515,14 +4515,15 @@ main(int argc, char *argv[])
 "\n"
 "2. Create %s in this format:\n"
 "[flickr]\n"
-"api_key = <API Key>\n"
-"secret = <Shared Secret>\n"
+"api_key=<API Key>\n"
+"secret=<Shared Secret>\n"
 "\n"
 "3. Visit the <Authentication URL> in a browser to get a <FROB>\n"
 "\n"
 "4. Call this program with the frob:\n"
 "  %s -a <FROB>\n"
-"to update the configuration file with the authentication token.\n",
+"to update the configuration file with the authentication token.\n"
+"See http://librdf.org/flickcurl/api/flickcurl-auth.html for full instructions.\n",
                 program, config_path, config_path, program);
         rc = 1;
         goto tidy;
