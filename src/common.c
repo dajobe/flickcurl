@@ -2,7 +2,7 @@
  *
  * common.c - Flickcurl common functions
  *
- * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2010, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -63,9 +63,9 @@
 
 #include <libxml/xmlsave.h>
 
-const char* const flickcurl_short_copyright_string = "Copyright 2007-2009 David Beckett.";
+const char* const flickcurl_short_copyright_string = "Copyright 2007-2010 David Beckett.";
 
-const char* const flickcurl_copyright_string = "Copyright (C) 2007-2009 David Beckett - http://www.dajobe.org/";
+const char* const flickcurl_copyright_string = "Copyright (C) 2007-2010 David Beckett - http://www.dajobe.org/";
 
 const char* const flickcurl_license_string = "LGPL 2.1 or newer, GPL 2 or newer, Apache 2.0 or newer.\nSee http://librdf.org/flickcurl/ for full terms.";
 
