@@ -115,6 +115,16 @@ API <emphasis>Key</emphasis> that looks something like:
 </programlisting>
 
 <para>
+These strings should be used for the values of the <code>api</code>
+and <code>secret</code> keys in either the <code>~/.flickcurl.conf</code>
+if used with the flickcurl utility or in code, with the
+<link linkend="flickcurl-set-api-key">flickcurl_set_api_key()</link>
+and
+<link linkend="flickcurl-set-shared-secret">flickcurl_set_shared_secret()</link>
+functions.
+</para>
+
+<para>
 You now need to change the key to be of type mobile since no callback
 URL is usually appropriate for a command-line application or library.
 </para>
@@ -146,8 +156,8 @@ appropriate.
 
 <para>
 This sequence will make the new key 'Auth mode Mobile'
-and an <emphasis>authentication URL</emphasis> will appear on the
-same page and look something like:
+and an <emphasis>authentication URL</emphasis> will be shown on the
+same page and look something like this:
 </para>
 <programlisting>
 http://www.flickr.com/auth-11111111111111111
@@ -198,20 +208,19 @@ secret=fedcba9876543210
 <programlisting>
   "[APP NAME] wants to link to your Flickr account"
 </programlisting>
-<para>with more information and two buttons.  Locate the one
-below the text:</para>
-<programlisting>
- If you arrived at this page because you specifically asked  to connect
- to your Flickr account, click here:
-
-  [NEXT]
-</programlisting>
-
-<para>Click that button and on the next page click the button
-</para>
+<para>with more information and two buttons.  Click the button
+with the text:</para>
 <programlisting>
   [OK, I'LL AUTHORIZE IT]
 </programlisting>
+
+<mediaobject>
+<imageobject>
+<imagedata fileref="appgarden-mobile-auth-page.png" format="PNG" scale="80" align="center"/>
+</imageobject>
+<caption><para>Flickr App Garden - Mobile Auth</para></caption>
+</mediaobject>
+
 
 <para>Flickr will return on the next page a
 9-digit <emphasis>FROB</emphasis> that looks like this:</para>
@@ -226,13 +235,18 @@ Switch back to the command line and run the flickcurl utility with that FROB:
 $ flickcurl -a 123-456-789
 </programlisting>
 
-<para>and the result will be that an
+<para>The result will be that an
 <emphasis>Authentication Token</emphasis> (auth token) is calculated
-and returned.</para>
+and returned.  The flickcurl utility will reply:</para>
+<programlisting>
+flickcurl: Successfully exchanged frob 836-328-145 for authentication token
+flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
+</programlisting>
 
-<para>The flickcurl utility will automatically update the
-<code>~/.flickcurl.conf</code> configuration file with
-the <code>auth_token</code> field to give something like:</para>
+<para>The flickcurl utility has automatically updated the
+<code>~/.flickcurl.conf</code> configuration file (as the message
+will show) with the <code>auth_token</code> field to give something
+like:</para>
 
 <programlisting>
 $ cat ~/.flickcurl.conf
@@ -241,6 +255,10 @@ auth_token=1234567-8901234567890123
 api_key=0123456789abcdef0123456789abcdef
 secret=fedcba9876543210
 </programlisting>
+
+<para>
+At this stage, the utility (or library) is authenticated and ready to use.
+</para>
 
 </section>
 

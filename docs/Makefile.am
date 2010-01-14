@@ -1,7 +1,7 @@
 #
 # Makefile.am - makefile for documentation
 #
-# Copyright (C) 2008-2009, David Beckett http://www.dajobe.org/
+# Copyright (C) 2008-2010, David Beckett http://www.dajobe.org/
 # 
 # This file is licensed under the following three licenses as alternatives:
 #   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -67,7 +67,8 @@ HTML_IMAGES = \
 	appgarden-new-api-key-secret.png \
 	appgarden-edit-auth-flow.png \
 	appgarden-edit-auth-flow-mobile.png \
-	appgarden-test-app-page.png
+	appgarden-test-app-page.png \
+	appgarden-mobile-auth-page.png
 
 
 
