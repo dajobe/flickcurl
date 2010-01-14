@@ -1,4 +1,35 @@
+2010-01-13  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_16 for 1.16 release
+	(GIT 12509697523a4a91378fbb154a71d1c636d03616)
+
+	* docs/Makefile.am, docs/flickcurl-authenticate.xml: Add
+	appgarden-mobile-auth-page.png for results of mobile auth and
+	update words
+
+	* utils/flickcurl.c: Remove spaces around config examples.  Add
+	pointer to web site auth page
+
+2010-01-04  Dave Beckett <dave@dajobe.org>
+
+	* src/config.c: Allow spaces around = in config key=value lines
+	Include ctype.h for isspace()
+
+	(read_ini_config): Skip spaces before = in key and after = in
+	value.
+
+	* utils/flickcurl.c: Fix .flickcurl.conf generation to not add
+	spaces around =
+
 2010-01-03  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac: do not edit VERSION to make major/minor/release
+	vars
+
+	* NEWS.html, configure.ac: Bump version to 1.16
+
+	* docs/flickcurl-docs.xml, LICENSE.html, NEWS.html, README.html,
+	coverage.html: Update to 2010
 
 	* configure.ac, src/Makefile.am:
 	Add LIBFLICKCURL_LIBTOOL_VERSION and use to explicitly set libtool
