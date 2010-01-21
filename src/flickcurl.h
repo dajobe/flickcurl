@@ -1784,6 +1784,10 @@ char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 FLICKCURL_API
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_people_getPhotosOf_params(flickcurl* fc, const char* user_id, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
+flickcurl_photo** flickcurl_people_getPhotosOf(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
+FLICKCURL_API
 flickcurl_group** flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id);
 FLICKCURL_API
 flickcurl_photo** flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,  const char* extras, int per_page, int page);

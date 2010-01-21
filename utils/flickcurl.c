@@ -3973,6 +3973,42 @@ command_source_uri_to_photoid(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_people_getPhotosOf(flickcurl* fc, int argc, char *argv[])
+{
+  char *user_id = argv[1];
+  flickcurl_photos_list* photos_list = NULL;
+  flickcurl_photos_list_params list_params;
+  int rc;
+  
+  flickcurl_photos_list_params_init(&list_params);
+
+  if(argc >2) {
+    list_params.per_page = parse_page_param(argv[2]);
+    if(argc >3) {
+      list_params.page = parse_page_param(argv[3]);
+      if(argc >4) {
+        list_params.format = argv[4];
+      }
+    }
+  }
+
+  photos_list = flickcurl_people_getPhotosOf_params(fc, user_id,
+                                                    &list_params);
+  if(!photos_list)
+    return 1;
+
+  if(verbose)
+    fprintf(stderr, "%s: Photos of user %s (per_page %d  page %d):\n",
+            program, user_id, list_params.per_page, list_params.page);
+
+  rc = command_print_photos_list(fc, photos_list, output_fh, "Photo");
+  flickcurl_free_photos_list(photos_list);
+
+  return rc;
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4126,6 +4162,9 @@ static flickcurl_cmd commands[] = {
   {"people.getInfo",
    "USER-NSID", "Get information about one person with id USER-NSID", 
    command_people_getInfo,  1, 1},
+  {"people.getPhotosOf",
+   "USER-NSID [PER-PAGE [PAGE [FORMAT]]]", "Get public photos of a user USER-NSID", 
+   command_people_getPhotosOf,  1, 4},
   {"people.getPublicGroups",
    "USER-NSID", "Get list of public groups a user is amember of", 
    command_people_getPublicGroups,  1, 1},

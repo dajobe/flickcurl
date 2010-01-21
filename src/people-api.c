@@ -2,7 +2,7 @@
  *
  * people-api.c - Flickr flickr.people.* API calls
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2010, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -342,3 +342,95 @@ flickcurl_people_getUploadStatus(flickcurl* fc)
 }
 
 
+/**
+ * flickcurl_people_getPhotosOf_params:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user who's photo to search. A value of "me" will search against the calling user's photos for authenticated calls.
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ * 
+ * Returns a list of photos containing a particular Flickr member.
+ *
+ * Announced 2010-01-21
+ * http://code.flickr.com/blog/2010/01/21/people-in-photos-the-api-methods/
+ * 
+ * Return value: photos list or NULL on failure
+ **/
+flickcurl_photos_list*
+flickcurl_people_getPhotosOf_params(flickcurl* fc, const char* user_id,
+                                    flickcurl_photos_list_params* list_params)
+{
+  const char* parameters[11][2];
+  int count = 0;
+  flickcurl_photos_list* photos_list = NULL;
+  const char* format = NULL;
+  
+  if(!user_id)
+    return photos_list;
+
+  parameters[count][0]  = "user_id";
+  parameters[count++][1]= user_id;
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.people.getPhotosOf", parameters, count))
+    goto tidy;
+
+  photos_list = flickcurl_invoke_photos_list(fc,
+                                             (const xmlChar*)"/rsp/photos/photo",
+                                             format);
+
+  tidy:
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list = NULL;
+  }
+
+  return photos_list;
+}
+
+/**
+ * flickcurl_people_getPhotosOf:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user who's photo to search. A value of "me" will search against the calling user's photos for authenticated calls.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ * 
+ * Returns a list of photos containing a particular Flickr member.
+ *
+ * Implements flickr.people.getPhotosOf (1.17) 
+ *
+ * Announced 2010-01-21
+ * http://code.flickr.com/blog/2010/01/21/people-in-photos-the-api-methods/
+ * 
+ * Return value: photos array or NULL on failure
+ **/
+flickcurl_photo**
+flickcurl_people_getPhotosOf(flickcurl* fc, const char* user_id,
+                             const char* extras, int per_page, int page)
+{
+  flickcurl_photos_list_params list_params;
+  flickcurl_photos_list* photos_list;
+  flickcurl_photo** photos;
+  
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
+  photos_list = flickcurl_people_getPhotosOf_params(fc, user_id, &list_params);
+  if(!photos_list)
+    return NULL;
+
+  photos = photos_list->photos; photos_list->photos = NULL;  
+  /* photos array is now owned by this function */
+
+  flickcurl_free_photos_list(photos_list);
+
+  return photos;
+}
