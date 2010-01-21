@@ -1868,6 +1868,19 @@ int flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id, int saf
 FLICKCURL_API
 int flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags);
 
+/* flickr.photos.people */
+FLICKCURL_API
+int flickcurl_photos_people_add(flickcurl* fc, const char* photo_id, const char* user_id, int person_x, int person_y, int person_w, int person_h);
+FLICKCURL_API
+int flickcurl_photos_people_delete(flickcurl* fc, const char* photo_id, const char* user_id);
+FLICKCURL_API
+int flickcurl_photos_people_deleteCoords(flickcurl* fc, const char* photo_id, const char* user_id);
+FLICKCURL_API
+int flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id, const char* user_id, int person_x, int person_y, int person_w, int person_h);
+FLICKCURL_API
+flickcurl_person** flickcurl_photos_people_getList(flickcurl* fc, const char* photo_id);
+
+
 /* flickr.places */
 FLICKCURL_API
 flickcurl_place** flickcurl_places_find(flickcurl* fc, const char* query);

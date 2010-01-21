@@ -4009,6 +4009,78 @@ command_people_getPhotosOf(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_photos_people_add(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id = argv[1];
+  char *user_id = argv[2];
+  int person_x = atoi(argv[3]);
+  int person_y = atoi(argv[4]);
+  int person_w = atoi(argv[5]);
+  int person_h = atoi(argv[6]);
+
+  return flickcurl_photos_people_add(fc, photo_id, user_id,
+                                     person_x, person_y, person_w, person_h);
+}
+
+
+static int
+command_photos_people_delete(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id = argv[1];
+  char *user_id = argv[2];
+
+  return flickcurl_photos_people_delete(fc, photo_id, user_id);
+}
+
+
+static int
+command_photos_people_deleteCoords(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id = argv[1];
+  char *user_id = argv[2];
+
+  return flickcurl_photos_people_deleteCoords(fc, photo_id, user_id);
+}
+
+
+static int
+command_photos_people_editCoords(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id = argv[1];
+  char *user_id = argv[2];
+  int person_x = atoi(argv[3]);
+  int person_y = atoi(argv[4]);
+  int person_w = atoi(argv[5]);
+  int person_h = atoi(argv[6]);
+
+  return flickcurl_photos_people_editCoords(fc, photo_id, user_id,
+                                            person_x, person_y,
+                                            person_w, person_h);
+}
+
+
+static int
+command_photos_people_getList(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id = argv[1];
+  int i;
+  flickcurl_person** persons;
+
+  persons = flickcurl_photos_people_getList(fc, photo_id);
+
+  if(!persons)
+    return 1;
+
+  for(i = 0; persons[i]; i++)
+    command_print_person(persons[i]);
+  
+  flickcurl_free_persons(persons);
+  return 0;
+}
+
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4302,6 +4374,22 @@ static flickcurl_cmd commands[] = {
   {"photos.notes.edit",
    "NOTE-ID X Y W H TEXT", "Edit note NOTE-ID to (X, Y, W, H, TEXT)", 
    command_photos_notes_edit,  6, 6},
+
+  {"photos.people.add",
+   "PHOTO-ID USER-ID X Y W H", "Mark USER-ID appearing in PHOTO-ID at (X, Y, W, H)", 
+   command_photos_people_add,  6, 6},
+  {"photos.people.delete",
+   "PHOTO-ID USER-ID", "Mark USER-ID as not appearing in PHOTO-ID", 
+   command_photos_people_delete,  2, 2},
+  {"photos.people.deleteCoords",
+   "PHOTO-ID USER-ID", "Mark USER-ID as not appearing at coordinates in PHOTO-ID", 
+   command_photos_people_deleteCoords,  2, 2},
+  {"photos.people.editCoords",
+   "PHOTO-ID USER-ID X Y W H", "Update USER-ID appearing in PHOTO-ID to coords (X, Y, W, H)", 
+   command_photos_people_editCoords,  6, 6},
+  {"photos.people.getList",
+   "PHOTO-ID", "Get list of users appearing in PHOTO-ID", 
+   command_photos_people_getList,  1, 1},
 
   {"photos.transform.rotate",
    "PHOTO-ID DEGREES", "Rotate PHOTO-ID by 90/180/270 DEGREES", 

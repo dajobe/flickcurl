@@ -1,7 +1,7 @@
 #
 # Makefile.am
 #
-# Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+# Copyright (C) 2007-2010, David Beckett http://www.dajobe.org/
 # 
 # This file is licensed under the following three licenses as alternatives:
 #   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -70,6 +70,7 @@ photos-comments-api.c \
 photos-geo-api.c \
 photos-licenses-api.c \
 photos-notes-api.c \
+photos-people-api.c \
 photos-transform-api.c \
 photos-upload-api.c \
 photosets-api.c \
