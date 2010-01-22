@@ -118,6 +118,8 @@ static struct option long_options[] =
 };
 #endif
 
+#define IS_INT_ARG(arg) (!strcmp(arg->name, "per_page") || !strcmp(arg->name, "page"))
+#define IS_OPTIONAL_ARG(arg) (!strcmp(arg->name, "per_page") || !strcmp(arg->name, "page"))
 
 static const char *title_format_string = "Skeleton code generator utility %s\n";
 
@@ -377,8 +379,12 @@ main(int argc, char *argv[])
         if(!strcmp(arg->name, "api_key"))
           continue;
 
-        fprintf(stdout, " * @%s: %s%s\n", arg->name, arg->description,
-                (arg->optional? " (or NULL)" : ""));
+        fprintf(stdout, " * @%s: %s", arg->name, arg->description);
+        if(arg->optional) {
+          fputs((IS_INT_ARG(arg)? " (or < 0)" : " (or NULL)"), stdout);
+        }
+        fputc('\n', stdout);
+
       }
     }
 
@@ -404,7 +410,11 @@ main(int argc, char *argv[])
         if(!strcmp(arg->name, "api_key"))
           continue;
         
-        fprintf(stdout, ", const char* %s", arg->name);
+        if(IS_INT_ARG(arg)) {
+          fprintf(stdout, ", int %s", arg->name);
+        } else {
+          fprintf(stdout, ", const char* %s", arg->name);
+        }
       }
     }
     fprintf(stdout, ")\n{\n");
@@ -414,10 +424,25 @@ main(int argc, char *argv[])
 "  int count = 0;\n"
 "  xmlDocPtr doc = NULL;\n"
 "  xmlXPathContextPtr xpathCtx = NULL; \n"
-"  void* result = NULL;\n"
-"  \n",
+"  void* result = NULL;\n",
   6+method->args_count);
+    if(method->args_count) {
+      int argi;
+      for(argi = 0; method->args[argi]; argi++) {
+        flickcurl_arg* arg = method->args[argi];
+        if(IS_INT_ARG(arg)) {
+          fprintf(stdout,
+"  char %s_str[10];\n",
+                  arg->name);
+        }
+      }
+    }
 
+    fputs(
+"  \n",
+    stdout);
+    
+    
     if(method->args_count) {
       int argi;
       int print_or = 0;
@@ -450,10 +475,33 @@ main(int argc, char *argv[])
         if(!strcmp(arg->name, "api_key"))
           continue;
         
+        if(arg->optional) {
+          if(IS_INT_ARG(arg)) {
+            fprintf(stdout,
+"  if(%s >= 0) {\n"
+"    sprintf(%s_str, \"%%d\", %s);\n"
+"    parameters[count][0]  = \"%s\";\n"
+"    parameters[count++][1]= %s_str;\n"
+"  }\n",
+                    arg->name, arg->name, arg->name, arg->name, arg->name);
+            continue;
+          }
+          fprintf(stdout,
+"  if(%s) {\n",
+                  arg->name);
+        }
+        
         fprintf(stdout,
 "  parameters[count][0]  = \"%s\";\n"
 "  parameters[count++][1]= %s;\n",
               arg->name, arg->name);
+
+        if(arg->optional) {
+          fprintf(stdout,
+"  }\n"
+                  );
+        }
+        
       }
     }
 
