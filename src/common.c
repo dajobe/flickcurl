@@ -1783,7 +1783,9 @@ static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1] = {
   "uri",
   "<internal>person ID",
   "<internal>media type",
-  "<internal>tag string"
+  "<internal>collection id",
+  "<internal>icon photos",
+  "<internal>gallery id"
 };
 
 

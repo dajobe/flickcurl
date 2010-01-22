@@ -4080,6 +4080,95 @@ command_photos_people_getList(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_galleries_addPhoto(flickcurl* fc, int argc, char *argv[])
+{
+  const char* gallery_id = argv[1];
+  const char* photo_id = argv[2];
+  const char* comment_text = argv[3];
+
+  return flickcurl_galleries_addPhoto(fc, gallery_id, photo_id, comment_text);
+}
+
+
+static void
+command_print_gallery(flickcurl_gallery* g)
+{
+    fprintf(stderr,
+            "id %s  url %s  owner %s\n"
+            "  date create %d  date update %d\n"
+            "  count of photos %d  count of videos %d\n"
+            "  title '%s'\n"
+            "  description '%s'\n"
+            ,
+            g->id, g->url, g->owner,
+            g->date_create, g->date_update,
+            g->count_photos, g->count_videos,
+            g->title, g->description);
+    fputs("  primary ", stderr);
+    command_print_photo(g->primary_photo);
+}
+
+
+static int
+command_galleries_getList(flickcurl* fc, int argc, char *argv[])
+{
+  const char* user_id = argv[1];
+  int per_page = 10;
+  int page = 0;
+  flickcurl_gallery** galleries;
+  int i;
+  
+  if(argc > 2) {
+    per_page = parse_page_param(argv[2]);
+    if(argc > 3){
+      page = parse_page_param(argv[3]);
+    }
+  }
+
+  galleries = flickcurl_galleries_getList(fc, user_id, per_page, page);
+  if(!galleries)
+    return 1;
+  for(i = 0; galleries[i]; i++) {
+    fprintf(stderr, "%s: Gallery %d\n", program, i);
+    command_print_gallery(galleries[i]);
+  }
+
+  flickcurl_free_galleries(galleries);
+  return 0;
+}
+
+
+static int
+command_galleries_getListForPhoto(flickcurl* fc, int argc, char *argv[])
+{
+  const char* photo_id = argv[1];
+  int per_page = 10;
+  int page = 0;
+  flickcurl_gallery** galleries;
+  int i;
+
+  if(argc > 2) {
+    per_page = parse_page_param(argv[2]);
+    if(argc > 3){
+      page = parse_page_param(argv[3]);
+    }
+  }
+
+  galleries = flickcurl_galleries_getListForPhoto(fc, photo_id, per_page, page);
+  if(!galleries)
+    return 1;
+  for(i = 0; galleries[i]; i++) {
+    fprintf(stderr, "%s: Gallery %d\n", program, i);
+    command_print_gallery(galleries[i]);
+  }
+
+  flickcurl_free_galleries(galleries);
+  return 0;
+}
+
+
+
 
 typedef struct {
   const char*     name;
@@ -4167,6 +4256,16 @@ static flickcurl_cmd commands[] = {
   {"favorites.remove",
    "PHOTO-ID", "Removes PHOTO-ID to the current user's favorites.",
    command_favorites_remove, 1, 1},
+
+  {"galleries.addPhoto",
+   "GALLERY-ID PHOTO-ID TEXT", "Add photo PHOTO-ID to gallery GALLERY-ID with TEXT",
+   command_galleries_addPhoto, 3, 3},
+  {"galleries.getList",
+   "USER-ID [PER-PAGE [PAGE]]", "Get list of galleries for a USER-ID with optional paging",
+   command_galleries_getList, 1, 3},
+  {"galleries.getListForPhoto",
+   "PHOTO-ID [PER-PAGE [PAGE]]", "Get list of galleries PHOTO-ID appears in with optional paging",
+   command_galleries_getListForPhoto, 1, 3},
 
   {"groups.browse",
    "[CAT-ID]", "Browse groups below category CAT-ID (or root).",

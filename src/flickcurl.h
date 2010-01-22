@@ -958,6 +958,27 @@ typedef struct flickcurl_category_s flickcurl_category;
 
 
 /**
+ * flickcurl_gallery: 
+ * @nsid: gallery ID
+ * @fields: gallery fields
+ *
+ * A user.
+ */
+typedef struct {
+  char *id;
+  char *url;
+  char *owner;
+  int date_create;
+  int date_update;
+  flickcurl_photo* primary_photo;
+  int count_photos;
+  int count_videos;
+  char *title;
+  char *description;
+} flickcurl_gallery;
+
+
+/**
  * flickcurl_photoset:
  * @id: photoset ID
  * @primary: primary photo ID
@@ -1706,6 +1727,16 @@ FLICKCURL_API
 flickcurl_photos_list* flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id, flickcurl_photos_list_params* list_params);
 FLICKCURL_API
 int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
+
+/* flickr.galleries */
+FLICKCURL_API
+int flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id, const char* photo_id, const char* comment_text);
+FLICKCURL_API
+flickcurl_gallery** flickcurl_galleries_getList(flickcurl* fc, const char* user_id, int per_page, int page);
+FLICKCURL_API
+flickcurl_gallery** flickcurl_galleries_getListForPhoto(flickcurl* fc, const char* photo_id, int per_page, int page);
+FLICKCURL_API
+void flickcurl_free_galleries(flickcurl_gallery **galleries_object);
 
 /* flickr.groups */
 FLICKCURL_API

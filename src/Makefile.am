@@ -31,6 +31,7 @@ contacts.c \
 context.c \
 config.c \
 exif.c \
+gallery.c \
 group.c \
 institution.c \
 md5.c \
@@ -58,6 +59,7 @@ collections-api.c \
 contacts-api.c \
 favorites-api.c \
 interestingness-api.c \
+galleries-api.c \
 groups-api.c \
 groups-members-api.c \
 groups-pools-api.c \
