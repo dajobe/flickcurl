@@ -136,6 +136,15 @@ flickcurl_favorites_remove
 </SECTION>
 
 <SECTION>
+<FILE>section-gallery</FILE>
+flickcurl_gallery
+flickcurl_free_galleries
+flickcurl_galleries_addPhoto
+flickcurl_galleries_getList
+flickcurl_galleries_getListForPhoto
+</SECTION>
+
+<SECTION>
 <FILE>section-group</FILE>
 flickcurl_group
 flickcurl_free_group
@@ -191,6 +200,8 @@ flickcurl_person_field_type
 flickcurl_people_findByEmail
 flickcurl_people_findByUsername
 flickcurl_people_getInfo
+flickcurl_people_getPhotosOf
+flickcurl_people_getPhotosOf_params
 flickcurl_people_getPublicGroups
 flickcurl_people_getPublicPhotos
 flickcurl_people_getPublicPhotos_params
@@ -274,6 +285,15 @@ flickcurl_photos_setTags
 flickcurl_photos_transform_rotate
 flickcurl_photos_upload_checkTickets
 flickcurl_photos_upload_params
+</SECTION>
+
+<SECTION>
+<FILE>section-photos-people</FILE>
+flickcurl_photos_people_add
+flickcurl_photos_people_delete
+flickcurl_photos_people_deleteCoords
+flickcurl_photos_people_editCoords
+flickcurl_photos_people_getList
 </SECTION>
 
 <SECTION>

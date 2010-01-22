@@ -1,0 +1,79 @@
+<!-- ##### SECTION Title ##### -->
+section-gallery
+
+<!-- ##### SECTION Short_Description ##### -->
+Galleries of photos.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Galleries of photos.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### STRUCT flickcurl_gallery ##### -->
+<para>
+
+</para>
+
+@id: 
+@url: 
+@owner: 
+@date_create: 
+@date_update: 
+@primary_photo: 
+@count_photos: 
+@count_videos: 
+@title: 
+@description: 
+
+<!-- ##### FUNCTION flickcurl_free_galleries ##### -->
+<para>
+
+</para>
+
+@galleries_object: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_addPhoto ##### -->
+<para>
+
+</para>
+
+@fc: 
+@gallery_id: 
+@photo_id: 
+@comment_text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_getList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_getListForPhoto ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@per_page: 
+@page: 
+@Returns: 
+
+

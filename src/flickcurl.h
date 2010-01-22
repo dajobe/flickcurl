@@ -959,10 +959,23 @@ typedef struct flickcurl_category_s flickcurl_category;
 
 /**
  * flickcurl_gallery: 
- * @nsid: gallery ID
- * @fields: gallery fields
+ * @id: gallery ID
+ * @url: URL of gallery
+ * @owner: owner NSID
+ * @date_create: creation date of gallery
+ * @date_update: update / last modified date of gallery
+ * @primary_photo: primary photo for the gallery
+ * @count_photos: number of photos in the gallery
+ * @count_videos: number of photos in the gallery
+ * @title: Gallery title
+ * @description: Gallery description
  *
- * A user.
+ * A photo gallery.
+ *
+ * The list of photos in the gallery is not curently available via the API.
+ * It should be flickr.galleries.getInfo() but that is does not exist
+ * at this date 2010-01-21.
+ *
  */
 typedef struct {
   char *id;

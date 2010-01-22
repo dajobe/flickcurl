@@ -79,6 +79,7 @@
     <xi:include href="xml/section-context.xml"/>
     <xi:include href="xml/section-exif.xml"/>
     <xi:include href="xml/section-favorite.xml"/>
+    <xi:include href="xml/section-gallery.xml"/>
     <xi:include href="xml/section-group.xml"/>
     <xi:include href="xml/section-machinetags.xml"/>
     <xi:include href="xml/section-misc.xml"/>
@@ -86,6 +87,7 @@
     <xi:include href="xml/section-people.xml"/>
     <xi:include href="xml/section-person.xml"/>
     <xi:include href="xml/section-photo.xml"/>
+    <xi:include href="xml/section-photos-people.xml"/>
     <xi:include href="xml/section-photoslist.xml"/>
     <xi:include href="xml/section-photoset.xml"/>
     <xi:include href="xml/section-place.xml"/>
