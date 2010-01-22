@@ -1,3 +1,71 @@
+2010-01-21  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: f
+
+	* src/common.c: Update fflickcurl_field_value_type_label
+
+	* docs/tmpl/section-photos-people.sgml: Updated photos.people
+	template
+
+	* docs/flickcurl-docs.xml, docs/flickcurl-sections.txt,
+	docs/tmpl/section-gallery.sgml, docs/tmpl/section-people.sgml,
+	src/flickcurl.h: Add documentation for galleries
+
+	* src/galleries-api.c, src/gallery.c: Add photo galleries support
+	- add photos to gallery, list galleries
+
+	(flickcurl_galleries_addPhoto, flickcurl_galleries_getList,
+	flickcurl_galleries_getListForPhoto): Added functions for gallery
+	API.
+
+	(flickcurl_free_galleries): Added destructor
+
+	* src/Makefile.am, src/common.c, src/flickcurl.h,
+	src/flickcurl_internal.h, utils/flickcurl.c: Add photo galleries
+	support - add photos to gallery, list galleries
+
+	flickcurl_gallery: added new type
+
+	Added new gallery.c and galleries-api.c modules.
+
+	(flickcurl_galleries_addPhoto, flickcurl_galleries_getList,
+	flickcurl_galleries_getListForPhoto): Added functions for gallery
+	API.
+
+	(flickcurl_free_galleries): Added destructor Updated flickcurl
+	utility to call above functions.
+
+	* src/Makefile.am, src/flickcurl.h, src/photos-people-api.c,
+	utils/flickcurl.c: Added flickr.photos.people.* APIs -
+	add/remove/edit/list people in photos.
+
+	(flickcurl_photos_people_add, flickcurl_photos_people_delete,
+	flickcurl_photos_people_deleteCoords,
+	flickcurl_photos_people_editCoordsflickcurl_photos_people_getList):
+	Added
+
+	Updated utility to support new above functions.
+
+	* src/flickcurl.h, src/people-api.c, utils/flickcurl.c: Added
+	flickr.people.getPhotosOf support in
+	flickcurl_people_getPhotosOf_params() and
+	flickcurl_people_getPhotosOf()
+
+	(flickcurl_people_getPhotosOf_params): Added with
+	flickcurl_photos_list_params* list_params for full control of
+	paging and result formats.
+
+	(flickcurl_people_getPhotosOf_params): Added, calling above with
+	simple photos result and fixed params.
+
+	Added support for people.getPhotosOf to flickcurl utility
+
+	(command_people_getPhotosOf): Added.
+
+	* utils/codegen.c: 2010
+
+	* NEWS.html, configure.ac: 1.17
+
 2010-01-13  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_16 for 1.16 release
