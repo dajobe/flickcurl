@@ -1,0 +1,81 @@
+<!-- ##### SECTION Title ##### -->
+section-photos-people
+
+<!-- ##### SECTION Short_Description ##### -->
+Photos containing people.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Photos containing people.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### FUNCTION flickcurl_photos_people_add ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@user_id: 
+@person_x: 
+@person_y: 
+@person_w: 
+@person_h: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_people_delete ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_people_deleteCoords ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_people_editCoords ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@user_id: 
+@person_x: 
+@person_y: 
+@person_w: 
+@person_h: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photos_people_getList ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@Returns: 
+
+
