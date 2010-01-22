@@ -1770,7 +1770,7 @@ flickcurl_set_xml_data(flickcurl *fc, xmlDocPtr doc)
 }
 
 
-static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1] = {
+static const char* fflickcurl_field_value_type_label[VALUE_TYPE_LAST+1] = {
   "(none)",
   "photo id",
   "photo URI",
@@ -1783,9 +1783,9 @@ static const char* flickcurl_field_value_type_label[VALUE_TYPE_LAST+1] = {
   "uri",
   "<internal>person ID",
   "<internal>media type",
+  "<internal>tag string",
   "<internal>collection id",
-  "<internal>icon photos",
-  "<internal>gallery id"
+  "<internal>icon photos"
 };
 
 
