@@ -3983,11 +3983,11 @@ command_people_getPhotosOf(flickcurl* fc, int argc, char *argv[])
   
   flickcurl_photos_list_params_init(&list_params);
 
-  if(argc >2) {
+  if(argc >1) {
     list_params.per_page = parse_page_param(argv[2]);
-    if(argc >3) {
+    if(argc >2) {
       list_params.page = parse_page_param(argv[3]);
-      if(argc >4) {
+      if(argc >3) {
         list_params.format = argv[4];
       }
     }
@@ -4119,9 +4119,9 @@ command_galleries_getList(flickcurl* fc, int argc, char *argv[])
   flickcurl_gallery** galleries;
   int i;
   
-  if(argc > 2) {
+  if(argc > 1) {
     per_page = parse_page_param(argv[2]);
-    if(argc > 3){
+    if(argc > 2) {
       page = parse_page_param(argv[3]);
     }
   }
