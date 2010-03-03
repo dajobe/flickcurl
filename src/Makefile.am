@@ -80,6 +80,7 @@ photosets-comments-api.c \
 places-api.c \
 prefs-api.c \
 reflection-api.c \
+stats-api.c \
 tags-api.c \
 test-api.c \
 upload-api.c \
