@@ -2101,6 +2101,37 @@ char** flickcurl_reflection_getMethods(flickcurl* fc);
 FLICKCURL_API
 flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name);
 
+/* flickr.stats */
+FLICKCURL_API
+int flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date, const char* collection_id, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date, const char* domain, const char* collection_id, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date, const char* collection_id);
+FLICKCURL_API
+int flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date, const char* photo_id, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date, const char* domain, const char* photo_id, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date, const char* photoset_id, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date, const char* domain, const char* photoset_id, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date, const char* photoset_id);
+FLICKCURL_API
+int flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date, const char* photo_id);
+FLICKCURL_API
+int flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date, const char* domain, int per_page, int page);
+FLICKCURL_API
+int flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date);
+FLICKCURL_API
+int flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date, const char* sort, int per_page, int page, const char* extras);
+FLICKCURL_API
+int flickcurl_stats_getTotalViews(flickcurl* fc, const char* date);
+
+
 /* flickr.tag */
 FLICKCURL_API
 flickcurl_photos_list* flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag, const char* cluster_id, flickcurl_photos_list_params* list_params);
