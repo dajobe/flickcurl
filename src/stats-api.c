@@ -965,10 +965,10 @@ int
 flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date)
 {
   const char* parameters[8][2];
+  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* count_str;
-  int count;
   
   if(!date)
     return -1;
