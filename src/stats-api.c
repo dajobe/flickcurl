@@ -356,7 +356,7 @@ flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
   }
 
   stats = flickcurl_build_stats(fc, xpathCtx,
-                                (const xmlChar*)"/rsp/domains/referrer", NULL);
+                                (const xmlChar*)"/rsp/domains/domain", NULL);
 
   tidy:
   if(xpathCtx)
