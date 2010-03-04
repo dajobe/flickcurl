@@ -4289,11 +4289,12 @@ command_stats_getCollectionStats(flickcurl* fc, int argc, char *argv[])
   }
 
   views = flickcurl_stats_getCollectionStats(fc, date, collection_id);
+  if(views < 0)
+    return 1;
 
-  if(views >= 0)
-    fprintf(stderr, "%s: Collection view stats: %d\n", program, views);
+  fprintf(stderr, "%s: Collection view stats: %d\n", program, views);
   
-  return (views >= 0);
+  return 0;
 }
 
 
@@ -4491,11 +4492,12 @@ command_stats_getPhotosetStats(flickcurl* fc, int argc, char *argv[])
   }
 
   views = flickcurl_stats_getPhotosetStats(fc, date, photoset_id);
+  if(views < 0)
+    return 1;
 
-  if(views >= 0)
-    fprintf(stderr, "%s: Photoset view stats: %d\n", program, views);
+  fprintf(stderr, "%s: Photoset view stats: %d\n", program, views);
   
-  return (views >= 0);
+  return 0;
 }
 
 
@@ -4580,11 +4582,12 @@ command_stats_getPhotostreamStats(flickcurl* fc, int argc, char *argv[])
     date = argv[1];
   
   views = flickcurl_stats_getPhotostreamStats(fc, date);
-
-  if(views >= 0)
-    fprintf(stderr, "%s: Photostream view stats: %d\n", program, views);
+  if(views < 0)
+    return 1;
   
-  return (views >= 0);
+  fprintf(stderr, "%s: Photostream view stats: %d\n", program, views);
+  
+  return 0;
 }
 
 
