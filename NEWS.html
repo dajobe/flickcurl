@@ -17,6 +17,64 @@
 <p>Not yet released.
 </p>
 
+<p>Added flickr stats API including new
+<code>flickcurl_stats</code> and <code>flickcurl_view_stats</code>
+datatypes:</p>
+<pre>
+  flickcurl_stat** flickcurl_stats_getCollectionDomains(flickcurl* fc,
+    const char* date, const char* collection_id, int per_page, int page);
+
+  flickcurl_stat** flickcurl_stats_getCollectionReferrers(flickcurl* fc,
+    const char* date, const char* domain, const char* collection_id,
+    int per_page, int page);
+
+  int flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date,
+    const char* collection_id);
+
+  flickcurl_stat** flickcurl_stats_getPhotoDomains(flickcurl* fc,
+    const char* date, const char* photo_id, int per_page, int page);
+
+  flickcurl_stat** flickcurl_stats_getPhotoReferrers(flickcurl* fc,
+    const char* date, const char* domain, const char* photo_id,
+    int per_page, int page);
+
+  flickcurl_stat* flickcurl_stats_getPhotoStats(flickcurl* fc,
+    const char* date, const char* photo_id);
+
+  flickcurl_stat** flickcurl_stats_getPhotosetDomains(flickcurl* fc,
+    const char* date, const char* photoset_id, int per_page, int page);
+
+  flickcurl_stat** flickcurl_stats_getPhotosetReferrers(flickcurl* fc,
+    const char* date, const char* domain, const char* photoset_id,
+    int per_page, int page);
+
+  int flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date,
+    const char* photoset_id);
+
+  flickcurl_stat** flickcurl_stats_getPhotostreamDomains(flickcurl* fc,
+    const char* date, int per_page, int page);
+
+  flickcurl_stat** flickcurl_stats_getPhotostreamReferrers(flickcurl* fc,
+    const char* date, const char* domain, int per_page, int page);
+
+  int flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date);
+
+  flickcurl_photo** flickcurl_stats_getPopularPhotos(flickcurl* fc,
+    const char* date, const char* sort, int per_page, int page,
+    const char* extras);
+
+  flickcurl_view_stats* flickcurl_stats_getTotalViews(flickcurl* fc,
+    const char* date);
+
+  void flickcurl_free_stat(flickcurl_stat *stat);
+
+  void flickcurl_free_stats(flickcurl_stat **stats_object);
+
+  void flickcurl_free_view_stats(flickcurl_view_stats *view_stats);
+</pre>
+
+
+
 <h2 id="D2010-01-13">2010-01-13 Flickcurl 1.16</h2>
 
 <p>Fix <code>flickcurl(1)</code> utility configuration file
