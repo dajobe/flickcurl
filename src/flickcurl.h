@@ -174,6 +174,8 @@ typedef enum {
  * @PHOTO_FIELD_original_width: original photo width
  * @PHOTO_FIELD_original_height: original photo height
  * @PHOTO_FIELD_views: number of photo views
+ * @PHOTO_FIELD_comments: number of photo comments
+ * @PHOTO_FIELD_favorites: number of photo favorites
  * @PHOTO_FIELD_none: internal
  * @PHOTO_FIELD_FIRST: internal offset to first in enum list
  * @PHOTO_FIELD_LAST: internal offset to last in enum list
