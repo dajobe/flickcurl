@@ -4641,14 +4641,17 @@ command_stats_getTotalViews(flickcurl* fc, int argc, char *argv[])
     date = argv[1];
   
   view_stats = flickcurl_stats_getTotalViews(fc, date);
-
-  if(view_stats) {
-    fprintf(stderr, "%s: Total view stats\n", program);
-    fprintf(stderr, "  Total: %d\n  Photos: %d\n  Photostreams: %d\n  Sets: %d\n  Collections: %d\n", view_stats->total, view_stats->photos, view_stats->photostreams, view_stats->sets, view_stats->collections);
+  if(!view_stats)
+    return 1;
   
-    flickcurl_free_view_stats(view_stats);
-  }
-  return (view_stats != NULL);
+  fprintf(stderr, "%s: Total view stats\n", program);
+  fprintf(stderr,
+          "  Total: %d\n  Photos: %d\n  Photostreams: %d\n  Sets: %d\n  Collections: %d\n",
+          view_stats->total, view_stats->photos, view_stats->photostreams,
+          view_stats->sets, view_stats->collections);
+  
+  flickcurl_free_view_stats(view_stats);
+  return 0;
 }
 
 
@@ -5096,45 +5099,45 @@ static flickcurl_cmd commands[] = {
 
 
   {"stats.getCollectionDomains",
-   "[DATE [COLLECTION-ID [PER-PAGE [PAGE]]]]", "Get collection domains stats", 
-  command_stats_getCollectionDomains, 0, 4},
+   "DATE [COLLECTION-ID [PER-PAGE [PAGE]]]", "Get collection domains stats",
+  command_stats_getCollectionDomains, 1, 4},
   {"stats.getCollectionReferrers",
-   "[DATE [DOMAIN [COLLECTION-ID [PER-PAGE [PAGE]]]]]", "Get collection referrers stats", 
-  command_stats_getCollectionReferrers, 0, 5},
+   "DATE DOMAIN [COLLECTION-ID [PER-PAGE [PAGE]]]", "Get collection referrers stats", 
+  command_stats_getCollectionReferrers, 2, 5},
   {"stats.getCollectionStats",
-   "[DATE [COLLECTION-ID]]", "Get collection view count stats", 
-  command_stats_getCollectionStats, 0, 2},
-{"stats.getPhotoDomains",
-   "[DATE [PHOTO-ID [PER-PAGE [PAGE]]]]", "Get photo domains stats", 
-  command_stats_getPhotoDomains, 0, 4},
+   "DATE COLLECTION-ID", "Get collection view count stats", 
+  command_stats_getCollectionStats, 2, 2},
+  {"stats.getPhotoDomains",
+   "DATE [PHOTO-ID [PER-PAGE [PAGE]]]", "Get photo domains stats", 
+  command_stats_getPhotoDomains, 1, 4},
   {"stats.getPhotoReferrers",
-   "[DATE [DOMAIN [PHOTO-ID [PER-PAGE [PAGE]]]]]", "Get photo referrers stats", 
-  command_stats_getPhotoReferrers, 0, 5},
+   "DATE DOMAIN [PHOTO-ID [PER-PAGE [PAGE]]]", "Get photo referrers stats", 
+  command_stats_getPhotoReferrers, 2, 5},
   {"stats.getPhotoStats",
-   "[DATE [PHOTO-ID]]", "Get photo view count stats", 
-  command_stats_getPhotoStats, 0, 2},
-{"stats.getPhotosetDomains",
-   "[DATE [PHOTOSET-ID [PER-PAGE [PAGE]]]]", "Get photoset domains stats", 
-  command_stats_getPhotosetDomains, 0, 4},
+   "DATE PHOTO-ID", "Get photo view count stats", 
+  command_stats_getPhotoStats, 2, 2},
+  {"stats.getPhotosetDomains",
+   "DATE [PHOTOSET-ID [PER-PAGE [PAGE]]]", "Get photoset domains stats", 
+  command_stats_getPhotosetDomains, 1, 4},
   {"stats.getPhotosetReferrers",
-   "[DATE [DOMAIN [PHOTOSET-ID [PER-PAGE [PAGE]]]]]", "Get photoset referrers stats", 
-  command_stats_getPhotosetReferrers, 0, 5},
+   "DATE DOMAIN [PHOTOSET-ID [PER-PAGE [PAGE]]]", "Get photoset referrers stats", 
+  command_stats_getPhotosetReferrers, 2, 5},
   {"stats.getPhotosetStats",
-   "[DATE [PHOTOSET-ID]]", "Get photoset view count stats", 
-  command_stats_getPhotosetStats, 0, 2},
+   "DATE PHOTOSET-ID", "Get photoset view count stats", 
+  command_stats_getPhotosetStats, 2, 2},
   {"stats.getPhotostreamDomains",
-   "[DATE [PHOTOSTREAM-ID [PER-PAGE [PAGE]]]]", "Get photostream domains stats", 
-  command_stats_getPhotostreamDomains, 0, 4},
+   "DATE [PHOTOSTREAM-ID [PER-PAGE [PAGE]]]", "Get photostream domains stats", 
+  command_stats_getPhotostreamDomains, 1, 4},
   {"stats.getPhotostreamReferrers",
-   "[DATE [DOMAIN [PHOTOSTREAM-ID [PER-PAGE [PAGE]]]]]", "Get photostream referrers stats", 
-  command_stats_getPhotostreamReferrers, 0, 5},
+   "DATE DOMAIN [PHOTOSTREAM-ID [PER-PAGE [PAGE]]]", "Get photostream referrers stats", 
+  command_stats_getPhotostreamReferrers, 2, 5},
   {"stats.getPhotostreamStats",
-   "[DATE [PHOTOSTREAM-ID]]", "Get photostream view count stats", 
-  command_stats_getPhotostreamStats, 0, 2},
-  {"flickcurl_stats.getPopularPhotos",
+   "DATE PHOTOSTREAM-ID", "Get photostream view count stats", 
+  command_stats_getPhotostreamStats, 2, 2},
+  {"stats.getPopularPhotos",
    "[DATE [SORT [PER-PAGE [PAGE [EXTRAS]]]]]", "Get popular photos stats", 
   command_stats_getPopularPhotos, 0, 5},
-  {"flickcurl_stats.getTotalViews",
+  {"stats.getTotalViews",
    "[DATE]", "Get total stats", 
   command_stats_getTotalViews, 0, 1},
 
