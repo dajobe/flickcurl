@@ -34,7 +34,7 @@
 #include <flickcurl_internal.h>
 
 
-static void
+void
 flickcurl_free_stat(flickcurl_stat *stat)
 {
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(stat, flickcurl_stat);

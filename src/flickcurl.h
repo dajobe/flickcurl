@@ -2172,6 +2172,8 @@ FLICKCURL_API
 flickcurl_view_stats* flickcurl_stats_getTotalViews(flickcurl* fc, const char* date);
 
 FLICKCURL_API
+void flickcurl_free_stat(flickcurl_stat *stat);
+FLICKCURL_API
 void flickcurl_free_stats(flickcurl_stat **stats_object);
 FLICKCURL_API
 void flickcurl_free_view_stats(flickcurl_view_stats *view_stats);
