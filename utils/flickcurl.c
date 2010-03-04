@@ -4165,8 +4165,491 @@ command_galleries_getListForPhoto(flickcurl* fc, int argc, char *argv[])
 
   flickcurl_free_galleries(galleries);
   return 0;
+};
+
+
+static void
+command_print_stat(flickcurl_stat* s)
+{
+  fprintf(stderr, "views %d comments %d favorites %d", s->views, s->comments,
+          s->favorites);
+  if(s->name)
+    fprintf(stderr, "name %s", s->name);
+  if(s->url)
+    fprintf(stderr, "url %s", s->url);
+  if(s->searchterms)
+    fprintf(stderr, "searchterms %s", s->searchterms);
+  fputc('\n', stderr);
 }
 
+static void
+command_print_stats(flickcurl_stat** stats)
+{
+  int i;
+
+  for(i = 0; stats[i]; i++) {
+    fprintf(stderr, "%s: Stat %d\n", program, i);
+    command_print_stat(stats[i]);
+  }
+
+}
+
+
+static int
+command_stats_getCollectionDomains(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* collection_id = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      collection_id = argv[2];
+      if(argc > 2) {
+        per_page = parse_page_param(argv[3]);
+        if(argc > 3) {
+          page = parse_page_param(argv[4]);
+        }
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getCollectionDomains(fc, date, collection_id,
+                                               per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Collection domain stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getCollectionReferrers(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* domain = NULL;
+  const char* collection_id = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      domain = argv[2];
+      if(argc > 2) {
+        collection_id = argv[3];
+        if(argc > 3) {
+          per_page = parse_page_param(argv[4]);
+          if(argc > 4) {
+            page = parse_page_param(argv[5]);
+          }
+        }
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getCollectionReferrers(fc, date, domain,
+                                                 collection_id, per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Collection referrers stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getCollectionStats(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* collection_id = NULL;
+  int views;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1)
+      collection_id = argv[2];
+  }
+
+  views = flickcurl_stats_getCollectionStats(fc, date, collection_id);
+
+  if(views >= 0)
+    fprintf(stderr, "%s: Collection view stats: %d\n", program, views);
+  
+  return (views >= 0);
+}
+
+
+static int
+command_stats_getPhotoDomains(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* photo_id = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      photo_id = argv[2];
+      if(argc > 2) {
+        per_page = parse_page_param(argv[3]);
+        if(argc > 3) {
+          page = parse_page_param(argv[4]);
+        }
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getPhotoDomains(fc, date, photo_id, per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Photo domains stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getPhotoReferrers(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* domain = NULL;
+  const char* photo_id = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      domain = argv[2];
+      if(argc > 2) {
+        photo_id = argv[3];
+        if(argc > 3) {
+          per_page = parse_page_param(argv[4]);
+          if(argc > 4) {
+            page = parse_page_param(argv[5]);
+          }
+        }
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getPhotoReferrers(fc, date, domain, photo_id,
+                                            per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Photo referrers stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getPhotoStats(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* photo_id = NULL;
+  flickcurl_stat* stat1;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1)
+      photo_id = argv[2];
+  }
+
+  stat1 = flickcurl_stats_getPhotoStats(fc, date, photo_id);
+  if(stat1) {
+    flickcurl_free_stat(stat1);
+  }
+  return (stat1 != NULL);
+}
+
+
+static int
+command_stats_getPhotosetDomains(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* photoset_id = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      photoset_id = argv[2];
+      if(argc > 2) {
+        per_page = parse_page_param(argv[3]);
+        if(argc > 3) {
+          page = parse_page_param(argv[4]);
+        }
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getPhotosetDomains(fc, date, photoset_id, 
+                                             per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Photoset domains stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getPhotosetReferrers(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* domain = NULL;
+  const char* photoset_id = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      domain = argv[2];
+      if(argc > 2) {
+        photoset_id = argv[3];
+        if(argc > 3) {
+          per_page = parse_page_param(argv[4]);
+          if(argc > 4) {
+            page = parse_page_param(argv[5]);
+          }
+        }
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getPhotosetReferrers(fc, date, domain, photoset_id,
+                                               per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Photoset referrers stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getPhotosetStats(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* photoset_id = NULL;
+  int views;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1)
+      photoset_id = argv[2];
+  }
+
+  views = flickcurl_stats_getPhotosetStats(fc, date, photoset_id);
+
+  if(views >= 0)
+    fprintf(stderr, "%s: Photoset view stats: %d\n", program, views);
+  
+  return (views >= 0);
+}
+
+
+static int
+command_stats_getPhotostreamDomains(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      per_page = parse_page_param(argv[2]);
+      if(argc > 2) {
+        page = parse_page_param(argv[3]);
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getPhotostreamDomains(fc, date, per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Photostream domains stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getPhotostreamReferrers(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* domain = NULL;
+  int per_page = -1;
+  int page = 0;
+  flickcurl_stat** stats;
+
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      domain = argv[2];
+      if(argc > 2) {
+        per_page = parse_page_param(argv[3]);
+        if(argc > 3) {
+          page = parse_page_param(argv[4]);
+        }
+      }
+    }
+  }
+
+  stats = flickcurl_stats_getPhotostreamReferrers(fc, date, domain,
+                                                  per_page, page);
+  if(!stats)
+    return 1;
+  
+  if(verbose)
+    fprintf(stderr, "%s: Photostream referrers stats (per_page %d  page %d):\n",
+            program, per_page, page);
+
+  command_print_stats(stats);
+  flickcurl_free_stats(stats);
+
+  return 0;
+}
+
+
+static int
+command_stats_getPhotostreamStats(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  int views;
+
+  if(argc > 0)
+    date = argv[1];
+  
+  views = flickcurl_stats_getPhotostreamStats(fc, date);
+
+  if(views >= 0)
+    fprintf(stderr, "%s: Photostream view stats: %d\n", program, views);
+  
+  return (views >= 0);
+}
+
+
+static int
+command_stats_getPopularPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  const char* sort = NULL;
+  int per_page = -1;
+  int page = 0;
+  const char *extras = NULL;
+  flickcurl_photo** photos;
+  int i;
+  
+  if(argc > 0) {
+    date = argv[1];
+    if(argc > 1) {
+      sort = argv[2];
+      if(argc > 2) {
+        per_page = parse_page_param(argv[3]);
+        if(argc > 3) {
+          page = parse_page_param(argv[4]);
+          if(argc > 4) {
+            extras = argv[5];
+          }
+        }
+      }
+    }
+  }
+
+  photos = flickcurl_stats_getPopularPhotos(fc, date, sort,
+                                            per_page, page, extras);
+  if(!photos)
+    return 1;
+
+  fprintf(stderr, "%s: Popular photos:\n", program);
+  for(i = 0; photos[i]; i++) {
+    fprintf(stderr, "%s: popular photo %d\n", program, i);
+    command_print_photo(photos[i]);
+  }
+  flickcurl_free_photos(photos);
+
+  return 0;
+}
+
+
+static int
+command_stats_getTotalViews(flickcurl* fc, int argc, char *argv[])
+{
+  char* date = NULL;
+  flickcurl_view_stats* view_stats;
+
+  if(argc > 0)
+    date = argv[1];
+  
+  view_stats = flickcurl_stats_getTotalViews(fc, date);
+
+  if(view_stats) {
+    fprintf(stderr, "%s: Total view stats\n", program);
+    fprintf(stderr, "  Total: %d\n  Photos: %d\n  Photostreams: %d\n  Sets: %d\n  Collections: %d\n", view_stats->total, view_stats->photos, view_stats->photostreams, view_stats->sets, view_stats->collections);
+  
+    flickcurl_free_view_stats(view_stats);
+  }
+  return (view_stats != NULL);
+}
 
 
 
@@ -4610,6 +5093,50 @@ static flickcurl_cmd commands[] = {
   {"reflection.getMethodInfo",
    "NAME", "Get information about an API method NAME",
    command_reflection_getMethodInfo, 1, 1},
+
+
+  {"stats.getCollectionDomains",
+   "[DATE [COLLECTION-ID [PER-PAGE [PAGE]]]]", "Get collection domains stats", 
+  command_stats_getCollectionDomains, 0, 4},
+  {"stats.getCollectionReferrers",
+   "[DATE [DOMAIN [COLLECTION-ID [PER-PAGE [PAGE]]]]]", "Get collection referrers stats", 
+  command_stats_getCollectionReferrers, 0, 5},
+  {"stats.getCollectionStats",
+   "[DATE [COLLECTION-ID]]", "Get collection view count stats", 
+  command_stats_getCollectionStats, 0, 2},
+{"stats.getPhotoDomains",
+   "[DATE [PHOTO-ID [PER-PAGE [PAGE]]]]", "Get photo domains stats", 
+  command_stats_getPhotoDomains, 0, 4},
+  {"stats.getPhotoReferrers",
+   "[DATE [DOMAIN [PHOTO-ID [PER-PAGE [PAGE]]]]]", "Get photo referrers stats", 
+  command_stats_getPhotoReferrers, 0, 5},
+  {"stats.getPhotoStats",
+   "[DATE [PHOTO-ID]]", "Get photo view count stats", 
+  command_stats_getPhotoStats, 0, 2},
+{"stats.getPhotosetDomains",
+   "[DATE [PHOTOSET-ID [PER-PAGE [PAGE]]]]", "Get photoset domains stats", 
+  command_stats_getPhotosetDomains, 0, 4},
+  {"stats.getPhotosetReferrers",
+   "[DATE [DOMAIN [PHOTOSET-ID [PER-PAGE [PAGE]]]]]", "Get photoset referrers stats", 
+  command_stats_getPhotosetReferrers, 0, 5},
+  {"stats.getPhotosetStats",
+   "[DATE [PHOTOSET-ID]]", "Get photoset view count stats", 
+  command_stats_getPhotosetStats, 0, 2},
+  {"stats.getPhotostreamDomains",
+   "[DATE [PHOTOSTREAM-ID [PER-PAGE [PAGE]]]]", "Get photostream domains stats", 
+  command_stats_getPhotostreamDomains, 0, 4},
+  {"stats.getPhotostreamReferrers",
+   "[DATE [DOMAIN [PHOTOSTREAM-ID [PER-PAGE [PAGE]]]]]", "Get photostream referrers stats", 
+  command_stats_getPhotostreamReferrers, 0, 5},
+  {"stats.getPhotostreamStats",
+   "[DATE [PHOTOSTREAM-ID]]", "Get photostream view count stats", 
+  command_stats_getPhotostreamStats, 0, 2},
+  {"flickcurl_stats.getPopularPhotos",
+   "[DATE [SORT [PER-PAGE [PAGE [EXTRAS]]]]]", "Get popular photos stats", 
+  command_stats_getPopularPhotos, 0, 5},
+  {"flickcurl_stats.getTotalViews",
+   "[DATE]", "Get total stats", 
+  command_stats_getTotalViews, 0, 1},
 
   {"tags.getClusters",
    "TAG", "Get list of tag clusters for TAG",
