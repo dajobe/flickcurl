@@ -1,6 +1,6 @@
 /* -*- Mode: c; c-basic-offset: 2 -*-
  *
- * stats.c - Flickcurl stat functions
+ * stat.c - Flickcurl statistic functions
  *
  * Copyright (C) 2010, David Beckett http://www.dajobe.org/
  * 
@@ -67,6 +67,21 @@ flickcurl_free_stats(flickcurl_stat **stats_object)
     flickcurl_free_stat(stats_object[i]);
   
   free(stats_object);
+}
+
+
+/**
+ * flickcurl_free_view_stats:
+ * @view_stats: view stat object
+ *
+ * Destructor for view stat object
+ */
+void
+flickcurl_free_view_stats(flickcurl_view_stats *view_stats)
+{
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(view_stats, flickcurl_view_stats);
+
+  free(view_stats);
 }
 
 
