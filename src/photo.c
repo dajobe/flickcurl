@@ -92,7 +92,9 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1] = {
   "owner_iconfarm",
   "original_width",
   "original_height",
-  "views"
+  "views",
+  "comments",
+  "favorites"
 };
 
 
@@ -917,6 +919,24 @@ static struct {
     VALUE_TYPE_INTEGER
   }
   ,
+  {
+    (const xmlChar*)"./stats/@views",
+    PHOTO_FIELD_views,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./stats/@comments",
+    PHOTO_FIELD_comments,
+    VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./stats/@favorites",
+    PHOTO_FIELD_favorites,
+    VALUE_TYPE_INTEGER
+  }
+  ,
   { 
     NULL,
     (flickcurl_photo_field_type)0,
@@ -1041,6 +1061,12 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
         case VALUE_TYPE_INTEGER:
         case VALUE_TYPE_BOOLEAN:
+          if(!*string_value && datatype == VALUE_TYPE_BOOLEAN) {
+            /* skip setting field with a boolean value '' */
+            special = 1;
+            break;
+          }
+
           int_value = atoi(string_value);
           break;
 
