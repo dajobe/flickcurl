@@ -4171,14 +4171,14 @@ command_galleries_getListForPhoto(flickcurl* fc, int argc, char *argv[])
 static void
 command_print_stat(flickcurl_stat* s)
 {
-  fprintf(stderr, "views %d comments %d favorites %d", s->views, s->comments,
-          s->favorites);
+  fprintf(stderr, "  Views %d  Comments %d  Favorites %d", 
+          s->views, s->comments, s->favorites);
   if(s->name)
-    fprintf(stderr, "name %s", s->name);
+    fprintf(stderr, "  Name %s", s->name);
   if(s->url)
-    fprintf(stderr, "url %s", s->url);
+    fprintf(stderr, "  Url %s", s->url);
   if(s->searchterms)
-    fprintf(stderr, "searchterms %s", s->searchterms);
+    fprintf(stderr, "  Search terms %s", s->searchterms);
   fputc('\n', stderr);
 }
 
@@ -4188,7 +4188,7 @@ command_print_stats(flickcurl_stat** stats)
   int i;
 
   for(i = 0; stats[i]; i++) {
-    fprintf(stderr, "%s: Stat %d\n", program, i);
+    fprintf(stderr, "%s: Statistic %d\n", program, i);
     command_print_stat(stats[i]);
   }
 
