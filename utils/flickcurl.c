@@ -4198,21 +4198,18 @@ command_print_stats(flickcurl_stat** stats)
 static int
 command_stats_getCollectionDomains(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
+  char* date = argv[1];
   const char* collection_id = NULL;
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      collection_id = argv[2];
-      if(argc > 2) {
-        per_page = parse_page_param(argv[3]);
-        if(argc > 3) {
-          page = parse_page_param(argv[4]);
-        }
+  if(argc > 1) {
+    collection_id = argv[2];
+    if(argc > 2) {
+      per_page = parse_page_param(argv[3]);
+      if(argc > 3) {
+        page = parse_page_param(argv[4]);
       }
     }
   }
@@ -4236,25 +4233,19 @@ command_stats_getCollectionDomains(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getCollectionReferrers(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
-  const char* domain = NULL;
+  char* date = argv[1];
+  const char* domain = argv[2];
   const char* collection_id = NULL;
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      domain = argv[2];
-      if(argc > 2) {
-        collection_id = argv[3];
-        if(argc > 3) {
-          per_page = parse_page_param(argv[4]);
-          if(argc > 4) {
-            page = parse_page_param(argv[5]);
-          }
-        }
+  if(argc > 2) {
+    collection_id = argv[3];
+    if(argc > 3) {
+      per_page = parse_page_param(argv[4]);
+      if(argc > 4) {
+        page = parse_page_param(argv[5]);
       }
     }
   }
@@ -4278,15 +4269,9 @@ command_stats_getCollectionReferrers(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getCollectionStats(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
-  const char* collection_id = NULL;
+  char* date = argv[1];
+  const char* collection_id = argv[2];
   int views;
-
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1)
-      collection_id = argv[2];
-  }
 
   views = flickcurl_stats_getCollectionStats(fc, date, collection_id);
   if(views < 0)
@@ -4301,21 +4286,18 @@ command_stats_getCollectionStats(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotoDomains(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
+  char* date = argv[1];
   const char* photo_id = NULL;
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      photo_id = argv[2];
-      if(argc > 2) {
-        per_page = parse_page_param(argv[3]);
-        if(argc > 3) {
-          page = parse_page_param(argv[4]);
-        }
+  if(argc > 1) {
+    photo_id = argv[2];
+    if(argc > 2) {
+      per_page = parse_page_param(argv[3]);
+      if(argc > 3) {
+        page = parse_page_param(argv[4]);
       }
     }
   }
@@ -4338,25 +4320,19 @@ command_stats_getPhotoDomains(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotoReferrers(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
-  const char* domain = NULL;
+  char* date = argv[1];
+  const char* domain = argv[2];
   const char* photo_id = NULL;
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      domain = argv[2];
-      if(argc > 2) {
-        photo_id = argv[3];
-        if(argc > 3) {
-          per_page = parse_page_param(argv[4]);
-          if(argc > 4) {
-            page = parse_page_param(argv[5]);
-          }
-        }
+  if(argc > 2) {
+    photo_id = argv[3];
+    if(argc > 3) {
+      per_page = parse_page_param(argv[4]);
+      if(argc > 4) {
+        page = parse_page_param(argv[5]);
       }
     }
   }
@@ -4380,42 +4356,38 @@ command_stats_getPhotoReferrers(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotoStats(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
-  const char* photo_id = NULL;
+  char* date = argv[1];
+  const char* photo_id = argv[2];
   flickcurl_stat* stat1;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1)
-      photo_id = argv[2];
-  }
-
   stat1 = flickcurl_stats_getPhotoStats(fc, date, photo_id);
-  if(stat1) {
-    flickcurl_free_stat(stat1);
-  }
-  return (stat1 != NULL);
+  if(!stat1)
+    return 1;
+  
+  fprintf(stderr, "%s: Photo %s on date %s statistics:\n", program,
+          photo_id, date);
+  command_print_stat(stat1);
+  flickcurl_free_stat(stat1);
+
+  return 0;
 }
 
 
 static int
 command_stats_getPhotosetDomains(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
+  char* date = argv[1];
   const char* photoset_id = NULL;
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      photoset_id = argv[2];
-      if(argc > 2) {
-        per_page = parse_page_param(argv[3]);
-        if(argc > 3) {
-          page = parse_page_param(argv[4]);
-        }
+  if(argc > 1) {
+    photoset_id = argv[2];
+    if(argc > 2) {
+      per_page = parse_page_param(argv[3]);
+      if(argc > 3) {
+        page = parse_page_param(argv[4]);
       }
     }
   }
@@ -4439,25 +4411,19 @@ command_stats_getPhotosetDomains(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotosetReferrers(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
-  const char* domain = NULL;
+  char* date = argv[1];
+  const char* domain = argv[2];
   const char* photoset_id = NULL;
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      domain = argv[2];
-      if(argc > 2) {
-        photoset_id = argv[3];
-        if(argc > 3) {
-          per_page = parse_page_param(argv[4]);
-          if(argc > 4) {
-            page = parse_page_param(argv[5]);
-          }
-        }
+  if(argc > 2) {
+    photoset_id = argv[3];
+    if(argc > 3) {
+      per_page = parse_page_param(argv[4]);
+      if(argc > 4) {
+        page = parse_page_param(argv[5]);
       }
     }
   }
@@ -4481,15 +4447,9 @@ command_stats_getPhotosetReferrers(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotosetStats(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
-  const char* photoset_id = NULL;
+  char* date = argv[1];
+  const char* photoset_id = argv[2];
   int views;
-
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1)
-      photoset_id = argv[2];
-  }
 
   views = flickcurl_stats_getPhotosetStats(fc, date, photoset_id);
   if(views < 0)
@@ -4504,18 +4464,15 @@ command_stats_getPhotosetStats(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotostreamDomains(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
+  char* date = argv[1];
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      per_page = parse_page_param(argv[2]);
-      if(argc > 2) {
-        page = parse_page_param(argv[3]);
-      }
+  if(argc > 1) {
+    per_page = parse_page_param(argv[2]);
+    if(argc > 2) {
+      page = parse_page_param(argv[3]);
     }
   }
 
@@ -4537,22 +4494,16 @@ command_stats_getPhotostreamDomains(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotostreamReferrers(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
-  const char* domain = NULL;
+  char* date = argv[1];
+  const char* domain = argv[2];
   int per_page = -1;
   int page = 0;
   flickcurl_stat** stats;
 
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      domain = argv[2];
-      if(argc > 2) {
-        per_page = parse_page_param(argv[3]);
-        if(argc > 3) {
-          page = parse_page_param(argv[4]);
-        }
-      }
+  if(argc > 2) {
+    per_page = parse_page_param(argv[3]);
+    if(argc > 3) {
+      page = parse_page_param(argv[4]);
     }
   }
 
@@ -4575,12 +4526,9 @@ command_stats_getPhotostreamReferrers(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPhotostreamStats(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
+  char* date = argv[1];
   int views;
 
-  if(argc > 0)
-    date = argv[1];
-  
   views = flickcurl_stats_getPhotostreamStats(fc, date);
   if(views < 0)
     return 1;
@@ -4594,7 +4542,7 @@ command_stats_getPhotostreamStats(flickcurl* fc, int argc, char *argv[])
 static int
 command_stats_getPopularPhotos(flickcurl* fc, int argc, char *argv[])
 {
-  char* date = NULL;
+  char* date = argv[1];
   const char* sort = NULL;
   int per_page = -1;
   int page = 0;
@@ -4602,17 +4550,14 @@ command_stats_getPopularPhotos(flickcurl* fc, int argc, char *argv[])
   flickcurl_photo** photos;
   int i;
   
-  if(argc > 0) {
-    date = argv[1];
-    if(argc > 1) {
-      sort = argv[2];
-      if(argc > 2) {
-        per_page = parse_page_param(argv[3]);
-        if(argc > 3) {
-          page = parse_page_param(argv[4]);
-          if(argc > 4) {
-            extras = argv[5];
-          }
+  if(argc > 1) {
+    sort = argv[2];
+    if(argc > 2) {
+      per_page = parse_page_param(argv[3]);
+      if(argc > 3) {
+        page = parse_page_param(argv[4]);
+        if(argc > 4) {
+          extras = argv[5];
         }
       }
     }
