@@ -147,12 +147,13 @@ flickcurl_build_stats(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     } /* end attributes */
 
 
-//#if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "stats: views %d comments %d favorites %d name %s url %s searchterms %s\n",
+#if FLICKCURL_DEBUG > 1
+    fprintf(stderr, "statistic: views %d comments %d favorites %d name %s url %s searchterms %s\n",
             s->views, s->comments,
             s->favorites, s->name,
-            s->url, s->searchterms);
-//#endif
+            s->url ? s->url : "", 
+            s->searchterms ? s->searchterms : "");
+#endif
     
     stats[stat_count++] = s;
   } /* for nodes */
