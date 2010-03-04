@@ -125,7 +125,7 @@ flickcurl_blogs_getServices(flickcurl* fc)
     goto tidy;
   }
 
-  services = flickcurl_build_blog_Services(fc, xpathCtx,
+  services = flickcurl_build_blog_services(fc, xpathCtx,
                                            (const xmlChar*)"/rsp/services/service", NULL);
 
   tidy:

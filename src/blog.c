@@ -181,7 +181,7 @@ flickcurl_free_blog_services(flickcurl_blog_service **blog_services_object)
 
 
 flickcurl_blog_service**
-flickcurl_build_blog_Services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
+flickcurl_build_blog_services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                               const xmlChar* xpathExpr,
                               int* blog_services_count_p)
 {
