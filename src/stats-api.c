@@ -59,7 +59,7 @@
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
                                      const char* collection_id,
                                      int per_page, int page)
@@ -68,28 +68,28 @@ flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   if(collection_id) {
     parameters[count][0]  = "collection_id";
-    parameters[count++][1]= collection_id;
+    parameters[count++][1] = collection_id;
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -110,16 +110,17 @@ flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/domain", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -145,7 +146,7 @@ flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
                                        const char* domain,
                                        const char* collection_id,
@@ -155,30 +156,30 @@ flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date || !domain)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   parameters[count][0]  = "domain";
-  parameters[count++][1]= domain;
+  parameters[count++][1] = domain;
   if(collection_id) {
     parameters[count][0]  = "collection_id";
-    parameters[count++][1]= collection_id;
+    parameters[count++][1] = collection_id;
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -199,16 +200,17 @@ flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/referrer", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -216,9 +218,9 @@ flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
  * flickcurl_stats_getCollectionStats:
  * @fc: flickcurl context
  * @date: Stats will be returned for this date. This should be in
-either be in YYYY-MM-DD or unix timestamp format.  A day according to
-Flickr Stats starts at midnight GMT for all users, and timestamps
-will automatically be rounded down to the start of the day.
+ * either be in YYYY-MM-DD or unix timestamp format.  A day according to
+ * Flickr Stats starts at midnight GMT for all users, and timestamps
+ * will automatically be rounded down to the start of the day.
  * @collection_id: The id of the collection to get stats for.
  * 
  * Get the number of views on a collection for a given date.
@@ -238,15 +240,15 @@ flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  int result;
+  char* count_str;
   
   if(!date || !collection_id)
     return -1;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   parameters[count][0]  = "collection_id";
-  parameters[count++][1]= collection_id;
+  parameters[count++][1] = collection_id;
 
   parameters[count][0]  = NULL;
 
@@ -265,16 +267,21 @@ flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = -1; /* your code here */
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/@views");
+  if(count_str) {
+    count = atoi(count_str);
+    free(count_str);
+  }
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = -1;
+    count = -1;
 
-  return result;
+  return count;
 }
 
 
@@ -299,7 +306,7 @@ flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
                                 const char* photo_id, int per_page, int page)
 {
@@ -307,28 +314,28 @@ flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   if(photo_id) {
   parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  parameters[count++][1] = photo_id;
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -348,16 +355,17 @@ flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/referrer", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -383,7 +391,7 @@ flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
                                   const char* domain, const char* photo_id,
                                   int per_page, int page)
@@ -392,30 +400,30 @@ flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date || !domain)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   parameters[count][0]  = "domain";
-  parameters[count++][1]= domain;
+  parameters[count++][1] = domain;
   if(photo_id) {
     parameters[count][0]  = "photo_id";
-    parameters[count++][1]= photo_id;
+    parameters[count++][1] = photo_id;
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -435,16 +443,17 @@ flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/referrer", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -469,7 +478,7 @@ flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
                                    const char* photoset_id,
                                    int per_page, int page)
@@ -478,28 +487,28 @@ flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   if(photoset_id) {
     parameters[count][0]  = "photoset_id";
-    parameters[count++][1]= photoset_id;
+    parameters[count++][1] = photoset_id;
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -519,16 +528,17 @@ flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/domain", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -554,7 +564,7 @@ flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date,
                                      const char* domain,
                                      const char* photoset_id,
@@ -564,30 +574,30 @@ flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date || !domain)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   parameters[count][0]  = "domain";
-  parameters[count++][1]= domain;
+  parameters[count++][1] = domain;
   if(photoset_id) {
     parameters[count][0]  = "photoset_id";
-    parameters[count++][1]= photoset_id;
+    parameters[count++][1] = photoset_id;
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -608,16 +618,17 @@ flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/referrer", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -648,15 +659,15 @@ flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  int result;
+  char* count_str;
   
   if(!date || !photoset_id)
     return -1;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   parameters[count][0]  = "photoset_id";
-  parameters[count++][1]= photoset_id;
+  parameters[count++][1] = photoset_id;
 
   parameters[count][0]  = NULL;
 
@@ -675,16 +686,21 @@ flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = -1; /* your code here */
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/@views");
+  if(count_str) {
+    count = atoi(count_str);
+    free(count_str);
+  }
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = -1;
+    count = -1;
 
-  return result;
+  return count;
 }
 
 
@@ -707,7 +723,7 @@ flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat*
 flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date,
                               const char* photo_id)
 {
@@ -715,15 +731,16 @@ flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
+  flickcurl_stat* stat1 = NULL;
   
   if(!date || !photo_id)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  parameters[count++][1] = photo_id;
 
   parameters[count][0]  = NULL;
 
@@ -742,16 +759,23 @@ flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/stats", NULL);
+
+  if(stats) {
+    stat1 = stats[0];
+    stats[0] = NULL;
+    flickcurl_free_stats(stats);
+  }
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stat1 = NULL;
 
-  return (result == NULL);
+  return stat1;
 }
 
 
@@ -775,7 +799,7 @@ flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
                                       int per_page, int page)
 {
@@ -783,24 +807,24 @@ flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -821,16 +845,17 @@ flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/domain", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -855,7 +880,7 @@ flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_stat**
 flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
                                         const char* domain,
                                         int per_page, int page)
@@ -864,26 +889,26 @@ flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
   if(!date || !domain)
-    return 1;
+    return NULL;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
   parameters[count][0]  = "domain";
-  parameters[count++][1]= domain;
+  parameters[count++][1] = domain;
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
     parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    parameters[count++][1] = per_page_str;
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
     parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    parameters[count++][1] = page_str;
   }
 
   parameters[count][0]  = NULL;
@@ -904,16 +929,17 @@ flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  stats = flickcurl_build_stats(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/domains/referrer", NULL);
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    stats = NULL;
 
-  return (result == NULL);
+  return stats;
 }
 
 
@@ -939,16 +965,16 @@ int
 flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date)
 {
   const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
+  char* count_str;
+  int count;
   
   if(!date)
     return -1;
 
   parameters[count][0]  = "date";
-  parameters[count++][1]= date;
+  parameters[count++][1] = date;
 
   parameters[count][0]  = NULL;
 
@@ -967,16 +993,21 @@ flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date)
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/@views");
+  if(count_str) {
+    count = atoi(count_str);
+    free(count_str);
+  }
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = NULL;
+    count = -1;
 
-  return (result == NULL);
+  return count;
 }
 
 
@@ -1003,69 +1034,60 @@ flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date)
  *
  * Return value: non-0 on failure
  **/
-int
+flickcurl_photo**
 flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date,
                                  const char* sort, int per_page, int page,
                                  const char* extras)
 {
+  flickcurl_photos_list_params list_params;
   const char* parameters[14][2];
   int count = 0;
-  xmlDocPtr doc = NULL;
-  xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  const char* format = NULL;
+  flickcurl_photos_list* photos_list = NULL;
+  flickcurl_photo** photos = NULL;
   
+  memset(&list_params, '\0', sizeof(list_params));
+  list_params.format   = NULL;
+  list_params.extras   = extras;
+  list_params.per_page = per_page;
+  list_params.page     = page;
+
   if(date) {
     parameters[count][0]  = "date";
-    parameters[count++][1]= date;
+    parameters[count++][1] = date;
   }
   if(sort) {
     parameters[count][0]  = "sort";
-    parameters[count++][1]= sort;
+    parameters[count++][1] = sort;
   }
-  if(per_page >= 0) {
-    sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
-  }
-  if(page >= 0) {
-    sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
-  }
-  if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
-  }
+
+  /* Photos List parameters */
+  flickcurl_append_photos_list_params(&list_params, parameters, &count, &format);
 
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.stats.getPopularPhotos", parameters, count))
     goto tidy;
 
-  doc = flickcurl_invoke(fc);
-  if(!doc)
-    goto tidy;
-
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed = 1;
-    goto tidy;
-  }
-
-  result = NULL; /* your code here */
+  photos_list = flickcurl_invoke_photos_list(fc,
+                                           (const xmlChar*)"/rsp/photos/photo",
+                                           format);
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
+  if(fc->failed) {
+    if(photos_list)
+      flickcurl_free_photos_list(photos_list);
+    photos_list = NULL;
+  }
+  
+  if(photos_list) {
+    photos = photos_list->photos; photos_list->photos = NULL;  
+    /* photos array is now owned by this function */
 
-  if(fc->failed)
-    result = NULL;
-
-  return (result == NULL);
+    flickcurl_free_photos_list(photos_list);
+  }
+  
+  return photos;
 }
 
 
@@ -1087,18 +1109,19 @@ If no date is provided, all time view counts will be returned. (or NULL)
  *
  * Return value: view count or <0 on failure
  **/
-int
+flickcurl_view_stats*
 flickcurl_stats_getTotalViews(flickcurl* fc, const char* date)
 {
   const char* parameters[8][2];
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
-  int result;
-  
+  flickcurl_view_stats* views = NULL;
+  char* count_str;
+
   if(date) {
     parameters[count][0]  = "date";
-    parameters[count++][1]= date;
+    parameters[count++][1] = date;
   }
 
   parameters[count][0]  = NULL;
@@ -1118,16 +1141,49 @@ flickcurl_stats_getTotalViews(flickcurl* fc, const char* date)
     goto tidy;
   }
 
-  result = -1; /* your code here */
+  views = (flickcurl_view_stats*)calloc(sizeof(*views), 1);
+  if(!views) {
+    fc->failed = 1;
+    goto tidy;
+  }
+
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/total/@views");
+  if(count_str) {
+    views->total = atoi(count_str);
+    free(count_str);
+  }
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/photos/@views");
+  if(count_str) {
+    views->photos = atoi(count_str);
+    free(count_str);
+  }
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/photostream/@views");
+  if(count_str) {
+    views->photostreams = atoi(count_str);
+    free(count_str);
+  }
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/sets/@views");
+  if(count_str) {
+    views->sets = atoi(count_str);
+    free(count_str);
+  }
+  count_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                   (const xmlChar*)"/rsp/stats/collections/@views");
+  if(count_str) {
+    views->collections = atoi(count_str);
+    free(count_str);
+  }
 
   tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    result = -1;
+    views = NULL;
 
-  return result;
+  return views;
 }
-
-

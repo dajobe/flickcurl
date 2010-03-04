@@ -46,6 +46,7 @@ place.c \
 serializer.c \
 shape.c \
 size.c \
+stat.c \
 ticket.c \
 user_upload_status.c \
 tags.c \

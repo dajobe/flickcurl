@@ -1299,7 +1299,47 @@ typedef struct {
   int is_commons;
   int in_gallery;
 } flickcurl_search_params;
-  
+
+
+/**
+ * flickcurl_stat:
+ * @views: number of views of item
+ * @comments: number of comments on item
+ * @favorites: number of item favorites
+ * @name: name assocated with stat (e.g. domain name)
+ * @url: URL associated with stat (e.g. referrer URL)
+ * @searchterms: search term assocated with stat
+ *
+ * Statistics object
+ */
+typedef struct {
+  int views;
+  int comments;
+  int favorites;
+  char *name;
+  char *url;
+  char *searchterms;
+} flickcurl_stat;
+
+
+/**
+ * flickcurl_view_stats
+ * @total: total view
+ * @photos: number of photo views
+ * @photostreams: number of photostream views
+ * @sets: number of set views
+ * @collections: number of collection views
+ *
+ * Total views statistics
+ */
+typedef struct {
+  int total;
+  int photos;
+  int photostreams;
+  int sets;
+  int collections;
+} flickcurl_view_stats;
+
 
 /**
  * flickcurl_size:
@@ -2103,34 +2143,35 @@ flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* 
 
 /* flickr.stats */
 FLICKCURL_API
-int flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date, const char* collection_id, int per_page, int page);
+flickcurl_stat** flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date, const char* collection_id, int per_page, int page);
 FLICKCURL_API
-int flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date, const char* domain, const char* collection_id, int per_page, int page);
+flickcurl_stat** flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date, const char* domain, const char* collection_id, int per_page, int page);
 FLICKCURL_API
 int flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date, const char* collection_id);
 FLICKCURL_API
-int flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date, const char* photo_id, int per_page, int page);
+flickcurl_stat** flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date, const char* photo_id, int per_page, int page);
 FLICKCURL_API
-int flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date, const char* domain, const char* photo_id, int per_page, int page);
+flickcurl_stat** flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date, const char* domain, const char* photo_id, int per_page, int page);
 FLICKCURL_API
-int flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date, const char* photoset_id, int per_page, int page);
+flickcurl_stat* flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date, const char* photo_id);
 FLICKCURL_API
-int flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date, const char* domain, const char* photoset_id, int per_page, int page);
+flickcurl_stat** flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date, const char* photoset_id, int per_page, int page);
+FLICKCURL_API
+flickcurl_stat** flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date, const char* domain, const char* photoset_id, int per_page, int page);
 FLICKCURL_API
 int flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date, const char* photoset_id);
 FLICKCURL_API
-int flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date, const char* photo_id);
+flickcurl_stat** flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date, int per_page, int page);
 FLICKCURL_API
-int flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date, int per_page, int page);
-FLICKCURL_API
-int flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date, const char* domain, int per_page, int page);
+flickcurl_stat** flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date, const char* domain, int per_page, int page);
 FLICKCURL_API
 int flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date);
 FLICKCURL_API
-int flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date, const char* sort, int per_page, int page, const char* extras);
+flickcurl_photo** flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date, const char* sort, int per_page, int page, const char* extras);
 FLICKCURL_API
-int flickcurl_stats_getTotalViews(flickcurl* fc, const char* date);
+flickcurl_view_stats* flickcurl_stats_getTotalViews(flickcurl* fc, const char* date);
 
+void flickcurl_free_stats(flickcurl_stat **stats_object);
 
 /* flickr.tag */
 FLICKCURL_API
