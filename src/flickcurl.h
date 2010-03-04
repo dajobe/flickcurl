@@ -241,8 +241,10 @@ typedef enum {
   PHOTO_FIELD_original_width,
   PHOTO_FIELD_original_height,
   PHOTO_FIELD_views,
+  PHOTO_FIELD_comments,
+  PHOTO_FIELD_favorites,
   PHOTO_FIELD_FIRST = PHOTO_FIELD_dateuploaded,
-  PHOTO_FIELD_LAST = PHOTO_FIELD_views
+  PHOTO_FIELD_LAST = PHOTO_FIELD_favorites
 } flickcurl_photo_field_type;
 
 
