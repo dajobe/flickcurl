@@ -1,5 +1,8 @@
 2010-03-03  Dave Beckett <dave@dajobe.org>
 
+	* Snapshotted flickcurl_1_17 for 1.17 release
+	(GIT 18826089d960123955c1a20f27bf94448b5bba68)
+
 	* src/flickcurl.h: autodocs
 
 	* docs/flickcurl-docs.xml: Added section-stats.xml
