@@ -12,14 +12,26 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2010-XX-YY">2010-XX-YY Flickcurl 1.17</h2>
+<h2 id="D2010-03-05">2010-03-05 Flickcurl 1.17</h2>
 
-<p>Not yet released.
-</p>
-
-<p>Added flickr stats API including new
-<code>flickcurl_stats</code> and <code>flickcurl_view_stats</code>
-datatypes:</p>
+<p>Added functions for new stats API calls
+<a href="http://code.flickr.com/blog/2010/03/03/flickr-stats-api/">announced 2010-03-03</a>:
+<a href="http://www.flickr.com/services/api/flickr.stats.getCollectionDomains.html">flickr.stats.getCollectionDomains</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getCollectionReferrers.html">flickr.stats.getCollectionReferrers</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getCollectionStats.html">flickr.stats.getCollectionStats</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotoDomains.html">flickr.stats.getPhotoDomains</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotoReferrers.html">flickr.stats.getPhotoReferrers</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotosetDomains.html">flickr.stats.getPhotosetDomains</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotosetReferrers.html">flickr.stats.getPhotosetReferrers</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotosetStats.html">flickr.stats.getPhotosetStats</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotoStats.html">flickr.stats.getPhotoStats</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotostreamDomains.html">flickr.stats.getPhotostreamDomains</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotostreamReferrers.html">flickr.stats.getPhotostreamReferrers</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPhotostreamStats.html">flickr.stats.getPhotostreamStats</a>, 
+<a href="http://www.flickr.com/services/api/flickr.stats.getPopularPhotos.html">flickr.stats.getPopularPhotos</a> and
+<a href="http://www.flickr.com/services/api/flickr.stats.getTotalViews.html">flickr.stats.getTotalViews</a>
+including new <code>flickcurl_stats</code> and
+<code>flickcurl_view_stats</code> datatypes:</p>
 <pre>
   flickcurl_stat** flickcurl_stats_getCollectionDomains(flickcurl* fc,
     const char* date, const char* collection_id, int per_page, int page);
@@ -73,6 +85,72 @@ datatypes:</p>
   void flickcurl_free_view_stats(flickcurl_view_stats *view_stats);
 </pre>
 
+
+<p>
+The <code>flickcurl_photo_field_type</code> enum gains new fields for
+counts of comments (<code>PHOTO_FIELD_comments</code>) and favorites
+(<code>PHOTO_FIELD_favorites</code>) so that these stats can be
+returned by the new <code>flickcurl_stats_getPopularPhotos()</code>
+call.  (View count field is already present).
+</p>
+
+<p>Added functions for 5 new people API calls
+<a href="http://code.flickr.com/blog/2010/01/21/people-in-photos-the-api-methods/">announced 2010-01-21</a>
+<a href="http://www.flickr.com/services/api/flickr.photos.people.add.html">flickr.photos.people.add</a>, 
+<a href="http://www.flickr.com/services/api/flickr.photos.people.delete.html">flickr.photos.people.delete</a>, 
+<a href="http://www.flickr.com/services/api/flickr.photos.people.deleteCoords.html">flickr.photos.people.deleteCoords</a>, 
+<a href="http://www.flickr.com/services/api/flickr.photos.people.editCoords.html">flickr.photos.people.editCoords</a> and
+<a href="http://www.flickr.com/services/api/flickr.photos.people.getList.html">flickr.photos.people.getList</a>:</p>
+<pre>
+  int flickcurl_photos_people_add(flickcurl* fc, const char* photo_id,
+    const char* user_id, int person_x, int person_y, int person_w, int person_h);
+
+  int flickcurl_photos_people_delete(flickcurl* fc, const char* photo_id,
+    const char* user_id);
+
+  int flickcurl_photos_people_deleteCoords(flickcurl* fc, const char* photo_id,
+    const char* user_id);
+
+  int flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
+    const char* user_id, int person_x, int person_y, int person_w, int person_h);
+
+  flickcurl_person** flickcurl_photos_people_getList(flickcurl* fc,
+    const char* photo_id);
+</pre>
+
+<p>Added functions for 1 new "photos of" people API calls
+<a href="http://code.flickr.com/blog/2010/01/21/people-in-photos-the-api-methods/">announced 2010-01-21</a>
+<a href="http://www.flickr.com/services/api/flickr.people.getPhotosOf.html">flickr.people.getPhotosOf</a>:</p>
+<pre>
+  flickcurl_photos_list* flickcurl_people_getPhotosOf_params(flickcurl* fc,
+    const char* user_id, flickcurl_photos_list_params* list_params);
+
+  flickcurl_photo** flickcurl_people_getPhotosOf(flickcurl* fc,
+    const char* user_id, const char* extras, int per_page, int page);
+</pre>
+
+<p>Added functions for 3 new gallery API calls - not yet announced
+and seems a little incomplete e.g. you cannot list the photos in a
+gallery:
+<a href="http://www.flickr.com/services/api/flickr.galleries.addPhoto.html">flickr.galleries.addPhoto</a>, 
+<a href="http://www.flickr.com/services/api/flickr.galleries.getList.html">flickr.galleries.getList</a> and
+<a href="http://www.flickr.com/services/api/flickr.galleries.getListForPhoto.html">flickr.galleries.getListForPhoto</a>
+including new type <code>flickcurl_gallery</code>:</p>
+<pre>
+  int flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id,
+    const char* photo_id, const char* comment_text);
+
+  flickcurl_gallery** flickcurl_galleries_getList(flickcurl* fc,
+    const char* user_id, int per_page, int page);
+
+  flickcurl_gallery** flickcurl_galleries_getListForPhoto(flickcurl* fc,
+    const char* photo_id, int per_page, int page);
+
+  void flickcurl_free_galleries(flickcurl_gallery **galleries_object);
+</pre>
+
+<p>Updated the <code>flickcurl(1)</code> to support the new gallery,
+people photos and stats API calls.</p>
 
 
 <h2 id="D2010-01-13">2010-01-13 Flickcurl 1.16</h2>
