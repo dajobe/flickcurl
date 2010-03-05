@@ -1,3 +1,89 @@
+2010-03-03  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: autodocs
+
+	* docs/flickcurl-docs.xml: Added section-stats.xml
+
+	* docs/flickcurl-sections.txt: Added section-stats
+
+	* NEWS.html: notes
+
+	* src/stats-api.c:
+	(flickcurl_stats_getPhotostreamStats): Init count to 0
+
+	* src/stats-api.c: fix getPhotoDomains xpath
+
+	* utils/flickcurl.c: tidy params for required args
+
+	* utils/flickcurl.c: fix view command return values
+
+	* utils/flickcurl.c: Fix args for photostream commands
+
+	* utils/flickcurl.c: Tidy print stats
+
+	* src/stat.c: hide view debug message
+
+	* src/photo.c: Added photo_fields for counts of comments and
+	favorites
+
+	photo_fields_table gains xpaths for stats/@views, stats/@comments
+	and stats/@favorites
+
+	(flickcurl_build_photos): Skip setting fields with boolean string
+	value ''
+
+	* src/flickcurl.h:
+	Added photo_fields for counts of comments and favorites
+	flickcurl_photo_field_type gains PHOTO_FIELD_comments and
+	PHOTO_FIELD_favorites
+
+	* utils/flickcurl.c: fix stats commands
+
+	* src/stats-api.c: docs
+
+	* utils/flickcurl.c: Add stat commands to utility - not yet tested
+
+	* src/flickcurl.h, src/stat.c: Export flickcurl_free_stat
+
+	* src/flickcurl.h, src/stat.c:
+	(flickcurl_free_view_stats): Added to free view stats object.
+
+	* src/Makefile.am, src/flickcurl.h, src/stat.c, src/stats-api.c:
+	Fill out stat APIs with results from responses.
+
+	flickcurl_stat and flickcurl_view_stats structs added
+
+	Return array of flickcurl_stat** for stat requests that return
+	domains or referrers.
+
+	Return int for stat requests for view counts.
+
+	(flickcurl_stats_getTotalViews): Return flickcurl_view_stats* for
+	total views.
+
+	(flickcurl_free_stat): Added.
+
+	(flickcurl_free_stats): Added to free array of stats.
+
+	(flickcurl_build_stats): Added.
+
+	* src/flickcurl_internal.h: code style
+
+	* src/blog.c, src/blogs-api.c: code style
+
+	* src/flickcurl.h: Added flickr stats API prototypes
+
+	* src/Makefile.am, src/stats-api.c: Added flickr.stats API initial
+	skeleton APIs
+
+2010-01-22  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c:
+	(command_people_getPhotosOf, command_galleries_getList): args fix
+
+	* utils/codegen.c: Handle optional and int args better - hard code
+	page & per_page for now.
+
 2010-01-21  Dave Beckett <dave@dajobe.org>
 
 	* src/common.c: f
