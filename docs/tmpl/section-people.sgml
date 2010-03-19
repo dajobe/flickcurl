@@ -47,6 +47,26 @@ People.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_people_getPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@safe_search: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
+@content_type: 
+@privacy_filter: 
+@extras: 
+@per_page: 
+@page: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_people_getPhotosOf ##### -->
 <para>
 
