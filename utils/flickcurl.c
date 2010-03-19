@@ -4604,6 +4604,97 @@ command_stats_getTotalViews(flickcurl* fc, int argc, char *argv[])
 
 
 
+static int
+command_people_getPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  int usage = 0;
+  char *user_id;
+  int safe_search = -1;
+  const char* min_upload_date = NULL;
+  const char* max_upload_date = NULL;
+  const char* min_taken_date = NULL;
+  const char* max_taken_date = NULL;
+  int content_type = -1;
+  int privacy_filter = -1;
+  flickcurl_photos_list* photos_list = NULL;
+  flickcurl_photos_list_params list_params;
+  int rc;
+  
+  flickcurl_photos_list_params_init(&list_params);
+
+  argv++; argc--;
+  user_id = argv[0];
+  argv++; argc--;
+
+  while(!usage && argc) {
+    char* field = argv[0];
+    argv++; argc--;
+
+    if(!strcmp(field, "safe-search")) {
+      safe_search = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "min-upload-date")) {
+      min_upload_date = argv[0];
+      argv++; argc--;
+    } else if(!strcmp(field, "max-upload-date")) {
+      max_upload_date = argv[0];
+      argv++; argc--;
+    } else if(!strcmp(field, "min-taken-date")) {
+      min_taken_date = argv[0];
+      argv++; argc--;
+    } else if(!strcmp(field, "max-taken-date")) {
+      max_taken_date = argv[0];
+      argv++; argc--;
+    } else if(!strcmp(field, "content-type")) {
+      content_type = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "privacy-filter")) {
+      privacy_filter = atoi(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "per-page")) {
+      /* int: default 100, max 500 */
+      list_params.per_page = parse_page_param(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "page")) {
+      /* int: default 1 */
+      list_params.page = parse_page_param(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "format")) {
+      list_params.format = argv[0];
+      argv++; argc--;
+    } else {
+      fprintf(stderr, "%s: Unknown parameter: '%s'\n", program, argv[0]);
+      usage = 1;
+    }
+  }
+
+  if(usage)
+    goto tidy;
+  
+  photos_list = flickcurl_people_getPhotos_params(fc, user_id,
+                                                  safe_search,
+                                                  min_upload_date,
+                                                  max_upload_date,
+                                                  min_taken_date,
+                                                  max_taken_date,
+                                                  content_type,
+                                                  privacy_filter,
+                                                  &list_params);
+  if(!photos_list)
+    return 1;
+
+  if(verbose)
+    fprintf(stderr, "%s: Photos of user %s (per_page %d  page %d):\n",
+            program, user_id, list_params.per_page, list_params.page);
+
+  rc = command_print_photos_list(fc, photos_list, output_fh, "Photo");
+  flickcurl_free_photos_list(photos_list);
+
+  tidy:
+  return rc;
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4767,6 +4858,9 @@ static flickcurl_cmd commands[] = {
   {"people.getInfo",
    "USER-NSID", "Get information about one person with id USER-NSID", 
    command_people_getInfo,  1, 1},
+  {"people.getPhotos",
+   "USER-NSID", "Get photos from user USER-NSID with optional parameters\n  safe-search 1-3  min-upload-date DATE  max-upload-date DATE\n  min-taken date DATE  max-taken-date DATE  content-type 1-7\n  privacy-filter 1-5  per-page PER-PAGE  page PAGE  format FORMAT", 
+   command_people_getPhotos,  1, 0},
   {"people.getPhotosOf",
    "USER-NSID [PER-PAGE [PAGE [FORMAT]]]", "Get public photos of a user USER-NSID", 
    command_people_getPhotosOf,  1, 4},
