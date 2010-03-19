@@ -12,6 +12,31 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
+<h2 id="D2010-XX-YY">2010-XX-YY Flickcurl 1.18</h2>
+
+<p>Not yet released.
+</p>
+
+<p>Added function for new people API call (not announced):
+<a href="http://www.flickr.com/services/api/flickr.photos.people.getPhotos.html">flickr.photos.people.getPhotos</a>:</p>
+<pre>
+  
+  flickcurl_photos_list* flickcurl_people_getPhotos_params(flickcurl* fc,
+    const char* user_id, int safe_search,
+    const char* min_upload_date, const char* max_upload_date,
+    const char* min_taken_date, const char* max_taken_date,
+    int content_type, int privacy_filter,
+    flickcurl_photos_list_params* list_params);
+
+  flickcurl_photo** flickcurl_people_getPhotos(flickcurl* fc,
+    const char* user_id, int safe_search,
+    const char* min_upload_date, const char* max_upload_date,
+    const char* min_taken_date, const char* max_taken_date,
+    int content_type, int privacy_filter, const char* extras,
+    int per_page, int page);
+</pre>
+
+
 <h2 id="D2010-03-05">2010-03-05 Flickcurl 1.17</h2>
 
 <p>Added functions for new stats API calls
