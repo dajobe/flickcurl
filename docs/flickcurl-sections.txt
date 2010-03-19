@@ -200,6 +200,7 @@ flickcurl_person_field_type
 flickcurl_people_findByEmail
 flickcurl_people_findByUsername
 flickcurl_people_getInfo
+flickcurl_people_getPhotos
 flickcurl_people_getPhotosOf
 flickcurl_people_getPhotosOf_params
 flickcurl_people_getPublicGroups
