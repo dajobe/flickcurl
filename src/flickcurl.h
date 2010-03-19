@@ -1872,9 +1872,9 @@ char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 FLICKCURL_API
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 FLICKCURL_API
-flickcurl_photos_list* flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id, const char* safe_search, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date, const char* content_type, int privacy_filter, flickcurl_photos_list_params* list_params);
+flickcurl_photos_list* flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id, int safe_search, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date, int content_type, int privacy_filter, flickcurl_photos_list_params* list_params);
 FLICKCURL_API
-flickcurl_photo** flickcurl_people_getPhotos(flickcurl* fc, const char* user_id, const char* safe_search, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date, const char* content_type, int privacy_filter, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_people_getPhotos(flickcurl* fc, const char* user_id, int safe_search, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date, int content_type, int privacy_filter, const char* extras, int per_page, int page);
 FLICKCURL_API
 flickcurl_photos_list* flickcurl_people_getPhotosOf_params(flickcurl* fc, const char* user_id, flickcurl_photos_list_params* list_params);
 FLICKCURL_API

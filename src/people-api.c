@@ -346,18 +346,16 @@ flickcurl_people_getUploadStatus(flickcurl* fc)
  * flickcurl_people_getPhotos_params:
  * @fc: flickcurl context
  * @user_id: The NSID of the user who's photos to return. A value of "me" will return the calling user's photos.
- * @safe_search: Safe search setting: 1 for safe, 2 for moderate, 3 for restricted. (Please note: Un-authed calls can only see Safe content.) (or NULL)
+ * @safe_search: Safe search setting: 1 for safe, 2 for moderate, 3 for restricted. (Please note: Un-authed calls can only see Safe content.) (or < 0)
  * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
  * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
  * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
  * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
- * @content_type: Content Type setting: 1 for photos only, 2 for screenshots only, 3 for 'other' only, 4 for photos and screenshots, 5 for screenshots and 'other', 6 for photos and 'other', 7 for photos, screenshots, and 'other' (all)(or NULL)
- * @privacy_filter: Return photos only matching a certain privacy level. This only applies when making an authenticated call to view photos you own. Valid values are: 1 public photos, 2 private photos visible to friends, 3 private photos visible to family, 4 private photos visible to friends & family, 5 completely private photos
- * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>description</code>, <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>, <code>o_dims</code>, <code>views</code>, <code>media</code>, <code>path_alias</code>, <code>url_sq</code>, <code>url_t</code>, <code>url_s</code>, <code>url_m</code>, <code>url_o</code> (or NULL)
- * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or < 0)
- * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or < 0)
+ * @content_type: Content Type setting: 1 for photos only, 2 for screenshots only, 3 for 'other' only, 4 for photos and screenshots, 5 for screenshots and 'other', 6 for photos and 'other', 7 for photos, screenshots, and 'other' (all) (or < 0)
+ * @privacy_filter: Return photos only matching a certain privacy level. This only applies when making an authenticated call to view photos you own. Valid values are: 1 public photos, 2 private photos visible to friends, 3 private photos visible to family, 4 private photos visible to friends & family, 5 completely private photos (or < 0)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
- * Return photos from the given user's photostream.
+ * Get photos from the given user's photostream.
  *
  * Only photos visible to the calling user will be returned. This
  * method must be authenticated; to return public photos for a user,
@@ -367,12 +365,12 @@ flickcurl_people_getUploadStatus(flickcurl* fc)
  **/
 flickcurl_photos_list*
 flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
-                                  const char* safe_search,
+                                  int safe_search,
                                   const char* min_upload_date,
                                   const char* max_upload_date,
                                   const char* min_taken_date,
                                   const char* max_taken_date,
-                                  const char* content_type,
+                                  int content_type,
                                   int privacy_filter,
                                   flickcurl_photos_list_params* list_params)
 {
@@ -380,6 +378,8 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
   int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
+  char safe_search_s[4];
+  char content_type_s[4];
   char privacy_filter_s[4];
   
   if(!user_id)
@@ -387,9 +387,10 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
 
   parameters[count][0] = "user_id";
   parameters[count++][1] = user_id;
-  if(safe_search) {
+  if(safe_search >= 0 && safe_search < 10) {
+    sprintf(safe_search_s, "%d", safe_search);
     parameters[count][0] = "safe_search";
-    parameters[count++][1] = safe_search;
+    parameters[count++][1] = safe_search_s;
   }
   if(min_upload_date) {
     parameters[count][0] = "min_upload_date";
@@ -407,11 +408,12 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
     parameters[count][0] = "max_taken_date";
     parameters[count++][1] = max_taken_date;
   }
-  if(content_type) {
+  if(content_type >= 0 && content_type < 10) {
+    sprintf(content_type_s, "%d", content_type);
     parameters[count][0] = "content_type";
-    parameters[count++][1] = content_type;
+    parameters[count++][1] = content_type_s;
   }
-  if(privacy_filter) {
+  if(privacy_filter >= 0 && privacy_filter < 10) {
     sprintf(privacy_filter_s, "%d", privacy_filter);
     parameters[count][0] = "privacy_filter";
     parameters[count++][1] = privacy_filter_s;
@@ -444,18 +446,18 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
  * flickcurl_people_getPhotos:
  * @fc: flickcurl context
  * @user_id: The NSID of the user who's photos to return. A value of "me" will return the calling user's photos.
- * @safe_search: Safe search setting: 1 for safe, 2 for moderate, 3 for restricted. (Please note: Un-authed calls can only see Safe content.) (or NULL)
+ * @safe_search: Safe search setting: 1 for safe, 2 for moderate, 3 for restricted. (Please note: Un-authed calls can only see Safe content.) (or < 0)
  * @min_upload_date: Minimum upload date. Photos with an upload date greater than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
  * @max_upload_date: Maximum upload date. Photos with an upload date less than or equal to this value will be returned. The date should be in the form of a unix timestamp. (or NULL)
  * @min_taken_date: Minimum taken date. Photos with an taken date greater than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
  * @max_taken_date: Maximum taken date. Photos with an taken date less than or equal to this value will be returned. The date should be in the form of a mysql datetime. (or NULL)
- * @content_type: Content Type setting: 1 for photos only, 2 for screenshots only, 3 for 'other' only, 4 for photos and screenshots, 5 for screenshots and 'other', 6 for photos and 'other', 7 for photos, screenshots, and 'other' (all)(or NULL)
- * @privacy_filter: Return photos only matching a certain privacy level. This only applies when making an authenticated call to view photos you own. Valid values are: 1 public photos, 2 private photos visible to friends, 3 private photos visible to family, 4 private photos visible to friends & family, 5 completely private photos
+ * @content_type: Content Type setting: 1 for photos only, 2 for screenshots only, 3 for 'other' only, 4 for photos and screenshots, 5 for screenshots and 'other', 6 for photos and 'other', 7 for photos, screenshots, and 'other' (all) (or < 0)
+ * @privacy_filter: Return photos only matching a certain privacy level. This only applies when making an authenticated call to view photos you own. Valid values are: 1 public photos, 2 private photos visible to friends, 3 private photos visible to family, 4 private photos visible to friends & family, 5 completely private photo (or < 0)
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: <code>description</code>, <code>license</code>, <code>date_upload</code>, <code>date_taken</code>, <code>owner_name</code>, <code>icon_server</code>, <code>original_format</code>, <code>last_update</code>, <code>geo</code>, <code>tags</code>, <code>machine_tags</code>, <code>o_dims</code>, <code>views</code>, <code>media</code>, <code>path_alias</code>, <code>url_sq</code>, <code>url_t</code>, <code>url_s</code>, <code>url_m</code>, <code>url_o</code> (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or < 0)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or < 0)
  * 
- * Return photos from the given user's photostream.
+ * Get photos from the given user's photostream.
  *
  * Only photos visible to the calling user will be returned. This
  * method must be authenticated; to return public photos for a user,
@@ -467,12 +469,12 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
  **/
 flickcurl_photo**
 flickcurl_people_getPhotos(flickcurl* fc, const char* user_id,
-                           const char* safe_search,
+                           int safe_search,
                            const char* min_upload_date,
                            const char* max_upload_date,
                            const char* min_taken_date,
                            const char* max_taken_date,
-                           const char* content_type,
+                           int content_type,
                            int privacy_filter,
                            const char* extras, int per_page, int page)
 {
