@@ -1647,7 +1647,8 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
  * Ensure the @params object is propertly initialized to zeros/NULLs
  * or use flickcurl_search_params_init() to initialize this.
  *
- * Flickcurl 1.15; Added in_gallery search parameter.
+ * Flickcurl 1.15; Added in_gallery search parameter as announced
+ * 2010-04-08 http://code.flickr.com/blog/2010/04/08/galleries-apis/
  *
  * Flickcurl 1.14: Added geo_context and is_commons search parameters
  * to #flickcurl_search_params.  Added more extras to docs.
