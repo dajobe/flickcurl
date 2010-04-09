@@ -103,6 +103,29 @@ flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id)
 
 
 /**
+ * flickcurl_urls_lookupGallery:
+ * @fc: flickcurl context
+ * @url: The gallery's URL.
+ * 
+ * Get a gallery ID by url.
+ *
+ * Implements flickr.urls.lookupGallery (1.18)
+ *
+ * Announced 2010-04-08
+ * http://code.flickr.com/blog/2010/04/08/galleries-apis/
+ *
+ * Return value: gallery ID or NULL on failure
+ **/
+char*
+flickcurl_urls_lookupGallery(flickcurl* fc, const char* url)
+{
+  return flickcurl_call_get_one_string_field(fc, "url", url, 
+                                             "flickr.urls.lookupGallery",
+                                             (const xmlChar*)"/rsp/gallery/@id");
+}
+
+
+/**
  * flickcurl_urls_lookupGroup:
  * @fc: flickcurl context
  * @url: URL of group's page or photo pool

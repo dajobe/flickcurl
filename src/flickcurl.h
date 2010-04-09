@@ -2220,6 +2220,8 @@ char* flickcurl_urls_getUserPhotos(flickcurl* fc, const char* user_id);
 FLICKCURL_API
 char* flickcurl_urls_getUserProfile(flickcurl* fc, const char* user_id);
 FLICKCURL_API
+char* flickcurl_urls_lookupGallery(flickcurl* fc, const char* url);
+FLICKCURL_API
 char* flickcurl_urls_lookupGroup(flickcurl* fc, const char* url);
 FLICKCURL_API
 char* flickcurl_urls_lookupUser(flickcurl* fc, const char* url);
