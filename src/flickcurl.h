@@ -176,6 +176,7 @@ typedef enum {
  * @PHOTO_FIELD_views: number of photo views
  * @PHOTO_FIELD_comments: number of photo comments
  * @PHOTO_FIELD_favorites: number of photo favorites
+ * @PHOTO_FIELD_gallery_comment: comment on the photo when used in a gallery
  * @PHOTO_FIELD_none: internal
  * @PHOTO_FIELD_FIRST: internal offset to first in enum list
  * @PHOTO_FIELD_LAST: internal offset to last in enum list
@@ -245,8 +246,9 @@ typedef enum {
   PHOTO_FIELD_views,
   PHOTO_FIELD_comments,
   PHOTO_FIELD_favorites,
+  PHOTO_FIELD_gallery_comment,
   PHOTO_FIELD_FIRST = PHOTO_FIELD_dateuploaded,
-  PHOTO_FIELD_LAST = PHOTO_FIELD_favorites
+  PHOTO_FIELD_LAST = PHOTO_FIELD_gallery_comment
 } flickcurl_photo_field_type;
 
 

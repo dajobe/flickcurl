@@ -2,7 +2,7 @@
  *
  * photo.c - Flickcurl photo functions
  *
- * Copyright (C) 2007-2009, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2010, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -94,7 +94,8 @@ static const char* flickcurl_photo_field_label[PHOTO_FIELD_LAST+1] = {
   "original_height",
   "views",
   "comments",
-  "favorites"
+  "favorites",
+  "gallery_comment"
 };
 
 
@@ -935,6 +936,12 @@ static struct {
     (const xmlChar*)"./stats/@favorites",
     PHOTO_FIELD_favorites,
     VALUE_TYPE_INTEGER
+  }
+  ,
+  {
+    (const xmlChar*)"./comment",
+    PHOTO_FIELD_gallery_comment,
+    VALUE_TYPE_STRING
   }
   ,
   { 
