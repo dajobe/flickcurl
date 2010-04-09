@@ -17,6 +17,36 @@
 <p>Not yet released.
 </p>
 
+<p>Added (rest of) Galleries API calls as
+<a href="http://code.flickr.com/blog/2010/04/08/galleries-apis/">announced 2010-04-08</a>:
+</p>
+<pre>
+  char* flickcurl_galleries_create(flickcurl* fc, const char* title,
+    const char* description, const char* primary_photo_id,
+    char** gallery_url_p);
+
+  int flickcurl_galleries_editMeta(flickcurl* fc, const char* gallery_id,
+    const char* title, const char* description);
+
+  int flickcurl_galleries_editPhoto(flickcurl* fc, const char* gallery_id,
+    const char* photo_id, const char* comment);
+
+  int flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id,
+    const char* primary_photo_id, const char* photo_ids);
+
+  flickcurl_gallery* flickcurl_galleries_getInfo(flickcurl* fc,
+    const char* gallery_id);
+
+  flickcurl_photos_list* flickcurl_galleries_getPhotos_params(flickcurl* fc,
+    const char* gallery_id, flickcurl_photos_list_params* list_params);
+
+  flickcurl_photo** flickcurl_galleries_getPhotos(flickcurl* fc,
+    const char* gallery_id, const char* extras, int per_page, int page);
+
+  char* flickcurl_urls_lookupGallery(flickcurl* fc, const char* url);
+
+</pre>
+
 <p>Added function for new people API call (not announced):
 <a href="http://www.flickr.com/services/api/flickr.people.getPhotos.html">flickr.people.getPhotos</a>:</p>
 <pre>
