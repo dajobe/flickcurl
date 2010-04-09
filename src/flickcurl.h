@@ -1789,9 +1789,23 @@ int flickcurl_favorites_remove(flickcurl* fc, const char* photo_id);
 FLICKCURL_API
 int flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id, const char* photo_id, const char* comment_text);
 FLICKCURL_API
+char* flickcurl_galleries_create(flickcurl* fc, const char* title, const char* description, const char* primary_photo_id, char** gallery_url_p);
+FLICKCURL_API
+int flickcurl_galleries_editMeta(flickcurl* fc, const char* gallery_id, const char* title, const char* description);
+FLICKCURL_API
+int flickcurl_galleries_editPhoto(flickcurl* fc, const char* gallery_id, const char* photo_id, const char* new_comment);
+FLICKCURL_API
+int flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id, const char* primary_photo_id, const char** photo_ids_arrray);
+FLICKCURL_API
+flickcurl_gallery* flickcurl_galleries_getInfo(flickcurl* fc, const char* gallery_id);
+FLICKCURL_API
 flickcurl_gallery** flickcurl_galleries_getList(flickcurl* fc, const char* user_id, int per_page, int page);
 FLICKCURL_API
 flickcurl_gallery** flickcurl_galleries_getListForPhoto(flickcurl* fc, const char* photo_id, int per_page, int page);
+FLICKCURL_API
+flickcurl_photos_list* flickcurl_galleries_getPhotos_params(flickcurl* fc, const char* gallery_id, flickcurl_photos_list_params* list_params);
+FLICKCURL_API
+flickcurl_photo** flickcurl_galleries_getPhotos(flickcurl* fc, const char* gallery_id, const char* extras, int per_page, int page);
 FLICKCURL_API
 void flickcurl_free_galleries(flickcurl_gallery **galleries_object);
 
