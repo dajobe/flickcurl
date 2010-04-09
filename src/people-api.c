@@ -208,7 +208,7 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
  * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
- * Return value: non-0 on failure
+ * Return value: list of people public photos or NULL on failure
  **/
 flickcurl_photos_list*
 flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id, 
@@ -263,7 +263,7 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
  *
  * Implements flickr.people.getPublicPhotos (0.12)
  * 
- * Return value: non-0 on failure
+ * Return value: list of photos or NULL on failure
  **/
 flickcurl_photo**
 flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id, 
