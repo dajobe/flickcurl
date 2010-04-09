@@ -976,9 +976,9 @@ typedef struct flickcurl_category_s flickcurl_category;
  *
  * A photo gallery.
  *
- * The list of photos in the gallery is not curently available via the API.
- * It should be flickr.galleries.getInfo() but that is does not exist
- * at this date 2010-01-21.
+ * The list of photos in the gallery is available via the API calls
+ * flickcurl_galleries_getPhotos() or
+ * flickcurl_galleries_getPhotos_params()
  *
  */
 typedef struct {
