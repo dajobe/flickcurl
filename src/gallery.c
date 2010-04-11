@@ -34,7 +34,13 @@
 #include <flickcurl_internal.h>
 
 
-static void
+/**
+ * flickcurl_free_gallery:
+ * @gallery: gallery object
+ *
+ * Destructor for gallery object
+ */
+void
 flickcurl_free_gallery(flickcurl_gallery *gallery)
 {
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(gallery, flickcurl_gallery);
