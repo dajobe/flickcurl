@@ -138,10 +138,18 @@ flickcurl_favorites_remove
 <SECTION>
 <FILE>section-gallery</FILE>
 flickcurl_gallery
+flickcurl_free_gallery
 flickcurl_free_galleries
 flickcurl_galleries_addPhoto
+flickcurl_galleries_create
+flickcurl_galleries_editMeta
+flickcurl_galleries_editPhoto
+flickcurl_galleries_editPhotos
+flickcurl_galleries_getInfo
 flickcurl_galleries_getList
 flickcurl_galleries_getListForPhoto
+flickcurl_galleries_getPhotos_params
+flickcurl_galleries_getPhotos
 </SECTION>
 
 <SECTION>
