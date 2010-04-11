@@ -4695,6 +4695,121 @@ command_people_getPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_galleries_create(flickcurl* fc, int argc, char *argv[])
+{
+  const char* title = argv[1];
+  const char* description = NULL;
+  const char* primary_photo_id = NULL;
+  char* url = NULL;
+  char* id;
+
+  if(argc > 1) {
+    description = argv[2];
+    if(argc > 2)
+      primary_photo_id = argv[3];
+  }
+  
+  id = flickcurl_galleries_create(fc, title, description, primary_photo_id,
+                                  &url);
+  if(!id)
+    return 1;
+  fprintf(stderr, "%s: Gallery %s created with URL %s\n", program, id, url);
+  free(url);
+  free(id);
+  return 0;
+}
+
+
+static int
+command_galleries_editMeta(flickcurl* fc, int argc, char *argv[])
+{
+  return flickcurl_galleries_editMeta(fc, argv[1], argv[2], argv[3]);
+}
+
+
+static int
+command_galleries_editPhoto(flickcurl* fc, int argc, char *argv[])
+{
+  const char* gallery_id = argv[1];
+  const char* primary_photo_id = argv[2];
+  const char* new_comment = argv[3];
+  
+  return flickcurl_galleries_editPhoto(fc, gallery_id, primary_photo_id,
+                                       new_comment);
+}
+
+
+static int
+command_galleries_editPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  const char* photoset_id = argv[1];
+  const char* primary_photo_id = argv[2];
+  char** photo_ids = flickcurl_array_split(argv[3], ',');
+  int rc;
+  
+  rc = flickcurl_galleries_editPhotos(fc, photoset_id, primary_photo_id,
+                                    (const char**)photo_ids);
+  flickcurl_array_free(photo_ids);
+  return rc;
+}
+
+
+static int
+command_galleries_getInfo(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_gallery* gallery = NULL;
+  const char* gallery_id = argv[1];
+  
+  gallery = flickcurl_galleries_getInfo(fc, gallery_id);
+  if(gallery) {
+    command_print_gallery(gallery);
+    flickcurl_free_gallery(gallery);
+  }
+  
+  return (gallery == NULL);
+}
+
+
+static int
+command_galleries_getPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  const char* gallery_id = argv[1];
+  flickcurl_photos_list* photos_list = NULL;
+  flickcurl_photos_list_params list_params;
+  int rc;
+  
+  flickcurl_photos_list_params_init(&list_params);
+
+  if(argc > 2) {
+    list_params.extras = argv[2];
+    if(argc > 3) {
+      list_params.per_page = parse_page_param(argv[3]);
+      if(argc > 4) {
+        list_params.page = parse_page_param(argv[4]);
+        if(argc > 5) {
+          list_params.format = argv[5];
+        }
+      }
+    }
+  }
+  
+  photos_list = flickcurl_galleries_getPhotos_params(fc, gallery_id,
+                                                     &list_params);
+  if(!photos_list)
+    return 1;
+
+  if(verbose)
+    fprintf(stderr, "%s: Gallery %s photos (per_page %d  page %d):\n",
+            program, gallery_id, list_params.per_page, list_params.page);
+
+  rc = command_print_photos_list(fc, photos_list, output_fh, "Photo");
+  flickcurl_free_photos_list(photos_list);
+
+  return rc;
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4783,14 +4898,32 @@ static flickcurl_cmd commands[] = {
    command_favorites_remove, 1, 1},
 
   {"galleries.addPhoto",
-   "GALLERY-ID PHOTO-ID TEXT", "Add photo PHOTO-ID to gallery GALLERY-ID with TEXT",
+   "GALLERY-ID PHOTO-ID TEXT", "Add photo PHOTO-ID to galleries GALLERY-ID with TEXT",
    command_galleries_addPhoto, 3, 3},
+  {"galleries.create",
+   "TITLE [DESCRIPTION [PRIMARY-PHOTO-ID]", "Create a new galleries with TITlE, DESCRIPTION and PRIMARY-PHOTO_ID.",
+   command_galleries_create, 1, 3},
+  {"galleries.editMeta",
+   "GALLERY-ID TITLE [DESCRIPTION]", "Set the TITLE and/or DESCRIPTION of a GALLERY-ID.",
+   command_galleries_editMeta, 2, 3},
+  {"galleries.editPhoto",
+   "GALLERY-ID PHOTO-ID COMMENT", "Set the COMMENT for PHOTO-ID in GALLERY-ID.",
+   command_galleries_editPhoto, 3, 3},
+  {"galleries.editPhotos",
+   "GALLERY-ID PRIMARY-PHOTO-ID PHOTO-IDS,...", "Set the PHOTO-IDs of a GALLERY-ID and PRIMARY-PHOTO-ID.",
+   command_galleries_editPhotos, 3, 3},
+  {"galleries.getInfo",
+   "GALLERY-ID", "Get information about GALLERY-ID.",
+   command_galleries_getInfo, 1, 1},
   {"galleries.getList",
    "USER-ID [PER-PAGE [PAGE]]", "Get list of galleries for a USER-ID with optional paging",
    command_galleries_getList, 1, 3},
   {"galleries.getListForPhoto",
    "PHOTO-ID [PER-PAGE [PAGE]]", "Get list of galleries PHOTO-ID appears in with optional paging",
    command_galleries_getListForPhoto, 1, 3},
+  {"galleries.getPhotos",
+   "GALLERY-ID [EXTRAS [PER-PAGE [PAGE [FORMAT]]]]", "Get the list of photos in GALLERY-ID with options.",
+   command_galleries_getPhotos, 1, 5},
 
   {"groups.browse",
    "[CAT-ID]", "Browse groups below category CAT-ID (or root).",
@@ -5039,7 +5172,7 @@ static flickcurl_cmd commands[] = {
    "PHOTOSET-ID TITLE DESCRIPTION", "Set the TITLE and/or DESCRIPTION of a PHOTOSET-ID.",
    command_photosets_editMeta, 3, 3},
   {"photosets.editPhotos",
-   "PHOTOSET-ID PRIMARY-PHOTO-ID PHOTO-IDS...", "Set the PHOTO-IDs of a PHOTOSET-ID and PRIMARY-PHOTO-ID.",
+   "PHOTOSET-ID PRIMARY-PHOTO-ID PHOTO-IDS,...", "Set the PHOTO-IDs of a PHOTOSET-ID and PRIMARY-PHOTO-ID.",
    command_photosets_editPhotos, 3, 3},
   {"photosets.getContext",
    "PHOTO-ID PHOTOSET-ID", "Get next and previous photos for PHOTO-ID in PHOTOSET-ID.",
