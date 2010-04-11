@@ -1,3 +1,63 @@
+2010-04-11  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: docs
+
+	* utils/flickcurl.c: Add utility support for new galleries
+	commands.
+
+	* src/flickcurl.h, src/gallery.c: Make flickcurl_free_gallery()
+	public
+
+2010-04-09  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 1.18 gallery docs
+
+	* src/flickcurl.h, src/photo.c: Added PHOTO_FIELD_gallery_comment
+	for photo comments in a gallery context.
+
+	* NEWS.html: Update 1.18 news with new galleries functions
+
+	* src/flickcurl.h: Update flickcurl_gallery docs
+
+	* src/photos-api.c: #docs for in_gallery
+
+	* src/flickcurl.h, src/galleries-api.c:
+	Added implementation for (rest of) galleries APIs
+
+	(flickcurl_galleries_create, flickcurl_galleries_editMeta,
+	flickcurl_galleries_editPhoto, flickcurl_galleries_editPhotos,
+	flickcurl_galleries_getInfo, flickcurl_galleries_getPhotos_params,
+	flickcurl_galleries_getPhotos): Added.
+
+	* src/flickcurl.h, src/urls-api.c: Added
+	flickcurl_urls_lookupGallery() As announced
+	http://code.flickr.com/blog/2010/04/08/galleries-apis/
+
+	* src/people-api.c: #autodocs
+
+2010-03-18  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: fix link
+
+	* NEWS.html, configure.ac: 1.18
+
+	* utils/flickcurl.c: Add command for flickcurl_people_getPhotos
+
+	* src/flickcurl.h, src/people-api.c:
+	Change flickcurl_people_getPhotos* to have int params for filters
+
+	(flickcurl_people_getPhotos_params, flickcurl_people_getPhotos);
+	Take int param for safe_search, content_type, privacy_filter.
+
+	* docs/tmpl/section-people.sgml: Add tmpl for
+	flickcurl_people_getPhotos
+
+	* docs/flickcurl-sections.txt: Add flickcurl_people_getPhotos
+
+	* src/flickcurl.h, src/people-api.c: Added
+	flickcurl_people_getPhotos() and
+	flickcurl_people_getPhotos_params().
+
 2010-03-03  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_17 for 1.17 release
