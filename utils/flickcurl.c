@@ -5111,7 +5111,7 @@ static flickcurl_cmd commands[] = {
   {"photos.geo.removeLocation",
    "PHOTO-ID", "Remove the location for a photo PHOTO-ID.",
    command_photos_geo_removeLocation, 1, 1},
-  {"photos.geo.removeLocation",
+  {"photos.geo.setLocation",
    "PHOTO-ID LAT LONG ACCURACY", "Set the location for a photo PHOTO-ID.",
    command_photos_geo_setLocation, 4, 4},
   {"photos.geo.setPerms",
