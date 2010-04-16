@@ -95,7 +95,7 @@ flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
   sprintf(latitude_s, "%f", location->latitude);
   parameters[count++][1]= latitude_s;
   parameters[count][0]  = "lon";
-  sprintf(longitude_s, "%f", location->latitude);
+  sprintf(longitude_s, "%f", location->longitude);
   parameters[count++][1]= longitude_s;
   parameters[count][0]  = "accuracy";
   sprintf(accuracy_s, "%d", location->accuracy);
@@ -358,7 +358,7 @@ flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
   sprintf(latitude_s, "%f", location->latitude);
   parameters[count++][1]= latitude_s;
   parameters[count][0]  = "lon";
-  sprintf(longitude_s, "%f", location->latitude);
+  sprintf(longitude_s, "%f", location->longitude);
   parameters[count++][1]= longitude_s;
   parameters[count][0]  = "accuracy";
   sprintf(accuracy_s, "%d", location->accuracy);
@@ -590,7 +590,7 @@ flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
   sprintf(latitude_s, "%f", location->latitude);
   parameters[count++][1]= latitude_s;
   parameters[count][0]  = "lon";
-  sprintf(longitude_s, "%f", location->latitude);
+  sprintf(longitude_s, "%f", location->longitude);
   parameters[count++][1]= longitude_s;
   if(location->accuracy >= 1) {
     parameters[count][0]  = "accuracy";
