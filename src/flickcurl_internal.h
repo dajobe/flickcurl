@@ -361,6 +361,9 @@ struct flickcurl_s {
   char *replace_service_uri;
 
   unsigned int uri_len;
+
+  flickcurl_curl_setopt_handler curl_setopt_handler;
+  void* curl_setopt_handler_data;
 };
 
 struct flickcurl_serializer_s

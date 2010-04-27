@@ -1375,7 +1375,9 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     /* Set the form info */
     curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPPOST, post);
   }
-  
+
+  if(fc->curl_setopt_handler)
+    fc->curl_setopt_handler(fc->curl_handle, fc->curl_setopt_handler_data);
 
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "Resolving URI '%s' with method %s\n", 
@@ -2336,4 +2338,35 @@ flickcurl_search_params_init(flickcurl_search_params* params)
   /* The remaining fields are pointers and are set to NULL by the memset() */
 
   return 0;
+}
+
+
+/**
+ * flickcurl_set_curl_setopt_handler:
+ * @fc: flickcurl object
+ * @curl_handler: curl set options handler (or NULL)
+ * @curl_handler_data: user data for handler (or NULL)
+ *
+ * Set curl set option callback handler.
+ *
+ * This handler is called for every curl request after all internal
+ * curl_easy_setopt calls are made on the internal CURL* handle and
+ * just before curl_easy_perform is invoked to start the retrieval.
+ * Thus, this callback can override any internal configuration.
+ *
+ * If a simple once-only CURL configuration is needed, using
+ * flickcurl_new_with_handle() may be easier.
+ *
+ * WARNING: The @curl_handler callback is called with 2 void args in
+ * the order user data (@curl_handler_data value), curl_handle (CURL*
+ * pointer) - take care to use them correct in implementation.
+ *
+ */
+void
+flickcurl_set_curl_setopt_handler(flickcurl *fc,
+                                  flickcurl_curl_setopt_handler curl_handler,
+                                  void* curl_handler_data)
+{
+  fc->curl_setopt_handler = curl_handler;
+  fc->curl_setopt_handler_data = curl_handler_data;
 }

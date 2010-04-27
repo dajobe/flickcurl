@@ -23,6 +23,7 @@ flickcurl_get_extras_format_info
 flickcurl_get_feed_format_info
 flickcurl_set_api_key
 flickcurl_set_auth_token
+flickcurl_set_curl_setopt_handler
 flickcurl_set_data
 flickcurl_set_error_handler
 flickcurl_set_http_accept

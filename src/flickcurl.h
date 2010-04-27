@@ -1519,6 +1519,28 @@ typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
 typedef void (*flickcurl_tag_handler)(void *user_data, flickcurl_tag* tag);
 
 
+/**
+ * flickcurl_curl_setopt_handler:
+ * @user_data: user data pointer
+ * @curl_handle: curl CURL* handle
+ *
+ * Flickcurl curl options handle callback.
+ *
+ * For use with flickcurl_set_curl_setopt_handler() to set curl
+ * handle options once Flickcurl has created the CURL* handle
+ * internally.
+ *
+ * NOTE: The type of @curl_handle is void* so that curl headers are
+ * optional when compiling against flickcurl.
+ *
+ * WARNING: This callback is called with two void args in the order
+ * curl handler user data, curl handle (CURL* pointer) - take care in
+ * getting them correct in implementation.
+ *
+ */
+typedef void (*flickcurl_curl_setopt_handler)(void *user_data, void *curl_handle);
+
+
 /* library constants */
 FLICKCURL_API
 extern const char* const flickcurl_short_copyright_string;
@@ -1558,6 +1580,8 @@ FLICKCURL_API
 void flickcurl_free(flickcurl *fc);
 
 /* flickcurl* object set methods */
+FLICKCURL_API
+void flickcurl_set_curl_setopt_handler(flickcurl *fc, flickcurl_curl_setopt_handler curl_handler, void* curl_handler_data);
 FLICKCURL_API
 void flickcurl_set_service_uri(flickcurl *fc, const char *uri);
 FLICKCURL_API
