@@ -1550,6 +1550,8 @@ void flickcurl_finish(void);
 /* flickcurl* object constructor */
 FLICKCURL_API
 flickcurl* flickcurl_new(void);
+FLICKCURL_API
+flickcurl* flickcurl_new_with_handle(void* curl_handle);
 
 /* flickcurl* object destructor */
 FLICKCURL_API

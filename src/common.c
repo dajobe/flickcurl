@@ -181,14 +181,24 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
 
 
 /**
- * flickcurl_new:
+ * flickcurl_new_with_handle:
+ * @curl_handle: CURL* handle
  *
- * Create a Flickcurl sesssion
+ * Create a Flickcurl sesssion from an existing CURL* handler
+ *
+ * This allows setting up or re-using an existing CURL handle with
+ * Flickcurl, however the library will call curl_easy_setopt to set
+ * options based on the operation being performed.  If these need to
+ * be over-ridden, use flickcurl_set_curl_setopt_handler() to adjust
+ * the options.
+ *
+ * NOTE: The type of @handle is void* so that curl headers are
+ * optional when compiling against flickcurl.
  *
  * Return value: new #flickcurl object or NULL on fialure
  */
 flickcurl*
-flickcurl_new(void)
+flickcurl_new_with_handle(void* curl_handle)
 {
   flickcurl* fc;
 
@@ -203,6 +213,7 @@ flickcurl_new(void)
   /* DEFAULT delay between requests is 1000ms i.e 1 request/second max */
   fc->request_delay = 1000;
   
+  fc->curl_handle = (CURL*)curl_handle;
   if(!fc->curl_handle) {
     fc->curl_handle = curl_easy_init();
     fc->curl_init_here = 1;
@@ -231,6 +242,19 @@ flickcurl_new(void)
   return fc;
 }
 
+
+/**
+ * flickcurl_new:
+ *
+ * Create a Flickcurl sesssion
+ *
+ * Return value: new #flickcurl object or NULL on fialure
+ */
+flickcurl*
+flickcurl_new(void)
+{
+  return flickcurl_new_with_handle(NULL);
+}
 
 /**
  * flickcurl_free:

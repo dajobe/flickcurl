@@ -14,6 +14,7 @@ flickcurl_message_handler
 flickcurl_init
 flickcurl_finish
 flickcurl_new
+flickcurl_new_with_handle
 flickcurl_free
 flickcurl_get_api_key
 flickcurl_get_auth_token
