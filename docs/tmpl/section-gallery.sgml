@@ -17,6 +17,9 @@ Galleries of photos.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT flickcurl_gallery ##### -->
 <para>
 
@@ -32,6 +35,14 @@ Galleries of photos.
 @count_videos: 
 @title: 
 @description: 
+
+<!-- ##### FUNCTION flickcurl_free_gallery ##### -->
+<para>
+
+</para>
+
+@gallery: 
+
 
 <!-- ##### FUNCTION flickcurl_free_galleries ##### -->
 <para>
@@ -50,6 +61,65 @@ Galleries of photos.
 @gallery_id: 
 @photo_id: 
 @comment_text: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_create ##### -->
+<para>
+
+</para>
+
+@fc: 
+@title: 
+@description: 
+@primary_photo_id: 
+@gallery_url_p: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_editMeta ##### -->
+<para>
+
+</para>
+
+@fc: 
+@gallery_id: 
+@title: 
+@description: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_editPhoto ##### -->
+<para>
+
+</para>
+
+@fc: 
+@gallery_id: 
+@photo_id: 
+@new_comment: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_editPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@gallery_id: 
+@primary_photo_id: 
+@photo_ids_array: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_getInfo ##### -->
+<para>
+
+</para>
+
+@fc: 
+@gallery_id: 
 @Returns: 
 
 
@@ -72,6 +142,30 @@ Galleries of photos.
 
 @fc: 
 @photo_id: 
+@per_page: 
+@page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_getPhotos_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@gallery_id: 
+@list_params: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_galleries_getPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@gallery_id: 
+@extras: 
 @per_page: 
 @page: 
 @Returns: 

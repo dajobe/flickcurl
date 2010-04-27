@@ -17,6 +17,9 @@ Support functions to get URLs.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION flickcurl_urls_getGroup ##### -->
 <para>
 
@@ -44,6 +47,16 @@ Support functions to get URLs.
 
 @fc: 
 @user_id: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_urls_lookupGallery ##### -->
+<para>
+
+</para>
+
+@fc: 
+@url: 
 @Returns: 
 
 

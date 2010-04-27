@@ -17,6 +17,9 @@ Authentication of web service requests
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION flickcurl_auth_checkToken ##### -->
 <para>
 

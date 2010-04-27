@@ -17,6 +17,9 @@ Photo.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### STRUCT flickcurl_photo ##### -->
 <para>
 
@@ -187,6 +190,7 @@ Photo.
 @PHOTO_FIELD_views: 
 @PHOTO_FIELD_comments: 
 @PHOTO_FIELD_favorites: 
+@PHOTO_FIELD_gallery_comment: 
 @PHOTO_FIELD_FIRST: 
 @PHOTO_FIELD_LAST: 
 

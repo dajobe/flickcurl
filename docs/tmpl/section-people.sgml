@@ -17,6 +17,9 @@ People.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### FUNCTION flickcurl_people_findByEmail ##### -->
 <para>
 
@@ -64,6 +67,24 @@ People.
 @extras: 
 @per_page: 
 @page: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_people_getPhotos_params ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@safe_search: 
+@min_upload_date: 
+@max_upload_date: 
+@min_taken_date: 
+@max_taken_date: 
+@content_type: 
+@privacy_filter: 
+@list_params: 
 @Returns: 
 
 

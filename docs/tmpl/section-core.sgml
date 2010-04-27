@@ -17,6 +17,9 @@ Core library functions
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### TYPEDEF flickcurl ##### -->
 <para>
 
@@ -37,6 +40,7 @@ Core library functions
 
 </para>
 
+@void: 
 @Returns: 
 
 
@@ -45,6 +49,7 @@ Core library functions
 
 </para>
 
+@void: 
 
 
 <!-- ##### FUNCTION flickcurl_new ##### -->
@@ -52,6 +57,16 @@ Core library functions
 
 </para>
 
+@void: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_new_with_handle ##### -->
+<para>
+
+</para>
+
+@curl_handle: 
 @Returns: 
 
 
@@ -129,6 +144,25 @@ Core library functions
 
 @fc: 
 @auth_token: 
+
+
+<!-- ##### USER_FUNCTION flickcurl_curl_setopt_handler ##### -->
+<para>
+
+</para>
+
+@user_data: 
+@curl_handle: 
+
+
+<!-- ##### FUNCTION flickcurl_set_curl_setopt_handler ##### -->
+<para>
+
+</para>
+
+@fc: 
+@curl_handler: 
+@curl_handler_data: 
 
 
 <!-- ##### FUNCTION flickcurl_set_data ##### -->

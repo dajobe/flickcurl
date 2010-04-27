@@ -17,6 +17,9 @@ Serialize a photo to RDF Triples.
 <!-- ##### SECTION Stability_Level ##### -->
 
 
+<!-- ##### SECTION Image ##### -->
+
+
 <!-- ##### TYPEDEF flickcurl_serializer ##### -->
 <para>
 
