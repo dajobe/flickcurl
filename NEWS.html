@@ -68,6 +68,26 @@ before they were announced.)</p>
     int per_page, int page);
 </pre>
 
+<p>Added functions to allow more control over the internal
+<code>CURL*</code> handle and to set any curl options needed
+such as with <code>curl_easy_setopt()</code>.
+The new library constructor
+function <code>flickcurl_new_with_handle()</code>
+allows reuse an existing curl handle rather than create and
+destroy one during the library use.
+The new library method
+<code>flickcurl_set_curl_setopt_handler()</code> allows user code to
+be called via a handler to make any adjustments to the curl options
+that may be required on a per-request basis.
+</p>
+<pre>
+  flickcurl* flickcurl_new_with_handle(void* curl_handle);
+
+  void flickcurl_set_curl_setopt_handler(flickcurl *fc,
+     flickcurl_curl_setopt_handler curl_handler,
+     void* curl_handler_data);
+</pre>
+
 <p>Added <code>flickcurl(1)</code> utility support for new API calls.</p>
 
 
