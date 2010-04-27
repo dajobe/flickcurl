@@ -1,4 +1,49 @@
+2010-04-26  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt, src/common.c, src/flickcurl.h,
+	src/flickcurl_internal.h:
+
+	Added flickcurl_curl_setopt_handler()
+
+	flickcurl_curl_setopt_handler: Added new handler typedef for
+	setting curl options.
+
+	(flickcurl_curl_setopt_handler): Added to set handler callback
+	with docs to note alternative flickcurl_new_with_handle()
+
+	* docs/flickcurl-sections.txt, src/common.c, src/flickcurl.h: Add
+	flickcurl_new_with_handle()
+
+	* src/flickcurl.h: autodocs
+
+2010-04-15  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c:
+	Make command "photos.geo.setLocation" work Fixes second part of Issue
+	http://github.com/dajobe/flickcurl/issues/#issue/1
+
+	* src/photos-geo-api.c: Correct several cut-n-paste "latitude
+	should be longitude" errors
+
+	(flickcurl_photos_geo_batchCorrectLocation,
+	flickcurl_photos_geo_photosForLocation_params,
+	flickcurl_photos_geo_setLocation): sprintf longitude value into
+	longitude_s - not latitude.
+
+	Fixes Issue http://github.com/dajobe/flickcurl/issues#issue/1
+
 2010-04-11  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-photos-people.sgml: give section a title
+
+	* docs/tmpl/section-gallery.sgml: give section a title
+
+	* docs/tmpl/section-stats.sgml: give section a title
+
+	* docs/flickcurl-sections.txt: Add new Galleries methods to docs
+
+	* NEWS.html: update flickcurl_galleries_editPhoto sig to match
+	param name.
 
 	* NEWS.html: docs
 
