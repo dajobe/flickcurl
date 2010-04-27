@@ -1500,7 +1500,7 @@ typedef struct {
 /* callback handlers */
 
 /**
- * flickcurl_message_handler
+ * flickcurl_message_handler:
  * @user_data: user data pointer
  * @message: error message
  *
@@ -1508,8 +1508,9 @@ typedef struct {
  */
 typedef void (*flickcurl_message_handler)(void *user_data, const char *message);
 
+
 /**
- * flickcurl_tag_handler
+ * flickcurl_tag_handler:
  * @user_data: user data pointer
  * @tag: tag
  *
