@@ -307,7 +307,7 @@ flickcurl_galleries_editPhoto(flickcurl* fc, const char* gallery_id,
  * @fc: flickcurl context
  * @gallery_id: The id of the gallery to modify. The gallery must belong to the calling user.
  * @primary_photo_id: The id of the photo to use as the 'primary' photo for the gallery. This id must also be passed along in photo_ids list argument.
- * @photos_ids_array: Array of photo ids to include in the gallery. They will appear in the set in the order sent. This list MUST contain the primary photo id. This list of photos replaces the existing list.
+ * @photo_ids_array: Array of photo ids to include in the gallery. They will appear in the set in the order sent. This list MUST contain the primary photo id. This list of photos replaces the existing list.
  * 
  * Modify the photos in a gallery. Use this method to add, remove and re-order photos.
  *
