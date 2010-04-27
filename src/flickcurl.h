@@ -1826,7 +1826,7 @@ int flickcurl_galleries_editMeta(flickcurl* fc, const char* gallery_id, const ch
 FLICKCURL_API
 int flickcurl_galleries_editPhoto(flickcurl* fc, const char* gallery_id, const char* photo_id, const char* new_comment);
 FLICKCURL_API
-int flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id, const char* primary_photo_id, const char** photo_ids_arrray);
+int flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id, const char* primary_photo_id, const char** photo_ids_array);
 FLICKCURL_API
 flickcurl_gallery* flickcurl_galleries_getInfo(flickcurl* fc, const char* gallery_id);
 FLICKCURL_API
