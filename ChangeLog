@@ -1,5 +1,8 @@
 2010-04-26  Dave Beckett <dave@dajobe.org>
 
+	* Snapshotted flickcurl_1_18 for 1.18 release
+	(GIT ebae39d1cde76c5f805bcd2cc4614615317b7eb0)
+
 	* docs/flickcurl-sections.txt, src/common.c, src/flickcurl.h,
 	src/flickcurl_internal.h:
 
