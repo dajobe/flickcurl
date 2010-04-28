@@ -4618,7 +4618,7 @@ command_people_getPhotos(flickcurl* fc, int argc, char *argv[])
   int privacy_filter = -1;
   flickcurl_photos_list* photos_list = NULL;
   flickcurl_photos_list_params list_params;
-  int rc;
+  int rc = 0;
   
   flickcurl_photos_list_params_init(&list_params);
 
