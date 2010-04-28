@@ -272,7 +272,6 @@ flickcurl_build_tag_clusters(flickcurl* fc,
 {
   flickcurl_tag_clusters* tcs = NULL;
   int nodes_count;
-  int cluster_count;
   int i;
   xmlXPathObjectPtr xpathObj = NULL;
   xmlNodeSetPtr nodes;
@@ -294,7 +293,7 @@ flickcurl_build_tag_clusters(flickcurl* fc,
 
   tcs->clusters = (flickcurl_tag_cluster**)calloc(sizeof(flickcurl_tag_cluster*), nodes_count+1);
   
-  for(i = 0, cluster_count = 0; i < nodes_count; i++) {
+  for(i = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     xmlNodePtr chnode;
