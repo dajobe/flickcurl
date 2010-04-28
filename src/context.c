@@ -119,7 +119,7 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
   xnp = xmlDocGetRootElement(doc);
 
   /* count root element children */
-  for(i = 0, node = xnp->children; node; node = node->next) {
+  for(node = xnp->children; node; node = node->next) {
     if(node->type == XML_ELEMENT_NODE)
       nodes_count++;
   }
