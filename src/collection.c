@@ -248,13 +248,11 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
                     value, (long)unix_time, new_value);
 #endif
-            free(string_value);
-            string_value= new_value;
-            int_value= (int)unix_time;
-            datatype = VALUE_TYPE_DATETIME;
-          } else
-            /* failed to convert, make it a string */
-            datatype = VALUE_TYPE_STRING;
+            int_value = (int)unix_time;
+          } else {
+            /* else failed to convert */
+            int_value = -1;
+          }
           break;
           
         case VALUE_TYPE_INTEGER:
