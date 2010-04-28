@@ -183,7 +183,6 @@ flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id)
   const char* parameters[8][2];
   int count = 0;
   xmlDocPtr doc = NULL;
-  int result = 1;
   
   if(!photoset_id)
     return 1;
@@ -202,8 +201,6 @@ flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id)
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
-
-  result = 0;
 
   tidy:
 
