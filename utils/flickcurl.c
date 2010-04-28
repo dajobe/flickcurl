@@ -5515,7 +5515,6 @@ main(int argc, char *argv[])
             fputs(flickcurl_get_shared_secret(fc), fh);
             fputs("\n", fh);
             fclose(fh);
-            read_auth = 0;
             fprintf(stdout, 
                   "%s: Updated configuration file %s with authentication token\n",
                     program, config_path);
