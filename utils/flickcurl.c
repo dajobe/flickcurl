@@ -5558,7 +5558,6 @@ main(int argc, char *argv[])
                   d++;
                   dc = commands[i].description[d];
                 } while(dc == ' ');
-                lastdc = -1;
               }
 
               nl = 0;
