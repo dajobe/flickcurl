@@ -96,10 +96,10 @@ my_vsnprintf(const char *message, va_list arguments)
     len = vsnprintf(buffer, size, message, args_copy);
     va_end(args_copy);
 
-    if(len> = 0)
+    if(len >= 0)
       break;
     free(buffer);
-    size+ = 4;
+    size += 4;
   }
 #endif
 
