@@ -1187,27 +1187,43 @@ flickcurl_free_photos(flickcurl_photo** photos)
 }
 
 
+/*
+ * flickcurl_invoke_photos_list:
+ * @fc: Flickcurl context
+ * @xpathExpr: Xpath to the list of photos e.g. '/rsp/photos' or '/rsp/gallery'.  The /photos suffix is added internally.
+ * @format: result format wanted
+ *
+ * INTERNAL - Build photos list from XML or get format content result from web service response document
+ *
+ * Return value: new photos list or NULL on failure
+ */
 flickcurl_photos_list*
 flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
                              const char* format)
 {
   flickcurl_photos_list* photos_list = NULL;
   xmlXPathContextPtr xpathCtx = NULL;
+  xmlXPathObjectPtr xpathObj = NULL;
+  xmlXPathContextPtr xpathNodeCtx = NULL;
   const char *nformat;
   size_t format_len;
 
-  photos_list = (flickcurl_photos_list*)calloc(1, sizeof(flickcurl_photos_list));
+  photos_list = (flickcurl_photos_list*)calloc(1, sizeof(*photos_list));
   if(!photos_list) {
     fc->failed = 1;
     goto tidy;
   }
 
+  photos_list->page = -1;
+  photos_list->per_page = -1;
+  photos_list->total_count = -1;
+  
   if(format) {
     nformat = format;
     format_len = strlen(format);
   
     photos_list->content = flickcurl_invoke_get_content(fc,
-                                                      &photos_list->content_length);
+                                                        &photos_list->content_length);
     if(!photos_list->content) {
       fc->failed = 1;
       goto tidy;
@@ -1215,6 +1231,12 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
 
   } else {
     xmlDocPtr doc = NULL;
+    xmlNodePtr photos_node;
+    size_t xpathExprLen = strlen((const char*)xpathExpr);
+    char* value;
+    xmlChar* photosXpathExpr;
+#define SUFFIX "/photo"
+#define SUFFIX_LEN 6
 
     nformat = "xml";
     format_len = 3;
@@ -1230,8 +1252,65 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
       goto tidy;
     }
 
-    photos_list->photos = flickcurl_build_photos(fc, xpathCtx, xpathExpr,
-                                               &photos_list->photos_count);
+    /* set up a new XPath context for the top level list-of-photos
+     * XML element.  It may be <photos> or <gallery> or ... - the
+     * code does not care.
+     */
+
+    xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+    if(!xpathObj) {
+      flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                      xpathExpr);
+      fc->failed = 1;
+      goto tidy;
+    }
+
+    photos_node = xpathObj->nodesetval->nodeTab[0];
+
+    xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
+    if(!xpathNodeCtx) {
+      flickcurl_error(fc, "Unable to create XPath context for XPath \"%s\"", 
+                      xpathExpr);
+      fc->failed = 1;
+      goto tidy;
+    }
+    
+    xpathNodeCtx->node = photos_node;
+
+    value = flickcurl_xpath_eval(fc, xpathNodeCtx,
+                                 (const xmlChar*)"./@page");
+    if(value) {
+      photos_list->page = atoi(value);
+      free(value);
+    }
+
+    value = flickcurl_xpath_eval(fc, xpathNodeCtx,
+                                 (const xmlChar*)"./@perpage");
+    if(value) {
+      photos_list->per_page = atoi(value);
+      free(value);
+    }
+
+    value = flickcurl_xpath_eval(fc, xpathNodeCtx,
+                                 (const xmlChar*)"./@total");
+    if(value) {
+      photos_list->total_count = atoi(value);
+      free(value);
+    }
+
+    /* finished with these */
+    xmlXPathFreeContext(xpathNodeCtx);
+    xpathNodeCtx = NULL;
+    xmlXPathFreeObject(xpathObj);
+    xpathObj = NULL;
+
+
+    photosXpathExpr = (xmlChar*)malloc(xpathExprLen + SUFFIX_LEN + 1);
+    memcpy(photosXpathExpr, xpathExpr, xpathExprLen);
+    memcpy(photosXpathExpr + xpathExprLen, SUFFIX, SUFFIX_LEN + 1);
+  
+    photos_list->photos = flickcurl_build_photos(fc, xpathCtx, photosXpathExpr,
+                                                 &photos_list->photos_count);
     if(!photos_list->photos) {
       fc->failed = 1;
       goto tidy;
@@ -1248,6 +1327,10 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
   memcpy(photos_list->format, nformat, format_len+1);
 
   tidy:
+  if(xpathNodeCtx)
+    xmlXPathFreeContext(xpathNodeCtx);
+  if(xpathObj)
+    xmlXPathFreeObject(xpathObj);
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
