@@ -1148,6 +1148,9 @@ typedef struct {
  * @photos_count: number of photos in @photos array if @format is NULL. Undefined on failure
  * @content: raw content if @format is not NULL.  Also may be NULL on failure.
  * @content_length: size of @content if @format is not NULL. Undefined on failure
+ * @page: current photo list page
+ * @per_page: current photo list per-page
+ * @total_count: total number of photos available of which the current @page and @per_page is a slice
  *
  * Photos List result.
  */
@@ -1157,6 +1160,9 @@ typedef struct {
   int photos_count;
   char* content;
   size_t content_length;
+  int page;
+  int per_page;
+  int total_count;
 } flickcurl_photos_list;
 
 
