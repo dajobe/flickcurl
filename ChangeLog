@@ -1,3 +1,64 @@
+2010-05-09  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html: Updated to 1.18 - 176 API calls
+
+	* NEWS.html, configure.ac: 1.19
+
+	* utils/flickcurl.c:
+	(command_print_photos_list): Print out photos list new fields
+
+	* src/favorites-api.c, src/galleries-api.c,
+	src/groups-pools-api.c, src/interestingness-api.c,
+	src/panda-api.c, src/people-api.c: Update
+	flickcurl_invoke_photos_list callers to remove '/photos/' from
+	XPath suffix
+
+	* src/photo.c: Capture counts and, change xpath convention for
+	internal flickcurl_invoke_photos_list.
+
+	(flickcurl_invoke_photos_list): Capture the page, per-page and
+	total photos counts into fields of the returned photos_list
+
+	Adjust the calling convention to pass in the top level XPath, and
+	append '/photo' to it to get the individual photos via the
+	unchanged internal function flickcurl_build_photos.
+
+	* src/flickcurl.h: flickcurl_photos_list gains page, per_page and
+	total_count
+
+	* src/collection.c:
+	(flickcurl_build_collections): declare debug var in ifdef
+
+2010-05-03  Dave Beckett <dave@dajobe.org>
+
+	* src/vsnprintf.c: Remove space from '> =' and '+ =' operators
+	added by accident -
+	http://github.com/dajobe/flickcurl/issues/#issue/4
+
+2010-04-28  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c:
+	(main): remove harmless unused set of read_auth var [clang]
+
+	* utils/flickcurl.c:
+	(main): remove harmless unused set of lastdc var [clang]
+
+	* utils/flickcurl.c:
+	(command_people_getPhotos): initialise rc [clang]
+
+	* src/photosets-api.c:
+	(flickcurl_photosets_delete): result var never used [clang]
+
+	* src/tags.c:
+	(flickcurl_build_tag_clusters): cluster_count written but never read
+	[clang]
+
+	* src/context.c:
+	(flickcurl_build_contexts): setting i is useless in first loop
+	[clang]
+
+	* (flickcurl_build_collections): setting datatype is usless [clang]
+
 2010-04-26  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_18 for 1.18 release
