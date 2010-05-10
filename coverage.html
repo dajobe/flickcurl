@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (168/168)</span>
+<span class="coverage">100.0% (176/176)</span>
 </p>
 
 
@@ -103,8 +103,14 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.addPhoto.html">flickr.galleries.addPhoto</a> (1.17)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.create.html">flickr.galleries.create</a> (1.18)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.editMeta.html">flickr.galleries.editMeta</a> (1.18)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.editPhoto.html">flickr.galleries.editPhoto</a> (1.18)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.editPhotos.html">flickr.galleries.editPhotos</a> (1.18)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.getInfo.html">flickr.galleries.getInfo</a> (1.18)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.getList.html">flickr.galleries.getList</a> (1.17)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.getListForPhoto.html">flickr.galleries.getListForPhoto</a> (1.17)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.galleries.getPhotos.html">flickr.galleries.getPhotos</a> (1.18)</li>
 </ul>
 
 <h3>groups</h3>
@@ -166,6 +172,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.findByEmail.html">flickr.people.findByEmail</a> (0.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.findByUsername.html">flickr.people.findByUsername</a> (0.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getInfo.html">flickr.people.getInfo</a> (0.6)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getPhotos.html">flickr.people.getPhotos</a> (1.18)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getPublicGroups.html">flickr.people.getPublicGroups</a> (0.13)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getPublicPhotos.html">flickr.people.getPublicPhotos</a> (0.12)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getUploadStatus.html">flickr.people.getUploadStatus</a> (0.13)</li>
@@ -389,12 +396,26 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.getGroup.html">flickr.urls.getGroup</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.getUserPhotos.html">flickr.urls.getUserPhotos</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.getUserProfile.html">flickr.urls.getUserProfile</a> (0.9)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.lookupGallery.html">flickr.urls.lookupGallery</a> (1.18)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.lookupGroup.html">flickr.urls.lookupGroup</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.urls.lookupUser.html">flickr.urls.lookupUser</a> (0.6)</li>
 </ul>
 
 
 <h2>Changes</h2>
+
+<p><strong>1.18</strong>: flickr.galleries.create, flickr.galleries.editMeta, flickr.galleries.editPhoto, flickr.galleries.editPhotos, flickr.galleries.getInfo, flickr.galleries.getPhotos, flickr.people.getPhotos, flickr.urls.lookupGallery (8 new)</p>
+<pre>
+char* flickcurl_galleries_create(flickcurl* fc, const char* title, const char* description, const char* primary_photo_id, char** gallery_url_p);
+int flickcurl_galleries_editMeta(flickcurl* fc, const char* gallery_id, const char* title, const char* description);
+int flickcurl_galleries_editPhoto(flickcurl* fc, const char* gallery_id, const char* photo_id, const char* new_comment);
+int flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id, const char* primary_photo_id, const char** photo_ids_array);
+flickcurl_gallery* flickcurl_galleries_getInfo(flickcurl* fc, const char* gallery_id);
+flickcurl_photo** flickcurl_galleries_getPhotos(flickcurl* fc, const char* gallery_id, const char* extras, int per_page, int page);
+flickcurl_photo** flickcurl_people_getPhotos(flickcurl* fc, const char* user_id, int safe_search, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date, int content_type, int privacy_filter, const char* extras, int per_page, int page);
+char* flickcurl_urls_lookupGallery(flickcurl* fc, const char* url);
+</pre>
+
 
 <p><strong>1.17</strong>: flickr.galleries.addPhoto, flickr.galleries.getList, flickr.galleries.getListForPhoto, flickr.people.getPhotosOf, flickr.photos.people.add, flickr.photos.people.delete, flickr.photos.people.deleteCoords, flickr.photos.people.editCoords, flickr.photos.people.getList, flickr.stats.getCollectionDomains, flickr.stats.getCollectionReferrers, flickr.stats.getCollectionStats, flickr.stats.getPhotoDomains, flickr.stats.getPhotoReferrers, flickr.stats.getPhotosetDomains, flickr.stats.getPhotosetReferrers, flickr.stats.getPhotosetStats, flickr.stats.getPhotoStats, flickr.stats.getPhotostreamDomains, flickr.stats.getPhotostreamReferrers, flickr.stats.getPhotostreamStats, flickr.stats.getPopularPhotos, flickr.stats.getTotalViews (23 new)</p>
 <pre>
