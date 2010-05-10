@@ -257,8 +257,8 @@ flickcurl_groups_pools_getPhotos_params(flickcurl* fc, const char* group_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {

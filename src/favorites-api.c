@@ -138,7 +138,7 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
+                                           (const xmlChar*)"/rsp/photos",
                                            format);
 
   tidy:
@@ -233,8 +233,8 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {

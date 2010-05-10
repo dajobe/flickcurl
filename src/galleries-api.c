@@ -625,7 +625,7 @@ flickcurl_galleries_getPhotos_params(flickcurl* fc, const char* gallery_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                             (const xmlChar*)"/rsp/gallery/photo",
+                                             (const xmlChar*)"/rsp/gallery",
                                              format);
 
   tidy:

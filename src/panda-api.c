@@ -198,7 +198,7 @@ flickcurl_panda_getPhotos(flickcurl *fc, const char *panda_name)
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                             (const xmlChar*)"/rsp/photos/photo",
+                                             (const xmlChar*)"/rsp/photos",
                                              format);
   if(!photos_list)
     fc->failed = 1;

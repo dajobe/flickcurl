@@ -235,8 +235,8 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {
@@ -428,7 +428,7 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                             (const xmlChar*)"/rsp/photos/photo",
+                                             (const xmlChar*)"/rsp/photos",
                                              format);
 
   tidy:
@@ -546,7 +546,7 @@ flickcurl_people_getPhotosOf_params(flickcurl* fc, const char* user_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                             (const xmlChar*)"/rsp/photos/photo",
+                                             (const xmlChar*)"/rsp/photos",
                                              format);
 
   tidy:
