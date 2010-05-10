@@ -30,6 +30,9 @@ Photos List.
 @photos_count: 
 @content: 
 @content_length: 
+@page: 
+@per_page: 
+@total_count: 
 
 <!-- ##### STRUCT flickcurl_photos_list_params ##### -->
 <para>
