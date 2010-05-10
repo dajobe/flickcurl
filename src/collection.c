@@ -243,8 +243,8 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             unix_time = curl_getdate((const char*)string_value, NULL);
           
           if(unix_time >= 0) {
-            char* new_value = flickcurl_unixtime_to_isotime(unix_time);
 #if FLICKCURL_DEBUG > 1
+            char* new_value = flickcurl_unixtime_to_isotime(unix_time);
             fprintf(stderr, "  date from: '%s' unix time %ld to '%s'\n",
                     value, (long)unix_time, new_value);
 #endif
