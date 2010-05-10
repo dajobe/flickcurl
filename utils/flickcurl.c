@@ -1418,8 +1418,11 @@ command_print_photos_list(flickcurl* fc, flickcurl_photos_list* photos_list,
   int i;
   
   if(photos_list->photos) {
-    fprintf(stderr, "%s: %s returned %d photos\n", program, label,
-            photos_list->photos_count);
+    fprintf(stderr,
+            "%s: %s returned %d photos out of %d, page %d per-page %d\n",
+            program, label,
+            photos_list->photos_count, photos_list->total_count,
+            photos_list->page, photos_list->per_page);
     for(i = 0; photos_list->photos[i]; i++) {
       fprintf(stderr, "%s: %s photo %d\n", program, label, i);
       command_print_photo(photos_list->photos[i]);
