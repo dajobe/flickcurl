@@ -2202,6 +2202,8 @@ flickcurl_method* flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* 
 
 /* flickr.stats */
 FLICKCURL_API
+int flickcurl_stats_getCSVFiles(flickcurl* fc);
+FLICKCURL_API
 flickcurl_stat** flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date, const char* collection_id, int per_page, int page);
 FLICKCURL_API
 flickcurl_stat** flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date, const char* domain, const char* collection_id, int per_page, int page);

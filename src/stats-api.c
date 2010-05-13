@@ -39,6 +39,28 @@
 
 
 /**
+ * flickcurl_stats_getCSVFiles:
+ * @fc: flickcurl context
+ * 
+ * Returns a list of URLs for text files containing historic stats data (from November 26th 2007 to 1 June 2010) for the current user.
+ *
+ * Not implemented since the files that this API call points to stop
+ * working after June 1 2010.
+ *
+ * Implements flickr.stats.getCSVFiles (1.19)
+ *
+ * Announced http://code.flickr.com/blog/2010/05/13/stats-api-redux/
+ * 
+ * Return value: always returns non-0 to signify failure
+ **/
+int
+flickcurl_stats_getCSVFiles(flickcurl* fc)
+{
+  return 1;
+}
+
+
+/**
  * flickcurl_stats_getCollectionDomains:
  * @fc: flickcurl context
  * @date: Stats will be returned for this date. This should be in
