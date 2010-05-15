@@ -178,6 +178,9 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
  * See flickcurl_photos_upload_params() to set additional upload
  * parameters such as safety level and content type.
  *
+ * @deprecated: Replaced by flickcurl_photos_upload_params() with
+ * #flickcurl_upload_params argument.
+ *
  * Return value: #flickcurl_upload_status or NULL on failure
  **/
 flickcurl_upload_status*
