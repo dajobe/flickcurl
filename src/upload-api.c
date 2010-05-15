@@ -175,7 +175,7 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
  *
  * Implements Uploading Photos (0.10)
  * 
- * See flickcurl_photos_upload() to set additional upload
+ * See flickcurl_photos_upload_params() to set additional upload
  * parameters such as safety level and content type.
  *
  * Return value: #flickcurl_upload_status or NULL on failure
