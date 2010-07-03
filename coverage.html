@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (176/176)</span>
+<span class="coverage">100.0% (180/180)</span>
 </p>
 
 
@@ -294,6 +294,9 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.getPhotos.html">flickr.photosets.getPhotos</a> (0.13)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.orderSets.html">flickr.photosets.orderSets</a> (0.13)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.removePhoto.html">flickr.photosets.removePhoto</a> (0.13)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.removePhotos.html">flickr.photosets.removePhotos</a> (1.19)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.reorderPhotos.html">flickr.photosets.reorderPhotos</a> (1.19)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.photosets.setPrimaryPhoto.html">flickr.photosets.setPrimaryPhoto</a> (1.19)</li>
 </ul>
 
 
@@ -350,6 +353,7 @@ or <span class="unsupported">unsupported</span>.
 <h3>stats</h3>
 
 <ul>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.stats.getCSVFiles.html">flickr.stats.getCSVFiles</a> (1.19)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.stats.getCollectionDomains.html">flickr.stats.getCollectionDomains</a> (1.17)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.stats.getCollectionReferrers.html">flickr.stats.getCollectionReferrers</a> (1.17)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.stats.getCollectionStats.html">flickr.stats.getCollectionStats</a> (1.17)</li>
@@ -403,6 +407,15 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.19</strong>: flickr.photosets.removePhotos, flickr.photosets.reorderPhotos, flickr.photosets.setPrimaryPhoto, flickr.stats.getCSVFiles (4 new)</p>
+<pre>
+int flickcurl_photosets_removePhotos(flickcurl* fc, const char* photoset_id, const char** photo_ids_array);
+int flickcurl_photosets_reorderPhotos(flickcurl* fc, const char* photoset_id, const char** photo_ids_array);
+int flickcurl_photosets_setPrimaryPhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
+int flickcurl_stats_getCSVFiles(flickcurl* fc);
+</pre>
+
 
 <p><strong>1.18</strong>: flickr.galleries.create, flickr.galleries.editMeta, flickr.galleries.editPhoto, flickr.galleries.editPhotos, flickr.galleries.getInfo, flickr.galleries.getPhotos, flickr.people.getPhotos, flickr.urls.lookupGallery (8 new)</p>
 <pre>
