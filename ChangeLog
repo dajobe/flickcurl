@@ -1,3 +1,32 @@
+2010-07-02  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Added command support for
+	flickcurl_photosets_removePhotos,
+	flickcurl_photosets_reorderPhotos and
+	flickcurl_photosets_setPrimaryPhoto
+
+	* docs/flickcurl-sections.txt, src/flickcurl.h,
+	src/photosets-api.c: Added flickcurl_photosets_removePhotos,
+	flickcurl_photosets_reorderPhotos and
+	flickcurl_photosets_setPrimaryPhoto
+
+	* src/galleries-api.c:
+	(flickcurl_galleries_editPhotos): Fix param check.
+
+2010-05-15  Dave Beckett <dave@dajobe.org>
+
+	* src/upload-api.c:
+	(flickcurl_photos_upload): autodocs - note deprecation for
+	flickcurl_photos_upload_params
+
+	* src/upload-api.c: autodocs
+
+2010-05-13  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/stats-api.c:
+	(flickcurl_stats_getCSVFiles): Added, but not implementing an API
+	with a death date 2 weeks away. Always fails.
+
 2010-05-09  Dave Beckett <dave@dajobe.org>
 
 	* coverage.html: Updated to 1.18 - 176 API calls
