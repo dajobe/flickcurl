@@ -417,6 +417,7 @@ flickcurl_view_stats
 flickcurl_free_stat
 flickcurl_free_stats
 flickcurl_free_view_stats
+flickcurl_stats_getCSVFiles
 flickcurl_stats_getCollectionDomains
 flickcurl_stats_getCollectionReferrers
 flickcurl_stats_getCollectionStats
