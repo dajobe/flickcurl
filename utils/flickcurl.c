@@ -4813,6 +4813,41 @@ command_galleries_getPhotos(flickcurl* fc, int argc, char *argv[])
 }
 
 
+
+
+static int
+command_photosets_removePhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char** photoset_ids = flickcurl_array_split(argv[2], ',');
+  int rc;
+  
+  rc = flickcurl_photosets_removePhotos(fc, argv[1],
+                                        (const char**)photoset_ids);
+  flickcurl_array_free(photoset_ids);
+  return rc;
+}
+
+
+static int
+command_photosets_reorderPhotos(flickcurl* fc, int argc, char *argv[])
+{
+  char** photoset_ids = flickcurl_array_split(argv[2], ',');
+  int rc;
+  
+  rc = flickcurl_photosets_reorderPhotos(fc, argv[1],
+                                         (const char**)photoset_ids);
+  flickcurl_array_free(photoset_ids);
+  return rc;
+}
+
+
+static int
+command_photosets_setPrimaryPhoto(flickcurl* fc, int argc, char *argv[])
+{
+  return flickcurl_photosets_setPrimaryPhoto(fc, argv[1], argv[2]);
+}
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -5195,6 +5230,15 @@ static flickcurl_cmd commands[] = {
   {"photosets.removePhoto",
    "PHOTOSET-ID PHOTO-ID", "Remove PHOTO-ID from PHOTOSET-ID.",
    command_photosets_removePhoto, 2, 2},
+  {"photosets.removePhotos",
+   "PHOTOSET-ID PHOTO-IDS...", "Remove PHOTO-IDS from PHOTOSET-ID.",
+   command_photosets_removePhotos, 2, 2},
+  {"photosets.reorderPhotos",
+   "PHOTOSET-ID PHOTO-IDS...", "Reorder PHOTO-IDS from PHOTOSET-ID.",
+   command_photosets_reorderPhotos, 2, 2},
+  {"photosets.setPrimaryPhoto",
+   "PHOTOSET-ID PHOTO-ID", "Set photoset PHOTOSET-ID primary photo to PHOTO-ID.",
+   command_photosets_setPrimaryPhoto, 2, 2},
 
   {"photosets.comments.addComment",
    "PHOTOSET-ID TEXT", "Add a comment TEXT to photoset PHOTOSET-ID.",
