@@ -695,3 +695,164 @@ flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id,
 
   return result;
 }
+
+
+/**
+ * flickcurl_photosets_removePhotos:
+ * @fc: flickcurl context
+ * @photoset_id: The id of the photoset to remove photos from.
+ * @photo_ids_array: Array of photo ids to remove from the photoset.
+ * 
+ * Remove multiple photos from a photoset.
+ *
+ * Implements flickr.photosets.removePhotos (1.19)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_photosets_removePhotos(flickcurl* fc, const char* photoset_id,
+                                 const char** photo_ids_array)
+{
+  const char* parameters[9][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
+  char* photo_ids = NULL;
+  
+  if(!photoset_id || !photo_ids_array)
+    return 1;
+
+  parameters[count][0]  = "photoset_id";
+  parameters[count++][1]= photoset_id;
+  parameters[count][0]  = "photo_ids";
+  photo_ids = flickcurl_array_join(photo_ids_array, ',');
+  parameters[count++][1]= photo_ids;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photosets.removePhotos", parameters, count))
+    goto tidy;
+
+  flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+  if(photo_ids)
+    free(photo_ids);
+
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}
+
+
+/**
+ * flickcurl_photosets_reorderPhotos:
+ * @fc: flickcurl context
+ * @photoset_id: The id of the photoset to reorder. The photoset must belong to the calling user.
+ * @photo_ids_array: Array of Ordered list of photo ids.  Photos that are not in the list will keep their original order
+ * 
+ * (null)
+ *
+ * Implements flickr.photosets.reorderPhotos (1.19)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_photosets_reorderPhotos(flickcurl* fc, const char* photoset_id,
+                                  const char** photo_ids_array)
+{
+  const char* parameters[9][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
+  char* photo_ids = NULL;
+  
+  if(!photoset_id || !photo_ids_array)
+    return 1;
+
+  parameters[count][0]  = "photoset_id";
+  parameters[count++][1]= photoset_id;
+  parameters[count][0]  = "photo_ids";
+  photo_ids = flickcurl_array_join(photo_ids_array, ',');
+  parameters[count++][1]= photo_ids;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photosets.reorderPhotos", parameters, count))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+  if(photo_ids)
+    free(photo_ids);
+
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}
+
+
+/**
+ * flickcurl_photosets_setPrimaryPhoto:
+ * @fc: flickcurl context
+ * @photoset_id: The id of the photoset to set primary photo to.
+ * @photo_id: The id of the photo to set as primary.
+ * 
+ * Set photoset primary photo
+ *
+ * Implements flickr.photosets.setPrimaryPhoto (1.19)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_photosets_setPrimaryPhoto(flickcurl* fc, const char* photoset_id,
+                                    const char* photo_id)
+{
+  const char* parameters[9][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
+  
+  if(!photoset_id || !photo_id)
+    return 1;
+
+  parameters[count][0]  = "photoset_id";
+  parameters[count++][1]= photoset_id;
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.photosets.setPrimaryPhoto", parameters, 
+                       count))
+    goto tidy;
+
+  flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}

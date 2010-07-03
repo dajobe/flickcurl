@@ -338,6 +338,9 @@ flickcurl_photosets_getPhotos
 flickcurl_photosets_getPhotos_params
 flickcurl_photosets_orderSets
 flickcurl_photosets_removePhoto
+flickcurl_photosets_removePhotos
+flickcurl_photosets_reorderPhotos
+flickcurl_photosets_setPrimaryPhoto
 </SECTION>
 
 <SECTION>

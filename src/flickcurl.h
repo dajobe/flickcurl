@@ -2169,6 +2169,12 @@ FLICKCURL_API
 int flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array);
 FLICKCURL_API
 int flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
+FLICKCURL_API
+int flickcurl_photosets_removePhotos(flickcurl* fc, const char* photoset_id, const char** photo_ids_array);
+FLICKCURL_API
+int flickcurl_photosets_reorderPhotos(flickcurl* fc, const char* photoset_id, const char** photo_ids_array);
+FLICKCURL_API
+int flickcurl_photosets_setPrimaryPhoto(flickcurl* fc, const char* photoset_id, const char* photo_id);
 
 /* flickr.photosets.comments */
 FLICKCURL_API
