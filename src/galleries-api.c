@@ -329,7 +329,7 @@ flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id,
   int result = 1;
   char* photo_ids = NULL;
   
-  if(!gallery_id || !primary_photo_id || !photo_ids)
+  if(!gallery_id || !primary_photo_id || !photo_ids_array)
     return 1;
 
   parameters[count][0]  = "gallery_id";
