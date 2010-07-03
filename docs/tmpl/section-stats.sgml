@@ -67,6 +67,15 @@ Statistics.
 @view_stats: 
 
 
+<!-- ##### FUNCTION flickcurl_stats_getCSVFiles ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_stats_getCollectionDomains ##### -->
 <para>
 

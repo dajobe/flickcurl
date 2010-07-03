@@ -229,3 +229,36 @@ Set of Photos.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photosets_removePhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@photo_ids_array: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_reorderPhotos ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@photo_ids_array: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_photosets_setPrimaryPhoto ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photoset_id: 
+@photo_id: 
+@Returns: 
+
+
