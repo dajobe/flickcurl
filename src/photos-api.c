@@ -1594,7 +1594,7 @@ flickcurl_photos_recentlyUpdated(flickcurl* fc, int min_date,
  *
  * Remove a tag from a photo.
  *
- * The @tag_id is returned such as from flickr_photos_getInfo()
+ * The @tag_id is returned such as from flickcurl_photos_getInfo()
  *
  * Implements flickr.photos.removeTag (0.9)
  *
