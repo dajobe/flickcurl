@@ -34,6 +34,12 @@
 #include <flickcurl_internal.h>
 
 
+/**
+ * flickcurl_free_stat:
+ * @stat: stat object
+ *
+ * Destructor for stat object
+ */
 void
 flickcurl_free_stat(flickcurl_stat *stat)
 {
