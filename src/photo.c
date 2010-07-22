@@ -1127,6 +1127,10 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     photo->video = flickcurl_build_video(fc, xpathNodeCtx,
                                        (const xmlChar*)"./video");
     
+    photo->notes = flickcurl_build_notes(fc, photo, xpathNodeCtx, 
+                                         (const xmlChar*)"./notes/note",
+                                         &photo->notes_count);
+
     if(!photo->media_type) {
       photo->media_type = (char*)malloc(6);
       strncpy(photo->media_type, "photo", 6);

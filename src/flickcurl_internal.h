@@ -199,6 +199,9 @@ flickcurl_member** flickcurl_build_members(flickcurl* fc,  xmlXPathContextPtr xp
 /* method.c */
 flickcurl_method* flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 
+/* note.c  */
+flickcurl_note** flickcurl_build_notes(flickcurl* fc, flickcurl_photo* photo, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* note_count_p);
+
 /* perms.c */
 flickcurl_perms* flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 

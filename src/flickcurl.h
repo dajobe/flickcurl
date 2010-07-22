@@ -526,6 +526,36 @@ typedef struct {
   
 
 /**
+ * flickcurl_note: 
+ * @id: note identifier (per-photo)
+ * @author: author (may be NULL)
+ * @authorname: author real name (may be NULL)
+ * @x: The left coordinate of the note
+ * @y: The top coordinate of the note
+ * @w: The width of the note
+ * @h: The height of the note
+ * @text: The description of the note
+ *
+ * A note OR a posting of a note about a photo by a user OR a note in a histogram
+ *
+ * Most of these fields may be NULL, 0 for numbers
+ * but not all.  Either @raw or @cooked MUST appear. 
+ *
+ * A Photo Note.
+ */
+typedef struct flickcurl_note_s {
+  int id;
+  char* author;
+  char* authorname;
+  unsigned int x;
+  unsigned int y;
+  unsigned int w;
+  unsigned int h;
+  char* text;
+} flickcurl_note;
+
+
+/**
  * flickcurl_place_type:
  * @FLICKCURL_PLACE_LOCATION: a general location
  * @FLICKCURL_PLACE_NEIGHBOURHOOD: neighborhood (narrowest place)
@@ -742,6 +772,8 @@ typedef struct {
  * @place: place
  * @video: video (may be NULL)
  * @media_type: "photo" or "video"
+ * @notes: array of notes (may be NULL)
+ * @notes_count: size of notes array
  *
  * A photo or video.
  *
@@ -760,6 +792,9 @@ typedef struct flickcurl_photo_s {
   flickcurl_video* video;
 
   char *media_type;
+
+  flickcurl_note** notes;
+  int notes_count;
 } flickcurl_photo;
 
 
@@ -1638,6 +1673,8 @@ FLICKCURL_API
 void flickcurl_free_collections(flickcurl_collection** collections);
 FLICKCURL_API
 void flickcurl_free_gallery(flickcurl_gallery *gallery);
+FLICKCURL_API
+void flickcurl_free_note(flickcurl_note *n);
 FLICKCURL_API
 void flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_nspace);
 FLICKCURL_API

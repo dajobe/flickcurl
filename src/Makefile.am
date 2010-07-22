@@ -39,6 +39,7 @@ location.c \
 machinetags.c \
 members.c \
 method.c \
+note.c \
 person.c \
 photo.c \
 photoset.c \
