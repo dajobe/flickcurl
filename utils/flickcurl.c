@@ -276,9 +276,15 @@ static void
 command_print_tags(flickcurl_tag** tags, const char* label, const char* value)
 {
   int i;
+  if(!tags)
+    return;
+  
   if(label)
     fprintf(stderr, "%s: %s %s tags\n", program, label,
             (value ? value : "(none)"));
+  else
+    fprintf(stderr, "tags:\n");
+  
   for(i = 0; tags[i]; i++) {
     flickcurl_tag* tag = tags[i];
     fprintf(stderr,
@@ -402,6 +408,33 @@ command_print_video(flickcurl_video* v)
 
 
 static void
+command_print_notes(flickcurl_note** notes, const char* label,
+                    const char* value)
+{
+  int i;
+
+  if(!notes)
+    return;
+  
+  if(label)
+    fprintf(stderr, "%s: %s %s notes\n", program, label,
+            (value ? value : "(none)"));
+  else
+    fprintf(stderr, "notes:\n");
+
+  for(i = 0; notes[i]; i++) {
+    flickcurl_note* note = notes[i];
+    fprintf(stderr,
+            "%d) id %d note: author ID %s name %s  x %d y %d w %d h %d text '%s'\n",
+            i, note->id,
+            note->author, (note->authorname ? note->authorname : "(Unknown)"),
+            note->x, note->y, note->w, note->h,
+            note->text);
+  }
+}
+
+
+static void
 command_print_photo(flickcurl_photo* photo)
 {
   int i;
@@ -425,6 +458,9 @@ command_print_photo(flickcurl_photo* photo)
   }
   
   command_print_tags(photo->tags, NULL, NULL);
+
+  if(photo->notes)
+    command_print_notes(photo->notes, NULL, NULL);
 
   if(photo->place)
     command_print_place(photo->place, NULL, NULL, 1);
