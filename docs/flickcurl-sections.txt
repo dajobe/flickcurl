@@ -191,6 +191,12 @@ flickcurl_machinetags_getValues
 </SECTION>
 
 <SECTION>
+<FILE>section-note</FILE>
+flickcurl_note
+flickcurl_free_note
+</SECTION>
+
+<SECTION>
 <FILE>section-panda</FILE>
 flickcurl_panda_getList
 flickcurl_panda_getPhotos
