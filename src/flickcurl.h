@@ -1674,8 +1674,6 @@ void flickcurl_free_collections(flickcurl_collection** collections);
 FLICKCURL_API
 void flickcurl_free_gallery(flickcurl_gallery *gallery);
 FLICKCURL_API
-void flickcurl_free_note(flickcurl_note *note);
-FLICKCURL_API
 void flickcurl_free_tag_namespace(flickcurl_tag_namespace *tag_nspace);
 FLICKCURL_API
 void flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_nspaces);
