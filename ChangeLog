@@ -1,4 +1,57 @@
+2010-07-24  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-photo.sgml: Update doc tmpl for
+	flickcurl_photo struct
+
+	* docs/tmpl/section-note.sgml: Add doc tmpl
+
+	* src/flickcurl.h: autodocs
+
+	* src/note.c: autodocs
+
+	* docs/flickcurl-sections.txt: Added section note for
+	flickcurl_free_note and flickcurl_note
+
+	* utils/flickcurl.c:
+	Print photo notes using flickcurl_note fields from photo object.
+
+	(command_print_tags): Print a tags: label if nothing passed in.
+
+	(command_print_notes): Added to print a list of notes
+
+	(command_print_photo): Call above.
+
+	* src/note.c: remove C++ comments
+
+2010-07-22  Dave Beckett <dave@dajobe.org>
+
+	* src/Makefile.am, src/flickcurl.h, src/flickcurl_internal.h,
+	src/note.c, src/photo.c:
+	Add flickr notes class flickcurl_note and use for photos
+
+	Added flickcurl_note class.
+
+	flickcurl_photo struct gains notes and and notes_count fields.
+
+	(flickcurl_free_note): Added.
+
+	(flickcurl_build_notes): Added internal function.
+
+	(flickcurl_build_photos): Use flickcurl_build_notes to add notes
+	structure.
+
 2010-07-02  Dave Beckett <dave@dajobe.org>
+
+	* docs/tmpl/section-photoset.sgml, docs/tmpl/section-stats.sgml:
+	Update doc tmpls
+
+	* coverage.html: Update coverage for 1.19
+
+	* src/photos-api.c: fix autodocs for flickcurl_photos_removeTag
+
+	* docs/flickcurl-sections.txt: Add flickcurl_stats_getCSVFiles
+
+	* src/stat.c: autodocs for flickcurl_free_stat
 
 	* utils/flickcurl.c: Added command support for
 	flickcurl_photosets_removePhotos,
