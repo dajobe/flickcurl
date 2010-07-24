@@ -239,7 +239,7 @@ $ flickcurl -a 123-456-789
 <emphasis>Authentication Token</emphasis> (auth token) is calculated
 and returned.  The flickcurl utility will reply:</para>
 <programlisting>
-flickcurl: Successfully exchanged frob 836-328-145 for authentication token
+flickcurl: Successfully exchanged frob 123-456-789 for authentication token
 flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
 </programlisting>
 
