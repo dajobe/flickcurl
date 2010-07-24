@@ -132,10 +132,10 @@ flickcurl_build_notes(flickcurl* fc, flickcurl_photo* photo,
       }
     }
     
-//#if FLICKCURL_DEBUG > 1
+#if FLICKCURL_DEBUG > 1
     fprintf(stderr, "note: id %d author ID %s name %s x %d y %d w %d h %d text '%s'\n",
             n->id, n->author, n->authorname, n->x, n->y, n->w, n->h, n->text);
-//#endif
+#endif
     
     notes[note_count++] = n;
   } /* for nodes */
