@@ -36,22 +36,22 @@
 
 /**
  * flickcurl_free_note:
- * @t: note object
+ * @note: note object
  *
  * Destructor for note object
  */
 void
-flickcurl_free_note(flickcurl_note *n)
+flickcurl_free_note(flickcurl_note *note)
 {
-  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(n, flickcurl_note);
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(note, flickcurl_note);
 
-  if(n->author)
-    free(n->author);
-  if(n->authorname)
-    free(n->authorname);
-  if(n->text)
-    free(n->text);
-  free(n);
+  if(note->author)
+    free(note->author);
+  if(note->authorname)
+    free(note->authorname);
+  if(note->text)
+    free(note->text);
+  free(note);
 }
 
 
