@@ -1,4 +1,7 @@
-2010-07-24  Dave Beckett <dave@dajobe.org>
+2010-07-24  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_19 for 1.19 release (GIT
+	acd343b3b123211be65b8b8539e847d8575fe56f)
 
 	* docs/tmpl/section-photo.sgml: Update doc tmpl for
 	flickcurl_photo struct
