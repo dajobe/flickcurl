@@ -138,6 +138,10 @@ flickcurl_free_photo(flickcurl_photo *photo)
     flickcurl_free_tag(photo->tags[i]);
   free(photo->tags);
 
+  for(i = 0; i < photo->notes_count; i++)
+    flickcurl_free_note(photo->notes[i]);
+  free(photo->notes);
+
   if(photo->id)
     free(photo->id);
   
