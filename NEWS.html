@@ -12,14 +12,44 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2010-XX-YY">2010-XX-YY Flickcurl 1.19</h2>
+<h2 id="D2010-07-24">2010-07-24 Flickcurl 1.19</h2>
 
-<p>Not yet released.
-</p>
+<p>Support returning photo notes in <code>flickcurl_photo</code> structure
+when returning photo information with a new array field <code>notes</code> and
+<code>notes_count</code> for the size of the array.</p>
+
+<p>Added <code>flickcurl_note</code> class to store photo notes.</p>
+
+<p>Added
+<code>flickcurl_photosets_removePhotos()</code>,
+<code>flickcurl_photosets_reorderPhotos()</code> and
+<code>flickcurl_photosets_setPrimaryPhoto()</code> for new API calls
+<a href="http://www.flickr.com/services/api/flickr.photosets.removePhotos.html">flickr.photosets.removePhotos</a>,
+<a href="http://www.flickr.com/services/api/flickr.photosets.reorderPhotos.html">flickr.photosets.reorderPhotos</a> and
+<a href="http://www.flickr.com/services/api/flickr.photosets.setPrimaryPhoto.html">flickr.photosets.setPrimaryPhoto</a>:</p>
+<pre>
+  int flickcurl_photosets_removePhotos(flickcurl* fc,
+    const char* photoset_id, const char** photo_ids_array);
+
+  int flickcurl_photosets_reorderPhotos(flickcurl* fc,
+    const char* photoset_id, const char** photo_ids_array);
+
+  int flickcurl_photosets_setPrimaryPhoto(flickcurl* fc,
+    const char* photoset_id, const char* photo_id);
+</pre>
+
+<p>Added <code>flickcurl(1)</code> command support for new API calls.</p>
 
 <p><code>flickcurl_photos_list</code> gains fields for page number
 (<code>page</code>), per-page count (<code>per_page</code>) and total
 photos count (<code>total_count</code>).
+</p>
+
+<p>Added <code>flickcurl_stats_getCSVFiles</code> but it always does
+nothing since it expired at 2010-06-01.</p>
+
+<p>Fixed portability operator typo '> =' and '+ =' lose spaces.
+<a href="http://github.com/dajobe/flickcurl/issues/#issue/4">Issue #4</a>.
 </p>
 
 
