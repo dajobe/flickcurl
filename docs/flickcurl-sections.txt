@@ -193,7 +193,6 @@ flickcurl_machinetags_getValues
 <SECTION>
 <FILE>section-note</FILE>
 flickcurl_note
-flickcurl_free_note
 </SECTION>
 
 <SECTION>
