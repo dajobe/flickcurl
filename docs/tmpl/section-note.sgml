@@ -1,0 +1,44 @@
+<!-- ##### SECTION Title ##### -->
+Notes.
+
+<!-- ##### SECTION Short_Description ##### -->
+Photo notes.
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Photo notes.
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### SECTION Image ##### -->
+
+
+<!-- ##### STRUCT flickcurl_note ##### -->
+<para>
+
+</para>
+
+@id: 
+@author: 
+@authorname: 
+@x: 
+@y: 
+@w: 
+@h: 
+@text: 
+
+<!-- ##### FUNCTION flickcurl_free_note ##### -->
+<para>
+
+</para>
+
+@note: 
+
+
