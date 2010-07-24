@@ -33,6 +33,8 @@ Photo.
 @place: 
 @video: 
 @media_type: 
+@notes: 
+@notes_count: 
 
 <!-- ##### FUNCTION flickcurl_free_photo ##### -->
 <para>
