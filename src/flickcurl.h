@@ -536,10 +536,7 @@ typedef struct {
  * @h: The height of the note
  * @text: The description of the note
  *
- * A note OR a posting of a note about a photo by a user OR a note in a histogram
- *
- * Most of these fields may be NULL, 0 for numbers
- * but not all.  Either @raw or @cooked MUST appear. 
+ * A note attached to a rectangular area on a photo.
  *
  * A Photo Note.
  */
