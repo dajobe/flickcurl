@@ -1273,6 +1273,12 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
       goto tidy;
     }
 
+    if(!xpathObj->nodesetval || !xpathObj->nodesetval->nodeTab) {
+      /* No <photo> elements found in content */
+      fc->failed = 1;
+      goto tidy;
+    }
+
     photos_node = xpathObj->nodesetval->nodeTab[0];
 
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);
