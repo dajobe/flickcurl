@@ -1274,8 +1274,7 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
     }
 
     if(!xpathObj->nodesetval || !xpathObj->nodesetval->nodeTab) {
-      /* No <photo> elements found in content */
-      fc->failed = 1;
+      /* No <photo> elements found in content - not a failure */
       goto tidy;
     }
 
