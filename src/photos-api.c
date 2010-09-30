@@ -240,8 +240,8 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {
@@ -373,8 +373,8 @@ flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {
@@ -885,8 +885,8 @@ flickcurl_get_photoslist_params(flickcurl* fc,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {
@@ -1081,8 +1081,8 @@ flickcurl_photos_getRecent_params(flickcurl* fc,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {
@@ -1528,8 +1528,8 @@ flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {
@@ -1859,8 +1859,8 @@ flickcurl_photos_search_params(flickcurl* fc,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {

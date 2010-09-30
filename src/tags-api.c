@@ -82,8 +82,8 @@ flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
   tidy:
   if(fc->failed) {
     if(photos_list)

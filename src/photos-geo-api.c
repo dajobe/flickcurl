@@ -374,7 +374,7 @@ flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                             (const xmlChar*)"/rsp/photos/photo",
+                                             (const xmlChar*)"/rsp/photos",
                                              format);
 
   tidy:
