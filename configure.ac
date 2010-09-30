@@ -299,7 +299,7 @@ AC_DEFUN([FLICKCURL_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
   flickcurl_save_CFLAGS="$CFLAGS"
   CFLAGS="$CFLAGS $1"
-  AC_COMPILE_IFELSE([ ], [flickcurl_cc_flag=yes], [flickcurl_cc_flag=no])
+  AC_COMPILE_IFELSE([AC_LANG_SOURCE([ ])], [flickcurl_cc_flag=yes], [flickcurl_cc_flag=no])
   CFLAGS="$flickcurl_save_CFLAGS"
   if test "X$flickcurl_cc_flag" = "Xyes"; then
     ifelse([$2], , :, [$2])
