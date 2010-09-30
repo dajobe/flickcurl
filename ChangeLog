@@ -1,3 +1,26 @@
+2010-09-29  Dave Beckett <dave@dajobe.org>
+
+	* src/gallery.c: Casts for C++
+
+	* configure.ac: Use AC_LANG_SOURCE for gcc flag test
+
+	* NEWS.html, configure.ac: 1.20
+
+	* src/photos-api.c, src/photos-comments-api.c,
+	src/photos-geo-api.c, src/stats-api.c, src/tags-api.c:
+	Adjust all
+	callers to flickcurl_invoke_photos_list() to not pass /photo xpath
+	suffix This makes searches work again.
+
+2010-09-02  Dave Beckett <dave@dajobe.org>
+
+	* src/photo.c:
+	(flickcurl_invoke_photos_list): End with no-error if no <photo>
+	found.
+
+	* src/photo.c:
+	(flickcurl_invoke_photos_list): End with error if no <photo> found.
+
 2010-07-24  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_19 for 1.19 release (GIT
