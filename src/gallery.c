@@ -156,10 +156,10 @@ flickcurl_build_galleries(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "primary_photo_id")) {
         g->primary_photo->id = attr_value;
       } else if(!strcmp(attr_name, "primary_photo_server")) {
-        g->primary_photo->fields[PHOTO_FIELD_server].integer = atoi(attr_value);
+        g->primary_photo->fields[PHOTO_FIELD_server].integer = (flickcurl_photo_field_type)atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "primary_photo_farm")) {
-        g->primary_photo->fields[PHOTO_FIELD_farm].integer = atoi(attr_value);
+        g->primary_photo->fields[PHOTO_FIELD_farm].integer = (flickcurl_photo_field_type)atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "primary_photo_secret")) {
         g->primary_photo->fields[PHOTO_FIELD_secret].string = attr_value;
