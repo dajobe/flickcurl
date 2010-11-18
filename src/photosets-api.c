@@ -537,8 +537,8 @@ flickcurl_photosets_getPhotos_params(flickcurl* fc, const char* photoset_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photoset/photo",
-                                           format);
+                                             (const xmlChar*)"/rsp/photoset",
+                                             format);
 
   tidy:
   if(fc->failed) {
