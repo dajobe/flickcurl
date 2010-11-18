@@ -12,12 +12,40 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2010-XX-YY">2010-XX-YY Flickcurl 1.20</h2>
+<h2 id="D2010-11-18">2010-11-18 Flickcurl 1.20</h2>
 
-<p>Not yet released.</p>
-
-<p>Fixed parsing of several standard photos responses (SPR) to work again.
-</p>
+<p>Fixed parsing of standard photos responses (SPR) to make several
+API calls work again including:</p>
+<ul>
+  <li><code>flickr.photos.comments.getRecentForContacts</code><br />
+    Functions <code>flickcurl_photos_comments_getRecentForContacts_params()</code> and
+    <code>flickcurl_photos_comments_getRecentForContacts()</code>.</li>
+  <li><code>flickr.photos.getContactsPhotos</code><br />
+    Functions <code>flickcurl_photos_getContactsPhotos_params()</code> and
+    <code>flickcurl_photos_getContactsPhotos()</code>.</li>
+  <li><code>flickr.photos.getContactsPublicPhotos</code><br />
+    Functions <code>flickcurl_photos_getContactsPublicPhotos_params()</code> and
+    <code>flickcurl_photos_getContactsPublicPhotos()</code>.</li>
+  <li><code>flickr.photos.getRecent</code><br />
+    Functions <code>flickcurl_photos_getRecent_params()</code> and
+    <code>flickcurl_photos_getRecent()</code>.</li>
+  <li><code>flickr.photos.recentlyUpdated</code><br />
+    Functions <code>flickcurl_photos_recentlyUpdated_params()</code> and
+    <code>flickcurl_photos_recentlyUpdated()</code>.</li>
+  <li><code>flickr.photos.search</code><br />
+    Functions <code>flickcurl_photos_search_params()</code> and
+    <code>flickcurl_photos_search()</code>.</li>
+  <li><code>flickr.photos.geo.photosForLocation</code><br />
+    Functions <code>flickcurl_photos_geo_photosForLocation_params()</code> and
+    <code>flickcurl_photos_geo_photosForLocation()</code>.</li>
+  <li><code>flickr.photosets.getPhotos</code><br />
+    Functions <code>flickcurl_photosets_getPhotos_params()</code> and
+    <code>flickcurl_photosets_getPhotos()</code>.</li>
+  <li><code>flickr.stats.getPopularPhotos</code><br />
+    Functions <code>flickcurl_stats_getPopularPhotos()</code>.</li>
+  <li><code>flickr.tags.getClusterPhotos</code><br />
+    Functions <code>flickcurl_tags_getClusterPhotos()</code>.</li>
+</ul>
 
 
 <h2 id="D2010-07-24">2010-07-24 Flickcurl 1.19</h2>
