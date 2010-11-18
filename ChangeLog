@@ -1,3 +1,8 @@
+2010-11-17  Dave Beckett <dave@dajobe.org>
+
+	* src/photosets-api.c:
+	(flickcurl_photosets_getPhotos_params): Make it work again.
+
 2010-09-29  Dave Beckett <dave@dajobe.org>
 
 	* src/gallery.c: Casts for C++
