@@ -1,4 +1,7 @@
-2010-11-17  Dave Beckett <dave@dajobe.org>
+2010-11-17  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_20 for 1.20 release (GIT
+	36da7d18f61cacc33808d20fb9a00455b5dc34c6)
 
 	* src/photosets-api.c:
 	(flickcurl_photosets_getPhotos_params): Make it work again.
