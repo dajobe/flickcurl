@@ -1324,6 +1324,7 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
   
     photos_list->photos = flickcurl_build_photos(fc, xpathCtx, photosXpathExpr,
                                                  &photos_list->photos_count);
+    free(photosXpathExpr);
     if(!photos_list->photos) {
       fc->failed = 1;
       goto tidy;
