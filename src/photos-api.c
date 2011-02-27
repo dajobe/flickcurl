@@ -2166,9 +2166,7 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
   char perm_comment_str[2];
   char perm_addmeta_str[2];
   
-  if(!photo_id || !perms ||
-     !perms->is_public || !perms->is_friend || !perms->is_family ||
-     !perms->perm_comment || !perms->perm_addmeta)
+  if(!photo_id || !perms)
     return 1;
 
   if(perms->perm_comment <0 || perms->perm_comment >3)
