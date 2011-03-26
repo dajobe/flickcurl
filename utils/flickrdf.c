@@ -2,7 +2,7 @@
  *
  * flickrdf - Triples from Flickrs
  *
- * Copyright (C) 2007-2008, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2011, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -51,6 +51,8 @@
 
 #ifdef HAVE_RAPTOR
 #include <raptor.h>
+#else
+#include <raptor_fake.h>
 #endif
 
 
@@ -129,206 +131,19 @@ static struct option long_options[] =
 #endif
 
 
-#ifndef HAVE_RAPTOR
-typedef enum {
-  RAPTOR_IDENTIFIER_TYPE_UNKNOWN,
-  RAPTOR_IDENTIFIER_TYPE_RESOURCE,
-  RAPTOR_IDENTIFIER_TYPE_ANONYMOUS,
-  RAPTOR_IDENTIFIER_TYPE_PREDICATE,
-  RAPTOR_IDENTIFIER_TYPE_ORDINAL,
-  RAPTOR_IDENTIFIER_TYPE_LITERAL,
-  RAPTOR_IDENTIFIER_TYPE_XML_LITERAL
-} raptor_identifier_type;
-typedef char raptor_uri;
-typedef struct {
-  const void *subject;
-  raptor_identifier_type subject_type;
-  const void *predicate;
-  raptor_identifier_type predicate_type;
-  const void *object;
-  raptor_identifier_type object_type;
-  raptor_uri *object_literal_datatype;
-  const unsigned char *object_literal_language;
-} raptor_statement;
-typedef struct {
-  FILE* fh;
-  int output_turtle;
-} raptor_serializer;
 
-
-static void raptor_init(void) {}
-static void raptor_finish(void) {}
-
-static
-raptor_uri* raptor_new_uri(const unsigned char* uri)
-{
-  size_t len;
-  raptor_uri* u;
-
-  len = strlen((const char*)uri);
-  u = (raptor_uri*)malloc(len+1);
-  strncpy((char*)u, (const char*)uri, len+1);
-  return u;
-}
-
-
-static
-raptor_uri* raptor_new_uri_from_uri_local_name(raptor_uri* u,
-                                               const unsigned char* name)
-{
-  size_t len1;
-  size_t len2;
-  raptor_uri* newu;
-  
-  len1 = strlen((const char*)u);
-  len2 = strlen((const char*)name);
-
-  newu = (raptor_uri*)malloc(len1+len2+1);
-  strncpy((char*)newu, (const char*)u, len1);
-  strncpy((char*)(newu+len1), (const char*)name, len2+1);
-
-  return newu;
-}
-
-
-static
-void raptor_free_uri(raptor_uri* u)
-{
-  free(u);
-}
-
-
-#define NSERIALIZERS 2
-static struct 
-{
-  const char *name;
-  const char *label;
-} serializers[NSERIALIZERS]= {
-  { "ntriples",  "N-Triples" },
-  { "turtle",    "Turtle" }
-};
-
-
-static int
-raptor_serializer_syntax_name_check(const char* name)
-{
-  int i;
-  
-  for(i = 0; i < NSERIALIZERS; i++) {
-    if(strcmp(serializers[i].name, name))
-       return 1;
-  }
-  return 0;
-}
-
-
-static int
-raptor_serializers_enumerate(const unsigned int counter,
-                             const char **name_p, const char **label_p,
-                             const char **mime_type,
-                             const unsigned char **uri_string)
-{
-  if(counter > (NSERIALIZERS-1))
-    return 1;
-  if(name_p)
-    *name_p = serializers[counter].name;
-  if(label_p)
-    *label_p = serializers[counter].label;
-  return 0;
-}
-
-
-static raptor_serializer*
-raptor_new_serializer(const char* serializer_name)
-{
-  raptor_serializer* s;
-  s = (raptor_serializer*)calloc(sizeof(raptor_serializer), 1);
-  s->output_turtle = !strcmp((const char*)serializer_name, "turtle");
-  return s;
-}
-
-
-static void
-raptor_free_serializer(raptor_serializer* s)
-{
-  free(s);
-}
-
-
-static void
-raptor_serialize_set_namespace(raptor_serializer* serializer,
-                               raptor_uri* uri, const unsigned char* prefix)
-{
-  FILE* fh = serializer->fh;
-  if(serializer->output_turtle)
-    fprintf(fh, "@prefix %s: <%s> .\n", (const char*)prefix, (const char*)uri);
-}
-
-
-static void
-raptor_serialize_start_to_file_handle(raptor_serializer* serializer,
-                                      raptor_uri* base_uri, FILE* fh)
-{
-  serializer->fh = fh;
-  if(base_uri && serializer->output_turtle)
-    fprintf(fh, "@base <%s>\n", (char*)base_uri);
-}
-
-
-static void
-raptor_serialize_statement(raptor_serializer* serializer, raptor_statement* s)
-{
-  FILE *fh = serializer->fh;
-
-  if(s->subject_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
-    fprintf(fh, "<%s>", (const char*)s->subject);
-  else /* blank node */
-    fprintf(fh, "_:%s", (const char*)s->subject);
-
-  fprintf(fh, " <%s> ", (const char*)s->predicate);
-
-  if(s->object_type == RAPTOR_IDENTIFIER_TYPE_LITERAL) {
-    const char *p;
-    char c;
-    
-    fputc('"', fh);
-    for(p = (const char*)s->object; (c = *p); p++) {
-      if(c == '\n') {
-        fputs("\\\n", fh);
-        continue;
-      } else if(c == '\t') {
-        fputs("\\\t", fh);
-        continue;
-      } if(c == '\r') {
-        fputs("\\\r", fh);
-        continue;
-      } else if(c == '"' || c == '\\')
-        fputc('\\', fh);
-      fputc(c, fh);
-    }
-    fputc('"', fh);
-    if(s->object_literal_datatype)  {
-      fputs("^^<", fh);
-      fputs((const char*)s->object_literal_datatype, fh);
-      fputc('>', fh);
-    }
-  } else if(s->object_type == RAPTOR_IDENTIFIER_TYPE_RESOURCE)
-    fprintf(fh, "<%s>", (const char*)s->object);
-  else /* blank node */
-    fprintf(fh, "_:%s", (const char*)s->object);
-  
-  fputs(" . \n", fh);
-}
-
-
-static void
-raptor_serialize_end(raptor_serializer* serializer)
-{
-  fflush(serializer->fh);
-}
-
+#if defined(HAVE_RAPTOR) && RAPTOR_VERSION < 20000
+#define raptor_new_uri(world, string) raptor_new_uri(string)
+#define raptor_new_serializer(world, name) raptor_new_serializer(name)
+#define raptor_world_is_serializer_name(world, name) raptor_serializer_syntax_name_check(name) 
+#define raptor_serializer_start_to_file_handle(ser, uri, fh) raptor_serialize_start_to_file_handle(ser, uri, fh)
 #endif
 
+static raptor_world* rworld;
+
+
+#if defined(HAVE_RAPTOR) && RAPTOR_VERSION < 20000
+/* RAPTOR V1 version */
 
 static void
 ser_emit_namespace(void* user_data,
@@ -338,7 +153,7 @@ ser_emit_namespace(void* user_data,
   raptor_serializer* serializer = (raptor_serializer*)user_data;
   raptor_uri *ns_uri = NULL;
 
-  ns_uri = raptor_new_uri((const unsigned char*)uri);
+  ns_uri = raptor_new_uri(NULL, (const unsigned char*)uri);
   raptor_serialize_set_namespace(serializer, ns_uri, 
                                  (const unsigned char*)prefix);
   raptor_free_uri(ns_uri);
@@ -358,11 +173,11 @@ ser_emit_triple(void* user_data,
   
   s.subject_type = (raptor_identifier_type)subject_type;
   if((flickcurl_term_type)s.subject_type == FLICKCURL_TERM_TYPE_RESOURCE)
-    s.subject = (void*)raptor_new_uri((const unsigned char*)subject);
+    s.subject = (void*)raptor_new_uri(rworld, (const unsigned char*)subject);
   else /* blank node */
     s.subject = (void*)subject;
 
-  predicate_ns_uri = raptor_new_uri((const unsigned char*)predicate_nspace);
+  predicate_ns_uri = raptor_new_uri(rworld, (const unsigned char*)predicate_nspace);
   s.predicate = (void*)raptor_new_uri_from_uri_local_name(predicate_ns_uri,
                                                         (const unsigned char*)predicate_name);
   raptor_free_uri(predicate_ns_uri);
@@ -370,11 +185,11 @@ ser_emit_triple(void* user_data,
 
   s.object_type = (raptor_identifier_type)object_type;
   if((flickcurl_term_type)s.object_type == FLICKCURL_TERM_TYPE_RESOURCE)
-    s.object = (void*)raptor_new_uri((const unsigned char*)object);
+    s.object = (void*)raptor_new_uri(rworld, (const unsigned char*)object);
   else /* literal or blank node */
     s.object = (void*)object;
   if(datatype_uri)
-    s.object_literal_datatype = raptor_new_uri((const unsigned char*)datatype_uri);
+    s.object_literal_datatype = raptor_new_uri(rworld, (const unsigned char*)datatype_uri);
   else
     s.object_literal_datatype = NULL;
   s.object_literal_language = NULL;
@@ -398,6 +213,81 @@ ser_emit_finish(void* user_data)
   raptor_serialize_end(serializer);
 }
 
+#else
+/* RAPTOR V2 version */
+
+static void
+ser_emit_namespace(void* user_data,
+                   const char *prefix, size_t prefix_len,
+                   const char* uri, size_t uri_len)
+{
+  raptor_serializer* serializer = (raptor_serializer*)user_data;
+  raptor_uri *ns_uri = NULL;
+
+  ns_uri = raptor_new_uri(rworld, (const unsigned char*)uri);
+  raptor_serializer_set_namespace(serializer, ns_uri, 
+                                 (const unsigned char*)prefix);
+  raptor_free_uri(ns_uri);
+}
+
+
+static void
+ser_emit_triple(void* user_data,
+                const char* subject, int subject_type,
+                const char* predicate_nspace, const char* predicate_name,
+                const char *object, int object_type,
+                const char *datatype_uri)
+{
+  raptor_serializer* serializer = (raptor_serializer*)user_data;
+  raptor_statement s; /* static */
+  raptor_uri* predicate_ns_uri;
+  raptor_uri* predicate_uri;
+  
+  raptor_statement_init(&s, rworld);
+  
+  if(subject_type == FLICKCURL_TERM_TYPE_RESOURCE)
+    s.subject = raptor_new_term_from_uri_string(rworld, (const unsigned char*)subject);
+  else /* blank node */
+    s.subject = raptor_new_term_from_blank(rworld, (const unsigned char*)subject);
+
+  predicate_ns_uri = raptor_new_uri(rworld, (const unsigned char*)predicate_nspace);
+  predicate_uri = raptor_new_uri_from_uri_local_name(rworld, predicate_ns_uri,
+                                                     (const unsigned char*)predicate_name);
+  s.predicate = raptor_new_term_from_uri(rworld, predicate_uri);
+  raptor_free_uri(predicate_uri);
+  raptor_free_uri(predicate_ns_uri);
+
+  if(object_type == FLICKCURL_TERM_TYPE_RESOURCE)
+    s.object = (void*)raptor_new_term_from_uri_string(rworld, (const unsigned char*)object);
+  else if(object_type == FLICKCURL_TERM_TYPE_BLANK)
+    s.object = raptor_new_term_from_blank(rworld, (const unsigned char*)subject);
+  else {
+    /* literal */
+    raptor_uri* raptor_datatype_uri = NULL;
+
+    if(datatype_uri)
+      raptor_datatype_uri = raptor_new_uri(rworld, (const unsigned char*)datatype_uri);
+
+    s.object = raptor_new_term_from_literal(rworld, (const unsigned char*)object, raptor_datatype_uri, NULL /* language */);
+
+    raptor_free_uri(raptor_datatype_uri);
+  }
+
+  raptor_serializer_serialize_statement(serializer, &s);
+
+raptor_statement_clear(&s);
+
+}
+
+
+static void
+ser_emit_finish(void* user_data)
+{
+  raptor_serializer* serializer = (raptor_serializer*)user_data;
+  raptor_serializer_serialize_end(serializer);
+}
+#endif
+
 
 static flickcurl_serializer_factory flickrdf_serializer_factory = {
   1, ser_emit_namespace, ser_emit_triple, ser_emit_finish
@@ -408,7 +298,6 @@ static const char *title_format_string = "Flickrdf - triples from flickrs %s\n";
 
 static const char* config_filename = ".flickcurl.conf";
 static const char* config_section = "flickr";
-
 
 int
 main(int argc, char *argv[]) 
@@ -433,7 +322,13 @@ main(int argc, char *argv[])
 
   flickcurl_init();
 
+#if defined(HAVE_RAPTOR) && RAPTOR_VERSION < 20000
+  rworld = NULL;
   raptor_init();
+#else
+  rworld = raptor_new_world();
+  raptor_world_open(rworld);
+#endif
 
   home = getenv("HOME");
   if(home)
@@ -477,7 +372,7 @@ main(int argc, char *argv[])
 
       case 'o':
         if(optarg) {
-          if(raptor_serializer_syntax_name_check(optarg))
+          if(raptor_world_is_serializer_name(rworld, optarg))
             serializer_syntax_name = optarg;
           else {
             int i;
@@ -487,11 +382,20 @@ main(int argc, char *argv[])
                     program, optarg);
             fprintf(stderr, "Valid arguments are:\n");
             for(i = 0; 1; i++) {
+#if defined(HAVE_RAPTOR) && RAPTOR_VERSION < 20000
               const char *help_name;
               const char *help_label;
               if(raptor_serializers_enumerate(i, &help_name, &help_label, NULL, NULL))
                 break;
               printf("  %-12s for %s\n", help_name, help_label);
+#else
+              const raptor_syntax_description *d;
+
+              d = raptor_world_get_serializer_description(rworld, i);
+              if(!d)
+                break;
+              printf("  %-12s for %s\n", d->names[0], d->label);
+#endif
             }
             usage = 1;
             break;
@@ -556,7 +460,7 @@ main(int argc, char *argv[])
   }
 
 
-  serializer = raptor_new_serializer(serializer_syntax_name);
+  serializer = raptor_new_serializer(rworld, serializer_syntax_name);
   if(!serializer) {
     fprintf(stderr, 
             "%s: Failed to create raptor serializer type %s\n", program,
@@ -564,9 +468,9 @@ main(int argc, char *argv[])
     return(1);
   }
 
-  /* base_uri = raptor_new_uri((const unsigned char*)argv[0]); */
+  base_uri = raptor_new_uri(rworld, (const unsigned char*)argv[0]);
 
-  raptor_serialize_start_to_file_handle(serializer, base_uri, stdout);
+  raptor_serializer_start_to_file_handle(serializer, base_uri, stdout);
 
 
   /* Initialise the Flickcurl library */
@@ -626,14 +530,28 @@ main(int argc, char *argv[])
     puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
     puts(HELP_TEXT("o", "output FORMAT   ", "Set output format to one of:"));
     for(i = 0; 1; i++) {
+#if defined(HAVE_RAPTOR) && RAPTOR_VERSION < 20000
       const char *help_name;
       const char *help_label;
       if(raptor_serializers_enumerate(i, &help_name, &help_label, NULL, NULL))
         break;
+
       if(!strcmp(help_name, serializer_syntax_name))
         printf("      %-15s %s (default)\n", help_name, help_label);
       else
         printf("      %-15s %s\n", help_name, help_label);
+#else
+      const raptor_syntax_description* d;
+
+      d = raptor_world_get_serializer_description(rworld, i);
+      if(!d)
+        break;
+
+      if(!strcmp(d->names[0], serializer_syntax_name))
+        printf("      %-15s %s (default)\n", d->names[0], d->label);
+      else
+        printf("      %-15s %s\n", d->names[0], d->label);
+#endif
     }
 #ifdef HAVE_RAPTOR
     printf("    via Raptor %s serializers\n", raptor_version_string);
@@ -681,8 +599,13 @@ main(int argc, char *argv[])
     raptor_free_serializer(serializer);
   if(base_uri)
     raptor_free_uri(base_uri);
-  
+
+#if defined(HAVE_RAPTOR) && RAPTOR_VERSION < 20000
   raptor_finish();
+#else
+  if(rworld)
+    raptor_free_world(rworld);
+#endif
 
   flickcurl_finish();
 

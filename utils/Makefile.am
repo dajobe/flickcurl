@@ -43,7 +43,9 @@ if RAPTOR
 flickrdf_CFLAGS += @RAPTOR_CFLAGS@
 flickrdf_LDADD += @RAPTOR_LIBS@
 endif
-
+if !RAPTOR
+flickrdf_SOURCES += raptor_fake.c
+endif
 
 codegen_SOURCES = codegen.c
 if GETOPT

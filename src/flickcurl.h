@@ -1475,7 +1475,9 @@ struct flickcurl_serializer_s;
  *
  * Triple part types
  *
- * These are the same as raptor_identifier_type values.
+ * These are the same enumeration values as used by Raptor V2
+ * raptor_term_type enumeration and Raptor V1 raptor_identifier_type
+ * enumeration.
  */
 typedef enum {
   FLICKCURL_TERM_TYPE_RESOURCE = 1,
