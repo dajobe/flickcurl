@@ -12,6 +12,24 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
+<h2 id="D2011-03-26">2011-03-26 Flickcurl 1.21</h2>
+
+<p>Minor bug fixes:</p>
+<ul>
+<li>Fixed a memory leak when building photo list results.  Patch from
+Naruto TAKAHASHI - thanks.</li>
+<li><code>flickcurl_photos_setPerms()</code> now allows false boolean
+permissions.  Patch from Henning Spruth - thanks.</li>
+<li><code>flickcurl_photosets_getPhotos_params()</code> now works again.</li>
+</ul>
+
+<p>Made the <code>flickcurl(1)</code> utility handle Raptor V1, V2 or
+none.  The <code>configure</code> argument <code>--with-raptor</code>
+now takes values '1', '2', 'yes' or 'no'.  'yes' selects Raptor V1 as
+before.
+</p>
+
+
 <h2 id="D2010-11-18">2010-11-18 Flickcurl 1.20</h2>
 
 <p>Fixed parsing of standard photos responses (SPR) to make several
@@ -2408,7 +2426,7 @@ is now <code>~/.flickcurl.conf</code></p>
 
 <hr />
 
-<p>Copyright (C) 2007-2010 <a href="http://www.dajobe.org/">Dave Beckett</a></p>
+<p>Copyright (C) 2007-2011 <a href="http://www.dajobe.org/">Dave Beckett</a></p>
 
 </body>
 </html>
