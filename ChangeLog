@@ -1,4 +1,44 @@
-2010-11-17  Dave Beckett <dave@dajobe.org>
+2011-03-26  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac: 1.21
+
+	* LICENSE.html, README.html, coverage.html: 2011
+
+	* NEWS.html: 1.21
+
+2011-03-25  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac, src/common.c, src/flickcurl.h, utils/Makefile.am,
+	utils/flickrdf.c, utils/raptor_fake.c, utils/raptor_fake.h:
+	Support Raptor V1 and Raptor V2 with flickrdf utility
+
+	(configure.ac): Add check for raptor V1 or V2.  Support
+	--with-raptor values '1'/'yes' for V1, '2' for V2 and 'no' for
+	none/fake.
+
+	(utils/flickrdf.c): can now support raptor V1, V2 or fake
+
+	(utils/raptor_fake.c, utils/raptor_fake.h): Added module to
+	emulate Raptor V2 emulation for flickrdf
+
+	(src/flickcurl.h): Updated flickcurl_term_type autodocs
+
+2011-02-27  Dave Beckett <dave@dajobe.org>
+
+	* src/photos-api.c:
+	(flickcurl_photos_setPerms): Allow false boolean permissions.  Bug
+	report and patch from Henning Spruth - thanks.
+
+2011-02-22  Naruto TAKAHASHI <tnaruto@gmail.com>
+
+	* src/photo.c: leak--
+
+2010-11-17  Dave Beckett  <dave@dajobe.org>
+
+       * Snapshotted flickcurl_1_20 for 1.20 release (GIT
+       36da7d18f61cacc33808d20fb9a00455b5dc34c6)
+
+	* NEWS.html: 1.20
 
 	* src/photosets-api.c:
 	(flickcurl_photosets_getPhotos_params): Make it work again.
@@ -12,8 +52,7 @@
 	* NEWS.html, configure.ac: 1.20
 
 	* src/photos-api.c, src/photos-comments-api.c,
-	src/photos-geo-api.c, src/stats-api.c, src/tags-api.c:
-	Adjust all
+	src/photos-geo-api.c, src/stats-api.c, src/tags-api.c: Adjust all
 	callers to flickcurl_invoke_photos_list() to not pass /photo xpath
 	suffix This makes searches work again.
 
