@@ -1,8 +1,8 @@
 #                                               -*- Autoconf -*-
-# Copyright (C) 2007-2010 David Beckett http://www.dajobe.org/
+# Copyright (C) 2007-2011 David Beckett http://www.dajobe.org/
 
 AC_PREREQ(2.62)
-AC_INIT(Flickcurl, 1.20, http://bugs.librdf.org/, flickcurl)
+AC_INIT(Flickcurl, 1.21, http://bugs.librdf.org/, flickcurl)
 AC_CONFIG_SRCDIR([src/flickcurl.h])
 AM_CONFIG_HEADER([src/config.h])
 AC_CONFIG_AUX_DIR(build)
