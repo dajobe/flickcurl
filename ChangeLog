@@ -1,5 +1,8 @@
 2011-03-26  Dave Beckett <dave@dajobe.org>
 
+	* Snapshotted flickcurl_1_21 for 1.21 release (GIT
+	7fe09ab24658240b02a1ba43d84d6df6814e8fb7)
+
 	* configure.ac: 1.21
 
 	* LICENSE.html, README.html, coverage.html: 2011
