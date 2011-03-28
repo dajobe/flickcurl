@@ -1033,6 +1033,7 @@ typedef struct {
  * flickcurl_photoset:
  * @id: photoset ID
  * @primary: primary photo ID
+ * @owner: owner NSID
  * @secret: secret
  * @server: server
  * @farm: farm
@@ -1046,6 +1047,7 @@ typedef struct {
  */
 typedef struct {
   char *id;
+  char *owner; 
   char *primary;
   char *secret;
   int server;

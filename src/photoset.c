@@ -48,6 +48,9 @@ flickcurl_free_photoset(flickcurl_photoset *photoset)
   if(photoset->id)
     free(photoset->id);
   
+  if(photoset->owner)
+    free(photoset->owner);
+  
   if(photoset->primary)
     free(photoset->primary);
   
@@ -131,6 +134,8 @@ flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       
       if(!strcmp(attr_name, "id"))
         ps->id = attr_value;
+      else if(!strcmp(attr_name, "owner"))
+        ps->owner = attr_value;
       else if(!strcmp(attr_name, "primary"))
         ps->primary = attr_value;
       else if(!strcmp(attr_name, "secret")) {
@@ -144,6 +149,8 @@ flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "photos")) {
         ps->photos_count = atoi(attr_value);
         free(attr_value);
+      } else {
+         free(attr_value);
       }
     }
 
