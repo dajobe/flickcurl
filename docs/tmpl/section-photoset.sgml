@@ -26,7 +26,6 @@ Set of Photos.
 </para>
 
 @id: 
-@owner: 
 @primary: 
 @secret: 
 @server: 
@@ -35,6 +34,7 @@ Set of Photos.
 @title: 
 @description: 
 @photos: 
+@owner: 
 
 <!-- ##### FUNCTION flickcurl_free_photoset ##### -->
 <para>
