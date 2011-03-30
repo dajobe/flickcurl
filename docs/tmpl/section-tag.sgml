@@ -58,6 +58,14 @@ Photo tagging.
 @t: 
 
 
+<!-- ##### FUNCTION flickcurl_free_tags ##### -->
+<para>
+
+</para>
+
+@tags: 
+
+
 <!-- ##### FUNCTION flickcurl_free_tag_clusters ##### -->
 <para>
 
