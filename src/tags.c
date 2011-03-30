@@ -58,6 +58,23 @@ flickcurl_free_tag(flickcurl_tag *t)
   free(t);
 }
 
+/**
+ * flickcurl_free_tags:
+ * @tags: tag object array
+ *
+ * Destructor for array of tag objects
+ */
+void
+flickcurl_free_tags(flickcurl_tag **tags)
+{
+  int i;
+
+  FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(tags, flickcurl_tag_array);
+
+  for(i = 0; tags[i]; i++)
+    flickcurl_free_tag(tags[i]);
+  free(tags);
+}
 
 flickcurl_tag**
 flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,

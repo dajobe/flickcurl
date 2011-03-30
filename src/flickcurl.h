@@ -1681,6 +1681,8 @@ void flickcurl_free_tag_namespaces(flickcurl_tag_namespace** tag_nspaces);
 FLICKCURL_API
 void flickcurl_free_tag(flickcurl_tag *t);
 FLICKCURL_API
+void flickcurl_free_tags(flickcurl_tag **tags);
+FLICKCURL_API
 void flickcurl_free_tag_clusters(flickcurl_tag_clusters *tcs);
 FLICKCURL_API
 void flickcurl_free_photo(flickcurl_photo *photo);
