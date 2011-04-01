@@ -1,3 +1,32 @@
+2011-03-31  Dave Beckett <dave@dajobe.org>
+
+	* utils/Makefile.am: Add raptor_fake.h to sources and
+	distribution.
+
+2011-03-30  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac:
+	Bumped version to 1.22
+
+	* docs/tmpl/section-tag.sgml:
+	Added flickcurl_free_tags to doc tmpls
+
+	* docs/flickcurl-sections.txt:
+	(flickcurl_free_tags): Added
+
+2011-03-30  Naruto TAKAHASHI <tnaruto@gmail.com>
+
+	* src/flickcurl.h, src/photo.c, src/tags.c: add
+	flickcurl_free_tags
+
+	* docs/tmpl/section-photoset.sgml, src/flickcurl.h,
+	src/photoset.c: move owner filed to the end of the structure.
+
+2011-03-29  Naruto TAKAHASHI <tnaruto@gmail.com>
+
+	* docs/tmpl/section-photoset.sgml, src/flickcurl.h,
+	src/photoset.c: add owner to flickcurl_photoset
+
 2011-03-26  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_21 for 1.21 release (GIT
