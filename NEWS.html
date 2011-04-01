@@ -17,6 +17,20 @@
 <p>Not yet released.
 </p>
 
+<p>Added raptor_fake.h to distribution so
+that <code>flickrdf(1)</code> utility can work without raptor
+installed.  Noticed by Naruto TAKAHASHI - thanks!
+</p>
+
+<p>Added <code>flickcurl_free_tags()</code> to API.  Patch from
+Naruto TAKAHASHI - thanks!
+</p>
+
+<p><code>flickcurl_photoset</code> structure gains an owner NSID
+field filled in when present.  Patch from Naruto TAKAHASHI - thanks!
+</p>
+
+
 <h2 id="D2011-03-26">2011-03-26 Flickcurl 1.21</h2>
 
 <p>Minor bug fixes:</p>
@@ -28,7 +42,7 @@ permissions.  Patch from Henning Spruth - thanks.</li>
 <li><code>flickcurl_photosets_getPhotos_params()</code> now works again.</li>
 </ul>
 
-<p>Made the <code>flickcurl(1)</code> utility handle Raptor V1, V2 or
+<p>Made the <code>flickrdf(1)</code> utility handle Raptor V1, V2 or
 none.  The <code>configure</code> argument <code>--with-raptor</code>
 now takes values '1', '2', 'yes' or 'no'.  'yes' selects Raptor V1 as
 before.
