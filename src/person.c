@@ -293,13 +293,9 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       time_t unix_time;
       
       string_value = flickcurl_xpath_eval(fc, xpathNodeCtx,
-                                        person_fields_table[expri].xpath);
-      if(!string_value) {
-        person->fields[field].string = NULL;
-        person->fields[field].integer= (flickcurl_person_field_type)-1;
-        person->fields[field].type   = VALUE_TYPE_NONE;
+                                          person_fields_table[expri].xpath);
+      if(!string_value)
         continue;
-      }
       
       switch(datatype) {
         case VALUE_TYPE_PERSON_ID:
