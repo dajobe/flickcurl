@@ -125,7 +125,8 @@ flickcurl_test_login(flickcurl* fc)
     goto tidy;
   }
 
-  username = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/user/username");
+  username = flickcurl_xpath_eval(fc, xpathCtx,
+                                  (const xmlChar*)"/rsp/user/username");
 
   tidy:
   if(xpathCtx)

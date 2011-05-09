@@ -75,7 +75,8 @@ flickcurl_prefs_getContentType(flickcurl* fc)
     goto tidy;
   }
   
-  content_type_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@content_type");
+  content_type_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                          (const xmlChar*)"/rsp/person/@content_type");
   if(content_type_str) {
     content_type = atoi(content_type_str);
     free(content_type_str);
@@ -160,7 +161,8 @@ flickcurl_prefs_getHidden(flickcurl* fc)
     goto tidy;
   }
 
-  hidden_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@hidden");
+  hidden_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                    (const xmlChar*)"/rsp/person/@hidden");
   if(hidden_str) {
     hidden = atoi(hidden_str);
     free(hidden_str);
@@ -217,7 +219,8 @@ flickcurl_prefs_getPrivacy(flickcurl* fc)
     goto tidy;
   }
 
-  privacy_level_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@privacy");
+  privacy_level_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                           (const xmlChar*)"/rsp/person/@privacy");
   if(privacy_level_str) {
     privacy_level = atoi(privacy_level_str);
     free(privacy_level_str);
@@ -272,7 +275,8 @@ flickcurl_prefs_getSafetyLevel(flickcurl* fc)
     goto tidy;
   }
 
-  safety_level_str = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/person/@safety_level");
+  safety_level_str = flickcurl_xpath_eval(fc, xpathCtx,
+                                          (const xmlChar*)"/rsp/person/@safety_level");
   if(safety_level_str) {
     safety_level = atoi(safety_level_str);
     free(safety_level_str);

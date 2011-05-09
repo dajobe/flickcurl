@@ -150,9 +150,11 @@ flickcurl_photosets_create(flickcurl* fc, const char* title,
     goto tidy;
   }
 
-  photoset_id = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoset/@id");
+  photoset_id = flickcurl_xpath_eval(fc, xpathCtx,
+                                     (const xmlChar*)"/rsp/photoset/@id");
   if(photoset_url_p) {
-    *photoset_url_p = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoset/@url");
+    *photoset_url_p = flickcurl_xpath_eval(fc, xpathCtx,
+                                           (const xmlChar*)"/rsp/photoset/@url");
   }
   
   tidy:

@@ -170,8 +170,8 @@ flickcurl_galleries_create(flickcurl* fc,
   gallery_id = flickcurl_xpath_eval(fc, xpathCtx,
                                     (const xmlChar*)"/rsp/gallery/@id");
   if(gallery_url_p) {
-    *gallery_url_p = flickcurl_xpath_eval(fc,
-                                          xpathCtx, (const xmlChar*)"/rsp/gallery/@url");
+    *gallery_url_p = flickcurl_xpath_eval(fc, xpathCtx,
+                                          (const xmlChar*)"/rsp/gallery/@url");
   }
 
   tidy:

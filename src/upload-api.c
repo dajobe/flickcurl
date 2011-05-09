@@ -145,9 +145,11 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   }
 
   status = (flickcurl_upload_status*)calloc(1, sizeof(flickcurl_upload_status));
-  status->photoid = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid");
+  status->photoid = flickcurl_xpath_eval(fc, xpathCtx,
+                                         (const xmlChar*)"/rsp/photoid");
   /* when async is true */
-  status->ticketid = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/ticketid");
+  status->ticketid = flickcurl_xpath_eval(fc, xpathCtx,
+                                          (const xmlChar*)"/rsp/ticketid");
 
   tidy:
   if(xpathCtx)
@@ -270,10 +272,13 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
   }
 
   status = (flickcurl_upload_status*)calloc(1, sizeof(flickcurl_upload_status));
-  status->secret = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid/@secret");
-  status->originalsecret = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/photoid/@originalsecret");
+  status->secret = flickcurl_xpath_eval(fc, xpathCtx,
+                                        (const xmlChar*)"/rsp/photoid/@secret");
+  status->originalsecret = flickcurl_xpath_eval(fc, xpathCtx,
+                                                (const xmlChar*)"/rsp/photoid/@originalsecret");
   /* when async is true */
-  status->ticketid = flickcurl_xpath_eval(fc, xpathCtx, (const xmlChar*)"/rsp/ticketid");
+  status->ticketid = flickcurl_xpath_eval(fc, xpathCtx,
+                                          (const xmlChar*)"/rsp/ticketid");
 
   tidy:
   if(xpathCtx)

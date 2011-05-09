@@ -118,7 +118,7 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
   
   for(expri = 0; method_fields_table[expri].xpath; expri++) {
     char *string_value = flickcurl_xpath_eval(fc, xpathCtx, 
-                                            method_fields_table[expri].xpath);
+                                              method_fields_table[expri].xpath);
     switch(method_fields_table[expri].field) {
       case METHOD_FIELD_name:
         method->name = string_value;
