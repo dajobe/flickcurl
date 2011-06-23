@@ -87,7 +87,9 @@ tags-api.c \
 test-api.c \
 upload-api.c \
 urls-api.c \
-flickcurl_internal.h
+flickcurl_internal.h \
+sha1.c \
+oauth.c
 
 AM_CFLAGS=
 libflickcurl_la_LIBADD=

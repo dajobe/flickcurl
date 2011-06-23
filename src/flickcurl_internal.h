@@ -379,3 +379,10 @@ struct flickcurl_serializer_s
 
 void flickcurl_serializer_init(void);
 void flickcurl_serializer_terminate(void);
+
+/* sha1.c */
+#define SHA1_DIGEST_LENGTH 20
+unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void *key, size_t key_len);
+
+/* oauth.c */
+char* flickcurl_base64_encode(const unsigned char *data, size_t len, size_t *out_len_p);
