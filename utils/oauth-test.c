@@ -126,6 +126,21 @@ static const char* config_filename = ".flickcurl.conf";
 static const char* config_section = "flickr";
 
 
+typedef struct {
+  const char* client_shared_secret;
+  size_t client_shared_secret_len;
+  const char* token_shared_secret;
+  size_t token_shared_secret_len;
+  
+  /* HMAC-SHA1 key */
+  unsigned char *key;
+  size_t key_len;
+  /* HMAC-SHA1 data */
+  unsigned char* data;
+  size_t data_len;
+} oauth_data;
+  
+
 int
 main(int argc, char *argv[]) 
 {
@@ -248,13 +263,13 @@ main(int argc, char *argv[])
 
   if(1) {
     /* KEY fields */
-    const char* client_shared_secret = "a9567d986a7539fe";
-    const char* token_shared_secret  = NULL;
+    const char* test_client_shared_secret = "a9567d986a7539fe";
+    const char* test_token_shared_secret  = NULL;
 
     /* DATA fields */
-    const char* http_request_method = "GET";
-    const char* uri_base_string     = "http://www.flickr.com/services/oauth/request_token";
-    const char* request_parameters  = "oauth_callback=http%3A%2F%2Fwww.example.com&oauth_consumer_key=653e7a6ecc1d528c516cc8f92cf98611&oauth_nonce=95613465&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1305586162&oauth_version=1.0";
+    const char* test_http_request_method = "GET";
+    const char* test_uri_base_string     = "http://www.flickr.com/services/oauth/request_token";
+    const char* test_request_parameters  = "oauth_callback=http%3A%2F%2Fwww.example.com&oauth_consumer_key=653e7a6ecc1d528c516cc8f92cf98611&oauth_nonce=95613465&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1305586162&oauth_version=1.0";
 
     /*
      * KEY
@@ -292,68 +307,61 @@ main(int argc, char *argv[])
 
     const char* expected_base64_hmac_sha1 = "7w18YS2bONDPL/zgyzP5XTr5af4=";
     const char* expected_url_encoded_base64_hmac_sha1 = "7w18YS2bONDPL%2FzgyzP5XTr5af4%3D";
-    unsigned char *key = NULL;
-    size_t key_len;
-    unsigned char* data = NULL;
-    size_t data_len;
     unsigned char *p;
     char *s = NULL;
     char *escaped_s = NULL;
     size_t s_len;
     size_t escaped_s_len;
     unsigned char* result;
+    oauth_data od;
 
-    key_len = 1; /* & */
-    if(client_shared_secret) {
-      s_len = strlen(client_shared_secret);
-      key_len += s_len;
-    }
-    if(token_shared_secret) {
-      s_len = strlen(token_shared_secret);
-      key_len += s_len;
-    }
+    memset(&od, '\0', sizeof(od));
+    /* Set up test data */
+    od.client_shared_secret = test_client_shared_secret;
+    if(od.client_shared_secret)
+      od.client_shared_secret_len = strlen(od.client_shared_secret);
+    od.token_shared_secret = test_token_shared_secret;
+    if(od.token_shared_secret)
+      od.token_shared_secret_len = strlen(od.token_shared_secret);
     
-    key = malloc(key_len + 1); /* for NUL */
+    od.key_len = od.client_shared_secret_len + 1 + od.token_shared_secret_len;
+    od.key = malloc(od.key_len + 1); /* for NUL */
 
-    data_len = strlen(http_request_method) +
+    od.data_len = strlen(test_http_request_method) +
       1 +
-      (strlen(uri_base_string) * 3) + /* PESSIMAL; every char %-escaped */
+      (strlen(test_uri_base_string) * 3) + /* PESSIMAL; every char %-escaped */
       1 +
-      (strlen(request_parameters) * 3); /* PESSIMAL */
-    data = malloc(data_len + 1); /* for NUL */
+      (strlen(test_request_parameters) * 3); /* PESSIMAL */
+    od.data = malloc(od.data_len + 1); /* for NUL */
 
-    if(!key || !data) {
+    if(!od.key || !od.data) {
       fprintf(stderr, "%s: malloc() failed\n", program);
       rc = 1;
       goto tidy_oauth;
     }
 
     /* Prepare key */
-    p = key;
-    if(client_shared_secret) {
-      s_len = strlen(client_shared_secret);
-      memcpy(p, client_shared_secret, s_len);
-      p += s_len;
+    p = od.key;
+    if(od.client_shared_secret_len) {
+      memcpy(p, od.client_shared_secret, od.client_shared_secret_len);
+      p += od.client_shared_secret_len;
     }
     *p++ = '&';
-    if(token_shared_secret) {
-      s_len = strlen(token_shared_secret);
-      memcpy(p, token_shared_secret, s_len);
-      p += s_len;
+    if(od.token_shared_secret_len) {
+      memcpy(p, od.token_shared_secret, od.token_shared_secret_len);
+      p += od.token_shared_secret_len;
     }
     *p = '\0'; /* Not part of HMAC-SHA1 data */
-    /* calculate actual key len */
-    key_len = p - key;
 
     /* Prepare data */
-    p = data;
-    s_len = strlen(http_request_method);
-    memcpy(p, http_request_method, s_len);
+    p = od.data;
+    s_len = strlen(test_http_request_method);
+    memcpy(p, test_http_request_method, s_len);
     p += s_len;
 
     *p++ = '&';
 
-    escaped_s = curl_escape(uri_base_string, strlen(uri_base_string));
+    escaped_s = curl_escape(test_uri_base_string, strlen(test_uri_base_string));
     s_len = strlen(escaped_s);
     memcpy(p, escaped_s, s_len);
     p += s_len;
@@ -361,7 +369,7 @@ main(int argc, char *argv[])
 
     *p++ = '&';
 
-    escaped_s = curl_escape(request_parameters, strlen(request_parameters));
+    escaped_s = curl_escape(test_request_parameters, strlen(test_request_parameters));
     s_len = strlen(escaped_s);
     memcpy(p, escaped_s, s_len);
     p += s_len;
@@ -369,15 +377,15 @@ main(int argc, char *argv[])
 
     *p = '\0'; /* Not part of HMAC-SHA1 data */
     /* calculate actual data len */
-    data_len = p - data;
+    od.data_len = p - od.data;
 
-    fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)key_len, key);
+    fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)od.key_len, od.key);
     fprintf(stderr, "%s: expected key is\n  %s\n", program, expected_key);
 
-    fprintf(stderr, "%s: data is (%d bytes)\n  %s\n", program, (int)data_len, data);
+    fprintf(stderr, "%s: data is (%d bytes)\n  %s\n", program, (int)od.data_len, od.data);
     fprintf(stderr, "%s: expected data is\n  %s\n", program, expected_data);
 
-    result = flickcurl_hmac_sha1(data, data_len, key, key_len);
+    result = flickcurl_hmac_sha1(od.data, od.data_len, od.key, od.key_len);
     if(!result) {
       fprintf(stderr, "%s: flickcurl_hmac_sha1() failed\n", program);
       rc = 1;
@@ -418,10 +426,10 @@ main(int argc, char *argv[])
       free(s);
     if(result)
       free(result);
-    if(data)
-      free(data);
-    if(key)
-      free(key);
+    if(od.data)
+      free(od.data);
+    if(od.key)
+      free(od.key);
   }
 
  tidy:
