@@ -247,77 +247,181 @@ main(int argc, char *argv[])
   }
 
   if(1) {
-    /* key = concat(client-shared-secret, '&', token-shared-secret) */
-    const char* secret = "a9567d986a7539fe" "&" /* No token in this example*/;
+    /* KEY fields */
+    const char* client_shared_secret = "a9567d986a7539fe";
+    const char* token_shared_secret  = NULL;
 
-    /* data = concat(http-verb, '&'
-                     %-escaped-URI, '&',
-                     %-escaped-oauth-parameters)
-    */
-    const char* base_string =
+    /* DATA fields */
+    const char* http_request_method = "GET";
+    const char* uri_base_string     = "http://www.flickr.com/services/oauth/request_token";
+    const char* request_parameters  = "oauth_callback=http%3A%2F%2Fwww.example.com&oauth_consumer_key=653e7a6ecc1d528c516cc8f92cf98611&oauth_nonce=95613465&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1305586162&oauth_version=1.0";
+
+    /*
+     * KEY
+     * http://tools.ietf.org/html/rfc5849#section-3.4.2
+     * key = concat(client-shared-secret, '&', token-shared-secret) 
+     */
+
+    /* 
+     * DATA
+     * http://tools.ietf.org/html/rfc5849#section-3.4.1
+     *
+     * http-request-method:
+     *   uppercase of method
+     *
+     * uri-base-string: scheme://authority/path (NO query or fragment)
+     *   http://tools.ietf.org/html/rfc5849#section-3.4.1.2
+     *
+     * normalized-request-parameters:
+     *   uri escaped
+     *   http://tools.ietf.org/html/rfc5849#section-3.4.1.3.2
+     *
+     * data = concat(http-request-method, '&'
+     *               uri-base-string, '&',
+     *               normalized-request-parameters)
+     */
+
+    /* Expected results */
+    const char* expected_key = 
+      "a9567d986a7539fe"
+      "&";
+    const char* expected_data =
       "GET" "&"
       "http%3A%2F%2Fwww.flickr.com%2Fservices%2Foauth%2Frequest_token" "&"
       "oauth_callback%3Dhttp%253A%252F%252Fwww.example.com%26oauth_consumer_key%3D653e7a6ecc1d528c516cc8f92cf98611%26oauth_nonce%3D95613465%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1305586162%26oauth_version%3D1.0";
 
-    /* Expected results */
     const char* expected_base64_hmac_sha1 = "7w18YS2bONDPL/zgyzP5XTr5af4=";
     const char* expected_url_encoded_base64_hmac_sha1 = "7w18YS2bONDPL%2FzgyzP5XTr5af4%3D";
-    const void *key = secret;
-    size_t key_len = strlen(secret);
-    void *data = NULL;
-    size_t data_len = strlen(base_string);
+    unsigned char *key = NULL;
+    size_t key_len;
+    unsigned char* data = NULL;
+    size_t data_len;
+    unsigned char *p;
+    char *s = NULL;
+    char *escaped_s = NULL;
+    size_t s_len;
+    size_t escaped_s_len;
     unsigned char* result;
 
-    data = malloc(5000);
-    if(!data) {
+    key_len = 1; /* & */
+    if(client_shared_secret) {
+      s_len = strlen(client_shared_secret);
+      key_len += s_len;
+    }
+    if(token_shared_secret) {
+      s_len = strlen(token_shared_secret);
+      key_len += s_len;
+    }
+    
+    key = malloc(key_len + 1); /* for NUL */
+
+    data_len = strlen(http_request_method) +
+      1 +
+      (strlen(uri_base_string) * 3) + /* PESSIMAL; every char %-escaped */
+      1 +
+      (strlen(request_parameters) * 3); /* PESSIMAL */
+    data = malloc(data_len + 1); /* for NUL */
+
+    if(!key || !data) {
       fprintf(stderr, "%s: malloc() failed\n", program);
       rc = 1;
-    } else {
-      memcpy(data, base_string, data_len+1);
-
-      result = flickcurl_hmac_sha1(data, data_len, key, key_len);
-      if(!result) {
-        fprintf(stderr, "%s: flickcurl_hmac_sha1() failed\n", program);
-        rc = 1;
-      } else {
-        char *s;
-
-        s = flickcurl_base64_encode(result, SHA1_DIGEST_LENGTH, NULL);
-        if(!s) {
-          fprintf(stderr, "%s: flickcurl_base64_encode() failed\n", program);
-          rc = 1;
-        } else {
-          char *escaped_s = NULL;
-          size_t s_len = strlen(s);
-          
-          fprintf(stdout, "Result (%d bytes):\n  %s\n", (int)s_len, s);
-
-          fprintf(stdout, "Expected result:\n  %s\n", expected_base64_hmac_sha1);
-          
-          escaped_s = curl_escape(s, s_len);
-          if(!escaped_s) {
-            fprintf(stderr, "%s: curl_escape(%s) failed\n", program, s);
-            rc = 1;
-          } else {
-            size_t escaped_s_len = strlen(escaped_s);
-            fprintf(stdout, "URI Escaped result (%d bytes):\n   %s\n",
-                    (int)escaped_s_len, escaped_s);
-            
-            fprintf(stdout, "Expected URI escaped result\n   %s\n", 
-                    expected_url_encoded_base64_hmac_sha1);
-          
-            curl_free(escaped_s);
-          }
-
-          free(s);
-        }
-      }
-
-      if(result)
-        free(result);
-      if(data)
-        free(data);
+      goto tidy_oauth;
     }
+
+    /* Prepare key */
+    p = key;
+    if(client_shared_secret) {
+      s_len = strlen(client_shared_secret);
+      memcpy(p, client_shared_secret, s_len);
+      p += s_len;
+    }
+    *p++ = '&';
+    if(token_shared_secret) {
+      s_len = strlen(token_shared_secret);
+      memcpy(p, token_shared_secret, s_len);
+      p += s_len;
+    }
+    *p = '\0'; /* Not part of HMAC-SHA1 data */
+    /* calculate actual key len */
+    key_len = p - key;
+
+    /* Prepare data */
+    p = data;
+    s_len = strlen(http_request_method);
+    memcpy(p, http_request_method, s_len);
+    p += s_len;
+
+    *p++ = '&';
+
+    escaped_s = curl_escape(uri_base_string, strlen(uri_base_string));
+    s_len = strlen(escaped_s);
+    memcpy(p, escaped_s, s_len);
+    p += s_len;
+    curl_free(escaped_s);
+
+    *p++ = '&';
+
+    escaped_s = curl_escape(request_parameters, strlen(request_parameters));
+    s_len = strlen(escaped_s);
+    memcpy(p, escaped_s, s_len);
+    p += s_len;
+    curl_free(escaped_s);
+
+    *p = '\0'; /* Not part of HMAC-SHA1 data */
+    /* calculate actual data len */
+    data_len = p - data;
+
+    fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)key_len, key);
+    fprintf(stderr, "%s: expected key is\n  %s\n", program, expected_key);
+
+    fprintf(stderr, "%s: data is (%d bytes)\n  %s\n", program, (int)data_len, data);
+    fprintf(stderr, "%s: expected data is\n  %s\n", program, expected_data);
+
+    result = flickcurl_hmac_sha1(data, data_len, key, key_len);
+    if(!result) {
+      fprintf(stderr, "%s: flickcurl_hmac_sha1() failed\n", program);
+      rc = 1;
+      goto tidy_oauth;
+    }
+
+    s = flickcurl_base64_encode(result, SHA1_DIGEST_LENGTH, NULL);
+    if(!s) {
+      fprintf(stderr, "%s: flickcurl_base64_encode() failed\n", program);
+      rc = 1;
+      goto tidy_oauth;
+    }
+
+    s_len = strlen(s);
+    
+    fprintf(stdout, "Result (%d bytes):\n  %s\n", (int)s_len, s);
+    
+    fprintf(stdout, "Expected result:\n  %s\n", expected_base64_hmac_sha1);
+    
+    escaped_s = curl_escape(s, s_len);
+    if(!escaped_s) {
+      fprintf(stderr, "%s: curl_escape(%s) failed\n", program, s);
+      rc = 1;
+      goto tidy_oauth;
+    }
+
+    escaped_s_len = strlen(escaped_s);
+    fprintf(stdout, "URI Escaped result (%d bytes):\n   %s\n",
+            (int)escaped_s_len, escaped_s);
+    
+    fprintf(stdout, "Expected URI escaped result\n   %s\n", 
+            expected_url_encoded_base64_hmac_sha1);
+    
+    curl_free(escaped_s);
+
+    tidy_oauth:
+    if(s)
+      free(s);
+    if(result)
+      free(result);
+    if(data)
+      free(data);
+    if(key)
+      free(key);
   }
 
  tidy:
