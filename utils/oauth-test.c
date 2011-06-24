@@ -94,6 +94,120 @@ my_set_config_var_handler(void* userdata, const char* key, const char* value)
 }
 
 
+typedef struct {
+  const char* client_shared_secret;
+  size_t client_shared_secret_len;
+  const char* token_shared_secret;
+  size_t token_shared_secret_len;
+  
+  /* HMAC-SHA1 key */
+  unsigned char *key;
+  size_t key_len;
+  /* HMAC-SHA1 data */
+  unsigned char* data;
+  size_t data_len;
+} oauth_data;
+  
+
+/*
+ * oauth_build_key_data:
+ *
+ * INTERNAL - Build OAuth 1.0 key and data from parameters
+ *
+ * KEY
+ * http://tools.ietf.org/html/rfc5849#section-3.4.2
+ * key = concat(client-shared-secret, '&', token-shared-secret) 
+ *
+ *
+ * DATA
+ * http://tools.ietf.org/html/rfc5849#section-3.4.1
+ *
+ * http-request-method:
+ *   uppercase of method
+ *
+ * uri-base-string: scheme://authority/path (NO query or fragment)
+ *   http://tools.ietf.org/html/rfc5849#section-3.4.1.2
+ *
+ * normalized-request-parameters:
+ *   uri escaped
+ *   http://tools.ietf.org/html/rfc5849#section-3.4.1.3.2
+ *
+ * data = concat(http-request-method, '&'
+ *               uri-base-string, '&',
+ *               normalized-request-parameters)
+ *
+ * Return value: non-0 on failure
+ */
+static
+int oauth_build_key_data(oauth_data* od, const char* http_request_method,
+                         const char* uri_base_string, 
+                         const char* request_parameters)
+{
+  int rc = 0;
+  unsigned char *p;
+  size_t s_len;
+  char *escaped_s = NULL;
+  
+  od->key_len = od->client_shared_secret_len + 1 + od->token_shared_secret_len;
+  od->key = malloc(od->key_len + 1); /* for NUL */
+  
+  od->data_len = strlen(http_request_method) +
+    1 +
+    (strlen(uri_base_string) * 3) + /* PESSIMAL; every char %-escaped */
+    1 +
+    (strlen(request_parameters) * 3); /* PESSIMAL */
+  od->data = malloc(od->data_len + 1); /* for NUL */
+  
+  if(!od->key || !od->data) {
+    fprintf(stderr, "%s: malloc() failed\n", program);
+    rc = 1;
+    goto tidy_oauth;
+  }
+
+  /* Prepare key */
+  p = od->key;
+  if(od->client_shared_secret_len) {
+    memcpy(p, od->client_shared_secret, od->client_shared_secret_len);
+    p += od->client_shared_secret_len;
+  }
+  *p++ = '&';
+  if(od->token_shared_secret_len) {
+    memcpy(p, od->token_shared_secret, od->token_shared_secret_len);
+    p += od->token_shared_secret_len;
+  }
+  *p = '\0'; /* Not part of HMAC-SHA1 data */
+  
+  /* Prepare data */
+  p = od->data;
+  s_len = strlen(http_request_method);
+  memcpy(p, http_request_method, s_len);
+  p += s_len;
+  
+  *p++ = '&';
+  
+  escaped_s = curl_escape(uri_base_string, strlen(uri_base_string));
+  s_len = strlen(escaped_s);
+  memcpy(p, escaped_s, s_len);
+  p += s_len;
+  curl_free(escaped_s);
+  
+  *p++ = '&';
+  
+  escaped_s = curl_escape(request_parameters, strlen(request_parameters));
+  s_len = strlen(escaped_s);
+  memcpy(p, escaped_s, s_len);
+  p += s_len;
+  curl_free(escaped_s);
+  
+  *p = '\0'; /* Not part of HMAC-SHA1 data */
+  /* calculate actual data len */
+  od->data_len = p - od->data;
+  
+  tidy_oauth:
+  return rc;
+}
+
+
 #ifdef HAVE_GETOPT_LONG
 #define HELP_TEXT(short, long, description) "  -" short ", --" long "  " description
 #define HELP_TEXT_LONG(long, description) "      --" long "  " description
@@ -125,21 +239,6 @@ static const char *title_format_string = "Flickr OAuth test utility %s\n";
 static const char* config_filename = ".flickcurl.conf";
 static const char* config_section = "flickr";
 
-
-typedef struct {
-  const char* client_shared_secret;
-  size_t client_shared_secret_len;
-  const char* token_shared_secret;
-  size_t token_shared_secret_len;
-  
-  /* HMAC-SHA1 key */
-  unsigned char *key;
-  size_t key_len;
-  /* HMAC-SHA1 data */
-  unsigned char* data;
-  size_t data_len;
-} oauth_data;
-  
 
 int
 main(int argc, char *argv[]) 
@@ -271,31 +370,6 @@ main(int argc, char *argv[])
     const char* test_uri_base_string     = "http://www.flickr.com/services/oauth/request_token";
     const char* test_request_parameters  = "oauth_callback=http%3A%2F%2Fwww.example.com&oauth_consumer_key=653e7a6ecc1d528c516cc8f92cf98611&oauth_nonce=95613465&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1305586162&oauth_version=1.0";
 
-    /*
-     * KEY
-     * http://tools.ietf.org/html/rfc5849#section-3.4.2
-     * key = concat(client-shared-secret, '&', token-shared-secret) 
-     */
-
-    /* 
-     * DATA
-     * http://tools.ietf.org/html/rfc5849#section-3.4.1
-     *
-     * http-request-method:
-     *   uppercase of method
-     *
-     * uri-base-string: scheme://authority/path (NO query or fragment)
-     *   http://tools.ietf.org/html/rfc5849#section-3.4.1.2
-     *
-     * normalized-request-parameters:
-     *   uri escaped
-     *   http://tools.ietf.org/html/rfc5849#section-3.4.1.3.2
-     *
-     * data = concat(http-request-method, '&'
-     *               uri-base-string, '&',
-     *               normalized-request-parameters)
-     */
-
     /* Expected results */
     const char* expected_key = 
       "a9567d986a7539fe"
@@ -307,15 +381,15 @@ main(int argc, char *argv[])
 
     const char* expected_base64_hmac_sha1 = "7w18YS2bONDPL/zgyzP5XTr5af4=";
     const char* expected_url_encoded_base64_hmac_sha1 = "7w18YS2bONDPL%2FzgyzP5XTr5af4%3D";
-    unsigned char *p;
     char *s = NULL;
     char *escaped_s = NULL;
     size_t s_len;
     size_t escaped_s_len;
     unsigned char* result;
     oauth_data od;
-
+    
     memset(&od, '\0', sizeof(od));
+  
     /* Set up test data */
     od.client_shared_secret = test_client_shared_secret;
     if(od.client_shared_secret)
@@ -324,61 +398,9 @@ main(int argc, char *argv[])
     if(od.token_shared_secret)
       od.token_shared_secret_len = strlen(od.token_shared_secret);
     
-    od.key_len = od.client_shared_secret_len + 1 + od.token_shared_secret_len;
-    od.key = malloc(od.key_len + 1); /* for NUL */
-
-    od.data_len = strlen(test_http_request_method) +
-      1 +
-      (strlen(test_uri_base_string) * 3) + /* PESSIMAL; every char %-escaped */
-      1 +
-      (strlen(test_request_parameters) * 3); /* PESSIMAL */
-    od.data = malloc(od.data_len + 1); /* for NUL */
-
-    if(!od.key || !od.data) {
-      fprintf(stderr, "%s: malloc() failed\n", program);
-      rc = 1;
-      goto tidy_oauth;
-    }
-
-    /* Prepare key */
-    p = od.key;
-    if(od.client_shared_secret_len) {
-      memcpy(p, od.client_shared_secret, od.client_shared_secret_len);
-      p += od.client_shared_secret_len;
-    }
-    *p++ = '&';
-    if(od.token_shared_secret_len) {
-      memcpy(p, od.token_shared_secret, od.token_shared_secret_len);
-      p += od.token_shared_secret_len;
-    }
-    *p = '\0'; /* Not part of HMAC-SHA1 data */
-
-    /* Prepare data */
-    p = od.data;
-    s_len = strlen(test_http_request_method);
-    memcpy(p, test_http_request_method, s_len);
-    p += s_len;
-
-    *p++ = '&';
-
-    escaped_s = curl_escape(test_uri_base_string, strlen(test_uri_base_string));
-    s_len = strlen(escaped_s);
-    memcpy(p, escaped_s, s_len);
-    p += s_len;
-    curl_free(escaped_s);
-
-    *p++ = '&';
-
-    escaped_s = curl_escape(test_request_parameters, strlen(test_request_parameters));
-    s_len = strlen(escaped_s);
-    memcpy(p, escaped_s, s_len);
-    p += s_len;
-    curl_free(escaped_s);
-
-    *p = '\0'; /* Not part of HMAC-SHA1 data */
-    /* calculate actual data len */
-    od.data_len = p - od.data;
-
+    rc = oauth_build_key_data(&od, test_http_request_method,
+                              test_uri_base_string, test_request_parameters);
+    
     fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)od.key_len, od.key);
     fprintf(stderr, "%s: expected key is\n  %s\n", program, expected_key);
 
