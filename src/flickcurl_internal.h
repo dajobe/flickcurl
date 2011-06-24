@@ -386,3 +386,25 @@ unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void
 
 /* oauth.c */
 char* flickcurl_base64_encode(const unsigned char *data, size_t len, size_t *out_len_p);
+
+
+typedef struct {
+  const char* client_shared_secret;
+  size_t client_shared_secret_len;
+  const char* token_shared_secret;
+  size_t token_shared_secret_len;
+  
+  /* HMAC-SHA1 key */
+  unsigned char *key;
+  size_t key_len;
+  /* HMAC-SHA1 data */
+  unsigned char* data;
+  size_t data_len;
+} flickcurl_oauth_data;
+  
+
+int
+flickcurl_oauth_build_key_data(flickcurl_oauth_data* od,
+                               const char* http_request_method,
+                               const char* uri_base_string, 
+                               const char* request_parameters);
