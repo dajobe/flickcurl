@@ -403,8 +403,5 @@ typedef struct {
 } flickcurl_oauth_data;
   
 
-int
-flickcurl_oauth_build_key_data(flickcurl_oauth_data* od,
-                               const char* http_request_method,
-                               const char* uri_base_string, 
-                               const char* request_parameters);
+int flickcurl_oauth_build_key_data(flickcurl_oauth_data* od, const char* http_request_method, const char* uri_base_string, const char* request_parameters);
+
