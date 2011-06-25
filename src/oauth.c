@@ -118,9 +118,52 @@ flickcurl_base64_encode(const unsigned char *data, size_t len,
   *p = '\0';
 
   if(out_len_p)
-    *out_len_p = p - out + 1;
+    *out_len_p = p - out;
 
   return out;
+}
+
+
+/**
+ * flickcurl_oauth_build_key:
+ * @od: oauth data
+ *
+ * INTERNAL - Build OAuth 1.0 key
+ *
+ * KEY
+ * http://tools.ietf.org/html/rfc5849#section-3.4.2
+ * key = concat(client-credentials-secret, '&', token-credentials-secret) 
+ *
+ * Stores result in od->key and od->key_len
+ *
+ * Return value: non-0 on failure
+ */
+int
+flickcurl_oauth_build_key(flickcurl_oauth_data* od)
+{
+  unsigned char *p;
+  
+  if(od->key)
+    free(od->key);
+
+  od->key_len = od->client_secret_len + 1 + od->token_secret_len;
+  od->key = malloc(od->key_len + 1); /* for NUL */
+  if(!od->key)
+    return 1;
+  
+  p = od->key;
+  if(od->client_secret_len) {
+    memcpy(p, od->client_secret, od->client_secret_len);
+    p += od->client_secret_len;
+  }
+  *p++ = '&';
+  if(od->token_secret_len) {
+    memcpy(p, od->token_secret, od->token_secret_len);
+    p += od->token_secret_len;
+  }
+  *p = '\0'; /* Not part of HMAC-SHA1 data */
+  
+  return 0;
 }
 
 
@@ -130,9 +173,7 @@ flickcurl_base64_encode(const unsigned char *data, size_t len,
  *
  * INTERNAL - Build OAuth 1.0 key and data from parameters
  *
- * KEY
- * http://tools.ietf.org/html/rfc5849#section-3.4.2
- * key = concat(client-shared-secret, '&', token-shared-secret) 
+ * Builds key using flickcurl_oauth_build_key()
  *
  *
  * DATA
@@ -163,10 +204,8 @@ flickcurl_oauth_build_key_data(flickcurl_oauth_data* od,
   unsigned char *p;
   size_t s_len;
   char *escaped_s = NULL;
-  
-  od->key_len = od->client_shared_secret_len + 1 + od->token_shared_secret_len;
-  od->key = malloc(od->key_len + 1); /* for NUL */
-  if(!od->key)
+
+  if(flickcurl_oauth_build_key(od))
     return 1;
   
   od->data_len = strlen(http_request_method) +
@@ -179,20 +218,6 @@ flickcurl_oauth_build_key_data(flickcurl_oauth_data* od,
   if(!od->data)
     return 1;
 
-
-  /* Prepare key */
-  p = od->key;
-  if(od->client_shared_secret_len) {
-    memcpy(p, od->client_shared_secret, od->client_shared_secret_len);
-    p += od->client_shared_secret_len;
-  }
-  *p++ = '&';
-  if(od->token_shared_secret_len) {
-    memcpy(p, od->token_shared_secret, od->token_shared_secret_len);
-    p += od->token_shared_secret_len;
-  }
-  *p = '\0'; /* Not part of HMAC-SHA1 data */
-  
   /* Prepare data */
   p = od->data;
   s_len = strlen(http_request_method);
@@ -220,4 +245,34 @@ flickcurl_oauth_build_key_data(flickcurl_oauth_data* od,
   od->data_len = p - od->data;
   
   return 0;
+}
+
+
+char*
+flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p)
+{
+  unsigned char *s1;
+  char *s2;
+  char *result;
+  size_t s_len;
+  
+  s1 = flickcurl_hmac_sha1(od->data, od->data_len, od->key, od->key_len);
+  if(!s1)
+    return NULL;
+  
+  s2 = flickcurl_base64_encode(s1, SHA1_DIGEST_LENGTH, &s_len);
+  free(s1);
+  if(!s2)
+    return NULL;
+  
+  s_len = strlen(s2);
+  result = (char*)malloc(s_len + 1);
+  memcpy(result, s2, s_len + 1);
+  
+  curl_free(s2);
+
+  if(len_p)
+    *len_p = s_len;
+
+  return result;
 }
