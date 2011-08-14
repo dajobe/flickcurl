@@ -5586,6 +5586,13 @@ main(int argc, char *argv[])
         goto tidy;
       }
     } else {
+        /* Check if the user has requested to see the help message */
+        for (i = 0; i < argc; ++i) {
+	  if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+	    print_help_string();
+	  }
+	}
+
         fprintf(stderr, "%s: Configuration file %s not found.\n\n"
 "1. Visit http://www.flickr.com/services/api/keys/ and obtain a\n"
 "mobile application <API Key>, <Shared Secret> and <Authentication URL>.\n"
