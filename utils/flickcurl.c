@@ -5586,14 +5586,14 @@ main(int argc, char *argv[])
         goto tidy;
       }
     } else {
-        /* Check if the user has requested to see the help message */
-        for (i = 0; i < argc; ++i) {
-	  if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
-	    print_help_string();
-	  }
+      /* Check if the user has requested to see the help message */
+      for (i = 0; i < argc; ++i) {
+	if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+	  print_help_string();
 	}
+      }
 
-        fprintf(stderr, "%s: Configuration file %s not found.\n\n"
+      fprintf(stderr, "%s: Configuration file %s not found.\n\n"
 "1. Visit http://www.flickr.com/services/api/keys/ and obtain a\n"
 "mobile application <API Key>, <Shared Secret> and <Authentication URL>.\n"
 "\n"
@@ -5608,9 +5608,9 @@ main(int argc, char *argv[])
 "  %s -a <FROB>\n"
 "to update the configuration file with the authentication token.\n"
 "See http://librdf.org/flickcurl/api/flickcurl-auth.html for full instructions.\n",
-                program, config_path, config_path, program);
-        rc = 1;
-        goto tidy;
+	      program, config_path, config_path, program);
+      rc = 1;
+      goto tidy;
     }
   }
 
