@@ -5837,7 +5837,8 @@ main(int argc, char *argv[])
     for(i = 0; commands[i].name; i++)
       printf("    %-28s %s\n      %s\n", commands[i].name, commands[i].args,
              commands[i].description);
-    fputs("  A prefix of `flickr.' may be optionally given\n", stdout);
+    fputs("  NSID is a user's Flickr ID, resembling the form 00000000@N00\n", stdout);
+    fputs("  A prefix of `flickr.' may be optionally given in all commands\n", stdout);
 
     fputs("\nParameters for API calls that return lists of photos:\n", stdout);
     
