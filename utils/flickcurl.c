@@ -4975,7 +4975,7 @@ static flickcurl_cmd commands[] = {
    "GALLERY-ID PHOTO-ID TEXT", "Add photo PHOTO-ID to galleries GALLERY-ID with TEXT",
    command_galleries_addPhoto, 3, 3},
   {"galleries.create",
-   "TITLE [DESCRIPTION [PRIMARY-PHOTO-ID]", "Create a new galleries with TITlE, DESCRIPTION and PRIMARY-PHOTO_ID.",
+   "TITLE [DESCRIPTION [PRIMARY-PHOTO-ID]", "Create a new gallery with TITLE, DESCRIPTION and PRIMARY-PHOTO_ID.",
    command_galleries_create, 1, 3},
   {"galleries.editMeta",
    "GALLERY-ID TITLE [DESCRIPTION]", "Set the TITLE and/or DESCRIPTION of a GALLERY-ID.",
@@ -5072,7 +5072,7 @@ static flickcurl_cmd commands[] = {
    "USER-NSID [PER-PAGE [PAGE [FORMAT]]]", "Get public photos of a user USER-NSID", 
    command_people_getPhotosOf,  1, 4},
   {"people.getPublicGroups",
-   "USER-NSID", "Get list of public groups a user is amember of", 
+   "USER-NSID", "Get list of public groups a user is a member of", 
    command_people_getPublicGroups,  1, 1},
   {"people.getPublicPhotos",
    "USER-NSID [PER-PAGE [PAGE [FORMAT]]]", "Get public photos for a user USER-NSID", 
@@ -5837,7 +5837,8 @@ main(int argc, char *argv[])
     for(i = 0; commands[i].name; i++)
       printf("    %-28s %s\n      %s\n", commands[i].name, commands[i].args,
              commands[i].description);
-    fputs("  A prefix of `flickr.' may be optionally given\n", stdout);
+    fputs("  NSID is a user's Flickr ID, resembling the form 00000000@N00\n", stdout);
+    fputs("  A prefix of `flickr.' may be optionally given in all commands\n", stdout);
 
     fputs("\nParameters for API calls that return lists of photos:\n", stdout);
     
