@@ -5476,6 +5476,69 @@ static const char* config_filename = ".flickcurl.conf";
 static const char* config_section = "flickr";
 
 
+static void
+print_help_string(void)
+{
+  int i;
+  printf(title_format_string, flickcurl_version_string);
+  puts("Call the Flickr API to get information.");
+  printf("Usage: %s [OPTIONS] command args...\n\n", program);
+
+  fputs(flickcurl_copyright_string, stdout);
+  fputs("\nLicense: ", stdout);
+  puts(flickcurl_license_string);
+  fputs("Flickcurl home page: ", stdout);
+  puts(flickcurl_home_url_string);
+
+  fputs("\n", stdout);
+
+  puts(HELP_TEXT("a", "auth FROB       ", "Authenticate with a FROB and write auth config"));
+  puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
+  puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
+#ifdef FLICKCURL_MAINTAINER
+  puts(HELP_TEXT("m", "maintainer TYPE ", "Print formatted fragments for maintainer use, then exit"));
+#endif
+  puts(HELP_TEXT("o", "output FILE     ", "Write format = FORMAT results to FILE"));
+  puts(HELP_TEXT("q", "quiet           ", "Print less information while running"));
+  puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
+  puts(HELP_TEXT("V", "verbose         ", "Print more information while running"));
+
+  fputs("\nCommands:\n", stdout);
+  for(i = 0; commands[i].name; i++)
+    printf("    %-28s %s\n      %s\n", commands[i].name, commands[i].args,
+	   commands[i].description);
+  fputs("  NSID is a user's Flickr ID, resembling the form 00000000@N00\n", stdout);
+  fputs("  A prefix of `flickr.' may be optionally given in all commands\n", stdout);
+
+  fputs("\nParameters for API calls that return lists of photos:\n", stdout);
+
+  fputs("  EXTRAS is a comma-separated list of optional fields to return from:\n", stdout);
+  for(i = 0; 1; i++) {
+    const char* name;
+    const char* label;
+
+    if(flickcurl_get_extras_format_info(i, &name, &label))
+      break;
+    printf("    %-16s %s\n", name, label);
+  }
+
+  fputs("  FORMAT is result syntax format:\n", stdout);
+  for(i = 0; 1; i++) {
+    const char* name;
+    const char* label;
+
+    if(flickcurl_get_feed_format_info(i, &name, &label, NULL))
+      break;
+    printf("    %-16s %s\n", name, label);
+  }
+  fputs("  PAGE is result page number or '-' for default (1 = first page)\n"
+	"  PER-PAGE is photos per result page or '-' for default (10)\n",
+	stdout
+	);
+  /* Extra space for neater distinctions in output */
+  fputs("\n", stdout);
+}
+
 int
 main(int argc, char *argv[]) 
 {
@@ -5523,7 +5586,14 @@ main(int argc, char *argv[])
         goto tidy;
       }
     } else {
-        fprintf(stderr, "%s: Configuration file %s not found.\n\n"
+      /* Check if the user has requested to see the help message */
+      for (i = 0; i < argc; ++i) {
+	if (!strcmp(argv[i], "-h") || !strcmp(argv[i], "--help")) {
+	  print_help_string();
+	}
+      }
+
+      fprintf(stderr, "%s: Configuration file %s not found.\n\n"
 "1. Visit http://www.flickr.com/services/api/keys/ and obtain a\n"
 "mobile application <API Key>, <Shared Secret> and <Authentication URL>.\n"
 "\n"
@@ -5538,9 +5608,9 @@ main(int argc, char *argv[])
 "  %s -a <FROB>\n"
 "to update the configuration file with the authentication token.\n"
 "See http://librdf.org/flickcurl/api/flickcurl-auth.html for full instructions.\n",
-                program, config_path, config_path, program);
-        rc = 1;
-        goto tidy;
+	      program, config_path, config_path, program);
+      rc = 1;
+      goto tidy;
     }
   }
 
@@ -5810,62 +5880,7 @@ main(int argc, char *argv[])
   }
 
   if(help) {
-    printf(title_format_string, flickcurl_version_string);
-    puts("Call the Flickr API to get information.");
-    printf("Usage: %s [OPTIONS] command args...\n\n", program);
-
-    fputs(flickcurl_copyright_string, stdout);
-    fputs("\nLicense: ", stdout);
-    puts(flickcurl_license_string);
-    fputs("Flickcurl home page: ", stdout);
-    puts(flickcurl_home_url_string);
-
-    fputs("\n", stdout);
-
-    puts(HELP_TEXT("a", "auth FROB       ", "Authenticate with a FROB and write auth config"));
-    puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
-    puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
-#ifdef FLICKCURL_MAINTAINER
-    puts(HELP_TEXT("m", "maintainer TYPE ", "Print formatted fragments for maintainer use, then exit"));
-#endif
-    puts(HELP_TEXT("o", "output FILE     ", "Write format = FORMAT results to FILE"));
-    puts(HELP_TEXT("q", "quiet           ", "Print less information while running"));
-    puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
-    puts(HELP_TEXT("V", "verbose         ", "Print more information while running"));
-
-    fputs("\nCommands:\n", stdout);
-    for(i = 0; commands[i].name; i++)
-      printf("    %-28s %s\n      %s\n", commands[i].name, commands[i].args,
-             commands[i].description);
-    fputs("  NSID is a user's Flickr ID, resembling the form 00000000@N00\n", stdout);
-    fputs("  A prefix of `flickr.' may be optionally given in all commands\n", stdout);
-
-    fputs("\nParameters for API calls that return lists of photos:\n", stdout);
-    
-    fputs("  EXTRAS is a comma-separated list of optional fields to return from:\n", stdout);
-    for(i = 0; 1; i++) {
-      const char* name;
-      const char* label;
-
-      if(flickcurl_get_extras_format_info(i, &name, &label))
-        break;
-      printf("    %-16s %s\n", name, label);
-    }
-
-    fputs("  FORMAT is result syntax format:\n", stdout);
-    for(i = 0; 1; i++) {
-      const char* name;
-      const char* label;
-
-      if(flickcurl_get_feed_format_info(i, &name, &label, NULL))
-        break;
-      printf("    %-16s %s\n", name, label);
-    }
-    fputs("  PAGE is result page number or '-' for default (1 = first page)\n"
-          "  PER-PAGE is photos per result page or '-' for default (10)\n",
-          stdout
-          );
-
+    print_help_string();
     rc = 0;
     goto tidy;
   }
