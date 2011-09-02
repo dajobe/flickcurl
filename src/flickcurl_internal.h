@@ -385,7 +385,7 @@ unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void
 
 /* oauth.c */
 
-#define MAX_OAUTH_PARAM_COUNT 7
+#define MAX_OAUTH_PARAM_COUNT 8
 
 char* flickcurl_base64_encode(const unsigned char *data, size_t len, size_t *out_len_p);
 
@@ -403,6 +403,9 @@ typedef struct {
   const char* tmp_token_secret;
   size_t tmp_token_secret_len;
   
+  const char* verifier; /* OAuth verifier */
+  size_t verifier_len;
+
   /* token credentials */
   const char* token; /* AKA access token */
   size_t token_len;
