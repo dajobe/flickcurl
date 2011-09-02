@@ -115,7 +115,8 @@ oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
                      const char* upload_field,
                      const char* upload_value,
                      const char* parameters[][2], int count,
-                     int parameters_in_url, int need_auth)
+                     int parameters_in_url, int need_auth,
+                     int is_request)
 {
   int i;
   char *signature_string = NULL;
@@ -179,28 +180,36 @@ oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
 
   /* OAuth parameters
    *
-   * oauth_callback         <URL> or "oob"
+   * oauth_callback         <URL> or "oob" [request token request]
    * oauth_consumer_key     API key
-   * oauth_nonce            <random value - different each time>
+   * oauth_nonce            <random value - different each time> [request token request]
    * oauth_signature        [ADDED AFTER COMPUTING]
    * oauth_signature_method "HMAC-SHA1"
-   * oauth_timestamp        <value of gettimeofday()>
+   * oauth_timestamp        <value of gettimeofday()> [request token request]
    * oauth_version          "1.0"
+   *
+   * oauth_verifier         verifier [access token request]
+   * oauth_token            access token [access token request]
    */
-  parameters[count][0]  = "oauth_callback";
-  parameters[count++][1]= (od->callback ? od->callback : "oob");
+
+  if(is_request) {
+    parameters[count][0]  = "oauth_callback";
+    parameters[count++][1]= (od->callback ? od->callback : "oob");
+  }
   
   parameters[count][0]  = "oauth_consumer_key";
   parameters[count++][1]= od->client_key;
 
-  nonce = (char*)od->nonce;
-  if(!nonce) {
-    nonce = (char*)malloc(20);
-    free_nonce = 1;
-    sprintf(nonce, "%d", rand());
+  if(is_request) {
+    nonce = (char*)od->nonce;
+    if(!nonce) {
+      nonce = (char*)malloc(20);
+      free_nonce = 1;
+      sprintf(nonce, "%d", rand());
+    }
+    parameters[count][0]  = "oauth_nonce";
+    parameters[count++][1]= nonce;
   }
-  parameters[count][0]  = "oauth_nonce";
-  parameters[count++][1]= nonce;
 
   /* oauth_signature - computed over these fields */
   parameters[count][0]  = "oauth_signature_method";
@@ -214,18 +223,29 @@ oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
     (void)gettimeofday(&tp, NULL);
     sprintf(timestamp, "%ld", (long)tp.tv_sec);
   }
-  parameters[count][0]  = "oauth_timestamp";
-  parameters[count++][1]= timestamp;
+  if(is_request) {
+    parameters[count][0]  = "oauth_timestamp";
+    parameters[count++][1]= timestamp;
+  }
 
   parameters[count][0]  = "oauth_version";
   parameters[count++][1]= "1.0";
 
+  if(od->tmp_token) {
+    parameters[count][0]  = "oauth_token";
+    parameters[count++][1]= od->tmp_token;
+  }
+  if(od->verifier) {
+    parameters[count][0]  = "oauth_verifier";
+    parameters[count++][1]= od->verifier;
+  }
+
   parameters[count][0]  = NULL;
 
-  /* +7 for 7 oauth fields +1 for NULL terminating pointer */
-  fc->param_fields = (char**)calloc(count + 8, sizeof(char*));
-  fc->param_values = (char**)calloc(count + 8, sizeof(char*));
-  values_len       = (size_t*)calloc(count + 8, sizeof(size_t));
+  /* +MAX_OAUTH_PARAM_COUNT for oauth fields +1 for NULL terminating pointer */
+  fc->param_fields = (char**)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  fc->param_values = (char**)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  values_len       = (size_t*)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(size_t));
 
   if((need_auth && (od->client_secret || od->token_secret)) || fc->sign)
     flickcurl_sort_args(fc, parameters, count);
@@ -423,7 +443,7 @@ oauth_prepare(flickcurl *fc, flickcurl_oauth_data* od,
                               method,
                               NULL, NULL,
                               parameters, count,
-                              1, 1);
+                              1, 1, 1);
 }
 
 
@@ -453,7 +473,73 @@ oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
                           /* upload_value */ NULL,
                           parameters, count,
                           /* parameters_in_url */ 1,
-                          /* need_auth */ 1)) {
+                          /* need_auth */ 1,
+                          /* is_request */ 1)) {
+    rc = 1;
+    goto tidy;
+  }
+
+  /* FIXME does not invoke it */
+  rc = 1;
+  goto tidy;
+
+  data = flickcurl_invoke_get_content(fc, &data_len);
+  if(!data) {
+    rc = 1;
+    goto tidy;
+  }
+
+  fprintf(stdout, "Data is '%s'\n", data);
+
+  if(tmp_token && tmp_token_secret) {
+    /* Now owned by od */
+    od->tmp_token = tmp_token;
+    od->tmp_token_len = strlen(od->tmp_token);
+    tmp_token = NULL;
+    od->tmp_token_secret = tmp_token_secret;
+    od->tmp_token_secret_len = strlen(od->tmp_token_secret);
+    tmp_token_secret = NULL;
+
+    fprintf(stderr, "Request returned token '%s' secret token '%s'\n",
+            od->tmp_token, od->tmp_token_secret);
+  }
+  
+  tidy:
+  if(tmp_token)
+    free(tmp_token);
+  if(tmp_token_secret)
+    free(tmp_token_secret);
+  
+  return rc;
+}
+
+
+static int
+oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
+{
+  const char * parameters[2 + MAX_OAUTH_PARAM_COUNT][2];
+  int count = 0;
+  char* tmp_token = NULL;
+  char* tmp_token_secret = NULL;
+  char* data = NULL;
+  size_t data_len = 0;
+  int rc = 0;
+  const char* uri = ACCESS_TOKEN_URL;
+
+  parameters[count][0]  = NULL;
+
+  /* Require signature */
+  flickcurl_set_sign(fc);
+
+  if(oauth_prepare_common(fc, od,
+                          uri,
+                          /* method */ "GET",
+                          /* upload_field */ NULL,
+                          /* upload_value */ NULL,
+                          parameters, count,
+                          /* parameters_in_url */ 1,
+                          /* need_auth */ 1,
+                          /* is_request */ 0)) {
     rc = 1;
     goto tidy;
   }
@@ -722,6 +808,33 @@ main(int argc, char *argv[])
   /* FIXME */
   srand(getpid());
 
+  /* Request token */
+  if(0) {
+    flickcurl_oauth_data od;
+
+    memset(&od, '\0', sizeof(od));
+
+#if 0
+    od.callback = test_oauth_callback_url;
+    od.client_key = test_oauth_consumer_key;
+    od.nonce = test_oauth_nonce;
+    od.timestamp = test_oauth_timestamp;
+
+    oauth_init_test_secrets(&od);
+#endif
+#if 0
+    od.client_key = fc->api_key;
+    od.client_secret = fc->secret;
+    od.client_secret_len = strlen(od.client_secret);
+#endif
+
+    od.client_len = strlen(od.client_key);
+    
+    rc = oauth_request_token(fc, &od);
+  }
+
+
+  /* Access token */
   if(1) {
     flickcurl_oauth_data od;
 
@@ -734,14 +847,16 @@ main(int argc, char *argv[])
     od.timestamp = test_oauth_timestamp;
 
     oauth_init_test_secrets(&od);
-#else
+#endif
+#if 0
     od.client_key = fc->api_key;
     od.client_secret = fc->secret;
     od.client_secret_len = strlen(od.client_secret);
 #endif
+
     od.client_len = strlen(od.client_key);
     
-    rc = oauth_request_token(fc, &od);
+    rc = oauth_access_token(fc, &od);
   }
 
 
