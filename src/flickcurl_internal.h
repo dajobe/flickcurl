@@ -210,6 +210,7 @@ flickcurl_person** flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpa
 flickcurl_person* flickcurl_build_person(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
 
 /* photo.c */
+flickcurl_photos_list* flickcurl_new_photos_list(flickcurl* fc);
 flickcurl_photo** flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* photo_count_p);
 flickcurl_photo* flickcurl_build_photo(flickcurl* fc, xmlXPathContextPtr xpathCtx);
 flickcurl_photos_list* flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr, const char* format);

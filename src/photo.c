@@ -1214,16 +1214,7 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
   const char *nformat;
   size_t format_len;
 
-  photos_list = (flickcurl_photos_list*)calloc(1, sizeof(*photos_list));
-  if(!photos_list) {
-    fc->failed = 1;
-    goto tidy;
-  }
-
-  photos_list->page = -1;
-  photos_list->per_page = -1;
-  photos_list->total_count = -1;
-  
+  photos_list = flickcurl_new_photos_list(fc);
   if(format) {
     nformat = format;
     format_len = strlen(format);
@@ -1355,6 +1346,29 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
   return photos_list;
 }
 
+
+/*
+ * flickcurl_new_photos_list:
+ * @fc: Flickcurl context
+ *
+ * INTERNAL - constructor for photos list
+ */
+flickcurl_photos_list*
+flickcurl_new_photos_list(flickcurl* fc)
+{
+  flickcurl_photos_list* photos_list;
+  
+  photos_list = (flickcurl_photos_list*)calloc(1, sizeof(*photos_list));
+  if(!photos_list)
+    return NULL;
+
+  photos_list->page = -1;
+  photos_list->per_page = -1;
+  photos_list->total_count = -1;
+
+  return photos_list;
+}
+  
 
 /**
  * flickcurl_free_photos_list:
