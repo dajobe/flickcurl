@@ -1162,6 +1162,9 @@ print_upload_params(FILE* handle, flickcurl_upload_params* params,
   fprintf(handle, "  Content type: %s (%d)\n",
           flickcurl_get_content_type_label(params->content_type),
           params->content_type);
+  fprintf(handle, "  Hidden: %s (%d)\n",
+          flickcurl_get_hidden_label(params->hidden),
+          params->hidden);
 }
 
 
@@ -1176,6 +1179,7 @@ command_upload(flickcurl* fc, int argc, char *argv[])
   memset(&params, '\0', sizeof(flickcurl_upload_params));
   params.safety_level = 1; /* default safe */
   params.content_type = 1; /* default photo */
+  params.hidden = 1; /* default public */
   
   
   argv++; argc--;
@@ -1204,6 +1208,9 @@ command_upload(flickcurl* fc, int argc, char *argv[])
       argv++; argc--;
     } else if(!strcmp(field, "content_type")) {
       params.content_type = flickcurl_get_content_type_from_string(argv[0]);
+      argv++; argc--;
+    } else if(!strcmp(field, "hidden")) {
+      params.hidden = flickcurl_get_hidden_from_string(argv[0]);
       argv++; argc--;
     } else if(!strcmp(field, "friend")) {
       params.is_friend = 1;
@@ -5506,7 +5513,7 @@ static flickcurl_cmd commands[] = {
    command_urls_lookupUser,  1, 1},
 
   {"upload",
-   "FILE [PARAMS...]", "Upload a photo FILE with optional parameters PARAM or PARAM VALUE\n      title TITLE  description DESC\n      safety_level LEVEL  content_type TYPE\n      friend  public  family\n      tags TAGS...", 
+   "FILE [PARAMS...]", "Upload a photo FILE with optional parameters PARAM or PARAM VALUE\n        title TITLE\n        description DESC\n        safety_level 'safe' (default) or 'moderate' or 'restricted'\n        content_type 'photo' (default) or screenshot' or 'other'\n        hidden 'public' (default) or 'hidden'\n        friend\n        public\n        family\n        tags TAGS... [must be last param]", 
    command_upload,  1, 0},
 
   {"replace",

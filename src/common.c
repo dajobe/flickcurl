@@ -2090,6 +2090,64 @@ flickcurl_get_safety_level_from_string(const char* safety_level_string)
 }
 
 
+#define HIDDEN_COUNT 2
+static const char* flickcurl_hidden_labels[HIDDEN_COUNT + 1] =
+  {"unknown", "public", "hidden" };
+
+
+/**
+ * flickcurl_get_hidden_label:
+ * @hidden: safety level index
+ * 
+ * Get label for a hidden status
+ *
+ * Return value: pointer to shared string label for hidden status or "unknown"
+ **/
+const char*
+flickcurl_get_hidden_label(int hidden)
+{
+  if(hidden < 1 || hidden > HIDDEN_COUNT)
+    hidden = 0;
+
+  return flickcurl_hidden_labels[hidden];
+}
+
+
+/**
+ * flickcurl_get_hidden_from_string:
+ * @hidden_string: string
+ * 
+ * Get the enumeration value for a hidden status string.
+ *
+ * Parses the string value into a safety level either from an
+ * integer form like '1' or a label like 'hidden'.
+ * 
+ * Returns: safety level enumeration value or <0 on error
+ **/
+int
+flickcurl_get_hidden_from_string(const char* hidden_string)
+{
+  char* endptr = NULL;
+  int hidden = -1;
+
+  hidden = (int)strtol(hidden_string, &endptr, 10);
+  /* If not all of string was used - fail */
+  if(endptr && *endptr)
+    hidden = -1;
+
+  if(hidden < 1 || hidden > HIDDEN_COUNT) {
+    int i;
+    for(i = 1; i< HIDDEN_COUNT; i++)
+      if(!strcmp(flickcurl_hidden_labels[i], hidden_string)) {
+        hidden = i;
+        break;
+      }
+  }
+
+  return hidden;
+}
+
+
 #define FEED_FORMAT_COUNT 8
 static struct {
   const char* name;

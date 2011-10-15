@@ -57,7 +57,7 @@
 flickcurl_upload_status*
 flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
 {
-  const char* parameters[12][2];
+  const char* parameters[13][2];
   int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
@@ -67,6 +67,7 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   char is_family_s[2];
   char safety_level_s[2];
   char content_type_s[2];
+  char hidden_s[2];
   
   if(!params->photo_file)
     return NULL;
@@ -88,14 +89,21 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
     safety_level_s[0] = '0' + params->safety_level;
     safety_level_s[1] = '\0';
   } else
-    params->safety_level= -1;
+    params->safety_level = -1;
   
   if(params->content_type >= 1 && params->content_type <= 3) {
     content_type_s[0] = '0' + params->content_type;
     content_type_s[1] = '\0';
   } else
-    params->content_type= -1;
+    params->content_type = -1;
   
+  if(params->hidden >= 1 && params->hidden <= 2 ) {
+    hidden_s[0] = '0' + params->hidden;
+    hidden_s[1] = '\0';
+  } else {
+    params->hidden = -1;
+  }
+
   if(params->title) {
     parameters[count][0]  = "title";
     parameters[count++][1]= params->title;
@@ -122,6 +130,10 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   parameters[count++][1]= is_friend_s;
   parameters[count][0]  = "is_family";
   parameters[count++][1]= is_family_s;
+  if(params->hidden >= 0) {
+    parameters[count][0]  = "hidden";
+    parameters[count++][1]= hidden_s;
+  }
 
   parameters[count][0]  = NULL;
 

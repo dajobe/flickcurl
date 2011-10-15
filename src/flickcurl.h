@@ -1238,6 +1238,7 @@ typedef struct {
  * @is_family: is family photo boolean (non-0 true)
  * @safety_level: 1=safe, 2=moderate, 3=restricted
  * @content_type: 1=photo, 2=screenshot, 3=other/artwork
+ * @hidden: 1=in global search, 2=hidden from publish searches (Flickcurl 1.22+)
  *
  * Photo upload parameters
  */
@@ -1251,6 +1252,8 @@ typedef struct {
   int is_family;  
   int safety_level;
   int content_type;
+  /* Flickcurl 1.22+ */
+  int hidden;
 } flickcurl_upload_params;
 
 
@@ -1778,6 +1781,10 @@ FLICKCURL_API
 const char* flickcurl_get_safety_level_label(int safety_level);
 FLICKCURL_API
 int flickcurl_get_safety_level_from_string(const char* safety_level_string);
+FLICKCURL_API
+const char* flickcurl_get_hidden_label(int hidden);
+FLICKCURL_API
+int flickcurl_get_hidden_from_string(const char* hidden_string);
 FLICKCURL_API
 int flickcurl_get_feed_format_info(int feed_format, const char** name_p, const char** label_p, const char** mime_type_p);
 FLICKCURL_API
