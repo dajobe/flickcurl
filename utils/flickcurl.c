@@ -5572,12 +5572,12 @@ print_help_string(void)
   for(i = 0; commands[i].name; i++)
     printf("    %-28s %s\n      %s\n", commands[i].name, commands[i].args,
 	   commands[i].description);
-  fputs("  NSID is a user's Flickr ID, resembling the form 00000000@N00\n", stdout);
-  fputs("  A prefix of `flickr.' may be optionally given in all commands\n", stdout);
+  fputs("\nNSID is a user's Flickr ID, resembling the form 00000000@N00\n", stdout);
+  fputs("\nA prefix of `flickr.' may be optionally given in all commands\n", stdout);
 
   fputs("\nParameters for API calls that return lists of photos:\n", stdout);
 
-  fputs("  EXTRAS is a comma-separated list of optional fields to return from:\n", stdout);
+  fputs("\n  EXTRAS is a comma-separated list of optional fields to return from:\n", stdout);
   for(i = 0; 1; i++) {
     const char* name;
     const char* label;
@@ -5587,7 +5587,7 @@ print_help_string(void)
     printf("    %-16s %s\n", name, label);
   }
 
-  fputs("  FORMAT is result syntax format:\n", stdout);
+  fputs("\n  FORMAT is result syntax format:\n", stdout);
   for(i = 0; 1; i++) {
     const char* name;
     const char* label;
@@ -5596,8 +5596,8 @@ print_help_string(void)
       break;
     printf("    %-16s %s\n", name, label);
   }
-  fputs("  PAGE is result page number or '-' for default (1 = first page)\n"
-	"  PER-PAGE is photos per result page or '-' for default (10)\n",
+  fputs("\n  PAGE is result page number or '-' for default (1 = first page)\n"
+	"\n  PER-PAGE is photos per result page or '-' for default (10)\n",
 	stdout
 	);
   /* Extra space for neater distinctions in output */
