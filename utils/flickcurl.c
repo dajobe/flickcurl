@@ -5506,7 +5506,7 @@ static flickcurl_cmd commands[] = {
    command_urls_lookupUser,  1, 1},
 
   {"upload",
-   "FILE [PARAMS...]", "Upload a photo FILE with optional parameters PARAM or PARAM VALUE\n      title TITLE  description DESC  tags TAGS...  friend  public  family", 
+   "FILE [PARAMS...]", "Upload a photo FILE with optional parameters PARAM or PARAM VALUE\n      title TITLE  description DESC\n      safety_level LEVEL  content_type TYPE\n      friend  public  family\n      tags TAGS...", 
    command_upload,  1, 0},
 
   {"replace",
