@@ -84,8 +84,7 @@ AC_PROG_LIBTOOL
 # Checks for libraries.
 
 libxml_min_version=2.6.8
-raptor_min_version=1.4.16
-raptor2_min_version=2.0.0
+raptor_min_version=2.0.0
 libcurl_min_version=7.10.0
 libcurl_min_vernum=070A00
 
@@ -225,44 +224,27 @@ PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libcurl >= $LIBCURL_MIN_VERSION"
 
 
 dnl raptor - optional
-AC_ARG_WITH(raptor, [  --with-raptor=2|1    Use raptor V2 or V1 to serialize (default=auto)], with_raptor="$withval", with_raptor="auto")
+AC_ARG_WITH(raptor, [  --with-raptor=yes|no|2    Use Raptor to serialize to triples (default=auto)], with_raptor="$withval", with_raptor="auto")
 
 # resolve autodetecting raptor
 if test "$with_raptor" = auto; then
   if $PKG_CONFIG raptor2 --exists; then
-    with_raptor=2
-  elif $PKG_CONFIG raptor --exists; then
-    with_raptor=1
-  else
-    with_raptor=no
-  fi
-fi
-
-# Yes is V1
-if test "$with_raptor" = yes; then
-  with_raptor=1
-fi
-
-# disable raptor if the version is too old
-RAPTOR_VERSION=
-raptor_major_version=1
-raptor_pkg_config_package=raptor
-# raptor_min_version=$raptor_min_version
-
-if test "$with_raptor" = 1 -o "$with_raptor" = 2; then
-  if test "$with_raptor" = 2; then
-    raptor_major_version=2
-    raptor_pkg_config_package=raptor2
-    raptor_min_version=$raptor2_min_version
-  fi
-
-  RAPTOR_VERSION=`$PKG_CONFIG $raptor_pkg_config_package --modversion 2>/dev/null`
-
-  if $PKG_CONFIG $raptor_pkg_config_package --atleast-version=$raptor_min_version; then
     with_raptor=yes
   else
     with_raptor=no
-    AC_MSG_WARN(Installed Raptor V$raptor_major_version $RAPTOR_VERSION is too old - need $raptor_min_version)
+  fi
+fi
+
+# Check raptor version and use it if new enough
+RAPTOR_VERSION=
+if test "$with_raptor" = yes -o "$with_raptor" = 2; then
+  RAPTOR_VERSION=`$PKG_CONFIG raptor2 --modversion 2>/dev/null`
+
+  if $PKG_CONFIG raptor2 --atleast-version=$raptor_min_version; then
+    with_raptor=yes
+  else
+    with_raptor=no
+    AC_MSG_WARN(Installed Raptor $RAPTOR_VERSION is too old - need $raptor_min_version)
   fi
 else
   with_raptor="no"
@@ -272,11 +254,11 @@ AC_SUBST(RAPTOR_MIN_VERSION)
 
 
 AM_CONDITIONAL(RAPTOR, test $with_raptor != no)
-AC_MSG_CHECKING(whether to use raptor)
-if test "$with_raptor" != no; then
-  AC_MSG_RESULT(yes - V$raptor_major_version $RAPTOR_VERSION)
-  RAPTOR_LIBS="`$PKG_CONFIG $raptor_pkg_config_package --libs`"
-  RAPTOR_CFLAGS="`$PKG_CONFIG $raptor_pkg_config_package --cflags`"
+AC_MSG_CHECKING(whether to use Raptor)
+if test "$with_raptor" = yes; then
+  AC_MSG_RESULT(yes - $RAPTOR_VERSION)
+  RAPTOR_LIBS="`$PKG_CONFIG raptor2 --libs`"
+  RAPTOR_CFLAGS="`$PKG_CONFIG raptor2 --cflags`"
 
   LIBS="$LIBS $RAPTOR_LIBS"
   CPPFLAGS="$CPPFLAGS $RAPTOR_CFLAGS"
@@ -284,7 +266,7 @@ if test "$with_raptor" != no; then
   if test "X$PKG_CONFIG_REQUIRES" != X; then
     PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
   fi
-  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES $raptor_pkg_config_package >= $raptor_min_version"
+  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES raptor2 >= $raptor_min_version"
   AC_SUBST(RAPTOR_LIBS)
   AC_SUBST(RAPTOR_CFLAGS)
   AC_DEFINE(HAVE_RAPTOR, 1, [have Raptor RDF syntax library])

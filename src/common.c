@@ -54,7 +54,7 @@
 
 #ifdef OFFLINE
 #ifdef HAVE_RAPTOR
-#include <raptor.h>
+#include <raptor2.h>
 #endif
 #endif
 
