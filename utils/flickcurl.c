@@ -4884,6 +4884,61 @@ command_photosets_setPrimaryPhoto(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_favorites_getContext(flickcurl* fc, int argc, char *argv[])
+{
+  char *photo_id = argv[1];
+  char *user_id = argv[2];
+  int num_prev = -1;
+  int num_next = -1;
+  const char* extras = NULL;
+  flickcurl_photos_list** photos_lists = NULL;
+
+  if(argc > 3) {
+    if(strcmp(argv[3], "-"))
+      num_prev = atoi(argv[3]);
+
+    if(argc > 4) {
+      if(strcmp(argv[4], "-"))
+        num_next = atoi(argv[4]);
+
+      if(argc > 5)
+        extras = argv[5];
+    }
+  }
+  
+  photos_lists = flickcurl_favorites_getContext(fc, photo_id, user_id,
+                                                num_prev, num_next,
+                                                extras);
+  if(!photos_lists) {
+    fprintf(stderr, "%s: Getting user %s favorite photo %s context failed\n",
+            program, user_id, photo_id);
+  } else {
+    int rc;
+    if(verbose)
+      fprintf(stdout,
+              "%s: Context around user %s favorite photo %s:\n",
+              program, user_id, photo_id);
+    rc = command_print_photos_list(fc, photos_lists[0], output_fh,
+                                   "Previous photos");
+    if(!rc)
+      rc = command_print_photos_list(fc, photos_lists[1], output_fh,
+                                     "Next photos");
+
+    flickcurl_free_photos_list(photos_lists[0]);
+    flickcurl_free_photos_list(photos_lists[1]);
+    free(photos_lists);
+    
+    if(rc)
+      photos_lists = NULL;
+  }
+
+  return (photos_lists == NULL);
+}
+
+
+
+
 typedef struct {
   const char*     name;
   const char*     args;
@@ -4961,6 +5016,9 @@ static flickcurl_cmd commands[] = {
   {"favorites.add",
    "PHOTO-ID", "Adds PHOTO-ID to the current user's favorites.",
    command_favorites_add, 1, 1},
+  {"favorites.getContext",
+   "PHOTO-ID USER-NSID [NUM-PREV [NUM-NEXT [EXTRAS]]]", "Get context photos around USER-ID's favorite PHOTO-ID.",
+   command_favorites_getContext, 2, 5},
   {"favorites.getList",
    "USER-NSID [[PER-PAGE] [PAGE [FORMAT]]]", "Get a list of USER-NSID's favorite photos.",
    command_favorites_getList, 1, 4},

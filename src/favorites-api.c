@@ -96,6 +96,132 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
 
 
 /**
+ * flickcurl_favorites_getContext:
+ * @fc: flickcurl context
+ * @photo_id: The id of the photo to fetch the context for.
+ * @user_id: The user who counts the photo as a favorite.
+ * @num_prev: number of previous photos to return (?) (or < 0)
+ * @num_next: number of next photos to return (?) (or < 0)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: description, license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags, o_dims, views, media, path_alias, url_sq, url_t, url_s, url_m, url_z, url_l, url_o (or NULL)
+ * 
+ * Returns next and previous favorites for a photo in a user's favorites.
+ *
+ * Implements flickr.favorites.getContext (1.22)
+ * 
+ * Return value: NULL-terminated array of photo lists (prev, next) or non-0 on failure
+ **/
+flickcurl_photos_list**
+flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
+                               const char* user_id,
+                               int num_prev,
+                               int num_next,
+                               const char* extras)
+{
+  const char* parameters[12][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_photos_list** photos_lists = NULL;
+  char num_prev_str[10];
+  char num_next_str[10];
+  int i;
+
+  if(!photo_id || !user_id)
+    return NULL;
+
+  parameters[count][0]  = "photo_id";
+  parameters[count++][1]= photo_id;
+  parameters[count][0]  = "user_id";
+  parameters[count++][1]= user_id;
+  if(num_prev >= 0) {
+    sprintf(num_prev_str, "%d", num_prev);
+    parameters[count][0]  = "num_prev";
+    parameters[count++][1]= num_prev_str;
+  }
+  if(num_next >= 0) {
+    sprintf(num_next_str, "%d", num_next);
+    parameters[count][0]  = "num_next";
+    parameters[count++][1]= num_next_str;
+  }
+  /* this is the only standard photos response parameter supported 
+   * so using flickcurl_append_photos_list_params() is not really needed
+   */
+  if(extras) {
+    parameters[count][0]  = "extras";
+    parameters[count++][1]= extras;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.favorites.getContext", parameters, count))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed = 1;
+    goto tidy;
+  }
+
+  /* 3 lists of photo lists: prev, next and NULL to end the list */
+  photos_lists = calloc(sizeof(flickcurl_photos_list*), 3);
+
+  /* Decode the prev and next into photo lists */
+  for(i = 0; i < 2; i++) {
+    const xmlChar* xpathExpr = (i == 0) ? (const xmlChar*)"/rsp/prevphoto" : (const xmlChar*)"/rsp/nextphoto";
+    flickcurl_photos_list* photos_list = photos_lists[i];
+    xmlXPathObjectPtr xpathObj = NULL;
+
+    xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
+    if(!xpathObj) {
+      flickcurl_error(fc, "Unable to evaluate XPath expression \"%s\"", 
+                      xpathExpr);
+      fc->failed = 1;
+      goto tidy;
+    }
+    
+    if(!xpathObj->nodesetval || !xpathObj->nodesetval->nodeTab) {
+      /* No elements found in content - probably not a failure */
+      xmlXPathFreeObject(xpathObj);
+      continue;
+    }
+
+    photos_list = flickcurl_new_photos_list(fc);
+    if(!photos_list) {
+      fc->failed = 1;
+      goto tidy;
+    }
+
+    photos_list->page = -1;
+    photos_list->per_page = -1;
+    photos_list->total_count = -1;
+
+    photos_list->photos = flickcurl_build_photos(fc, xpathCtx, xpathExpr,
+                                                 &photos_list->photos_count);
+    xmlXPathFreeObject(xpathObj);
+
+    photos_lists[i] = photos_list;
+  }
+  photos_lists[2] = NULL;
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    photos_lists = NULL;
+
+  return photos_lists;
+}
+
+
+
+/**
  * flickcurl_favorites_getList_params:
  * @fc: flickcurl context
  * @user_id: The NSID of the user to fetch the favorites list for. If this argument is omitted, the favorites list for the calling user is returned. (or NULL)
@@ -138,8 +264,8 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
-                                           (const xmlChar*)"/rsp/photos",
-                                           format);
+                                             (const xmlChar*)"/rsp/photos",
+                                             format);
 
   tidy:
   if(fc->failed) {
