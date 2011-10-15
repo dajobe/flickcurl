@@ -173,6 +173,11 @@ flickcurl_panda_getList(flickcurl* fc)
  * Announced 2009-03-03
  * http://code.flickr.com/blog/2009/03/03/panda-tuesday-the-history-of-the-panda-new-apis-explore-and-you/
  *
+ * Only "supports the following extras: ownername, license,
+ * date_upload, date_taken, tags, machine_tags, views, media" -
+ * Sergey M., Flickr staff 2011-09-16
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/7203
+ *
  * Implements flickr.panda.getPhotos (1.9)
  * 
  * Return value: photos array or NULL on failure
