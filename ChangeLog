@@ -1,5 +1,23 @@
 2011-10-15  Dave Beckett <dave@dajobe.org>
 
+	* utils/flickcurl.c: Tidy help output; describe all upload params
+	defaults
+
+	* docs/flickcurl-sections.txt: Add flickcurl_get_hidden_label,
+	flickcurl_get_hidden_level_from_string
+
+	* src/common.c, src/flickcurl.h, src/upload-api.c,
+	utils/flickcurl.c: Add support for upload field 'hidden'
+
+	flickcurl_upload_params gains int param hidden with values 1 for
+	global and 2 for hidden.
+
+	(flickcurl_get_hidden_label, flickcurl_get_hidden_from_string):
+	Added utility functions to turn the int to a label and vice versa
+
+	* utils/flickcurl.c: Document upload params safety_level and
+	content_type
+
 	* docs/Makefile.am, docs/tmpl/section-favorite.sgml: Update tmpls
 
 	* docs/flickcurl-sections.txt:
@@ -42,13 +60,13 @@
 	* utils/flickcurl.c: Fix indentation
 
 	* utils/flickcurl.c: Provision for help message even when not
-	authenticated
+	authenticated.
 
 	Even when not authenticated, the user might desire to see the list
 	of API calls available. This commit facilitates the display of
 	that message.
 
-	* utils/flickcurl.c: Move printing help details to a function
+	* utils/flickcurl.c: Move printing help details to a function.
 
 	This commit moves printing the help message to a function, viz.
 	print_help_string, so that it can be called from multiple places
