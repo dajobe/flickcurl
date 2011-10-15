@@ -30,6 +30,20 @@ Favorite photos.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_favorites_getContext ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@user_id: 
+@num_prev: 
+@num_next: 
+@extras: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_favorites_getList ##### -->
 <para>
 

@@ -56,6 +56,7 @@ MKTMPL_OPTIONS=
 content_files = \
 	flickcurl-authenticate.xml \
 	flickcurl-searching.xml \
+	flickcurl-extras.xml \
 	version.xml \
 	search-photos.c
 
