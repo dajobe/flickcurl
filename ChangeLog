@@ -1,3 +1,106 @@
+2011-10-15  Dave Beckett <dave@dajobe.org>
+
+	* src/panda-api.c: extras docs
+
+2011-09-02  Dave Beckett <dajobe@digg.com>
+
+	* utils/oauth-test.c: access token testing
+
+	* src/flickcurl_internal.h: Add verifier field
+
+2011-08-15  Dave Beckett <dave@dajobe.org>
+
+	* Merge pull request #13 from kumanna/help-without-auth (below)
+	Help without authentication
+
+2011-08-14  Kumar Appaiah <a.kumar@alumni.iitm.ac.in>
+
+	* utils/flickcurl.c: Use stdout for non-error user output
+
+	Since users usually expect any non-error output to come to stdout,
+	this commit changes all output except error reports to be directed
+	to stdout.
+
+	* utils/flickcurl.c: Fix indentation
+
+	* utils/flickcurl.c: Provision for help message even when not
+	authenticated
+
+	Even when not authenticated, the user might desire to see the list
+	of API calls available. This commit facilitates the display of
+	that message.
+
+	* utils/flickcurl.c: Move printing help details to a function
+
+	This commit moves printing the help message to a function, viz.
+	print_help_string, so that it can be called from multiple places
+	without having to duplicate code. In addition, displays an extra
+	newline at the end for neater output.
+
+2011-08-14  Dave Beckett <dave@dajobe.org>
+
+	* Merge pull request #12 from kumanna/kumar (below)
+	Fix man page and documentation quirks reported at Debian.
+
+	Debian bug http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=635892
+
+2011-08-14  Kumar Appaiah <a.kumar@alumni.iitm.ac.in>
+
+	* utils/flickcurl.c: Fix grammatical error in description of
+	galleries.create
+
+	* docs/flickrdf.1: Fix incorrect spacing in flickrdf man page
+	Fixes an incorrect space in the reference to the flickcurl man
+	page.
+
+	* docs/flickrdf.1: Remove reference to missing README for flickrdf
+	This removes the reference to a missing README file for flickrdf.
+	This fixes Debian bug 637196 in flickcurl.
+
+2011-07-28  Dave Beckett <dave@dajobe.org>
+
+	* Merge pull request #10 from radhermit/curl-headers (below)
+	Remove old curl header include
+
+2011-06-25  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl_internal.h, src/oauth.c, utils/oauth-test.c: Test
+	code calls Flickr OAuth endpoint with correctly signed call
+
+2011-06-23  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl_internal.h: ws
+
+	* src/flickcurl_internal.h, src/oauth.c, utils/oauth-test.c:
+	(flickcurl_oauth_build_key_data): Added internal call with API
+	that will change
+
+	* utils/oauth-test.c:
+	(oauth_build_key_data): Added
+
+	* utils/oauth-test.c:
+	Add a structure oauth_data
+
+	* utils/oauth-test.c:
+	Do URI encoding and concatenating
+
+	* src/Makefile.am, src/flickcurl_internal.h, src/oauth.c,
+	src/sha1.c, utils/.gitignore, utils/Makefile.am, utils/oauth-test.c:
+	OAuth test code
+
+2011-05-08  Dave Beckett <dave@dajobe.org>
+
+	* src/galleries-api.c, src/method.c, src/photosets-api.c,
+	src/prefs-api.c, src/test-api.c, src/upload-api.c: code style
+
+	* src/person.c:
+	(flickcurl_build_persons): Do not zap any existing data if a field
+	is not found.
+
+2011-03-31  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 1.22
+
 2011-03-31  Dave Beckett <dave@dajobe.org>
 
 	* utils/Makefile.am: Add raptor_fake.h to sources and
