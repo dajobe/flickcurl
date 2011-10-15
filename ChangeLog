@@ -1,5 +1,23 @@
 2011-10-15  Dave Beckett <dave@dajobe.org>
 
+	* docs/Makefile.am, docs/tmpl/section-favorite.sgml: Update tmpls
+
+	* docs/flickcurl-sections.txt:
+	Add flickcurl_favorites_getContext
+
+	* src/favorites-api.c, src/flickcurl.h, utils/flickcurl.c:
+	Implement API favorites.getContext
+
+	(flickcurl_favorites_getContext): Added returning an array of two
+	photo lists for previous and next photos.  flickcurl utility adds
+	new command favorites.getContext to call above.
+
+	* src/flickcurl_internal.h, src/photo.c:
+	(flickcurl_new_photos_list): Added to construct a photos list
+
+	* configure.ac, src/common.c, utils/flickrdf.c: Support Raptor V2
+	only.  Raptor V1 was last supported in January 2010
+
 	* src/panda-api.c: extras docs
 
 2011-09-02  Dave Beckett <dajobe@digg.com>
