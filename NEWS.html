@@ -17,13 +17,57 @@
 <p>Not yet released.
 </p>
 
-<p>Added raptor_fake.h to distribution so
+<p>Add support for the upload field 'hidden' to set if a photo is
+visible in global search..  The <code>flickcurl_upload_params</code>
+structure gains an int param <code>hidden</code> with values 1 for
+global and 2 for hidden.</p>
+
+<p>Added helper functions <code>flickcurl_get_hidden_label()</code>
+and <code>flickcurl_get_hidden_level_from_string()</code> to help
+converting between the int values and readable labels:</p>
+<pre>
+  const char* flickcurl_get_hidden_label(int hidden);
+
+  int flickcurl_get_hidden_from_string(const char* hidden_string);
+</pre>
+<p>Note: This is an API addition so code should test that the
+Flickcurl version is 1.22 or newer to use this field and the helper
+functions.</p>
+
+<p>Added
+<code>flickcurl_favorites_getContext()</code>
+for new API call
+<a href="http://www.flickr.com/services/api/flickr.favorites.getContext.html">flickr.favorites.getContext</a>,
+to get previous and next photos around a favo(u)rite:
+</p>
+<pre>
+  flickcurl_photos_list** flickcurl_favorites_getContext(flickcurl* fc,
+    const char* photo_id, const char* user_id,
+    int num_prev, int num_next, const char* extras);
+</pre>
+
+<p>Now supports only Raptor V2 for optional serializing of triples.</p>
+
+<p>Fix <code>flickcurl(1)</code> utiilty output and help messages.
+Patch from Kumar Appaiah - thanks.</p>
+
+<p>Fix several man page and documentation issues. Patch from Kumar
+Appaiah - thanks.</p>
+
+<p>Remove old curl header include. Patch from 'radhermit' on GitHub -
+thanks.</p>
+
+<p>Do not delete any existing data
+in <code>flickcurl_build_persons()</code> if a field is not found.
+</p>
+
+<p>Added <codE>raptor_fake.h</code> to distribution so
 that <code>flickrdf(1)</code> utility can work without raptor
-installed.  Noticed by Naruto TAKAHASHI - thanks!
+installed.  Noticed by Naruto TAKAHASHI - thanks.
 </p>
 
 <p>Added <code>flickcurl_free_tags()</code> to API.  Patch from
-Naruto TAKAHASHI - thanks!
+Naruto TAKAHASHI - thanks.
 </p>
 
 <p><code>flickcurl_photoset</code> structure gains an owner NSID
