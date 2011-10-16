@@ -86,7 +86,6 @@ AC_PROG_LIBTOOL
 libxml_min_version=2.6.8
 raptor_min_version=2.0.0
 libcurl_min_version=7.10.0
-libcurl_min_vernum=070A00
 
 # Checks for header files.
 AC_HEADER_STDC
