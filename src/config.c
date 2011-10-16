@@ -33,42 +33,59 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#ifdef HAVE_ERRNO_H
+#include <errno.h>
+#endif
 
 
 #include <flickcurl.h>
+#include <flickcurl_internal.h>
 
 
 #undef CONFIG_DEBUG
 
 /**
- * read_ini_config:
+ * flickcurl_config_read_ini:
+ * @fc: flickcurl config
  * @filename: filename
- * @application: application key to look up
- * @user_data: user data pointer for handler
- * @handler: config variable handler function
+ * @section: section name to use
+ * @user_data: user data pointer for handler (usually the @fc )
+ * @handler: config variable handler function (usually flickcurl_config_var_handler() )
  *
- * Read .INI config
- *
- * FIXME - where do you start.  This just needs a pile of error checking
+ * Read flickcurl library configuration in .INI format from a filename
  *
  * Return value: non-0 on failure
  */
 int
-read_ini_config(const char* filename, const char* application,
-                void* user_data, set_config_var_handler handler)
+flickcurl_config_read_ini(flickcurl* fc,
+                          const char* filename,
+                          const char* section,
+                          void* user_data, set_config_var_handler handler)
 {
   FILE* fh;
 #define INI_BUF_SIZE 255
   char buf[INI_BUF_SIZE+1];
   int in_section = 0;
   int lineno = 1;
-  
-  if(access((const char*)filename, R_OK))
+  size_t section_len;
+
+  if(!fc || !filename || !section || !handler)
     return 1;
+
+  if(access((const char*)filename, R_OK)) {
+    flickcurl_error(fc, "Failed to access config file %s for reading",
+                    filename);
+    return 1;
+  }
   
   fh = fopen(filename, "r");
-  if(!fh)
+  if(!fh) {
+    flickcurl_error(fc, "Failed to open %s for reading - %s", filename,
+                    strerror(errno));
     return 1;
+  }
+
+  section_len = strlen(section);
 
   while(!feof(fh)) {
     size_t len;
@@ -96,7 +113,8 @@ read_ini_config(const char* filename, const char* application,
 
       if(len > INI_BUF_SIZE) {
         if(!warned++)
-          fprintf(stderr, "read_ini_config(): line %d too long - truncated\n",
+          fprintf(stderr, 
+                  "flickcurl_config_read_ini(): line %d too long - truncated\n",
                   lineno);
         continue;
       }
@@ -140,8 +158,8 @@ read_ini_config(const char* filename, const char* application,
     /* Wait for a line '['application']' */
     if(!in_section) {
       if(*line == '[' && line[len-1] == ']' &&
-         (len-2) == strlen(application) &&
-         !strncmp(line+1, application, len-2)
+         (len - 2) == section_len &&
+         !strncmp(line + 1, section, len - 2)
          )
         in_section = 1;
       continue;
@@ -179,6 +197,92 @@ read_ini_config(const char* filename, const char* application,
     }
   }
   fclose(fh);
+
+  return 0;
+}
+
+/**
+ * read_ini_config:
+ * @filename: filename
+ * @section: section name to use
+ * @user_data: user data pointer for handler
+ * @handler: config variable handler function
+ *
+ * @Deprecated for flickcurl_config_read_ini()
+ * 
+ * Read .INI config
+ *
+ * Return value: non-0 on failure
+ */
+int
+read_ini_config(const char* filename, const char* section,
+                void* user_data, set_config_var_handler handler)
+{
+  return flickcurl_config_read_ini(NULL, filename, section, user_data,
+                                   handler);
+}
+
+
+/**
+ * flickcurl_config_var_handler:
+ * @userdata: user data pointing to #flickcurl object
+ * @key: var key
+ * @value: var value
+ *
+ * Standard handler for flickcurl_config_read_ini()
+ *
+ */
+void
+flickcurl_config_var_handler(void* userdata, 
+                             const char* key, const char* value)
+{
+  flickcurl *fc = (flickcurl *)userdata;
+  
+  if(!strcmp(key, "api_key"))
+    flickcurl_set_api_key(fc, value);
+  else if(!strcmp(key, "secret"))
+    flickcurl_set_shared_secret(fc, value);
+  else if(!strcmp(key, "auth_token"))
+    flickcurl_set_auth_token(fc, value);
+
+}
+
+
+/**
+ * flickcurl_config_write_ini:
+ * @fc: #flickcurl object
+ * @fh: file handle
+ * @section: section name to use
+ *
+ * Write flickcurl library configuration in INI file format to the given filehandle
+ *
+ * Return value: non-0 on failure
+ *
+ */
+int
+flickcurl_config_write_ini(flickcurl *fc, FILE* fh, const char* section)
+{
+  const char* s;
+  
+  fputc('[', fh);
+  fputs(section, fh);
+  fputc(']', fh);
+  s = flickcurl_get_auth_token(fc);
+  if(s) {
+    fputs("\nauth_token=", fh);
+    fputs(s, fh);
+  }
+  s = flickcurl_get_api_key(fc);
+  if(s) {
+    fputs("\napi_key=", fh);
+    fputs(s, fh);
+  }
+  s = flickcurl_get_shared_secret(fc);
+  if(s) {
+    fputs("\nsecret=", fh);
+    fputs(s, fh);
+  }
+  fputs("\n", fh);
 
   return 0;
 }

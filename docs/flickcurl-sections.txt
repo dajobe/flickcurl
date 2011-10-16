@@ -42,6 +42,13 @@ flickcurl_set_xml_data
 </SECTION>
 
 <SECTION>
+<FILE>section-config</FILE>
+flickcurl_config_read_ini
+flickcurl_config_var_handler
+flickcurl_config_write_ini
+</SECTION>
+
+<SECTION>
 <FILE>section-activity</FILE>
 flickcurl_activity
 flickcurl_activity_event

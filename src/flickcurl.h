@@ -1804,10 +1804,14 @@ int flickcurl_search_params_init(flickcurl_search_params* params);
  * Handler to get variables returned from an 'INI' style configuration file
 */
 typedef void (*set_config_var_handler)(void* userdata, const char* key, const char* value);
+FLICKCURL_API FLICKCURL_DEPRECATED
+int read_ini_config(const char* filename, const char* section, void* user_data, set_config_var_handler handler);
 FLICKCURL_API
-int read_ini_config(const char* filename, const char* application, void* user_data, set_config_var_handler handler);
-
-
+int flickcurl_config_read_ini(flickcurl* fc, const char* filename, const char* section, void* user_data, set_config_var_handler handler);
+FLICKCURL_API
+void flickcurl_config_var_handler(void* userdata, const char* key, const char* value);
+FLICKCURL_API
+int flickcurl_config_write_ini(flickcurl *fc, FILE* fh, const char* section);
 
 /* Flickr API calls */
 

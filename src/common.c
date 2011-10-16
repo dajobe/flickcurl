@@ -82,7 +82,7 @@ static void
 flickcurl_error_varargs(flickcurl* fc, const char *message, 
                         va_list arguments)
 {
-  if(fc->error_handler) {
+  if(fc && fc->error_handler) {
     char *buffer = my_vsnprintf(message, arguments);
     if(!buffer) {
       fprintf(stderr, "flickcurl: Out of memory\n");
