@@ -262,31 +262,14 @@ char*
 flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p)
 {
   unsigned char *s1;
-  char *s2;
   char *result;
-  size_t s_len;
   
   s1 = flickcurl_hmac_sha1(od->data, od->data_len, od->key, od->key_len);
   if(!s1)
     return NULL;
   
-  s2 = flickcurl_base64_encode(s1, SHA1_DIGEST_LENGTH, &s_len);
+  result = flickcurl_base64_encode(s1, SHA1_DIGEST_LENGTH, len_p);
   free(s1);
-  if(!s2)
-    return NULL;
   
-  s_len = strlen(s2);
-  result = (char*)malloc(s_len + 1);
-  if(result) {
-    curl_free(s2);
-    return NULL;
-  }
-
-  memcpy(result, s2, s_len + 1);
-  curl_free(s2);
-
-  if(len_p)
-    *len_p = s_len;
-
   return result;
 }
