@@ -108,20 +108,6 @@ my_message_handler(void *user_data, const char *message)
 }
 
 
-static void
-my_set_config_var_handler(void* userdata, const char* key, const char* value)
-{
-  flickcurl *fc = (flickcurl *)userdata;
-  
-  if(!strcmp(key, "api_key"))
-    flickcurl_set_api_key(fc, value);
-  else if(!strcmp(key, "secret"))
-    flickcurl_set_shared_secret(fc, value);
-  else if(!strcmp(key, "auth_token"))
-    flickcurl_set_auth_token(fc, value);
-}
-
-
 #ifdef HAVE_GETOPT_LONG
 #define HELP_TEXT(short, long, description) "  -" short ", --" long "  " description
 #define HELP_TEXT_LONG(long, description) "      --" long "  " description
@@ -5643,10 +5629,8 @@ main(int argc, char *argv[])
 
   if(read_auth) {
     if(!access((const char*)config_path, R_OK)) {
-      if(read_ini_config(config_path, config_section, fc,
-                         my_set_config_var_handler)) {
-        fprintf(stderr, "%s: Failed to read configuration filename %s: %s\n",
-                program, config_path, strerror(errno));
+      if(flickcurl_config_read_ini(fc, config_path, config_section, fc,
+                                   flickcurl_config_var_handler)) {
         rc = 1;
         goto tidy;
       }
@@ -5725,15 +5709,9 @@ main(int argc, char *argv[])
                     program, config_path, strerror(errno));
             rc = 1;
           } else {
-            fputs("[flickr]\nauth_token=", fh);
-            fputs(flickcurl_get_auth_token(fc), fh);
-            fputs("\napi_key=", fh);
-            fputs(flickcurl_get_api_key(fc), fh);
-            fputs("\nsecret=", fh);
-            fputs(flickcurl_get_shared_secret(fc), fh);
-            fputs("\n", fh);
+            flickcurl_config_write_ini(fc, fh, config_section);
             fclose(fh);
-            fprintf(stdout, 
+            fprintf(stdout,
                   "%s: Updated configuration file %s with authentication token\n",
                     program, config_path);
             rc = 0;

@@ -80,20 +80,6 @@ my_message_handler(void *user_data, const char *message)
 }
 
 
-static void
-my_set_config_var_handler(void* userdata, const char* key, const char* value)
-{
-  flickcurl *fc = (flickcurl *)userdata;
-  
-  if(!strcmp(key, "api_key"))
-    flickcurl_set_api_key(fc, value);
-  else if(!strcmp(key, "secret"))
-    flickcurl_set_shared_secret(fc, value);
-  else if(!strcmp(key, "auth_token"))
-    flickcurl_set_auth_token(fc, value);
-}
-
-
 static int
 compare_args(const void *a, const void *b) 
 {
@@ -524,7 +510,7 @@ oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
   char* data = NULL;
   size_t data_len = 0;
   int rc = 0;
-  const char* uri = ACCESS_TOKEN_URL;
+  const char* uri = "UNKNOWN";
 
   parameters[count][0]  = NULL;
 
@@ -795,10 +781,8 @@ main(int argc, char *argv[])
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
   if(read_auth && !access((const char*)config_path, R_OK)) {
-    if(read_ini_config(config_path, config_section, fc,
-                       my_set_config_var_handler)) {
-      fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
-              program, config_path, strerror(errno));
+    if(flickcurl_config_read_ini(fc, config_path, config_section, fc,
+                                 flickcurl_config_var_handler)) {
       rc = 1;
       goto tidy;
     }
