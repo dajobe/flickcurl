@@ -1811,7 +1811,7 @@ int flickcurl_config_read_ini(flickcurl* fc, const char* filename, const char* s
 FLICKCURL_API
 void flickcurl_config_var_handler(void* userdata, const char* key, const char* value);
 FLICKCURL_API
-int flickcurl_config_write_ini(flickcurl *fc, FILE* fh, const char* section);
+int flickcurl_config_write_ini(flickcurl *fc, const char* filename, const char* section);
 
 /* Flickr API calls */
 

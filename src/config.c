@@ -251,19 +251,32 @@ flickcurl_config_var_handler(void* userdata,
 /**
  * flickcurl_config_write_ini:
  * @fc: #flickcurl object
- * @fh: file handle
+ * @filename: filename
  * @section: section name to use
  *
- * Write flickcurl library configuration in INI file format to the given filehandle
+ * Write flickcurl library configuration in INI file format to the given file
  *
  * Return value: non-0 on failure
  *
  */
 int
-flickcurl_config_write_ini(flickcurl *fc, FILE* fh, const char* section)
+flickcurl_config_write_ini(flickcurl *fc,
+                           const char* filename,
+                           const char* section)
 {
   const char* s;
+  FILE *fh;
   
+  if(!fc || !filename || !section)
+    return 1;
+  
+  fh = fopen(filename, "w");
+  if(!fh) {
+    flickcurl_error(fc, "Failed to write to configuration file %s - %s",
+                    filename, strerror(errno));
+    return 1;
+  }
+
   fputc('[', fh);
   fputs(section, fh);
   fputc(']', fh);
@@ -283,6 +296,8 @@ flickcurl_config_write_ini(flickcurl *fc, FILE* fh, const char* section)
     fputs(s, fh);
   }
   fputs("\n", fh);
+
+  fclose(fh);
 
   return 0;
 }

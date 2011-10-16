@@ -5694,28 +5694,17 @@ main(int argc, char *argv[])
                   program);
           rc = 1;
         } else {
-          FILE* fh;
-          
           fprintf(stdout, 
                   "%s: Successfully exchanged frob %s for authentication token\n",
                   program, optarg);
           
           flickcurl_set_auth_token(fc, auth_token);
-          
-          fh = fopen(config_path, "w");
-          if(!fh) {
-            fprintf(stderr,
-                    "%s: Failed to write to configuration file %s: %s\n",
-                    program, config_path, strerror(errno));
-            rc = 1;
-          } else {
-            flickcurl_config_write_ini(fc, fh, config_section);
-            fclose(fh);
+
+          rc = flickcurl_config_write_ini(fc, config_path, config_section);
+          if(!rc)
             fprintf(stdout,
                   "%s: Updated configuration file %s with authentication token\n",
                     program, config_path);
-            rc = 0;
-          }
         }
         goto tidy;
 
