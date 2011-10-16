@@ -207,10 +207,10 @@ fi
 
 LIBCURL_VERSION=`$PKG_CONFIG libcurl --modversion 2>/dev/null`
 AC_MSG_RESULT(yes - $LIBCURL_VERSION)
-if $PKG_CONFIG libxml-2.0 --atleast-version=$LIBXML_MIN_VERSION; then
+if $PKG_CONFIG libcurl --atleast-version=$LIBCURLL_MIN_VERSION; then
   :
 else
-  AC_MSG_ERROR(curl $LIBCURL_VERSION is too old - $libcurl_min_version or newer required.)
+  AC_MSG_ERROR(curl $LIBCURL_VERSION is too old - $LIBCURL_MIN_VERSION or newer required.)
 fi
 
 LIBS="$LIBS `$PKG_CONFIG libcurl --libs`"
