@@ -248,6 +248,16 @@ flickcurl_oauth_build_key_data(flickcurl_oauth_data* od,
 }
 
 
+/**
+ * flickcurl_oauth_build_key_data:
+ * @od: oauth data
+ * @len_p: pointer to store size of result
+ *
+ * INTERNAL - Compute OAuth signature over data prepared by flickcurl_oauth_build_key()
+ *
+ * Result: signature string or NULL on failure
+ *
+ */
 char*
 flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p)
 {
@@ -267,8 +277,12 @@ flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p)
   
   s_len = strlen(s2);
   result = (char*)malloc(s_len + 1);
+  if(result) {
+    curl_free(s2);
+    return NULL;
+  }
+
   memcpy(result, s2, s_len + 1);
-  
   curl_free(s2);
 
   if(len_p)
