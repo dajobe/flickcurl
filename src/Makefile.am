@@ -107,7 +107,8 @@ libflickcurl_la_SOURCES += \
 $(top_srcdir)/libmtwist/mt.c \
 $(top_srcdir)/libmtwist/seed.c \
 $(top_srcdir)/libmtwist/mtwist.h \
-$(top_srcdir)/libmtwist/mtwist_internal.h 
+$(top_srcdir)/libmtwist/mtwist_internal.h \
+mtwist_config.h
 
 AM_CFLAGS += -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
 
