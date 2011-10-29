@@ -411,7 +411,7 @@ char* flickcurl_base64_encode(const unsigned char *data, size_t len, size_t *out
 typedef struct {
   /* client credentials */
   const char* client_key; /* AKA consumer key or the Flickr API key */
-  size_t client_len;
+  size_t client_key_len;
   const char* client_secret;
   size_t client_secret_len;
 

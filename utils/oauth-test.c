@@ -377,7 +377,7 @@ main(int argc, char *argv[])
       od.client_secret_len = strlen(od.client_secret);
     }
 
-    od.client_len = strlen(od.client_key);
+    od.client_key_len = strlen(od.client_key);
     
     rc = flickcurl_oauth_request_token(fc, &od);
 
@@ -412,7 +412,7 @@ main(int argc, char *argv[])
     od.client_secret_len = strlen(od.client_secret);
 #endif
 
-    od.client_len = strlen(od.client_key);
+    od.client_key_len = strlen(od.client_key);
     
     rc = flickcurl_oauth_access_token(fc, &od);
   }
