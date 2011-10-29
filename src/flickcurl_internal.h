@@ -456,4 +456,5 @@ int flickcurl_oauth_build_key_data(flickcurl_oauth_data* od, const char* http_re
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
 int flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth, int is_request);
 int flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od);
+char* flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od);
 int flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od);

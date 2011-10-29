@@ -1604,6 +1604,12 @@ FLICKCURL_API
 extern const char* const flickcurl_flickr_upload_service_uri;
 FLICKCURL_API
 extern const char* const flickcurl_flickr_replace_service_uri;
+FLICKCURL_API
+extern const char* const flickcurl_flickr_oauth_request_token_uri;
+FLICKCURL_API
+extern const char* const flickcurl_flickr_oauth_authorize_uri;
+FLICKCURL_API
+extern const char* const flickcurl_flickr_oauth_access_token_uri;
 
 
 /* library init - call once before creating anything */

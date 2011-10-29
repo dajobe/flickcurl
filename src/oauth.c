@@ -690,6 +690,35 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
 }
 
 
+char*
+flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
+{
+#define PARAM_LEN 13
+  const char* param = "?oauth_token=";
+  size_t len;
+  char* uri;
+  char *p;
+
+  if(!od->tmp_token)
+    return NULL;
+  
+  len = strlen(flickcurl_flickr_oauth_authorize_uri);
+  uri = (char*)malloc(len + PARAM_LEN + od->tmp_token_len + 1);
+  if(!uri)
+    return NULL;
+
+  p = uri;
+  memcpy(p, flickcurl_flickr_oauth_authorize_uri, len);
+  p += len;
+  memcpy(p, param, PARAM_LEN);
+  p += PARAM_LEN;
+  memcpy(p, od->tmp_token, od->tmp_token_len);
+  p += od->tmp_token_len;
+  *p = '\0';
+  
+  return uri;
+}
+
 int
 flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
 {
