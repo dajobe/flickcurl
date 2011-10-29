@@ -358,7 +358,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
     free(fc->method);
   if(method) {
     fc->method = strdup(method);
-    is_oauth_method = !strncmp(method, "oauth.", 6);
+    is_oauth_method = !strncmp(method, "flickr.oauth.", 13);
   } else
     fc->method = NULL;
 
