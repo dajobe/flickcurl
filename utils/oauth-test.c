@@ -454,9 +454,6 @@ main(int argc, char *argv[])
   }
 
 
-  /* FIXME */
-  srand(getpid());
-
   /* Request token */
   if(0) {
     flickcurl_oauth_data od;
