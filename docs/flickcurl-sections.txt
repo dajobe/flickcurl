@@ -10,6 +10,14 @@ flickcurl_array_split
 <SECTION>
 <FILE>section-core</FILE>
 flickcurl
+flickcurl_version_string
+flickcurl_license_string
+flickcurl_copyright_string
+flickcurl_short_copyright_string
+flickcurl_home_url_string
+flickcurl_flickr_replace_service_uri
+flickcurl_flickr_service_uri
+flickcurl_flickr_upload_service_uri
 flickcurl_message_handler
 flickcurl_init
 flickcurl_finish
@@ -534,4 +542,10 @@ flickcurl_serializer_s
 flickcurl_shapedata_s
 read_ini_config
 set_config_var_handler
+mtwist_drand
+mtwist_free
+mtwist_init
+mtwist_new
+mtwist_seed_from_system
+mtwist_u32rand
 </SECTION>
