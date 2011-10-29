@@ -98,138 +98,6 @@ oauth_prepare(flickcurl *fc, flickcurl_oauth_data* od,
 }
 
 
-#define REQUEST_TOKEN_URL "http://www.flickr.com/services/oauth/request_token"
-
-static int
-oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
-{
-  const char * parameters[2 + MAX_OAUTH_PARAM_COUNT][2];
-  int count = 0;
-  char* tmp_token = NULL;
-  char* tmp_token_secret = NULL;
-  char* data = NULL;
-  size_t data_len = 0;
-  int rc = 0;
-  const char* uri = REQUEST_TOKEN_URL;
-
-  parameters[count][0]  = NULL;
-
-  /* Require signature */
-  flickcurl_set_sign(fc);
-
-  if(flickcurl_oauth_prepare_common(fc, od,
-                                    uri,
-                                    /* method */ "oauth.request_token",
-                                    /* upload_field */ NULL,
-                                    /* upload_value */ NULL,
-                                    parameters, count,
-                                    /* parameters_in_url */ 1,
-                                    /* need_auth */ 1,
-                                    /* is_request */ 1)) {
-    rc = 1;
-    goto tidy;
-  }
-
-  /* FIXME does not invoke it */
-  rc = 1;
-  goto tidy;
-
-  data = flickcurl_invoke_get_content(fc, &data_len);
-  if(!data) {
-    rc = 1;
-    goto tidy;
-  }
-
-  fprintf(stdout, "Data is '%s'\n", data);
-
-  if(tmp_token && tmp_token_secret) {
-    /* Now owned by od */
-    od->tmp_token = tmp_token;
-    od->tmp_token_len = strlen(od->tmp_token);
-    tmp_token = NULL;
-    od->tmp_token_secret = tmp_token_secret;
-    od->tmp_token_secret_len = strlen(od->tmp_token_secret);
-    tmp_token_secret = NULL;
-
-    fprintf(stderr, "Request returned token '%s' secret token '%s'\n",
-            od->tmp_token, od->tmp_token_secret);
-  }
-  
-  tidy:
-  if(tmp_token)
-    free(tmp_token);
-  if(tmp_token_secret)
-    free(tmp_token_secret);
-  
-  return rc;
-}
-
-
-static int
-oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
-{
-  const char * parameters[2 + MAX_OAUTH_PARAM_COUNT][2];
-  int count = 0;
-  char* tmp_token = NULL;
-  char* tmp_token_secret = NULL;
-  char* data = NULL;
-  size_t data_len = 0;
-  int rc = 0;
-  const char* uri = "UNKNOWN";
-
-  parameters[count][0]  = NULL;
-
-  /* Require signature */
-  flickcurl_set_sign(fc);
-
-  if(flickcurl_oauth_prepare_common(fc, od,
-                                    uri,
-                                    /* method */ "oauth.access_token",
-                                    /* upload_field */ NULL,
-                                    /* upload_value */ NULL,
-                                    parameters, count,
-                                    /* parameters_in_url */ 1,
-                                    /* need_auth */ 1,
-                                    /* is_request */ 0)) {
-    rc = 1;
-    goto tidy;
-  }
-
-  /* FIXME does not invoke it */
-  rc = 1;
-  goto tidy;
-
-  data = flickcurl_invoke_get_content(fc, &data_len);
-  if(!data) {
-    rc = 1;
-    goto tidy;
-  }
-
-  fprintf(stdout, "Data is '%s'\n", data);
-
-  if(tmp_token && tmp_token_secret) {
-    /* Now owned by od */
-    od->tmp_token = tmp_token;
-    od->tmp_token_len = strlen(od->tmp_token);
-    tmp_token = NULL;
-    od->tmp_token_secret = tmp_token_secret;
-    od->tmp_token_secret_len = strlen(od->tmp_token_secret);
-    tmp_token_secret = NULL;
-
-    fprintf(stderr, "Request returned token '%s' secret token '%s'\n",
-            od->tmp_token, od->tmp_token_secret);
-  }
-  
-  tidy:
-  if(tmp_token)
-    free(tmp_token);
-  if(tmp_token_secret)
-    free(tmp_token_secret);
-  
-  return rc;
-}
-
-
 static int
 oauth_test_echo(flickcurl* fc, flickcurl_oauth_data* od,
                 const char* key, const char* value)
@@ -335,6 +203,27 @@ static const char* config_filename = ".flickcurl.conf";
 static const char* config_section = "flickr";
 
 
+static void
+print_help_string(void)
+{
+  printf(title_format_string, flickcurl_version_string);
+  puts("Flickr OAuth test utility.");
+  printf("Usage: %s [OPTIONS] (request_token | access_token)\n\n", program);
+  
+  fputs(flickcurl_copyright_string, stdout);
+  fputs("\nLicense: ", stdout);
+  puts(flickcurl_license_string);
+  fputs("Flickcurl home page: ", stdout);
+  puts(flickcurl_home_url_string);
+  
+  fputs("\n", stdout);
+  
+  puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
+  puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
+}
+
+
+
 int
 main(int argc, char *argv[]) 
 {
@@ -342,10 +231,12 @@ main(int argc, char *argv[])
   int rc = 0;
   int usage = 0;
   int help = 0;
+  int cmd_index = -1;
   int read_auth = 1;
   const char* home;
   char config_path[1024];
-  
+  char *command = NULL;
+
   flickcurl_init();
   
   program = my_basename(argv[0]);
@@ -356,6 +247,24 @@ main(int argc, char *argv[])
   else
     strcpy(config_path, config_filename);
   
+
+  /* Initialise the Flickcurl library */
+  fc = flickcurl_new();
+  if(!fc) {
+    rc = 1;
+    goto tidy;
+  }
+
+  flickcurl_set_error_handler(fc, my_message_handler, NULL);
+
+  if(read_auth && !access((const char*)config_path, R_OK)) {
+    if(flickcurl_config_read_ini(fc, config_path, config_section, fc,
+                                 flickcurl_config_var_handler)) {
+      rc = 1;
+      goto tidy;
+    }
+  }
+
 
   while (!usage && !help)
   {
@@ -389,14 +298,42 @@ main(int argc, char *argv[])
     
   }
   
-  if(help)
-    goto help;
+  argv += optind;
+  argc -= optind;
   
-  if(argc != 1) {
-    fprintf(stderr, "%s: Extra arguments given\n", program);
-    usage = 1;
+  if(!help && !argc) {
+    usage = 2; /* Title and usage */
+    goto usage;
   }
 
+  if(!help && !argc) {
+    usage = 2; /* Title and usage */
+    goto usage;
+  }
+
+  if(usage || help)
+    goto usage;
+
+
+  command = argv[0];
+
+  if(!strncmp(command, "flickr.", 7))
+    command += 7;
+  
+  if(!strcmp(command, "request_token")) {
+    cmd_index = 0;
+  } else if(!strcmp(command, "access_token")) {
+    cmd_index = 1;
+  }
+
+  if(cmd_index < 0) {
+    fprintf(stderr, "%s: No such command `%s'\n", program, command);
+    usage = 1;
+    goto usage;
+  }
+
+  
+ usage:
   if(usage) {
     if(usage>1) {
       fprintf(stderr, title_format_string, flickcurl_version_string);
@@ -414,74 +351,40 @@ main(int argc, char *argv[])
     goto tidy;
   }
 
-  help:
   if(help) {
-    printf(title_format_string, flickcurl_version_string);
-    puts("Flickr OAuth test utility.");
-    printf("Usage: %s [OPTIONS]\n\n", program);
-
-    fputs(flickcurl_copyright_string, stdout);
-    fputs("\nLicense: ", stdout);
-    puts(flickcurl_license_string);
-    fputs("Flickcurl home page: ", stdout);
-    puts(flickcurl_home_url_string);
-
-    fputs("\n", stdout);
-
-    puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
-    puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
-
+    print_help_string();
     rc = 0;
     goto tidy;
   }
 
 
-  /* Initialise the Flickcurl library */
-  fc = flickcurl_new();
-  if(!fc) {
-    rc = 1;
-    goto tidy;
-  }
-
-  flickcurl_set_error_handler(fc, my_message_handler, NULL);
-
-  if(read_auth && !access((const char*)config_path, R_OK)) {
-    if(flickcurl_config_read_ini(fc, config_path, config_section, fc,
-                                 flickcurl_config_var_handler)) {
-      rc = 1;
-      goto tidy;
-    }
-  }
-
-
   /* Request token */
-  if(0) {
+  if(cmd_index == 0) {
     flickcurl_oauth_data od;
 
     memset(&od, '\0', sizeof(od));
 
-#if 0
-    od.callback = test_oauth_callback_url;
-    od.client_key = test_oauth_consumer_key;
-    od.nonce = test_oauth_nonce;
-    od.timestamp = test_oauth_timestamp;
-
-    oauth_init_test_secrets(&od);
-#endif
-#if 0
-    od.client_key = fc->api_key;
-    od.client_secret = fc->secret;
-    od.client_secret_len = strlen(od.client_secret);
-#endif
+    if(0) {
+      od.callback = test_oauth_callback_url;
+      od.client_key = test_oauth_consumer_key;
+      od.nonce = test_oauth_nonce;
+      od.timestamp = test_oauth_timestamp;
+      
+      oauth_init_test_secrets(&od);
+    } else {
+      od.client_key = fc->api_key;
+      od.client_secret = fc->secret;
+      od.client_secret_len = strlen(od.client_secret);
+    }
 
     od.client_len = strlen(od.client_key);
     
-    rc = oauth_request_token(fc, &od);
+    rc = flickcurl_oauth_request_token(fc, &od);
   }
 
 
   /* Access token */
-  if(1) {
+  if(cmd_index == 1) {
     flickcurl_oauth_data od;
 
     memset(&od, '\0', sizeof(od));
@@ -502,11 +405,11 @@ main(int argc, char *argv[])
 
     od.client_len = strlen(od.client_key);
     
-    rc = oauth_access_token(fc, &od);
+    rc = flickcurl_oauth_access_token(fc, &od);
   }
 
 
-  if(0) {
+  if(cmd_index == 2) {
     flickcurl_oauth_data od;
 
     memset(&od, '\0', sizeof(od));
@@ -514,7 +417,7 @@ main(int argc, char *argv[])
     rc = oauth_test_echo(fc, &od, "hello", "world");
   }
   
-  if(0) {
+  if(cmd_index == 3) {
     char *s = NULL;
     char *escaped_s = NULL;
     size_t escaped_s_len;

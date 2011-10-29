@@ -76,6 +76,9 @@ const char* const flickcurl_version_string = VERSION;
 const char* const flickcurl_flickr_service_uri =  "http://www.flickr.com/services/rest/?";
 const char* const flickcurl_flickr_upload_service_uri =  "http://api.flickr.com/services/upload/";
 const char* const flickcurl_flickr_replace_service_uri =  "http://api.flickr.com/services/replace/";
+const char* const flickcurl_flickr_oauth_request_token_uri =  "http://www.flickr.com/services/oauth/request_token";
+const char* const flickcurl_flickr_oauth_authorize_uri =  "http://www.flickr.com/services/oauth/authorize";
+const char* const flickcurl_flickr_oauth_access_token_uri =  "http://www.flickr.com/services/oauth/access_token";
 
 
 static void
@@ -209,6 +212,8 @@ flickcurl_new_with_handle(void* curl_handle)
   fc->service_uri = strdup(flickcurl_flickr_service_uri);
   fc->upload_service_uri = strdup(flickcurl_flickr_upload_service_uri);
   fc->replace_service_uri = strdup(flickcurl_flickr_replace_service_uri);
+  fc->oauth_request_token_uri = strdup(flickcurl_flickr_oauth_request_token_uri);
+  fc->oauth_access_token_uri = strdup(flickcurl_flickr_oauth_access_token_uri);
 
   /* DEFAULT delay between requests is 1000ms i.e 1 request/second max */
   fc->request_delay = 1000;

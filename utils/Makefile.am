@@ -21,7 +21,7 @@ EXTRA_PROGRAMS = codegen list-methods oauth-test
 
 CLEANFILES=$(EXTRA_PROGRAMS)
 
-AM_CPPFLAGS= -I$(top_srcdir)/src 
+AM_CPPFLAGS= -I$(top_srcdir)/src -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
 
 flickcurl_SOURCES = flickcurl.c
 if GETOPT

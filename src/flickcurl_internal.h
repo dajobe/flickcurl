@@ -26,6 +26,8 @@
 #include <curl/curl.h>
 #include <curl/easy.h>
 
+#include <mtwist_config.h>
+
 #include <mtwist.h>
 
 #if defined (OFFLINE) && defined (CAPTURE)
@@ -371,6 +373,15 @@ struct flickcurl_s {
   void* curl_setopt_handler_data;
 
   mtwist* mt;
+
+  /* OAuth request token Web Service URI */
+  char *oauth_request_token_uri;
+
+  /* OAuth authorize URI */
+  char *oauth_authorize_uri;
+
+  /* OAuth access token Web Service URI */
+  char *oauth_access_token_uri;
 };
 
 struct flickcurl_serializer_s
@@ -441,3 +452,5 @@ int flickcurl_oauth_build_key_data(flickcurl_oauth_data* od, const char* http_re
 
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
 int flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth, int is_request);
+int flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od);
+int flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od);
