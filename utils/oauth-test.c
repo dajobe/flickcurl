@@ -81,341 +81,6 @@ my_message_handler(void *user_data, const char *message)
 
 
 static int
-compare_args(const void *a, const void *b) 
-{
-  return strcmp(*(char**)a, *(char**)b);
-}
-
-
-static void
-flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
-{
-  qsort((void*)parameters, count, sizeof(char*[2]), compare_args);
-}
-
-
-static int
-oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
-                     const char* url,
-                     const char* method,
-                     const char* upload_field,
-                     const char* upload_value,
-                     const char* parameters[][2], int count,
-                     int parameters_in_url, int need_auth,
-                     int is_request)
-{
-  int i;
-  char *signature_string = NULL;
-  size_t* values_len = NULL;
-  unsigned int fc_uri_len = 0;
-  char* nonce = NULL;
-  int free_nonce = 0;
-  char* timestamp = NULL;
-  int rc = 0;
-  int need_to_add_query = 0;
-
-  if(!url || !parameters)
-    return 1;
-  
-  /* If one is given, both are required */
-  if((upload_field || upload_value) && (!upload_field || !upload_value))
-    return 1;
-  
-  fc->failed = 0;
-  fc->error_code = 0;
-  if(fc->error_msg) {
-    free(fc->error_msg);
-    fc->error_msg = NULL;
-  }
-  /* Default to read */
-  fc->is_write = 0;
-  /* Default to no data */
-  if(fc->data) {
-    if(fc->data_is_xml)
-      xmlFree(fc->data);
-    fc->data = NULL;
-    fc->data_length = 0;
-    fc->data_is_xml = 0;
-  }
-  if(fc->param_fields) {
-    for(i = 0; fc->param_fields[i]; i++) {
-      free(fc->param_fields[i]);
-      free(fc->param_values[i]);
-    }
-    free(fc->param_fields);
-    free(fc->param_values);
-    fc->param_fields = NULL;
-    fc->param_values = NULL;
-    fc->parameter_count = 0;
-  }
-  if(fc->upload_field) {
-    free(fc->upload_field);
-    fc->upload_field = NULL;
-  }
-  if(fc->upload_value) {
-    free(fc->upload_value);
-    fc->upload_value = NULL;
-  }
-  
-  if(fc->method)
-    free(fc->method);
-  if(method)
-    fc->method = strdup(method);
-  else
-    fc->method = NULL;
-
-  /* OAuth parameters
-   *
-   * oauth_callback         <URL> or "oob" [request token request]
-   * oauth_consumer_key     API key
-   * oauth_nonce            <random value - different each time> [request token request]
-   * oauth_signature        [ADDED AFTER COMPUTING]
-   * oauth_signature_method "HMAC-SHA1"
-   * oauth_timestamp        <value of gettimeofday()> [request token request]
-   * oauth_version          "1.0"
-   *
-   * oauth_verifier         verifier [access token request]
-   * oauth_token            access token [access token request]
-   */
-
-  if(is_request) {
-    parameters[count][0]  = "oauth_callback";
-    parameters[count++][1]= (od->callback ? od->callback : "oob");
-  }
-  
-  parameters[count][0]  = "oauth_consumer_key";
-  parameters[count++][1]= od->client_key;
-
-  if(is_request) {
-    nonce = (char*)od->nonce;
-    if(!nonce) {
-      nonce = (char*)malloc(20);
-      free_nonce = 1;
-      sprintf(nonce, "%d", rand());
-    }
-    parameters[count][0]  = "oauth_nonce";
-    parameters[count++][1]= nonce;
-  }
-
-  /* oauth_signature - computed over these fields */
-  parameters[count][0]  = "oauth_signature_method";
-  parameters[count++][1]= "HMAC-SHA1";
-
-  timestamp = (char*)malloc(20);
-  if(od->timestamp)
-    sprintf(timestamp, "%ld", (long)od->timestamp);
-  else {
-    struct timeval tp;
-    (void)gettimeofday(&tp, NULL);
-    sprintf(timestamp, "%ld", (long)tp.tv_sec);
-  }
-  if(is_request) {
-    parameters[count][0]  = "oauth_timestamp";
-    parameters[count++][1]= timestamp;
-  }
-
-  parameters[count][0]  = "oauth_version";
-  parameters[count++][1]= "1.0";
-
-  if(od->tmp_token) {
-    parameters[count][0]  = "oauth_token";
-    parameters[count++][1]= od->tmp_token;
-  }
-  if(od->verifier) {
-    parameters[count][0]  = "oauth_verifier";
-    parameters[count++][1]= od->verifier;
-  }
-
-  parameters[count][0]  = NULL;
-
-  /* +MAX_OAUTH_PARAM_COUNT for oauth fields +1 for NULL terminating pointer */
-  fc->param_fields = (char**)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
-  fc->param_values = (char**)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
-  values_len       = (size_t*)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(size_t));
-
-  if((need_auth && (od->client_secret || od->token_secret)) || fc->sign)
-    flickcurl_sort_args(fc, parameters, count);
-
-
-  fc_uri_len = strlen(url);
-  if(url[fc_uri_len -1] != '?')
-    need_to_add_query++;
-  
-  /* Save away the parameters and calculate the value lengths */
-  for(i = 0; parameters[i][0]; i++) {
-    size_t param_len = strlen(parameters[i][0]);
-
-    if(parameters[i][1])
-      values_len[i] = strlen(parameters[i][1]);
-    else {
-      values_len[i] = 0;
-      parameters[i][1] = "";
-    }
-    fc->param_fields[i] = (char*)malloc(param_len + 1);
-    strcpy(fc->param_fields[i], parameters[i][0]);
-    fc->param_values[i] = (char*)malloc(values_len[i] + 1);
-    strcpy(fc->param_values[i], parameters[i][1]);
-
-    /* 3x value len is conservative URI %XX escaping on every char */
-    fc_uri_len += param_len + 1 /* = */ + 3 * values_len[i];
-  }
-
-  if(upload_field) {
-    fc->upload_field = (char*)malloc(strlen(upload_field) + 1);
-    strcpy(fc->upload_field, upload_field);
-
-    fc->upload_value = (char*)malloc(strlen(upload_value) + 1);
-    strcpy(fc->upload_value, upload_value);
-  }
-
-
-  if(((need_auth && (od->client_secret || od->token_secret))) ||
-     fc->sign) {
-    char *buf = NULL;
-    size_t buf_len = 0;
-    char *param_buf = NULL;
-    size_t param_buf_len = 0;
-    size_t vlen = 0;
-    char *escaped_value = NULL;
-    
-    for(i = 0; parameters[i][0]; i++)
-      param_buf_len += strlen(parameters[i][0]) + 3 + (3 * values_len[i]) + 3;
-    param_buf = (char*)malloc(param_buf_len + 1);
-    *param_buf = '\0';
-    
-    for(i = 0; parameters[i][0]; i++) {
-      if(i > 0)
-        strcat(param_buf, "&");
-      strcat(param_buf, parameters[i][0]);
-      strcat(param_buf, "=");
-      escaped_value = curl_escape(parameters[i][1], 0);
-      strcat(param_buf, escaped_value);
-      curl_free(escaped_value);
-    }
-
-    buf_len = strlen(fc->method);
-    buf_len += 1; /* & */
-    buf_len += (3 * strlen(url));
-    buf_len += 1; /* & */
-    buf_len += param_buf_len * 3;
-
-    buf = (char*)malloc(buf_len + 1);
-    strcpy(buf, fc->method);
-    strcat(buf, "&");
-    escaped_value = curl_escape(url, 0);
-    strcat(buf, escaped_value);
-    curl_free(escaped_value);
-    strcat(buf, "&");
-    escaped_value = curl_escape(param_buf, 0);
-    strcat(buf, escaped_value);
-    curl_free(escaped_value);
-
-    free(param_buf);
-
-    if(flickcurl_oauth_build_key(od)) {
-#ifdef FLICKCURL_DEBUG
-      fprintf(stderr, "flickcurl_oauth_build_key() failed\n");
-#endif
-      rc = 1;
-      goto tidy;
-    }
-
-    /* build data */
-    od->data = (unsigned char*)buf;
-    od->data_len = strlen((const char*)od->data);
-
-#ifdef FLICKCURL_DEBUG
-    fprintf(stderr, "data for signature (%d bytes)\n   %s\n", 
-            (int)od->data_len, (char*)od->data);
-#endif
-    signature_string = flickcurl_oauth_compute_signature(od, &vlen);
-
-    /* set by flickcurl_oauth_build_key() above */
-    free(od->key);
-
-    parameters[count][0]  = "oauth_signature";
-    parameters[count][1]  = signature_string;
-
-    /* Add a new parameter pair */
-    values_len[count] = vlen;
-    /* 15 = strlen(oauth_signature) */
-    fc->param_fields[count] = (char*)malloc(15 + 1);
-    strcpy(fc->param_fields[count], parameters[count][0]);
-    fc->param_values[count] = (char*)malloc(vlen + 1);
-    strcpy(fc->param_values[count], parameters[count][1]);
-
-    fc_uri_len += 15 /* "oauth_signature" */ + 1 /* = */ + vlen;
-
-    count++;
-    
-#ifdef FLICKCURL_DEBUG
-    fprintf(stderr, "HMAC-SHA1 signature:\n  %s\n", signature_string);
-#endif
-    
-    free(buf);
-    
-    parameters[count][0] = NULL;
-  }
-
-  /* add &s between parameters */
-  fc_uri_len += count-1;
-
-  /* reuse or grow uri buffer */
-  if(fc->uri_len < fc_uri_len) {
-    free(fc->uri);
-    fc->uri = (char*)malloc(fc_uri_len+1);
-    fc->uri_len = fc_uri_len;
-  }
-  strcpy(fc->uri, url);
-
-  if(need_to_add_query)
-    strcat(fc->uri, "?");
-
-  if(parameters_in_url) {
-    for(i = 0; parameters[i][0]; i++) {
-      char *value = (char*)parameters[i][1];
-      char *escaped_value = NULL;
-
-      if(!parameters[i][1])
-        continue;
-
-      strcat(fc->uri, parameters[i][0]);
-      strcat(fc->uri, "=");
-      escaped_value = curl_escape(value, values_len[i]);
-      strcat(fc->uri, escaped_value);
-      curl_free(escaped_value);
-      strcat(fc->uri, "&");
-    }
-
-    /* zap last & */
-    fc->uri[strlen(fc->uri)-1] = '\0';
-  }
-
-#ifdef FLICKCURL_DEBUG
-  fprintf(stderr, "Request URI:\n  %s\n", fc->uri);
-
-  FLICKCURL_ASSERT((strlen(fc->uri) == fc_uri_len),
-                   "Final URI does not match expected length");
-#endif
-
-  tidy:
-  if(signature_string)
-    free(signature_string);
-
-  if(values_len)
-    free(values_len);
-
-  if(nonce && free_nonce)
-    free(nonce);
-
-  if(timestamp)
-    free(timestamp);
-
-  return rc;
-}
-
-
-static int
 oauth_prepare(flickcurl *fc, flickcurl_oauth_data* od,
               const char* method, const char* parameters[][2], int count)
 {
@@ -424,12 +89,12 @@ oauth_prepare(flickcurl *fc, flickcurl_oauth_data* od,
     return 1;
   }
   
-  return oauth_prepare_common(fc, od,
-                              fc->service_uri,
-                              method,
-                              NULL, NULL,
-                              parameters, count,
-                              1, 1, 1);
+  return flickcurl_oauth_prepare_common(fc, od,
+                                        fc->service_uri,
+                                        method,
+                                        NULL, NULL,
+                                        parameters, count,
+                                        1, 1, 1);
 }
 
 
@@ -452,15 +117,15 @@ oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
   /* Require signature */
   flickcurl_set_sign(fc);
 
-  if(oauth_prepare_common(fc, od,
-                          uri,
-                          /* method */ "GET",
-                          /* upload_field */ NULL,
-                          /* upload_value */ NULL,
-                          parameters, count,
-                          /* parameters_in_url */ 1,
-                          /* need_auth */ 1,
-                          /* is_request */ 1)) {
+  if(flickcurl_oauth_prepare_common(fc, od,
+                                    uri,
+                                    /* method */ "GET",
+                                    /* upload_field */ NULL,
+                                    /* upload_value */ NULL,
+                                    parameters, count,
+                                    /* parameters_in_url */ 1,
+                                    /* need_auth */ 1,
+                                    /* is_request */ 1)) {
     rc = 1;
     goto tidy;
   }
@@ -517,15 +182,15 @@ oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
   /* Require signature */
   flickcurl_set_sign(fc);
 
-  if(oauth_prepare_common(fc, od,
-                          uri,
-                          /* method */ "GET",
-                          /* upload_field */ NULL,
-                          /* upload_value */ NULL,
-                          parameters, count,
-                          /* parameters_in_url */ 1,
-                          /* need_auth */ 1,
-                          /* is_request */ 0)) {
+  if(flickcurl_oauth_prepare_common(fc, od,
+                                    uri,
+                                    /* method */ "GET",
+                                    /* upload_field */ NULL,
+                                    /* upload_value */ NULL,
+                                    parameters, count,
+                                    /* parameters_in_url */ 1,
+                                    /* need_auth */ 1,
+                                    /* is_request */ 0)) {
     rc = 1;
     goto tidy;
   }

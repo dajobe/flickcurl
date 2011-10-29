@@ -26,6 +26,7 @@
 #include <curl/curl.h>
 #include <curl/easy.h>
 
+#include <mtwist.h>
 
 #if defined (OFFLINE) && defined (CAPTURE)
 #error "Cannot define both OFFLINE and CAPTURE"
@@ -368,6 +369,8 @@ struct flickcurl_s {
 
   flickcurl_curl_setopt_handler curl_setopt_handler;
   void* curl_setopt_handler_data;
+
+  mtwist* mt;
 };
 
 struct flickcurl_serializer_s
@@ -437,3 +440,4 @@ int flickcurl_oauth_build_key(flickcurl_oauth_data* od);
 int flickcurl_oauth_build_key_data(flickcurl_oauth_data* od, const char* http_request_method, const char* uri_base_string, const char* request_parameters);
 
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
+int flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth, int is_request);
