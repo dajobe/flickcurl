@@ -119,7 +119,7 @@ oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
 
   if(flickcurl_oauth_prepare_common(fc, od,
                                     uri,
-                                    /* method */ "GET",
+                                    /* method */ "oauth.request_token",
                                     /* upload_field */ NULL,
                                     /* upload_value */ NULL,
                                     parameters, count,
@@ -184,7 +184,7 @@ oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
 
   if(flickcurl_oauth_prepare_common(fc, od,
                                     uri,
-                                    /* method */ "GET",
+                                    /* method */ "oauth.access_token",
                                     /* upload_field */ NULL,
                                     /* upload_value */ NULL,
                                     parameters, count,
