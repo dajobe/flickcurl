@@ -102,7 +102,7 @@ static int
 oauth_test_echo(flickcurl* fc, flickcurl_oauth_data* od,
                 const char* key, const char* value)
 {
-  const char * parameters[2 + MAX_OAUTH_PARAM_COUNT][2];
+  const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
   int count = 0;
   xmlDocPtr doc = NULL;
   int rc = 0;
