@@ -89,7 +89,7 @@ libcurl_min_version=7.10.0
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([errno.h getopt.h stdlib.h string.h unistd.h])
+AC_CHECK_HEADERS([errno.h getopt.h stdlib.h stdint.h time.h string.h unistd.h])
 AC_HEADER_TIME
 
 # Checks for typedefs, structures, and compiler characteristics.

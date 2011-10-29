@@ -102,3 +102,12 @@ AM_CFLAGS += @RAPTOR_CFLAGS@
 libflickcurl_la_LIBADD += @RAPTOR_LIBS@
 endif
 endif
+
+libflickcurl_la_SOURCES += \
+$(top_srcdir)/libmtwist/mt.c \
+$(top_srcdir)/libmtwist/seed.c \
+$(top_srcdir)/libmtwist/mtwist.h \
+$(top_srcdir)/libmtwist/mtwist_internal.h 
+
+AM_CFLAGS += -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
+
