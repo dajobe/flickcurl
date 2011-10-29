@@ -1585,6 +1585,78 @@ flickcurl_invoke_get_content(flickcurl *fc, size_t* size_p)
 }
 
 
+void
+flickcurl_free_form(char **form, int count)
+{
+  if(!form)
+    return;
+
+  /* free content which is the first key */
+  free(form[0]);
+
+  free(form);
+}
+
+
+char**
+flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
+{
+  char* content = NULL;
+  char** form = NULL;
+  char *p;
+  int count;
+  int i;
+
+  if(flickcurl_invoke_common(fc, &content, NULL, NULL))
+    return NULL;
+
+  for(p = content, count = 0; *p; p++) {
+    if(*p == '&')
+      count++;
+  }
+  count++; /* counting separators so need +1 for number of contents */
+  
+  /* Allocate count + 1 sized array of char* (key, value) pointers
+   * The last pair are always (NULL, NULL).
+   *
+   * The pointers are into the 'content' buffer which is kept around
+   * and owned by this array and stored in form[0].
+   */
+  form = (char**)calloc(2*(count + 1), sizeof(char*));
+  if(!form)
+    goto tidy;
+
+  for(p = content, i = 0; *p; p++) {
+    char *start = p;
+    
+    while(*p && *p != '&' && *p != '=')
+      p++;
+
+    form[i++] = start;
+
+    if(!*p)
+      break;
+    *p = '\0';
+  }
+  form[i++] = '\0';
+  form[i] = '\0';
+  
+  if(count_p)
+    *count_p = count;
+
+  return form;
+
+  tidy:
+  if(form)
+    free(form);
+
+  if(content)
+    free(content);
+  
+  return NULL;
+}
+
+
 char*
 flickcurl_unixtime_to_isotime(time_t unix_time)
 {

@@ -118,6 +118,9 @@ int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_
 xmlDocPtr flickcurl_invoke(flickcurl *fc);
 /* Invoke Flickr API at URi prepared above and get back raw content */
 char* flickcurl_invoke_get_content(flickcurl *fc, size_t* size_p);
+/* Invoke URI prepared above and get back 'count' key/values */
+char** flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p);
+void flickcurl_free_form(char **form, int count);
 
 /* args.c */
 void flickcurl_free_arg(flickcurl_arg *arg);

@@ -626,10 +626,10 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
   int count = 0;
   char* tmp_token = NULL;
   char* tmp_token_secret = NULL;
-  char* data = NULL;
-  size_t data_len = 0;
+  char** form = NULL;
   int rc = 0;
   const char* uri = fc->oauth_request_token_uri;
+  int i;
 
   parameters[count][0]  = NULL;
 
@@ -638,7 +638,7 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
 
   if(flickcurl_oauth_prepare_common(fc, od,
                                     uri,
-                                    /* method */ "oauth.request_token",
+                                    /* method */ "flickr.oauth.request_token",
                                     /* upload_field */ NULL,
                                     /* upload_value */ NULL,
                                     parameters, count,
@@ -649,37 +649,42 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
     goto tidy;
   }
 
-  data = flickcurl_invoke_get_content(fc, &data_len);
-  if(!data) {
+  form = flickcurl_invoke_get_form_content(fc, &count);
+  if(!form) {
     rc = 1;
     goto tidy;
   }
 
 #ifdef FLICKCURL_DEBUG
-  fprintf(stderr, "OAuth request token request %s response is '%s'\n", uri,
-          data);
+  fprintf(stderr, "OAuth request token request %s response was %d params\n",
+          uri, count);
 #endif
 
+  for(i = 0; i < (2 * count); i += 2) {
+    if(!strcmp(form[i], "oauth_token")) {
+      tmp_token = form[i+1];
+    } else if(!strcmp(form[i], "oauth_token_secret")) {
+      tmp_token_secret = form[i+1];
+    }
+  }
+
   if(tmp_token && tmp_token_secret) {
-    /* Now owned by od */
-    od->tmp_token = tmp_token;
+    /* Take copies that are owned by od */
+    od->tmp_token = strdup(tmp_token);
     od->tmp_token_len = strlen(od->tmp_token);
-    tmp_token = NULL;
-    od->tmp_token_secret = tmp_token_secret;
+    od->tmp_token_secret = strdup(tmp_token_secret);
     od->tmp_token_secret_len = strlen(od->tmp_token_secret);
-    tmp_token_secret = NULL;
 
 #ifdef FLICKCURL_DEBUG
-    fprintf(stderr, "Request returned token '%s' secret token '%s'\n",
+    fprintf(stderr,
+            "OAuth request token returned token '%s' secret token '%s'\n",
             od->tmp_token, od->tmp_token_secret);
 #endif
   }
   
   tidy:
-  if(tmp_token)
-    free(tmp_token);
-  if(tmp_token_secret)
-    free(tmp_token_secret);
+  if(form)
+    flickcurl_free_form(form, count);
   
   return rc;
 }
@@ -692,11 +697,11 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
   int count = 0;
   char* tmp_token = NULL;
   char* tmp_token_secret = NULL;
-  char* data = NULL;
-  size_t data_len = 0;
+  char** form = NULL;
   int rc = 0;
   const char* uri = fc->oauth_access_token_uri;
-
+  int i;
+  
   parameters[count][0]  = NULL;
 
   /* Require signature */
@@ -704,7 +709,7 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
 
   if(flickcurl_oauth_prepare_common(fc, od,
                                     uri,
-                                    /* method */ "oauth.access_token",
+                                    /* method */ "flickr.oauth.access_token",
                                     /* upload_field */ NULL,
                                     /* upload_value */ NULL,
                                     parameters, count,
@@ -715,37 +720,42 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
     goto tidy;
   }
 
-  data = flickcurl_invoke_get_content(fc, &data_len);
-  if(!data) {
+  form = flickcurl_invoke_get_form_content(fc, &count);
+  if(!form) {
     rc = 1;
     goto tidy;
   }
 
 #ifdef FLICKCURL_DEBUG
-  fprintf(stderr, "OAuth access token request %s response is '%s'\n", uri,
-          data);
+  fprintf(stderr, "OAuth access token request %s response was %d params\n", 
+          uri, count);
 #endif
 
+  for(i = 0; i < (2 * count); i += 2) {
+    if(!strcmp(form[i], "oauth_token")) {
+      tmp_token = form[i+1];
+    } else if(!strcmp(form[i], "oauth_token_secret")) {
+      tmp_token_secret = form[i+1];
+    }
+  }
+
   if(tmp_token && tmp_token_secret) {
-    /* Now owned by od */
-    od->tmp_token = tmp_token;
-    od->tmp_token_len = strlen(od->tmp_token);
-    tmp_token = NULL;
-    od->tmp_token_secret = tmp_token_secret;
-    od->tmp_token_secret_len = strlen(od->tmp_token_secret);
-    tmp_token_secret = NULL;
+    /* Take copies that are owned by od */
+    od->token = strdup(tmp_token);
+    od->token_len = strlen(od->token);
+    od->token_secret = strdup(tmp_token_secret);
+    od->token_secret_len = strlen(od->token_secret);
 
 #ifdef FLICKCURL_DEBUG
-    fprintf(stderr, "Request returned token '%s' secret token '%s'\n",
-            od->tmp_token, od->tmp_token_secret);
+    fprintf(stderr, 
+            "OAuth access token returned token '%s' secret token '%s'\n",
+            od->token, od->token_secret);
 #endif
   }
   
   tidy:
-  if(tmp_token)
-    free(tmp_token);
-  if(tmp_token_secret)
-    free(tmp_token_secret);
+  if(form)
+    flickcurl_free_form(form, count);
   
   return rc;
 }
