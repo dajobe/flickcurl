@@ -308,6 +308,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
   char* timestamp = NULL;
   int rc = 0;
   int need_to_add_query = 0;
+  const char* http_method = "GET";
 
   if(!url || !parameters)
     return 1;
@@ -488,14 +489,14 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
       curl_free(escaped_value);
     }
 
-    buf_len = strlen(fc->method);
+    buf_len = strlen(http_method);
     buf_len += 1; /* & */
     buf_len += (3 * strlen(url));
     buf_len += 1; /* & */
     buf_len += param_buf_len * 3;
 
     buf = (char*)malloc(buf_len + 1);
-    strcpy(buf, fc->method);
+    strcpy(buf, http_method);
     strcat(buf, "&");
     escaped_value = curl_escape(url, 0);
     strcat(buf, escaped_value);
