@@ -309,6 +309,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
   int rc = 0;
   int need_to_add_query = 0;
   const char* http_method = "GET";
+  int is_oauth_method = 0;
 
   if(!url || !parameters)
     return 1;
@@ -355,9 +356,10 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
   
   if(fc->method)
     free(fc->method);
-  if(method)
+  if(method) {
     fc->method = strdup(method);
-  else
+    is_oauth_method = !strncmp(method, "oauth.", 6);
+  } else
     fc->method = NULL;
 
   /* OAuth parameters
@@ -373,6 +375,11 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
    * oauth_verifier         verifier [access token request]
    * oauth_token            access token [access token request]
    */
+
+  if(fc->method && !is_oauth_method) {
+    parameters[count][0]  = "method";
+    parameters[count++][1]= fc->method;
+  }
 
   if(is_request) {
     parameters[count][0]  = "oauth_callback";
