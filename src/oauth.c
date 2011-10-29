@@ -431,10 +431,10 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
 
   parameters[count][0]  = NULL;
 
-  /* +MAX_OAUTH_PARAM_COUNT for oauth fields +1 for NULL terminating pointer */
-  fc->param_fields = (char**)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
-  fc->param_values = (char**)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
-  values_len       = (size_t*)calloc(count + MAX_OAUTH_PARAM_COUNT + 1, sizeof(size_t));
+  /* +FLICKCURL_FLICKCURL_MAX_OAUTH_PARAM_COUNT for oauth fields +1 for NULL terminating pointer */
+  fc->param_fields = (char**)calloc(count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  fc->param_values = (char**)calloc(count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  values_len       = (size_t*)calloc(count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(size_t));
 
   if((need_auth && (od->client_secret || od->token_secret)) || fc->sign)
     flickcurl_sort_args(fc, parameters, count);
@@ -622,7 +622,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
 int
 flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
 {
-  const char * parameters[2 + MAX_OAUTH_PARAM_COUNT][2];
+  const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
   int count = 0;
   char* tmp_token = NULL;
   char* tmp_token_secret = NULL;
@@ -722,7 +722,7 @@ flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
 int
 flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
 {
-  const char * parameters[2 + MAX_OAUTH_PARAM_COUNT][2];
+  const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
   int count = 0;
   char* tmp_token = NULL;
   char* tmp_token_secret = NULL;

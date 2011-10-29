@@ -403,7 +403,7 @@ unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void
 
 /* oauth.c */
 
-#define MAX_OAUTH_PARAM_COUNT 8
+#define FLICKCURL_MAX_OAUTH_PARAM_COUNT 8
 
 char* flickcurl_base64_encode(const unsigned char *data, size_t len, size_t *out_len_p);
 
