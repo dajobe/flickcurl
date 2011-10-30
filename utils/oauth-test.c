@@ -383,6 +383,11 @@ main(int argc, char *argv[])
 
     if(!rc) {
       char* uri;
+
+      fprintf(stderr, 
+              "OAuth request token returned token '%s' secret token '%s'\n",
+              od.request_token, od.request_token_secret);
+
       uri = flickcurl_oauth_get_authorize_uri(fc, &od);
       if(uri) {
         fprintf(stderr, "%s: Authorize uri is %s\n", program, uri);
