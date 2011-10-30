@@ -720,7 +720,8 @@ flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
 }
 
 int
-flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
+flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
+                             const char* verifier)
 {
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
   int count = 0;
@@ -736,18 +737,23 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
   /* Require signature */
   flickcurl_set_sign(fc);
 
-  if(flickcurl_oauth_prepare_common(fc, od,
-                                    uri,
-                                    /* method */ "flickr.oauth.access_token",
-                                    /* upload_field */ NULL,
-                                    /* upload_value */ NULL,
-                                    parameters, count,
-                                    /* parameters_in_url */ 1,
-                                    /* need_auth */ 1,
-                                    /* is_request */ 0)) {
-    rc = 1;
+  od->verifier = verifier;
+  od->verifier_len = strlen(verifier);
+
+  rc = flickcurl_oauth_prepare_common(fc, od,
+                                      uri,
+                                      /* method */ "flickr.oauth.access_token",
+                                      /* upload_field */ NULL,
+                                      /* upload_value */ NULL,
+                                      parameters, count,
+                                      /* parameters_in_url */ 1,
+                                      /* need_auth */ 1,
+                                      /* is_request */ 0);
+
+  od->verifier = NULL;
+  od->verifier_len = 0;
+  if(rc)
     goto tidy;
-  }
 
   form = flickcurl_invoke_get_form_content(fc, &count);
   if(!form) {
@@ -766,6 +772,7 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
     } else if(!strcmp(form[i], "oauth_token_secret")) {
       request_token_secret = form[i+1];
     }
+    /* ignoring: fullname, user_nsid, username */
   }
 
   if(request_token && request_token_secret) {
@@ -780,7 +787,8 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od)
             "OAuth access token returned token '%s' secret token '%s'\n",
             od->token, od->token_secret);
 #endif
-  }
+  } else
+    rc = 1;
   
   tidy:
   if(form)

@@ -395,26 +395,39 @@ main(int argc, char *argv[])
   /* Access token */
   if(cmd_index == 1) {
     flickcurl_oauth_data od;
+    const char* request_token = argv[1];
+    const char* request_token_secret = argv[2];
+    const char* verifier = argv[3];
 
     memset(&od, '\0', sizeof(od));
 
-#if 0
-    od.callback = test_oauth_callback_url;
-    od.client_key = test_oauth_consumer_key;
-    od.nonce = test_oauth_nonce;
-    od.timestamp = test_oauth_timestamp;
-
-    oauth_init_test_secrets(&od);
-#endif
-#if 0
-    od.client_key = fc->api_key;
-    od.client_secret = fc->secret;
-    od.client_secret_len = strlen(od.client_secret);
-#endif
+    if(0) {
+      od.callback = test_oauth_callback_url;
+      od.client_key = test_oauth_consumer_key;
+      od.nonce = test_oauth_nonce;
+      od.timestamp = test_oauth_timestamp;
+      
+      oauth_init_test_secrets(&od);
+    } else {
+      od.client_key = fc->api_key;
+      od.client_secret = fc->secret;
+      od.client_secret_len = strlen(od.client_secret);
+      od.request_token = request_token;
+      od.request_token_len = strlen(request_token);
+      od.request_token_secret = request_token_secret;
+      od.request_token_secret_len = strlen(request_token_secret);
+    }
 
     od.client_key_len = strlen(od.client_key);
     
-    rc = flickcurl_oauth_access_token(fc, &od);
+    rc = flickcurl_oauth_access_token(fc, &od, verifier);
+
+    if(!rc) {
+      fprintf(stderr, 
+              "OAuth access token returned token '%s' secret token '%s'\n",
+              od.token, od.token_secret);
+    }
+
   }
 
 
