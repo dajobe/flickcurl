@@ -232,3 +232,109 @@ flickcurl_auth_getToken(flickcurl* fc, const char* frob)
 
   return auth_token;
 }
+
+
+/**
+ * flickcurl_auth_oauth_getAccessToken:
+ * @fc: flickcurl context
+ * 
+ * Exchange an auth token from the old Authentication API for an OAuth access token.
+ *
+ * Calling this method will delete the old auth token used to make the request.
+ *
+ * Implements flickr.auth.oauth.getAccessToken (1.22)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
+{
+  const char* parameters[5][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  int rc = 0;
+  
+  parameters[count][0]  = NULL;
+
+  flickcurl_set_sign(fc);
+
+  if(flickcurl_prepare(fc, "flickr.auth.oauth.getAccessToken",
+                       parameters, count))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed = 1;
+    goto tidy;
+  }
+
+  /*
+<auth>
+  <access_token oauth_token="72157607082540144-8d5d7ea7696629bf" oauth_token_secret="f38bf58b2d95bc8b" />
+</auth>
+  */
+
+  if(xpathCtx) {
+    char* auth_token;
+    char* auth_token_secret;
+
+/*
+    if(fc->api_key) {
+      FIXME - Copy API key as OAuth consumer key
+
+      od->client_key = fc->api_key;
+      od->client_key_len = strlen(od->consumer_key);
+    }
+*/
+
+    auth_token = flickcurl_xpath_eval(fc, xpathCtx,
+                                    (const xmlChar*)"/rsp/auth/access_token[@oauth_token]");
+
+    auth_token_secret = flickcurl_xpath_eval(fc, xpathCtx,
+                                             (const xmlChar*)"/rsp/auth/access_token[@oauth_token_secret]");
+
+#ifdef FLICKCURL_DEBUG
+    fprintf(stderr, 
+            "Exchanged old auth for OAuth access token '%s' secret token '%s'\n",
+            auth_token, auth_token_secret);
+#endif
+
+    /* FIXME - story this in the oauth structure */
+
+    free(auth_token);
+    free(auth_token_secret);
+
+    /* Remove old authentication fields - not valid or needed */
+    if(fc->auth_token) {
+      free(fc->auth_token);
+      fc->auth_token = NULL;
+    }
+    if(fc->api_key) {
+      free(fc->api_key);
+      fc->api_key = NULL;
+    }
+    if(fc->secret) {
+      free(fc->secret);
+      fc->secret = NULL;
+    }
+    
+    xmlXPathFreeContext(xpathCtx);
+    xpathCtx = NULL;
+  }
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    rc = 1;
+
+  return rc;
+}

@@ -1838,7 +1838,9 @@ FLICKCURL_API
 char* flickcurl_auth_getFullToken(flickcurl* fc, const char* frob);
 FLICKCURL_API
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
-
+FLICKCURL_API
+int flickcurl_auth_oauth_getAccessToken(flickcurl* fc);
+  
 /* flickr.blogs */
 FLICKCURL_API
 flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);

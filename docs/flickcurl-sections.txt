@@ -71,6 +71,7 @@ flickcurl_auth_checkToken
 flickcurl_auth_getFrob
 flickcurl_auth_getFullToken
 flickcurl_auth_getToken
+flickcurl_auth_oauth_getAccessToken
 </SECTION>
 
 <SECTION>
