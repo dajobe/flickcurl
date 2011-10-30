@@ -289,6 +289,10 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 }
 
 
+/**
+ *
+ * @is_request: send callback od->callback parameter
+ */
 int
 flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
                                const char* url,
@@ -389,16 +393,14 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
   parameters[count][0]  = "oauth_consumer_key";
   parameters[count++][1]= od->client_key;
 
-  if(is_request) {
-    nonce = (char*)od->nonce;
-    if(!nonce) {
-      nonce = (char*)malloc(20);
-      free_nonce = 1;
-      sprintf(nonce, "%ld", mtwist_u32rand(fc->mt));
-    }
-    parameters[count][0]  = "oauth_nonce";
-    parameters[count++][1]= nonce;
+  nonce = (char*)od->nonce;
+  if(!nonce) {
+    nonce = (char*)malloc(20);
+    free_nonce = 1;
+    sprintf(nonce, "%ld", mtwist_u32rand(fc->mt));
   }
+  parameters[count][0]  = "oauth_nonce";
+  parameters[count++][1]= nonce;
 
   /* oauth_signature - computed over these fields */
   parameters[count][0]  = "oauth_signature_method";
@@ -412,15 +414,16 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
     (void)gettimeofday(&tp, NULL);
     sprintf(timestamp, "%ld", (long)tp.tv_sec);
   }
-  if(is_request) {
-    parameters[count][0]  = "oauth_timestamp";
-    parameters[count++][1]= timestamp;
-  }
+  parameters[count][0]  = "oauth_timestamp";
+  parameters[count++][1]= timestamp;
 
   parameters[count][0]  = "oauth_version";
   parameters[count++][1]= "1.0";
 
-  if(od->request_token) {
+  if(od->token) {
+    parameters[count][0]  = "oauth_token";
+    parameters[count++][1]= od->token;
+  } else if(od->request_token) {
     parameters[count][0]  = "oauth_token";
     parameters[count++][1]= od->request_token;
   }
@@ -636,18 +639,17 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
   /* Require signature */
   flickcurl_set_sign(fc);
 
-  if(flickcurl_oauth_prepare_common(fc, od,
-                                    uri,
-                                    /* method */ "flickr.oauth.request_token",
-                                    /* upload_field */ NULL,
-                                    /* upload_value */ NULL,
-                                    parameters, count,
-                                    /* parameters_in_url */ 1,
-                                    /* need_auth */ 1,
-                                    /* is_request */ 1)) {
-    rc = 1;
+  rc = flickcurl_oauth_prepare_common(fc, od,
+                                      uri,
+                                      /* method */ "flickr.oauth.request_token",
+                                      /* upload_field */ NULL,
+                                      /* upload_value */ NULL,
+                                      parameters, count,
+                                      /* parameters_in_url */ 1,
+                                      /* need_auth */ 1,
+                                      /* is_request */ 1);
+  if(rc)
     goto tidy;
-  }
 
   form = flickcurl_invoke_get_form_content(fc, &count);
   if(!form) {
@@ -680,7 +682,8 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
             "OAuth request token returned token '%s' secret token '%s'\n",
             od->request_token, od->request_token_secret);
 #endif
-  }
+  } else
+    rc = 1;
   
   tidy:
   if(form)
