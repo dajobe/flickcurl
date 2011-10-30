@@ -416,10 +416,10 @@ typedef struct {
   size_t client_secret_len;
 
   /* temporary credentials */
-  const char* tmp_token; /* AKA request token */
-  size_t tmp_token_len;
-  const char* tmp_token_secret;
-  size_t tmp_token_secret_len;
+  const char* request_token;
+  size_t request_token_len;
+  const char* request_token_secret;
+  size_t request_token_secret_len;
   
   const char* verifier; /* OAuth verifier */
   size_t verifier_len;
