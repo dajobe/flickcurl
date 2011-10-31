@@ -170,7 +170,7 @@ print_help_string(void)
 {
   printf(title_format_string, flickcurl_version_string);
   puts("Flickr OAuth test utility.");
-  printf("Usage: %s [OPTIONS] (request_token | access_token)\n\n", program);
+  printf("Usage: %s [OPTIONS] COMMANDS\n\n", program);
   
   fputs(flickcurl_copyright_string, stdout);
   fputs("\nLicense: ", stdout);
@@ -182,6 +182,12 @@ print_help_string(void)
   
   puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
   puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
+
+  fputs("\nCOMMANDS\n", stdout);
+
+  puts("  request_token\n    Ask for an OAuth request token and show the authorize url.\n");
+  puts("  access_token   REQUEST_TOKEN REQUEST_TOKEN_SECRET VERIFIER\n    Use a request token with verifier to get an access token.\n");
+  puts("  echo\n    Run the test.echo API call using OAuth.\n");
 }
 
 
@@ -286,6 +292,8 @@ main(int argc, char *argv[])
     cmd_index = 0;
   } else if(!strcmp(command, "access_token")) {
     cmd_index = 1;
+  } else if(!strcmp(command, "echo")) {
+    cmd_index = 2;
   }
 
   if(cmd_index < 0) {
