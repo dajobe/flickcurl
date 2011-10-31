@@ -335,9 +335,9 @@ main(int argc, char *argv[])
     memset(&od, '\0', sizeof(od));
 
     od.client_key = fc->api_key;
+    od.client_key_len = strlen(od.client_key);
     od.client_secret = fc->secret;
     od.client_secret_len = strlen(od.client_secret);
-    od.client_key_len = strlen(od.client_key);
     
     rc = flickcurl_oauth_request_token(fc, &od);
 
@@ -367,13 +367,13 @@ main(int argc, char *argv[])
     memset(&od, '\0', sizeof(od));
 
     od.client_key = fc->api_key;
+    od.client_key_len = strlen(od.client_key);
     od.client_secret = fc->secret;
     od.client_secret_len = strlen(od.client_secret);
     od.request_token = (char*)request_token;
     od.request_token_len = strlen(request_token);
     od.request_token_secret = (char*)request_token_secret;
     od.request_token_secret_len = strlen(request_token_secret);
-    od.client_key_len = strlen(od.client_key);
     
     rc = flickcurl_oauth_access_token(fc, &od, verifier);
 
