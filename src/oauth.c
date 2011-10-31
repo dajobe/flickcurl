@@ -797,10 +797,13 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
     od->token_secret = strdup(access_token_secret);
     od->token_secret_len = strlen(od->token_secret);
 
-    /* Delete temporary request tokens */
+    /* Delete temporary request token and secret */
     free(od->request_token);
+    od->request_token = NULL;
     od->request_token_len = 0;
+
     free(od->request_token_secret);
+    od->request_token_secret = NULL;
     od->request_token_secret_len = 0;
 
 #ifdef FLICKCURL_DEBUG

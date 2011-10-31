@@ -410,24 +410,24 @@ char* flickcurl_base64_encode(const unsigned char *data, size_t len, size_t *out
 
 typedef struct {
   /* client credentials */
-  const char* client_key; /* AKA consumer key or the Flickr API key */
+  char* client_key; /* AKA consumer key or the Flickr API key */
   size_t client_key_len;
-  const char* client_secret;
+  char* client_secret;
   size_t client_secret_len;
 
   /* temporary credentials */
-  const char* request_token;
+  char* request_token;
   size_t request_token_len;
-  const char* request_token_secret;
+  char* request_token_secret;
   size_t request_token_secret_len;
   
   const char* verifier; /* OAuth verifier */
   size_t verifier_len;
 
   /* token credentials */
-  const char* token; /* AKA access token */
+  char* token; /* AKA access token */
   size_t token_len;
-  const char* token_secret;
+  char* token_secret;
   size_t token_secret_len;
   
   /* callback URI or NULL for "oob" */
