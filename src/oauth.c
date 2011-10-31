@@ -147,7 +147,12 @@ flickcurl_oauth_build_key(flickcurl_oauth_data* od)
   if(od->key)
     free(od->key);
 
-  od->key_len = od->client_secret_len + 1 + od->token_secret_len;
+  od->key_len = od->client_secret_len + 1;
+  if(od->request_token_secret_len)
+    od->key_len += od->request_token_secret_len;
+  else
+    od->key_len += od->token_secret_len;
+
   od->key = malloc(od->key_len + 1); /* for NUL */
   if(!od->key)
     return 1;
@@ -158,7 +163,10 @@ flickcurl_oauth_build_key(flickcurl_oauth_data* od)
     p += od->client_secret_len;
   }
   *p++ = '&';
-  if(od->token_secret_len) {
+  if(od->request_token_secret_len) {
+    memcpy(p, od->request_token_secret, od->request_token_secret_len);
+    p += od->request_token_secret_len;
+  } else if(od->token_secret_len) {
     memcpy(p, od->token_secret, od->token_secret_len);
     p += od->token_secret_len;
   }
@@ -539,6 +547,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
 
     /* set by flickcurl_oauth_build_key() above */
     free(od->key);
+    od->key = NULL;
 
     parameters[count][0]  = "oauth_signature";
     parameters[count][1]  = signature_string;
@@ -560,6 +569,8 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
 #endif
     
     free(buf);
+    od->data = NULL;
+    od->data_len = 0;
     
     parameters[count][0] = NULL;
   }
