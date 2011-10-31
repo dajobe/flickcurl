@@ -29,6 +29,7 @@
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 
+#ifndef STANDALONE
 
 /*
  * flickcurl_base64_encode_digit:
@@ -799,3 +800,187 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
   
   return rc;
 }
+#endif
+
+
+#ifdef STANDALONE
+#include <stdio.h>
+
+int main(int argc, char *argv[]);
+
+
+/* Test KEY fields */
+static const char* test_client_secret = "a9567d986a7539fe";
+static const char* test_token_secret  = NULL;
+
+/* Test DATA fields */
+static const char* test_http_request_method = "GET";
+static const char* test_uri_base_string     = "http://www.flickr.com/services/oauth/request_token";
+static const char* test_oauth_callback_url  = "http://www.example.com";
+static const char* test_oauth_consumer_key  = "653e7a6ecc1d528c516cc8f92cf98611";
+static const char* test_oauth_nonce         = "95613465";
+static const time_t test_oauth_timestamp     = (time_t)1305586162;
+
+static const char* test_request_parameters  = "oauth_callback=http%3A%2F%2Fwww.example.com&oauth_consumer_key=653e7a6ecc1d528c516cc8f92cf98611&oauth_nonce=95613465&oauth_signature_method=HMAC-SHA1&oauth_timestamp=1305586162&oauth_version=1.0";
+
+/* Expected results */
+static const char* expected_key = 
+      "a9567d986a7539fe"
+      "&";
+static const char* expected_data =
+      "GET" "&"
+      "http%3A%2F%2Fwww.flickr.com%2Fservices%2Foauth%2Frequest_token" "&"
+      "oauth_callback%3Dhttp%253A%252F%252Fwww.example.com%26oauth_consumer_key%3D653e7a6ecc1d528c516cc8f92cf98611%26oauth_nonce%3D95613465%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1305586162%26oauth_version%3D1.0";
+
+static const char* expected_signature = "7w18YS2bONDPL%2FzgyzP5XTr5af4%3D";
+
+static const char* program;
+
+
+static void
+oauth_init_test_secrets(flickcurl_oauth_data *od)
+{
+  /* Set up test data */
+  od->client_secret = test_client_secret;
+  if(od->client_secret)
+    od->client_secret_len = strlen(od->client_secret);
+
+  od->token_secret = test_token_secret;
+  if(od->token_secret)
+    od->token_secret_len = strlen(od->token_secret);
+}
+
+
+static int
+test_request_token(flickcurl* fc) 
+{
+  flickcurl_oauth_data od;
+  int rc;
+  
+  memset(&od, '\0', sizeof(od));
+
+  od.callback = test_oauth_callback_url;
+  od.client_key = test_oauth_consumer_key;
+  od.client_key_len = strlen(od.client_key);
+  od.nonce = test_oauth_nonce;
+  od.timestamp = test_oauth_timestamp;
+
+  oauth_init_test_secrets(&od);
+
+  rc = flickcurl_oauth_request_token(fc, &od);
+
+  return rc;
+}
+
+
+static int
+test_access_token(flickcurl* fc) 
+{
+  flickcurl_oauth_data od;
+  int rc;
+  const char* verifier = "123-456-789";
+  
+  memset(&od, '\0', sizeof(od));
+
+  od.callback = test_oauth_callback_url;
+  od.client_key = test_oauth_consumer_key;
+  od.client_key_len = strlen(od.client_key);
+  od.nonce = test_oauth_nonce;
+  od.timestamp = test_oauth_timestamp;
+  
+  oauth_init_test_secrets(&od);
+
+  rc = flickcurl_oauth_access_token(fc, &od, verifier);
+
+  return rc;
+}
+
+
+static int
+test_signature_calc(flickcurl* fc)
+{
+  char *s = NULL;
+  char *escaped_s = NULL;
+  size_t escaped_s_len;
+  char* signature;
+  flickcurl_oauth_data od;
+  int rc;
+
+  memset(&od, '\0', sizeof(od));
+  
+  oauth_init_test_secrets(&od);
+  
+  rc = flickcurl_oauth_build_key_data(&od, test_http_request_method,
+                                      test_uri_base_string, 
+                                      test_request_parameters);
+  
+  fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)od.key_len, od.key);
+  fprintf(stderr, "%s: expected key is\n  %s\n", program, expected_key);
+  
+  fprintf(stderr, "%s: data is (%d bytes)\n  %s\n", program, (int)od.data_len, od.data);
+  fprintf(stderr, "%s: expected data is\n  %s\n", program, expected_data);
+  
+  signature = flickcurl_oauth_compute_signature(&od, &escaped_s_len);
+  
+  escaped_s = curl_escape((char*)signature, 0);
+  free(signature);
+  escaped_s_len = strlen(escaped_s);
+  
+  fprintf(stdout, "URI Escaped result (%d bytes):\n   %s\n",
+          (int)escaped_s_len, escaped_s);
+  
+  fprintf(stdout, "Expected URI escaped result\n   %s\n", 
+          expected_signature);
+  
+  curl_free(escaped_s);
+  
+  if(s)
+    free(s);
+  if(od.data)
+    free(od.data);
+  if(od.key)
+    free(od.key);
+
+  return 0;
+}
+
+
+static void
+my_message_handler(void *user_data, const char *message)
+{
+  fprintf(stderr, "%s: ERROR: %s\n", program, message);
+}
+
+
+int
+main(int argc, char *argv[])
+{
+  flickcurl *fc = NULL;
+  int rc;
+  
+  program = "flickcurl_oauth_test"; /* No raptor_basename */
+
+  flickcurl_init();
+
+  /* Initialise the Flickcurl library */
+  fc = flickcurl_new();
+  if(!fc) {
+    rc = 1;
+    goto tidy;
+  }
+
+  flickcurl_set_error_handler(fc, my_message_handler, NULL);
+
+  if(0) {
+    rc += test_request_token(fc);
+    rc += test_access_token(fc);
+  }
+  rc += test_signature_calc(fc);
+
+  tidy:
+  if(fc)
+    flickcurl_free(fc);
+
+  return rc;
+}
+#endif

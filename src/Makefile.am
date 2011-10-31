@@ -103,6 +103,8 @@ libflickcurl_la_LIBADD += @RAPTOR_LIBS@
 endif
 endif
 
+TESTS=
+
 libflickcurl_la_SOURCES += \
 $(top_srcdir)/libmtwist/mt.c \
 $(top_srcdir)/libmtwist/seed.c \
@@ -111,4 +113,10 @@ $(top_srcdir)/libmtwist/mtwist_internal.h \
 mtwist_config.h
 
 AM_CFLAGS += -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
+
+
+TESTS+= flickcurl_oauth_test
+
+flickcurl_oauth_test: $(srcdir)/oauth.c libflickcurl.la
+	$(LINK) $(DEFS) $(CPPFLAGS) -I$(srcdir) -I. -DSTANDALONE $(srcdir)/oauth.c libflickcurl.la $(LIBS)
 
