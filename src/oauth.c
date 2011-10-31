@@ -861,11 +861,11 @@ static void
 oauth_init_test_secrets(flickcurl_oauth_data *od)
 {
   /* Set up test data */
-  od->client_secret = test_client_secret;
+  od->client_secret = (char*)test_client_secret;
   if(od->client_secret)
     od->client_secret_len = strlen(od->client_secret);
 
-  od->token_secret = test_token_secret;
+  od->token_secret = (char*)test_token_secret;
   if(od->token_secret)
     od->token_secret_len = strlen(od->token_secret);
 }
@@ -880,7 +880,7 @@ test_request_token(flickcurl* fc)
   memset(&od, '\0', sizeof(od));
 
   od.callback = test_oauth_callback_url;
-  od.client_key = test_oauth_consumer_key;
+  od.client_key = (char*)test_oauth_consumer_key;
   od.client_key_len = strlen(od.client_key);
   od.nonce = test_oauth_nonce;
   od.timestamp = test_oauth_timestamp;
@@ -903,7 +903,7 @@ test_access_token(flickcurl* fc)
   memset(&od, '\0', sizeof(od));
 
   od.callback = test_oauth_callback_url;
-  od.client_key = test_oauth_consumer_key;
+  od.client_key = (char*)test_oauth_consumer_key;
   od.client_key_len = strlen(od.client_key);
   od.nonce = test_oauth_nonce;
   od.timestamp = test_oauth_timestamp;
@@ -961,7 +961,7 @@ test_signature_calc(flickcurl* fc)
   if(od.key)
     free(od.key);
 
-  return 0;
+  return rc;
 }
 
 
@@ -976,7 +976,7 @@ int
 main(int argc, char *argv[])
 {
   flickcurl *fc = NULL;
-  int rc;
+  int failures = 0;
   
   program = "flickcurl_oauth_test"; /* No raptor_basename */
 
@@ -985,22 +985,22 @@ main(int argc, char *argv[])
   /* Initialise the Flickcurl library */
   fc = flickcurl_new();
   if(!fc) {
-    rc = 1;
+    failures++;
     goto tidy;
   }
 
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
   if(0) {
-    rc += test_request_token(fc);
-    rc += test_access_token(fc);
+    failures += test_request_token(fc);
+    failures += test_access_token(fc);
   }
-  rc += test_signature_calc(fc);
+  failures += test_signature_calc(fc);
 
   tidy:
   if(fc)
     flickcurl_free(fc);
 
-  return rc;
+  return failures;
 }
 #endif
