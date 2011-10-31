@@ -740,8 +740,8 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
 {
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
   int count = 0;
-  char* request_token = NULL;
-  char* request_token_secret = NULL;
+  char* access_token = NULL;
+  char* access_token_secret = NULL;
   char** form = NULL;
   int rc = 0;
   const char* uri = fc->oauth_access_token_uri;
@@ -783,19 +783,25 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
 
   for(i = 0; i < (2 * count); i += 2) {
     if(!strcmp(form[i], "oauth_token")) {
-      request_token = form[i+1];
+      access_token = form[i+1];
     } else if(!strcmp(form[i], "oauth_token_secret")) {
-      request_token_secret = form[i+1];
+      access_token_secret = form[i+1];
     }
     /* ignoring: fullname, user_nsid, username */
   }
 
-  if(request_token && request_token_secret) {
+  if(access_token && access_token_secret) {
     /* Take copies that are owned by od */
-    od->token = strdup(request_token);
+    od->token = strdup(access_token);
     od->token_len = strlen(od->token);
-    od->token_secret = strdup(request_token_secret);
+    od->token_secret = strdup(access_token_secret);
     od->token_secret_len = strlen(od->token_secret);
+
+    /* Delete temporary request tokens */
+    free(od->request_token);
+    od->request_token_len = 0;
+    free(od->request_token_secret);
+    od->request_token_secret_len = 0;
 
 #ifdef FLICKCURL_DEBUG
     fprintf(stderr, 
