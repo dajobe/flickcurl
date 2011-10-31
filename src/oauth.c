@@ -298,9 +298,12 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 }
 
 
-/**
- *
+/*
+ * flickcurl_oauth_prepare_common:
+ * ...
  * @is_request: send callback od->callback parameter
+ *
+ * INTERNAL - prepare an oauth request
  */
 int
 flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
