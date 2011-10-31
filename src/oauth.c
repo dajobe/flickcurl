@@ -379,14 +379,14 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
    *
    * oauth_callback         <URL> or "oob" [request token request]
    * oauth_consumer_key     API key
-   * oauth_nonce            <random value - different each time> [request token request]
+   * oauth_nonce            <random value - different each time>
    * oauth_signature        [ADDED AFTER COMPUTING]
    * oauth_signature_method "HMAC-SHA1"
-   * oauth_timestamp        <value of gettimeofday()> [request token request]
+   * oauth_timestamp        <value of gettimeofday()>
    * oauth_version          "1.0"
    *
    * oauth_verifier         verifier [access token request]
-   * oauth_token            access token [access token request]
+   * oauth_token            access token or request token
    */
 
   if(fc->method && !is_oauth_method) {
