@@ -369,9 +369,9 @@ main(int argc, char *argv[])
     od.client_key = fc->api_key;
     od.client_secret = fc->secret;
     od.client_secret_len = strlen(od.client_secret);
-    od.request_token = request_token;
+    od.request_token = (char*)request_token;
     od.request_token_len = strlen(request_token);
-    od.request_token_secret = request_token_secret;
+    od.request_token_secret = (char*)request_token_secret;
     od.request_token_secret_len = strlen(request_token_secret);
     od.client_key_len = strlen(od.client_key);
     
