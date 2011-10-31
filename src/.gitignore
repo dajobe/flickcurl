@@ -6,3 +6,4 @@
 config.h
 config.h.in
 stamp-*
+*_test
