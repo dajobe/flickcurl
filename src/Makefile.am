@@ -105,6 +105,8 @@ endif
 
 TESTS=
 
+CLEANFILES=$(TESTS)
+
 libflickcurl_la_SOURCES += \
 $(top_srcdir)/libmtwist/mt.c \
 $(top_srcdir)/libmtwist/seed.c \
