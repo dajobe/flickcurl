@@ -1402,7 +1402,8 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   if(curl_easy_perform(fc->curl_handle)) {
     /* failed */
     fc->failed = 1;
-    flickcurl_error(fc, fc->error_buffer);
+    flickcurl_error(fc, "Method %s failed with CURL error %s",
+                    fc->method, fc->error_buffer);
   } else {
     long lstatus;
 
@@ -1410,21 +1411,22 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
 #define CURLINFO_RESPONSE_CODE CURLINFO_HTTP_CODE
 #endif
 
+    fc->status_code = 0;
     /* Requires pointer to a long */
     if(CURLE_OK == 
-       curl_easy_getinfo(fc->curl_handle, CURLINFO_RESPONSE_CODE, &lstatus) ) {
+       curl_easy_getinfo(fc->curl_handle, CURLINFO_RESPONSE_CODE, &lstatus) )
       fc->status_code = lstatus;
-      if(fc->status_code != 200) {
-        if(fc->method)
-          flickcurl_error(fc, "Method %s failed with error %d - %s (HTTP %d)", 
-                          fc->method, fc->error_code, fc->error_msg,
-                          fc->status_code);
-        else
-          flickcurl_error(fc, "Call failed with error %d - %s (HTTP %d)", 
-                          fc->error_code, fc->error_msg,
-                          fc->status_code);
-        fc->failed = 1;
-      }
+
+    if(fc->status_code != 200) {
+      if(fc->method)
+        flickcurl_error(fc, "Method %s failed with error %d - %s (HTTP %d)", 
+                        fc->method, fc->error_code, fc->error_msg,
+                        fc->status_code);
+      else
+        flickcurl_error(fc, "Call failed with error %d - %s (HTTP %d)", 
+                        fc->error_code, fc->error_msg,
+                        fc->status_code);
+      fc->failed = 1;
     }
 
   }
