@@ -1,4 +1,161 @@
+2011-11-01  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: Return method details with curl errors
+
+	* src/Makefile.am: Clean tests
+
+2011-10-30  Dave Beckett <dave@dajobe.org>
+
+	* utils/oauth-test.c: code style
+
+	* utils/oauth-test.c: casts
+
+	* src/oauth.c: docs
+
+	* src/oauth.c: consts
+
+	* docs/flickcurl-sections.txt: add oauth urls
+
+	* src/flickcurl_internal.h, src/oauth.c: fix const char keys
+
+	* src/oauth.c: docs
+
+	* src/oauth.c:
+	(flickcurl_oauth_access_token): Delete request token after success.
+
+	* src/oauth.c:
+	(flickcurl_oauth_build_key): Build sign key from request OR access
+	token
+
+	* utils/oauth-test.c: docs
+
+	* src/Makefile.am, src/oauth.c, utils/oauth-test.c: Add oauth
+	checksum test
+
+	* src/.gitignore: ignore *_test
+
+2011-10-29  Dave Beckett <dave@dajobe.org>
+
+	* utils/oauth-test.c: Report request token
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): docs and send all oauth params
+	except callback to requests
+
+	* src/flickcurl_internal.h, src/oauth.c, utils/oauth-test.c:
+	(flickcurl_oauth_access_token): Pass in verifier
+
+	* src/flickcurl_internal.h, src/oauth.c: request_token* fields
+	renamed from tmp_token*
+
+	* docs/flickcurl-sections.txt, src/auth-api.c, src/flickcurl.h:
+	Added flickr.auth.oauth.getAccessToken partial support
+
+	(flickcurl_auth_oauth_getAccessToken): Added for
+	flickr.auth.oauth.getAccessToken - right now it exchanges the old
+	tokens for OAuth ones and drops them both.
+
+	* src/flickcurl_internal.h, utils/oauth-test.c: oauth field
+	client_key_len renamed from client_len
+
+	* utils/oauth-test.c: FLICKCURL_MAX_OAUTH_PARAM_COUNT
+
+	* src/oauth.c: is_oauth_method fix
+
+	* src/flickcurl_internal.h, src/oauth.c:
+	FLICKCURL_MAX_OAUTH_PARAM_COUNT
+
+	* src/flickcurl.h, src/flickcurl_internal.h, src/oauth.c,
+	utils/oauth-test.c: Compute authorize URI after getting back oauth
+	request token (flickcurl_oauth_get_authorize_uri): Added.
+
+	* src/common.c, src/flickcurl_internal.h, src/oauth.c: Add utility
+	functions for oauth responses as HTTP forms
+
+	(flickcurl_invoke_get_form_content): Added to get content as k/v
+	array of strings.
+
+	(flickcurl_free_form): Added to free the above.
+
+	(flickcurl_oauth_request_token), flickcurl_oauth_access_token):
+	Use above.
+
+	* src/common.c, src/flickcurl_internal.h, src/oauth.c,
+	utils/Makefile.am, utils/oauth-test.c: Move OAuth test code into
+	oauth.c and refactor a little
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): Do not use oath method name in
+	params
+
+	* libmtwist: Update to libmtwist head
+
+	* utils/oauth-test.c: Pass in (fake) flickr method for
+	flickcurl_oauth_prepare_common()
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): Use http method not flickr method
+
+	* utils/oauth-test.c: remove unused srand()
+
+	* src/common.c, src/flickcurl_internal.h, src/oauth.c,
+	utils/oauth-test.c: Use libmtwist for PRNG for nonce
+
+	* libmtwist: Update to libmtwist head
+
+	* docs/flickcurl-sections.txt: Add symbols
+
+	* src/Makefile.am:
+	Add mtwist_config.h
+
+	* NEWS.html, docs/flickcurl-sections.txt:
+	flickcurl_get_hidden_from_string
+
+	* README.html: libmtwist submodule
+
+2011-10-28  Dave Beckett <dave@dajobe.org>
+
+	* .gitmodules, configure.ac, libmtwist, src/Makefile.am,
+	src/mtwist_config.h: Add libmtwist as a git submodule
+
+2011-10-16  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c:
+	(flickcurl_oauth_compute_signature): Simplify greatly.
+
+	* src/config.c, src/flickcurl.h, utils/flickcurl.c:
+	(flickcurl_config_write_ini): Now writes to a filename
+
+	* utils/codegen.c, utils/flickcurl.c, utils/flickrdf.c,
+	utils/list-methods.c, utils/oauth-test.c: Update the utilities to
+	use flickcurl_config_ functions
+
+	* docs/flickcurl-sections.txt, src/common.c, src/config.c,
+	src/flickcurl.h: Update flickcurl config file reading and writing
+	support Move ini reading and writing into the library.
+
+	(flickcurl_config_read_ini): Added, deprecating read_ini_config()
+	and adding a flickcurl* param.  Reads in library configuration.
+
+	(flickcurl_config_var_handler): Added as standard handler for
+	above.
+
+	(flickcurl_config_write_ini): Added to write an ini file for
+	library configuration.
+
+	* src/oauth.c:
+	(flickcurl_oauth_compute_signature): Docs and error path.
+
+	* configure.ac: Fix libcurl version check to actually check curl
+	not libxml twice
+
+	* configure.ac: Remove unused libcurl_min_vernum
+
+	* NEWS.html: Tim Harder is 'radhermit' on GitHub.
+
 2011-10-15  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: 1.22
 
 	* utils/flickcurl.c: Tidy help output; describe all upload params
 	defaults
