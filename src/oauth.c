@@ -29,6 +29,10 @@
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 
+/* Only used in the test in this file so needs to be in the library */
+int flickcurl_oauth_build_key(flickcurl_oauth_data* od);
+
+
 #ifndef STANDALONE
 
 /*
@@ -68,7 +72,7 @@ flickcurl_base64_encode_digit(unsigned char c)
  *
  * Return value: base64 encoded string or NULL on failure
  */
-char*
+static char*
 flickcurl_base64_encode(const unsigned char *data, size_t len,
                         size_t *out_len_p)
 {
@@ -125,7 +129,7 @@ flickcurl_base64_encode(const unsigned char *data, size_t len,
 }
 
 
-/**
+/*
  * flickcurl_oauth_build_key:
  * @od: oauth data
  *
@@ -176,93 +180,12 @@ flickcurl_oauth_build_key(flickcurl_oauth_data* od)
 }
 
 
-/**
- * flickcurl_oauth_build_key_data:
- * @od: oauth data
- *
- * INTERNAL - Build OAuth 1.0 key and data from parameters
- *
- * Builds key using flickcurl_oauth_build_key()
- *
- *
- * DATA
- * http://tools.ietf.org/html/rfc5849#section-3.4.1
- *
- * http-request-method:
- *   uppercase of method
- *
- * uri-base-string: scheme://authority/path (NO query or fragment)
- *   http://tools.ietf.org/html/rfc5849#section-3.4.1.2
- *
- * normalized-request-parameters:
- *   uri escaped
- *   http://tools.ietf.org/html/rfc5849#section-3.4.1.3.2
- *
- * data = concat(http-request-method, '&'
- *               uri-base-string, '&',
- *               normalized-request-parameters)
- *
- * Return value: non-0 on failure
- */
-int
-flickcurl_oauth_build_key_data(flickcurl_oauth_data* od,
-                               const char* http_request_method,
-                               const char* uri_base_string, 
-                               const char* request_parameters)
-{
-  unsigned char *p;
-  size_t s_len;
-  char *escaped_s = NULL;
-
-  if(flickcurl_oauth_build_key(od))
-    return 1;
-  
-  od->data_len = strlen(http_request_method) +
-    1 +
-    (strlen(uri_base_string) * 3) + /* PESSIMAL; every char %-escaped */
-    1 +
-    (strlen(request_parameters) * 3); /* PESSIMAL */
-  od->data = malloc(od->data_len + 1); /* for NUL */
-  
-  if(!od->data)
-    return 1;
-
-  /* Prepare data */
-  p = od->data;
-  s_len = strlen(http_request_method);
-  memcpy(p, http_request_method, s_len);
-  p += s_len;
-  
-  *p++ = '&';
-  
-  escaped_s = curl_escape(uri_base_string, strlen(uri_base_string));
-  s_len = strlen(escaped_s);
-  memcpy(p, escaped_s, s_len);
-  p += s_len;
-  curl_free(escaped_s);
-  
-  *p++ = '&';
-  
-  escaped_s = curl_escape(request_parameters, strlen(request_parameters));
-  s_len = strlen(escaped_s);
-  memcpy(p, escaped_s, s_len);
-  p += s_len;
-  curl_free(escaped_s);
-  
-  *p = '\0'; /* Not part of HMAC-SHA1 data */
-  /* calculate actual data len */
-  od->data_len = p - od->data;
-  
-  return 0;
-}
-
-
-/**
- * flickcurl_oauth_build_key_data:
+/*
+ * flickcurl_oauth_compute_signature:
  * @od: oauth data
  * @len_p: pointer to store size of result
  *
- * INTERNAL - Compute OAuth signature over data prepared by flickcurl_oauth_build_key()
+ * INTERNAL - Compute OAuth signature over 'key' and 'data' fields of @od
  *
  * Result: signature string or NULL on failure
  *
@@ -637,6 +560,20 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
 
 
 
+/*
+ * flickcurl_oauth_request_token:
+ * @fc: flickcurl object
+ * @od: oauth data
+ *
+ * INTERNAL - get a Flickr OAuth request token
+ *
+ * Calls the Flickr OAuth endpoint to get a request token.
+ *
+ * Stores the request token in @od fields 'request_token' and
+ * 'request_token_secret' on success.
+ *
+ * Return value: non-0 on failure
+ */
 int
 flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
 {
@@ -708,6 +645,19 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
 }
 
 
+/*
+ * flickcurl_oauth_get_authorize_uri:
+ * @fc: flickcurl object
+ * @od: oauth data
+ *
+ * INTERNAL - get the URL for the user to authorize an application
+ *
+ * Forms the URL the user needs to start at to authorize the
+ * application.  The application should pass the verifier to
+ * flickcurl_oauth_access_token() for the final step in OAuth.
+ *
+ * Return value: authorize URI or NULL on failure
+ */
 char*
 flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
 {
@@ -737,6 +687,26 @@ flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
   return uri;
 }
 
+
+/*
+ * flickcurl_oauth_access_token:
+ * @fc: flickcurl object
+ * @od: oauth data
+ * @verifier: verifier from OOB authentication
+ *
+ * INTERNAL - get a Flickr OAuth access token from a verifier
+ *
+ * Calls the Flickr OAuth access token endpoint using the verifier
+ * from out of band authentication to get an access token.
+ *
+ * Uses the @verifier and the @od fields 'request_token' and
+ * 'request_token_secret' to get an access token stored which on
+ * success is stored in the @od fields 'access_token' and
+ * 'access_token_secret'.  The request token fields are deleted on
+ * success.
+ *
+ * Return value: non-0 on failure
+ */
 int
 flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
                              const char* verifier)
@@ -920,6 +890,59 @@ test_access_token(flickcurl* fc)
 
 
 static int
+test_oauth_build_key_data(flickcurl_oauth_data* od,
+                          const char* http_request_method,
+                          const char* uri_base_string, 
+                          const char* request_parameters)
+{
+  unsigned char *p;
+  size_t s_len;
+  char *escaped_s = NULL;
+
+  if(flickcurl_oauth_build_key(od))
+    return 1;
+  
+  od->data_len = strlen(http_request_method) +
+    1 +
+    (strlen(uri_base_string) * 3) + /* PESSIMAL; every char %-escaped */
+    1 +
+    (strlen(request_parameters) * 3); /* PESSIMAL */
+  od->data = malloc(od->data_len + 1); /* for NUL */
+  
+  if(!od->data)
+    return 1;
+
+  /* Prepare data */
+  p = od->data;
+  s_len = strlen(http_request_method);
+  memcpy(p, http_request_method, s_len);
+  p += s_len;
+  
+  *p++ = '&';
+  
+  escaped_s = curl_escape(uri_base_string, strlen(uri_base_string));
+  s_len = strlen(escaped_s);
+  memcpy(p, escaped_s, s_len);
+  p += s_len;
+  curl_free(escaped_s);
+  
+  *p++ = '&';
+  
+  escaped_s = curl_escape(request_parameters, strlen(request_parameters));
+  s_len = strlen(escaped_s);
+  memcpy(p, escaped_s, s_len);
+  p += s_len;
+  curl_free(escaped_s);
+  
+  *p = '\0'; /* Not part of HMAC-SHA1 data */
+  /* calculate actual data len */
+  od->data_len = p - od->data;
+  
+  return 0;
+}
+
+
+static int
 test_signature_calc(flickcurl* fc)
 {
   char *s = NULL;
@@ -933,9 +956,9 @@ test_signature_calc(flickcurl* fc)
   
   oauth_init_test_secrets(&od);
   
-  rc = flickcurl_oauth_build_key_data(&od, test_http_request_method,
-                                      test_uri_base_string, 
-                                      test_request_parameters);
+  rc = test_oauth_build_key_data(&od, test_http_request_method,
+                                 test_uri_base_string, 
+                                 test_request_parameters);
   
   fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)od.key_len, od.key);
   fprintf(stderr, "%s: expected key is\n  %s\n", program, expected_key);

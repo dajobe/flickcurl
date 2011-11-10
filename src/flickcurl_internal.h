@@ -405,8 +405,6 @@ unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void
 
 #define FLICKCURL_MAX_OAUTH_PARAM_COUNT 8
 
-char* flickcurl_base64_encode(const unsigned char *data, size_t len, size_t *out_len_p);
-
 
 typedef struct {
   /* client credentials */
@@ -449,9 +447,6 @@ typedef struct {
   size_t data_len;
 } flickcurl_oauth_data;
   
-
-int flickcurl_oauth_build_key(flickcurl_oauth_data* od);
-int flickcurl_oauth_build_key_data(flickcurl_oauth_data* od, const char* http_request_method, const char* uri_base_string, const char* request_parameters);
 
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
 int flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth, int is_request);
