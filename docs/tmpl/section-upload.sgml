@@ -60,6 +60,7 @@ Uploading APIs and Asynchronous upload tickets.
 @is_family: 
 @safety_level: 
 @content_type: 
+@hidden: 
 
 <!-- ##### STRUCT flickcurl_upload_status ##### -->
 <para>

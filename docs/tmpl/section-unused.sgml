@@ -57,7 +57,7 @@ Unused.
 </para>
 
 @filename: 
-@application: 
+@section: 
 @user_data: 
 @handler: 
 @Returns: 
@@ -71,5 +71,47 @@ Unused.
 @userdata: 
 @key: 
 @value: 
+
+
+<!-- ##### MACRO mtwist_drand ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO mtwist_free ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO mtwist_init ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO mtwist_new ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO mtwist_seed_from_system ##### -->
+<para>
+
+</para>
+
+
+
+<!-- ##### MACRO mtwist_u32rand ##### -->
+<para>
+
+</para>
+
 
 

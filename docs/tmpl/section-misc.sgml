@@ -163,6 +163,24 @@ Miscellaneous functions.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_get_hidden_label ##### -->
+<para>
+
+</para>
+
+@hidden: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_hidden_from_string ##### -->
+<para>
+
+</para>
+
+@hidden_string: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_get_safety_level_label ##### -->
 <para>
 

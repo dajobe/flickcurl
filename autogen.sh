@@ -282,13 +282,14 @@ fi
 # Initialise and/or update GIT submodules
 if test -f $GITMODULES ; then
   echo " "
-  for module in `sed -n -e 's/^.*path = \(.*\)/\1/p' $GITMODULES`; do
-    if test ! `ls -1 $module | wc -l`; then
+  modules=`sed -n -e 's/^.*path = \(.*\)/\1/p' $GITMODULES`
+  for module in $modules; do
+    if test `ls -1 $module | wc -l` -eq 0; then
        echo "$program: Initializing git submodule in $module"
        $DRYRUN git submodule init $module
     fi
   done
-  echo "$program: Updating git submodules"
+  echo "$program: Updating git submodules: $modules"
   $DRYRUN git submodule update
 fi
 

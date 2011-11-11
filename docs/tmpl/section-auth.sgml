@@ -59,3 +59,12 @@ Authentication of web service requests
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_auth_oauth_getAccessToken ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+

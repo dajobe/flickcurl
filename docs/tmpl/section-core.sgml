@@ -26,6 +26,72 @@ Core library functions
 </para>
 
 
+<!-- ##### VARIABLE flickcurl_version_string ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_license_string ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_copyright_string ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_short_copyright_string ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_home_url_string ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_flickr_replace_service_uri ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_flickr_service_uri ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_flickr_upload_service_uri ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_flickr_oauth_access_token_uri ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_flickr_oauth_authorize_uri ##### -->
+<para>
+
+</para>
+
+
+<!-- ##### VARIABLE flickcurl_flickr_oauth_request_token_uri ##### -->
+<para>
+
+</para>
+
+
 <!-- ##### USER_FUNCTION flickcurl_message_handler ##### -->
 <para>
 
