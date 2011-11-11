@@ -40,6 +40,9 @@ SRCDIR=${SRCDIR-.}
 # Where the GNU config.sub, config.guess might be found
 CONFIG_DIR=${CONFIG_DIR-../config}
 
+# GIT sub modules file
+GITMODULES='.gitmodules'
+
 # The programs required for configuring which will be searched for
 # in the current PATH.
 # Set an envariable of the same name in uppercase, to override scan
@@ -273,6 +276,20 @@ fi
 config_dir=
 if test -d $CONFIG_DIR; then
   config_dir=`cd $CONFIG_DIR; pwd`
+fi
+
+
+# Initialise and/or update GIT submodules
+if test -f $GITMODULES ; then
+  echo " "
+  for module in `sed -n -e 's/^.*path = \(.*\)/\1/p' $GITMODULES`; do
+    if test ! `ls -1 $module | wc -l`; then
+       echo "$program: Initializing git submodule in $module"
+       $DRYRUN git submodule init $module
+    fi
+  done
+  echo "$program: Updating git submodules"
+  $DRYRUN git submodule update
 fi
 
 
