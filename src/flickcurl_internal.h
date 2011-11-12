@@ -453,7 +453,7 @@ unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void
 
 void flickcurl_oauth_free(flickcurl_oauth_data* od);
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
-int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth, int is_request);
+int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth);
 int flickcurl_oauth_request_token(flickcurl* fc);
 char* flickcurl_oauth_get_authorize_uri(flickcurl* fc);
 int flickcurl_oauth_access_token(flickcurl* fc, const char* verifier);

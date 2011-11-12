@@ -267,7 +267,6 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 /*
  * flickcurl_oauth_prepare_common:
  * ...
- * @is_request: send callback od->callback parameter
  *
  * INTERNAL - prepare an oauth request
  */
@@ -278,8 +277,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
                                const char* upload_field,
                                const char* upload_value,
                                const char* parameters[][2], int count,
-                               int parameters_in_url, int need_auth,
-                               int is_request)
+                               int parameters_in_url, int need_auth)
 {
   flickcurl_oauth_data* od = &fc->od;
   int i;
@@ -364,9 +362,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     parameters[count++][1]= fc->method;
   }
 
-  if(is_request) {
+  if(od->callback) {
     parameters[count][0]  = "oauth_callback";
-    parameters[count++][1]= (od->callback ? od->callback : "oob");
+    parameters[count++][1]= od->callback;
   }
   
   parameters[count][0]  = "oauth_consumer_key";
@@ -635,6 +633,7 @@ flickcurl_oauth_request_token(flickcurl* fc)
   /* Require signature */
   flickcurl_set_sign(fc);
 
+  od->callback = "oob";
   rc = flickcurl_oauth_prepare_common(fc,
                                       uri,
                                       /* method */ "flickr.oauth.request_token",
@@ -642,8 +641,9 @@ flickcurl_oauth_request_token(flickcurl* fc)
                                       /* upload_value */ NULL,
                                       parameters, count,
                                       /* parameters_in_url */ 1,
-                                      /* need_auth */ 1,
-                                      /* is_request */ 1);
+                                      /* need_auth */ 1);
+  od->callback = NULL;
+
   if(rc)
     goto tidy;
 
@@ -778,8 +778,7 @@ flickcurl_oauth_access_token(flickcurl* fc, const char* verifier)
                                       /* upload_value */ NULL,
                                       parameters, count,
                                       /* parameters_in_url */ 1,
-                                      /* need_auth */ 1,
-                                      /* is_request */ 0);
+                                      /* need_auth */ 1);
 
   od->verifier = NULL;
   od->verifier_len = 0;
