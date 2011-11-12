@@ -87,9 +87,7 @@ tags-api.c \
 test-api.c \
 upload-api.c \
 urls-api.c \
-flickcurl_internal.h \
-sha1.c \
-oauth.c
+flickcurl_internal.h
 
 AM_CFLAGS=
 libflickcurl_la_LIBADD=
@@ -117,8 +115,14 @@ mtwist_config.h
 AM_CFLAGS += -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
 
 
-TESTS+= flickcurl_oauth_test
+if FLICKCURL_OAUTH
+
+libflickcurl_la_SOURCES += sha1.c \
+oauth.c
+
+TESTS += flickcurl_oauth_test
 
 flickcurl_oauth_test: $(srcdir)/oauth.c libflickcurl.la
 	$(LINK) $(DEFS) $(CPPFLAGS) -I$(srcdir) -I. -DSTANDALONE $(srcdir)/oauth.c libflickcurl.la $(LIBS)
 
+endif

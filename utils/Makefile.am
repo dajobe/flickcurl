@@ -17,7 +17,7 @@
 
 bin_PROGRAMS = flickcurl flickrdf
 
-EXTRA_PROGRAMS = codegen list-methods oauth-test
+EXTRA_PROGRAMS = codegen list-methods
 
 CLEANFILES=$(EXTRA_PROGRAMS)
 
@@ -59,11 +59,18 @@ list_methods_SOURCES += getopt.c flickcurl_getopt.h
 endif
 list_methods_LDADD= $(top_builddir)/src/libflickcurl.la
 
+
+if FLICKCURL_OAUTH
+
+EXTRA_PROGRAMS += oauth-test
+
 oauth_test_SOURCES = oauth-test.c
 if GETOPT
 oauth_test_SOURCES += getopt.c flickcurl_getopt.h
 endif
 oauth_test_LDADD= $(top_builddir)/src/libflickcurl.la
+
+endif
 
 $(top_builddir)/src/libflickcurl.la:
 	cd $(top_builddir)/src && $(MAKE) libflickcurl.la

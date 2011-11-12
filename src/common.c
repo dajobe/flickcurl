@@ -361,7 +361,9 @@ flickcurl_free(flickcurl *fc)
   if(fc->mt)
     mtwist_free(fc->mt);
 
+#ifdef FLICKCURL_OAUTH
   flickcurl_oauth_free(&fc->od);
+#endif
 
   free(fc);
 }

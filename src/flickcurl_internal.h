@@ -263,6 +263,7 @@ struct flickcurl_chunk_s {
 typedef struct flickcurl_chunk_s flickcurl_chunk;
 
 
+#ifdef FLICKCURL_OAUTH
 typedef struct {
   /* client credentials */
   char* client_key; /* AKA consumer key or the Flickr API key */
@@ -303,7 +304,7 @@ typedef struct {
   unsigned char* data;
   size_t data_len;
 } flickcurl_oauth_data;
-  
+#endif  
 
 
 struct flickcurl_s {
@@ -429,7 +430,9 @@ struct flickcurl_s {
   /* OAuth access token Web Service URI */
   char *oauth_access_token_uri;
 
+#ifdef FLICKCURL_OAUTH
   flickcurl_oauth_data od;
+#endif
 };
 
 struct flickcurl_serializer_s
@@ -442,9 +445,13 @@ struct flickcurl_serializer_s
 void flickcurl_serializer_init(void);
 void flickcurl_serializer_terminate(void);
 
+
+#ifdef FLICKCURL_OAUTH
+
 /* sha1.c */
 #define SHA1_DIGEST_LENGTH 20
 unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void *key, size_t key_len);
+
 
 /* oauth.c */
 
@@ -457,3 +464,4 @@ int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* m
 int flickcurl_oauth_request_token(flickcurl* fc);
 char* flickcurl_oauth_get_authorize_uri(flickcurl* fc);
 int flickcurl_oauth_access_token(flickcurl* fc, const char* verifier);
+#endif
