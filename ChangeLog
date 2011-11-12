@@ -1,3 +1,37 @@
+2011-11-11  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_free): Free OAuth urls
+
+	* src/oauth.c:
+	(test_signature_calc): Test free
+
+	* src/oauth.c: Make oauth test work again
+
+	* src/flickcurl_internal.h, src/oauth.c: Remove is_request arg -
+	just use od->callback
+
+	* src/common.c, src/flickcurl_internal.h, src/oauth.c,
+	utils/oauth-test.c: Move flickcurl_oauth_data into flickcurl
+	struct
+
+	* docs/flickcurl-docs.xml, docs/tmpl/section-config.sgml: Add
+	config section to docs
+
+	* autogen.sh, docs/tmpl/section-auth.sgml,
+	docs/tmpl/section-core.sgml, docs/tmpl/section-misc.sgml,
+	docs/tmpl/section-unused.sgml, docs/tmpl/section-upload.sgml,
+	libmtwist: Fix submodule checkouts
+
+	* autogen.sh: Init and update any git submodules
+
+2011-11-09  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl_internal.h, src/oauth.c:
+	Reduce visibility of oauth
+	internal functions These are internal to the library now because the
+	flickcurl_oauth_data is an internal structure.
+
 2011-11-01  Dave Beckett <dave@dajobe.org>
 
 	* src/common.c: Return method details with curl errors
