@@ -94,7 +94,7 @@ oauth_prepare(flickcurl *fc,
                                         method,
                                         NULL, NULL,
                                         parameters, count,
-                                        1, 1, 1);
+                                        1, 1);
 }
 
 
