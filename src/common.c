@@ -224,7 +224,7 @@ flickcurl_new_with_handle(void* curl_handle)
     return NULL;
   }
   mtwist_init(fc->mt, mtwist_seed_from_system(fc->mt));
-  
+
   fc->curl_handle = (CURL*)curl_handle;
   if(!fc->curl_handle) {
     fc->curl_handle = curl_easy_init();
@@ -356,6 +356,8 @@ flickcurl_free(flickcurl *fc)
 
   if(fc->mt)
     mtwist_free(fc->mt);
+
+  flickcurl_oauth_free(&fc->od);
 
   free(fc);
 }

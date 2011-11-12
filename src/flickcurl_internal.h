@@ -263,6 +263,49 @@ struct flickcurl_chunk_s {
 typedef struct flickcurl_chunk_s flickcurl_chunk;
 
 
+typedef struct {
+  /* client credentials */
+  char* client_key; /* AKA consumer key or the Flickr API key */
+  size_t client_key_len;
+  char* client_secret;
+  size_t client_secret_len;
+
+  /* temporary credentials */
+  char* request_token;
+  size_t request_token_len;
+  char* request_token_secret;
+  size_t request_token_secret_len;
+  
+  const char* verifier; /* OAuth verifier - always shared */
+  size_t verifier_len;
+
+  /* token credentials */
+  char* token; /* AKA access token */
+  size_t token_len;
+  char* token_secret;
+  size_t token_secret_len;
+  
+  /* callback URI or NULL for "oob" */
+  const char* callback; /* always shared */
+  size_t callback_len;
+
+  /* Generally leave as NULL to make it new each time */
+  char* nonce;
+
+  /* Generally leave as 0 to make it use current time with gettimeofday() */
+  time_t timestamp;
+
+  /* HMAC-SHA1 key */
+  unsigned char *key;
+  size_t key_len;
+
+  /* HMAC-SHA1 data */
+  unsigned char* data;
+  size_t data_len;
+} flickcurl_oauth_data;
+  
+
+
 struct flickcurl_s {
   int total_bytes;
 
@@ -385,6 +428,8 @@ struct flickcurl_s {
 
   /* OAuth access token Web Service URI */
   char *oauth_access_token_uri;
+
+  flickcurl_oauth_data od;
 };
 
 struct flickcurl_serializer_s
@@ -406,50 +451,9 @@ unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void
 #define FLICKCURL_MAX_OAUTH_PARAM_COUNT 8
 
 
-typedef struct {
-  /* client credentials */
-  char* client_key; /* AKA consumer key or the Flickr API key */
-  size_t client_key_len;
-  char* client_secret;
-  size_t client_secret_len;
-
-  /* temporary credentials */
-  char* request_token;
-  size_t request_token_len;
-  char* request_token_secret;
-  size_t request_token_secret_len;
-  
-  const char* verifier; /* OAuth verifier */
-  size_t verifier_len;
-
-  /* token credentials */
-  char* token; /* AKA access token */
-  size_t token_len;
-  char* token_secret;
-  size_t token_secret_len;
-  
-  /* callback URI or NULL for "oob" */
-  const char* callback;
-  size_t callback_len;
-
-  /* Generally leave as NULL to make it new each time */
-  const char* nonce;
-
-  /* Generally leave as 0 to make it use current time with gettimeofday() */
-  time_t timestamp;
-
-  /* HMAC-SHA1 key */
-  unsigned char *key;
-  size_t key_len;
-
-  /* HMAC-SHA1 data */
-  unsigned char* data;
-  size_t data_len;
-} flickcurl_oauth_data;
-  
-
+void flickcurl_oauth_free(flickcurl_oauth_data* od);
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
-int flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth, int is_request);
-int flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od);
-char* flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od);
-int flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od, const char* verifier);
+int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth, int is_request);
+int flickcurl_oauth_request_token(flickcurl* fc);
+char* flickcurl_oauth_get_authorize_uri(flickcurl* fc);
+int flickcurl_oauth_access_token(flickcurl* fc, const char* verifier);

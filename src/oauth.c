@@ -130,6 +130,49 @@ flickcurl_base64_encode(const unsigned char *data, size_t len,
 
 
 /*
+ * flickcurl_oauth_free:
+ * @od: oauth data
+ *
+ * INTERNAL - Free OAuth data
+ *
+ */
+void
+flickcurl_oauth_free(flickcurl_oauth_data* od)
+{
+  if(od->client_key)
+    free(od->client_key);
+  
+  if(od->client_secret)
+    free(od->client_secret);
+  
+  if(od->request_token)
+    free(od->request_token);
+  
+  if(od->request_token_secret)
+    free(od->request_token_secret);
+  
+  /* od->verifier always shared */
+  
+  if(od->token)
+    free(od->token);
+  
+  if(od->token_secret)
+    free(od->token_secret);
+  
+  /* od->callback always shared */
+  
+  if(od->nonce)
+    free(od->nonce);
+  
+  if(od->key)
+    free(od->key);
+  
+  if(od->data)
+    free(od->data);
+}
+
+
+/*
  * flickcurl_oauth_build_key:
  * @od: oauth data
  *
@@ -229,7 +272,7 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
  * INTERNAL - prepare an oauth request
  */
 int
-flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
+flickcurl_oauth_prepare_common(flickcurl *fc,
                                const char* url,
                                const char* method,
                                const char* upload_field,
@@ -238,6 +281,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
                                int parameters_in_url, int need_auth,
                                int is_request)
 {
+  flickcurl_oauth_data* od = &fc->od;
   int i;
   char *signature_string = NULL;
   size_t* values_len = NULL;
@@ -563,7 +607,6 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
 /*
  * flickcurl_oauth_request_token:
  * @fc: flickcurl object
- * @od: oauth data
  *
  * INTERNAL - get a Flickr OAuth request token
  *
@@ -575,8 +618,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc, flickcurl_oauth_data* od,
  * Return value: non-0 on failure
  */
 int
-flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
+flickcurl_oauth_request_token(flickcurl* fc)
 {
+  flickcurl_oauth_data* od = &fc->od;
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
   int count = 0;
   char* request_token = NULL;
@@ -591,7 +635,7 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
   /* Require signature */
   flickcurl_set_sign(fc);
 
-  rc = flickcurl_oauth_prepare_common(fc, od,
+  rc = flickcurl_oauth_prepare_common(fc,
                                       uri,
                                       /* method */ "flickr.oauth.request_token",
                                       /* upload_field */ NULL,
@@ -648,7 +692,6 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
 /*
  * flickcurl_oauth_get_authorize_uri:
  * @fc: flickcurl object
- * @od: oauth data
  *
  * INTERNAL - get the URL for the user to authorize an application
  *
@@ -659,8 +702,9 @@ flickcurl_oauth_request_token(flickcurl* fc, flickcurl_oauth_data* od)
  * Return value: authorize URI or NULL on failure
  */
 char*
-flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
+flickcurl_oauth_get_authorize_uri(flickcurl* fc)
 {
+  flickcurl_oauth_data* od = &fc->od;
 #define PARAM_LEN 13
   const char* param = "?oauth_token=";
   size_t len;
@@ -691,7 +735,6 @@ flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
 /*
  * flickcurl_oauth_access_token:
  * @fc: flickcurl object
- * @od: oauth data
  * @verifier: verifier from OOB authentication
  *
  * INTERNAL - get a Flickr OAuth access token from a verifier
@@ -708,9 +751,9 @@ flickcurl_oauth_get_authorize_uri(flickcurl* fc, flickcurl_oauth_data* od)
  * Return value: non-0 on failure
  */
 int
-flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
-                             const char* verifier)
+flickcurl_oauth_access_token(flickcurl* fc, const char* verifier)
 {
+  flickcurl_oauth_data* od = &fc->od;
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
   int count = 0;
   char* access_token = NULL;
@@ -728,7 +771,7 @@ flickcurl_oauth_access_token(flickcurl* fc, flickcurl_oauth_data* od,
   od->verifier = verifier;
   od->verifier_len = strlen(verifier);
 
-  rc = flickcurl_oauth_prepare_common(fc, od,
+  rc = flickcurl_oauth_prepare_common(fc,
                                       uri,
                                       /* method */ "flickr.oauth.access_token",
                                       /* upload_field */ NULL,

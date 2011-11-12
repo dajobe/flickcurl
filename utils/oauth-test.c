@@ -81,7 +81,7 @@ my_message_handler(void *user_data, const char *message)
 
 
 static int
-oauth_prepare(flickcurl *fc, flickcurl_oauth_data* od,
+oauth_prepare(flickcurl *fc,
               const char* method, const char* parameters[][2], int count)
 {
   if(!method) {
@@ -89,7 +89,7 @@ oauth_prepare(flickcurl *fc, flickcurl_oauth_data* od,
     return 1;
   }
   
-  return flickcurl_oauth_prepare_common(fc, od,
+  return flickcurl_oauth_prepare_common(fc,
                                         fc->service_uri,
                                         method,
                                         NULL, NULL,
@@ -99,7 +99,7 @@ oauth_prepare(flickcurl *fc, flickcurl_oauth_data* od,
 
 
 static int
-oauth_test_echo(flickcurl* fc, flickcurl_oauth_data* od,
+oauth_test_echo(flickcurl* fc,
                 const char* key, const char* value)
 {
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
@@ -112,7 +112,7 @@ oauth_test_echo(flickcurl* fc, flickcurl_oauth_data* od,
 
   parameters[count][0]  = NULL;
 
-  if(oauth_prepare(fc, od, "flickr.test.echo", parameters, count)) {
+  if(oauth_prepare(fc, "flickr.test.echo", parameters, count)) {
     rc = 1;
     goto tidy;
   }
@@ -330,25 +330,25 @@ main(int argc, char *argv[])
 
   /* Request token */
   if(cmd_index == 0) {
-    flickcurl_oauth_data od;
+    flickcurl_oauth_data* od = &fc->od;
 
-    memset(&od, '\0', sizeof(od));
+    memset(od, '\0', sizeof(od));
 
-    od.client_key = fc->api_key;
-    od.client_key_len = strlen(od.client_key);
-    od.client_secret = fc->secret;
-    od.client_secret_len = strlen(od.client_secret);
+    od->client_key = fc->api_key;
+    od->client_key_len = strlen(od->client_key);
+    od->client_secret = fc->secret;
+    od->client_secret_len = strlen(od->client_secret);
     
-    rc = flickcurl_oauth_request_token(fc, &od);
+    rc = flickcurl_oauth_request_token(fc);
 
     if(!rc) {
       char* uri;
 
       fprintf(stderr, 
               "OAuth request token returned token '%s' secret token '%s'\n",
-              od.request_token, od.request_token_secret);
+              od->request_token, od->request_token_secret);
 
-      uri = flickcurl_oauth_get_authorize_uri(fc, &od);
+      uri = flickcurl_oauth_get_authorize_uri(fc);
       if(uri) {
         fprintf(stderr, "%s: Authorize uri is %s\n", program, uri);
         free(uri);
@@ -359,39 +359,39 @@ main(int argc, char *argv[])
 
   /* Access token */
   if(cmd_index == 1) {
-    flickcurl_oauth_data od;
+    flickcurl_oauth_data* od = &fc->od;
     const char* request_token = argv[1];
     const char* request_token_secret = argv[2];
     const char* verifier = argv[3];
 
-    memset(&od, '\0', sizeof(od));
+    memset(od, '\0', sizeof(od));
 
-    od.client_key = fc->api_key;
-    od.client_key_len = strlen(od.client_key);
-    od.client_secret = fc->secret;
-    od.client_secret_len = strlen(od.client_secret);
-    od.request_token = (char*)request_token;
-    od.request_token_len = strlen(request_token);
-    od.request_token_secret = (char*)request_token_secret;
-    od.request_token_secret_len = strlen(request_token_secret);
+    od->client_key = fc->api_key;
+    od->client_key_len = strlen(od->client_key);
+    od->client_secret = fc->secret;
+    od->client_secret_len = strlen(od->client_secret);
+    od->request_token = (char*)request_token;
+    od->request_token_len = strlen(request_token);
+    od->request_token_secret = (char*)request_token_secret;
+    od->request_token_secret_len = strlen(request_token_secret);
     
-    rc = flickcurl_oauth_access_token(fc, &od, verifier);
+    rc = flickcurl_oauth_access_token(fc, verifier);
 
     if(!rc) {
       fprintf(stderr, 
               "OAuth access token returned token '%s' secret token '%s'\n",
-              od.token, od.token_secret);
+              od->token, od->token_secret);
     }
 
   }
 
 
   if(cmd_index == 2) {
-    flickcurl_oauth_data od;
+    flickcurl_oauth_data* od = &fc->od;
 
-    memset(&od, '\0', sizeof(od));
+    memset(od, '\0', sizeof(od));
 
-    rc = oauth_test_echo(fc, &od, "hello", "world");
+    rc = oauth_test_echo(fc, "hello", "world");
   }
   
 
