@@ -536,7 +536,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     fprintf(stderr, "HMAC-SHA1 signature:\n  %s\n", signature_string);
 #endif
     
-    free(buf);
+    free(od->data);
     od->data = NULL;
     od->data_len = 0;
     
@@ -889,20 +889,22 @@ oauth_init_test_secrets(flickcurl_oauth_data *od)
 static int
 test_request_token(flickcurl* fc) 
 {
-  flickcurl_oauth_data od;
+  flickcurl_oauth_data* od = &fc->od;
   int rc;
   
-  memset(&od, '\0', sizeof(od));
+  memset(od, '\0', sizeof(*od));
 
-  od.callback = test_oauth_callback_url;
-  od.client_key = (char*)test_oauth_consumer_key;
-  od.client_key_len = strlen(od.client_key);
-  od.nonce = test_oauth_nonce;
-  od.timestamp = test_oauth_timestamp;
+  od->callback = test_oauth_callback_url;
+  od->client_key = (char*)test_oauth_consumer_key;
+  od->client_key_len = strlen(od->client_key);
+  od->nonce = (char*)test_oauth_nonce;
+  od->timestamp = test_oauth_timestamp;
 
-  oauth_init_test_secrets(&od);
+  oauth_init_test_secrets(od);
 
-  rc = flickcurl_oauth_request_token(fc, &od);
+  rc = flickcurl_oauth_request_token(fc);
+
+  memset(od, '\0', sizeof(*od));
 
   return rc;
 }
@@ -911,21 +913,23 @@ test_request_token(flickcurl* fc)
 static int
 test_access_token(flickcurl* fc) 
 {
-  flickcurl_oauth_data od;
+  flickcurl_oauth_data* od = &fc->od;
   int rc;
   const char* verifier = "123-456-789";
   
-  memset(&od, '\0', sizeof(od));
+  memset(od, '\0', sizeof(*od));
 
-  od.callback = test_oauth_callback_url;
-  od.client_key = (char*)test_oauth_consumer_key;
-  od.client_key_len = strlen(od.client_key);
-  od.nonce = test_oauth_nonce;
-  od.timestamp = test_oauth_timestamp;
+  od->callback = test_oauth_callback_url;
+  od->client_key = (char*)test_oauth_consumer_key;
+  od->client_key_len = strlen(od->client_key);
+  od->nonce = (char*)test_oauth_nonce;
+  od->timestamp = test_oauth_timestamp;
   
-  oauth_init_test_secrets(&od);
+  oauth_init_test_secrets(od);
 
-  rc = flickcurl_oauth_access_token(fc, &od, verifier);
+  rc = flickcurl_oauth_access_token(fc, verifier);
+
+  memset(od, '\0', sizeof(*od));
 
   return rc;
 }
@@ -991,24 +995,24 @@ test_signature_calc(flickcurl* fc)
   char *escaped_s = NULL;
   size_t escaped_s_len;
   char* signature;
-  flickcurl_oauth_data od;
+  flickcurl_oauth_data* od = &fc->od;
   int rc;
 
-  memset(&od, '\0', sizeof(od));
+  memset(od, '\0', sizeof(*od));
   
-  oauth_init_test_secrets(&od);
+  oauth_init_test_secrets(od);
   
-  rc = test_oauth_build_key_data(&od, test_http_request_method,
+  rc = test_oauth_build_key_data(od, test_http_request_method,
                                  test_uri_base_string, 
                                  test_request_parameters);
   
-  fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)od.key_len, od.key);
+  fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)od->key_len, od->key);
   fprintf(stderr, "%s: expected key is\n  %s\n", program, expected_key);
   
-  fprintf(stderr, "%s: data is (%d bytes)\n  %s\n", program, (int)od.data_len, od.data);
+  fprintf(stderr, "%s: data is (%d bytes)\n  %s\n", program, (int)od->data_len, od->data);
   fprintf(stderr, "%s: expected data is\n  %s\n", program, expected_data);
   
-  signature = flickcurl_oauth_compute_signature(&od, &escaped_s_len);
+  signature = flickcurl_oauth_compute_signature(od, &escaped_s_len);
   
   escaped_s = curl_escape((char*)signature, 0);
   free(signature);
@@ -1024,10 +1028,8 @@ test_signature_calc(flickcurl* fc)
   
   if(s)
     free(s);
-  if(od.data)
-    free(od.data);
-  if(od.key)
-    free(od.key);
+
+  memset(od, '\0', sizeof(*od));
 
   return rc;
 }
