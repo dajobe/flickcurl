@@ -1028,6 +1028,10 @@ test_signature_calc(flickcurl* fc)
   
   if(s)
     free(s);
+  if(od->key)
+    free(od->key);
+  if(od->data)
+    free(od->data);
 
   memset(od, '\0', sizeof(*od));
 
