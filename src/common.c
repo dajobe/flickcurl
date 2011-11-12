@@ -347,6 +347,10 @@ flickcurl_free(flickcurl *fc)
     free(fc->upload_service_uri);
   if(fc->replace_service_uri)
     free(fc->replace_service_uri);
+  if(fc->oauth_request_token_uri)
+    free(fc->oauth_request_token_uri);
+  if(fc->oauth_access_token_uri)
+    free(fc->oauth_access_token_uri);
 
   if(fc->user_agent)
     free(fc->user_agent);
