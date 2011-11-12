@@ -1,0 +1,56 @@
+<!-- ##### SECTION Title ##### -->
+Config
+
+<!-- ##### SECTION Short_Description ##### -->
+Configuration files
+
+<!-- ##### SECTION Long_Description ##### -->
+<para>
+Configuration files
+</para>
+
+<!-- ##### SECTION See_Also ##### -->
+<para>
+
+</para>
+
+<!-- ##### SECTION Stability_Level ##### -->
+
+
+<!-- ##### SECTION Image ##### -->
+
+
+<!-- ##### FUNCTION flickcurl_config_read_ini ##### -->
+<para>
+
+</para>
+
+@fc: 
+@filename: 
+@section: 
+@user_data: 
+@handler: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_config_var_handler ##### -->
+<para>
+
+</para>
+
+@userdata: 
+@key: 
+@value: 
+
+
+<!-- ##### FUNCTION flickcurl_config_write_ini ##### -->
+<para>
+
+</para>
+
+@fc: 
+@filename: 
+@section: 
+@Returns: 
+
+

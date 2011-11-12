@@ -75,6 +75,7 @@
     <xi:include href="xml/section-comment.xml"/>
     <xi:include href="xml/section-commons.xml"/>
     <xi:include href="xml/section-collections.xml"/>
+    <xi:include href="xml/section-config.xml"/>
     <xi:include href="xml/section-contact.xml"/>
     <xi:include href="xml/section-context.xml"/>
     <xi:include href="xml/section-exif.xml"/>
