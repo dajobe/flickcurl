@@ -28,7 +28,9 @@
 
 #include <mtwist_config.h>
 
+#ifdef FLICKCURL_OAUTH
 #include <mtwist.h>
+#endif
 
 #if defined (OFFLINE) && defined (CAPTURE)
 #error "Cannot define both OFFLINE and CAPTURE"
@@ -419,8 +421,6 @@ struct flickcurl_s {
   flickcurl_curl_setopt_handler curl_setopt_handler;
   void* curl_setopt_handler_data;
 
-  mtwist* mt;
-
   /* OAuth request token Web Service URI */
   char *oauth_request_token_uri;
 
@@ -430,7 +430,10 @@ struct flickcurl_s {
   /* OAuth access token Web Service URI */
   char *oauth_access_token_uri;
 
-#ifdef FLICKCURL_OAUTH
+#if FLICKCURL_OAUTH
+  /*  Used for OAuth nonce generation */
+  mtwist* mt;
+
   flickcurl_oauth_data od;
 #endif
 };

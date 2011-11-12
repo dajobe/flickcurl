@@ -218,12 +218,14 @@ flickcurl_new_with_handle(void* curl_handle)
   /* DEFAULT delay between requests is 1000ms i.e 1 request/second max */
   fc->request_delay = 1000;
 
+#ifdef FLICKCURL_OAUTH
   fc->mt = mtwist_new();
   if(!fc->mt) {
     free(fc);
     return NULL;
   }
   mtwist_init(fc->mt, mtwist_seed_from_system(fc->mt));
+#endif
 
   fc->curl_handle = (CURL*)curl_handle;
   if(!fc->curl_handle) {
@@ -358,10 +360,10 @@ flickcurl_free(flickcurl *fc)
   if(fc->uri)
     free(fc->uri);
 
+#ifdef FLICKCURL_OAUTH
   if(fc->mt)
     mtwist_free(fc->mt);
 
-#ifdef FLICKCURL_OAUTH
   flickcurl_oauth_free(&fc->od);
 #endif
 
