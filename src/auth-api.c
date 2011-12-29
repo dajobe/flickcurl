@@ -242,7 +242,7 @@ flickcurl_auth_getToken(flickcurl* fc, const char* frob)
  *
  * Calling this method will delete the old auth token used to make the request.
  *
- * Implements flickr.auth.oauth.getAccessToken (1.22)
+ * Implements flickr.auth.oauth.getAccessToken (1.23)
  * 
  * Return value: non-0 on failure
  **/
