@@ -1,5 +1,8 @@
 2011-11-11  Dave Beckett <dave@dajobe.org>
 
+	* Snapshotted flickcurl_1_22 for 1.22 release (GIT
+	6698387f4240cec82b0e115adf8a863657dd7066)
+
 	* utils/oauth-test.c:
 	Update flickcurl_oauth_prepare_common call
 
