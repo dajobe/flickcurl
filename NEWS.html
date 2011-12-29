@@ -17,6 +17,17 @@
 <p>Not yet released.
 </p>
 
+<p>This release is intended to support using Flickr via OAuth and
+converting from the Flickr auth to OAuth.
+</p>
+
+<p>Added API call to exchange old auth access token for OAuth access
+token (deletes / revokes old token).</p>
+<pre>
+    int flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
+</pre>
+
+
 <h2 id="D2011-12-28-V1.22">2011-12-28 Flickcurl Version 1.22 Released</h2>
 
 <p>Add support for the upload field 'hidden' to set if a photo is
