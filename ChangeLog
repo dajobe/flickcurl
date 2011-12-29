@@ -1,5 +1,17 @@
 2011-11-11  Dave Beckett <dave@dajobe.org>
 
+	* utils/oauth-test.c:
+	Update flickcurl_oauth_prepare_common call
+
+	* NEWS.html, src/common.c, src/flickcurl_internal.h: Disable
+	mtwist unless building experimental OAuth
+
+	* src/Makefile.am: Do not use libmtwist without oauth
+
+	* configure.ac, src/Makefile.am, src/common.c,
+	src/flickcurl_internal.h, utils/Makefile.am: Add --enable-oauth
+	default disabled
+
 	* src/common.c:
 	(flickcurl_free): Free OAuth urls
 
