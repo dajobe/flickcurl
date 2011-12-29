@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">100.0% (180/180)</span>
+<span class="coverage">100.0% (182/182)</span>
 </p>
 
 
@@ -55,6 +55,7 @@ or <span class="unsupported">unsupported</span>.
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.auth.getFrob.html">flickr.auth.getFrob</a> (0.9)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.auth.getFullToken.html">flickr.auth.getFullToken</a> (0.5)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.auth.getToken.html">flickr.auth.getToken</a> (0.9)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.auth.oauth.getAccessToken.html">flickr.auth.oauth.getAccessToken</a> (1.23)</li>
 </ul>
 
 
@@ -93,6 +94,7 @@ or <span class="unsupported">unsupported</span>.
 
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.add.html">flickr.favorites.add</a> (1.0)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.getContext.html">flickr.favorites.getContext</a> (1.22)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.getList.html">flickr.favorites.getList</a> (1.0)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.getPublicList.html">flickr.favorites.getPublicList</a> (1.0)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.favorites.remove.html">flickr.favorites.remove</a> (1.0)</li>
@@ -407,6 +409,18 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.23</strong>: flickr.auth.oauth.getAccessToken (1 new)</p>
+<pre>
+int flickcurl_auth_oauth_getAccessToken(flickcurl* fc);
+</pre>
+
+
+<p><strong>1.22</strong>: flickr.favorites.getContext (1 new)</p>
+<pre>
+flickcurl_photos_list** flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id, const char* user_id, int num_prev, int num_next, const char* extras);
+</pre>
+
 
 <p><strong>1.19</strong>: flickr.photosets.removePhotos, flickr.photosets.reorderPhotos, flickr.photosets.setPrimaryPhoto, flickr.stats.getCSVFiles (4 new)</p>
 <pre>
