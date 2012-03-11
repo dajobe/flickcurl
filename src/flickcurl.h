@@ -1401,6 +1401,22 @@ typedef struct {
  *
  * A photo at a size.
  *
+ * Supported sizes and their letter suffixes used in the @source and
+ * the @url fields are as follows:
+ *
+ * s: small square 75x75.
+ * q: large square 150x150 (2011-03-12 or later).
+ * t: thumbnail, 100 on longest side.
+ * m: small, 240 on longest side.
+ * n: small, 320 on longest side (2011-03-12 or later).
+ * -: medium, 500 on longest side.
+ * z: medium 640, 640 on longest side.
+ * b: large, 1024 on longest side*.
+ * o: original image, either a jpg, gif or png, depending on source format.
+ *
+ * The 'q' and 'n' sizes were announced 2011-03-12 in
+ * http://tech.groups.yahoo.com/group/yws-flickr/message/7483
+ *
  */
 typedef struct {
   char *label;
