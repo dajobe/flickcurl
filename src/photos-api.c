@@ -2030,6 +2030,7 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
     parameters[count][0]  = "date_taken";
     /* taken date is always a SQL timestamp */
     date_taken_str = flickcurl_unixtime_to_sqltimestamp(date_taken);
+    parameters[count++][1] = date_taken_str;
   }
   if(date_taken_granularity >= 0) {
     parameters[count][0]  = "date_taken_granularity";
