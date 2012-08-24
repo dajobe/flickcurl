@@ -244,7 +244,14 @@ flickcurl_config_var_handler(void* userdata,
     flickcurl_set_shared_secret(fc, value);
   else if(!strcmp(key, "auth_token"))
     flickcurl_set_auth_token(fc, value);
-
+  else if(!strcmp(key, "oauth_client_key"))
+    flickcurl_set_oauth_client_credentials(fc, value, flickcurl_get_oauth_client_secret(fc));
+  else if(!strcmp(key, "oauth_client_secret"))
+    flickcurl_set_oauth_client_credentials(fc, flickcurl_get_oauth_client_key(fc), value);
+  else if(!strcmp(key, "oauth_token"))
+    flickcurl_set_oauth_token(fc, value);
+  else if(!strcmp(key, "oauth_token_secret"))
+    flickcurl_set_oauth_token_secret(fc, value);
 }
 
 
@@ -291,6 +298,16 @@ flickcurl_config_write_ini(flickcurl *fc,
       fputs("\noauth_secret=", fh);
       fputs(s, fh);
     }
+    s = flickcurl_get_oauth_client_key(fc);
+    if(s) {
+      fputs("\noauth_client_key=", fh);
+      fputs(s, fh);
+    }
+    s = flickcurl_get_oauth_client_secret(fc);
+    if(s) {
+      fputs("\noauth_client_secret=", fh);
+      fputs(s, fh);
+    }
   } else {
     /* Legacy Flickr auth */
     s = flickcurl_get_auth_token(fc);
@@ -303,14 +320,13 @@ flickcurl_config_write_ini(flickcurl *fc,
       fputs("\noauth_secret=", fh);
       fputs(s, fh);
     }
+    s = flickcurl_get_api_key(fc);
+    if(s) {
+      fputs("\napi_key=", fh);
+      fputs(s, fh);
+    }
   }
   
-  s = flickcurl_get_api_key(fc);
-  if(s) {
-    fputs("\napi_key=", fh);
-    fputs(s, fh);
-  }
-
   fputs("\n", fh);
 
   fclose(fh);
