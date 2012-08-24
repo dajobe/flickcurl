@@ -89,6 +89,7 @@ upload-api.c \
 urls-api.c \
 flickcurl_internal.h \
 sha1.c \
+legacy-auth.c \
 oauth.c \
 $(top_srcdir)/libmtwist/mt.c \
 $(top_srcdir)/libmtwist/seed.c \

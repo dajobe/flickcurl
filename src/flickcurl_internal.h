@@ -452,6 +452,9 @@ void flickcurl_serializer_terminate(void);
 unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void *key, size_t key_len);
 
 
+/* legacy-auth.c */
+int flickcurl_legacy_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, const char* parameters[][2], int count, int parameters_in_url, int need_auth);
+
 /* oauth.c */
 #define FLICKCURL_MAX_OAUTH_PARAM_COUNT 8
 
