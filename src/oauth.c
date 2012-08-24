@@ -1080,11 +1080,21 @@ test_signature_calc(flickcurl* fc)
                                  test_uri_base_string, 
                                  test_request_parameters);
   
-  fprintf(stderr, "%s: key is (%d bytes)\n  %s\n", program, (int)od->key_len, od->key);
-  fprintf(stderr, "%s: expected key is\n  %s\n", program, expected_key);
-  
-  fprintf(stderr, "%s: data is (%d bytes)\n  %s\n", program, (int)od->data_len, od->data);
-  fprintf(stderr, "%s: expected data is\n  %s\n", program, expected_data);
+  if(strcmp((const char*)od->key, expected_key)) {
+    fprintf(stderr, "%s: FAIL\n" 
+                    "  key is (%d bytes)\n    %s\n"
+                    "  expected key is\n    %s\n",
+            program, (int)od->key_len, od->key, expected_key);
+    rc++;
+  }
+
+  if(strcmp((const char*)od->data, expected_data)) {
+    fprintf(stderr, "%s: FAIL\n"
+            "  data is (%d bytes)\n    %s\n"
+            "  expected data is\n    %s\n",
+            program, (int)od->data_len, od->data, expected_data);
+    rc++;
+  }
   
   signature = flickcurl_oauth_compute_signature(od, &escaped_s_len);
   
@@ -1092,11 +1102,13 @@ test_signature_calc(flickcurl* fc)
   free(signature);
   escaped_s_len = strlen(escaped_s);
   
-  fprintf(stdout, "URI Escaped result (%d bytes):\n   %s\n",
-          (int)escaped_s_len, escaped_s);
-  
-  fprintf(stdout, "Expected URI escaped result\n   %s\n", 
-          expected_signature);
+  if(strcmp(escaped_s, expected_signature)) {
+    fprintf(stdout, "%s: FAIL\n"
+            "  URI Escaped result (%d bytes):\n    %s\n"
+            "  Expected URI escaped result\n    %s\n", 
+            program, (int)escaped_s_len, escaped_s, expected_signature);
+    rc++;
+  }
   
   curl_free(escaped_s);
   
