@@ -280,21 +280,37 @@ flickcurl_config_write_ini(flickcurl *fc,
   fputc('[', fh);
   fputs(section, fh);
   fputc(']', fh);
-  s = flickcurl_get_auth_token(fc);
+
+  s = flickcurl_get_oauth_token(fc);
   if(s) {
-    fputs("\nauth_token=", fh);
+    /* OAuth token and secret */
+    fputs("\noauth_token=", fh);
     fputs(s, fh);
+    s = flickcurl_get_oauth_token_secret(fc);
+    if(s) {
+      fputs("\noauth_secret=", fh);
+      fputs(s, fh);
+    }
+  } else {
+    /* Legacy Flickr auth */
+    s = flickcurl_get_auth_token(fc);
+    if(s) {
+      fputs("\noauth_token=", fh);
+      fputs(s, fh);
+    }
+    s = flickcurl_get_shared_secret(fc);
+    if(s) {
+      fputs("\noauth_secret=", fh);
+      fputs(s, fh);
+    }
   }
+  
   s = flickcurl_get_api_key(fc);
   if(s) {
     fputs("\napi_key=", fh);
     fputs(s, fh);
   }
-  s = flickcurl_get_shared_secret(fc);
-  if(s) {
-    fputs("\nsecret=", fh);
-    fputs(s, fh);
-  }
+
   fputs("\n", fh);
 
   fclose(fh);
