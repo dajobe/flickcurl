@@ -238,9 +238,14 @@ flickcurl_auth_getToken(flickcurl* fc, const char* frob)
  * flickcurl_auth_oauth_getAccessToken:
  * @fc: flickcurl context
  * 
- * Exchange an auth token from the old Authentication API for an OAuth access token.
+ * Exchange tokens from the legacy Flickr auth to ones for OAuth
  *
- * Calling this method will delete the old auth token used to make the request.
+ * Calling this method will delete the legacy auth tokens used to
+ * make the request since they will expire within 24 hours of this
+ * call.
+ *
+ * The OAuth token and secret should be saved and can be read from
+ * flickcurl_get_oauth_token() and flickcurl_get_oauth_token_secret()
  *
  * Implements flickr.auth.oauth.getAccessToken (1.23)
  * 
@@ -249,6 +254,7 @@ flickcurl_auth_getToken(flickcurl* fc, const char* frob)
 int
 flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
 {
+  flickcurl_oauth_data* od = &fc->od;
   const char* parameters[5][2];
   int count = 0;
   xmlDocPtr doc = NULL;
@@ -275,56 +281,38 @@ flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
     goto tidy;
   }
 
-  /*
-<auth>
-  <access_token oauth_token="72157607082540144-8d5d7ea7696629bf" oauth_token_secret="f38bf58b2d95bc8b" />
-</auth>
-  */
-
   if(xpathCtx) {
     char* auth_token;
     char* auth_token_secret;
 
-/*
-    if(fc->api_key) {
-      FIXME - Copy API key as OAuth consumer key
-
-      od->client_key = fc->api_key;
-      od->client_key_len = strlen(od->consumer_key);
-    }
-*/
-
     auth_token = flickcurl_xpath_eval(fc, xpathCtx,
-                                    (const xmlChar*)"/rsp/auth/access_token[@oauth_token]");
+                                      (const xmlChar*)"/rsp/auth/access_token[@oauth_token]");
 
     auth_token_secret = flickcurl_xpath_eval(fc, xpathCtx,
                                              (const xmlChar*)"/rsp/auth/access_token[@oauth_token_secret]");
 
 #ifdef FLICKCURL_DEBUG
-    fprintf(stderr, 
-            "Exchanged old auth for OAuth access token '%s' secret token '%s'\n",
+    fprintf(stderr,
+            "Exchanged legacy auth tokens for OAuth access token '%s' secret token '%s'\n",
             auth_token, auth_token_secret);
 #endif
 
-    /* FIXME - story this in the oauth structure */
-
-    free(auth_token);
-    free(auth_token_secret);
-
-    /* Remove old authentication fields - not valid or needed */
+    /* Remove legacy Flickr auth fields - not valid or needed */
     if(fc->auth_token) {
       free(fc->auth_token);
       fc->auth_token = NULL;
-    }
-    if(fc->api_key) {
-      free(fc->api_key);
-      fc->api_key = NULL;
     }
     if(fc->secret) {
       free(fc->secret);
       fc->secret = NULL;
     }
-    
+
+    /* Store OAuth token and secret in the oauth structure */
+    od->token = auth_token;
+    od->token_len = strlen(auth_token);
+    od->token_secret = auth_token_secret;
+    od->token_secret_len = strlen(auth_token_secret);
+
     xmlXPathFreeContext(xpathCtx);
     xpathCtx = NULL;
   }
