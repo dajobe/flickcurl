@@ -22,10 +22,12 @@
  * ~/.flickcurl.conf should contain the authentication details in the form:
  * [flickr]
  * oauth_token=1234567-8901234567890123
- * oauth_secret=fedcba9876543210
- * api_key=0123456789abcdef0123456789abcdef
+ * oauth_token_secret=fedcba9876543210
+ * oauth_client_key=0123456789abcdef0123456789abcdef
+ * oauth_client_secret=fedcba9876543210
  *
  * If the old Flickr auth is used the values will be:
+ * api_key=0123456789abcdef0123456789abcdef
  * auth_token=1234567-8901234567890123
  * secret=fedcba9876543210
  *
