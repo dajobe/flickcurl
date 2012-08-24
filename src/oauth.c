@@ -602,16 +602,18 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 
 
 
-/*
+/**
  * flickcurl_oauth_request_token:
  * @fc: flickcurl object
  *
- * INTERNAL - get a Flickr OAuth request token
+ * Request an OAuth request token from Flickr for the application API Key/secret
  *
+ * Requires the OAuth Client key (API key) and Client secret to have
+ * been set with flickcurl_set_oauth_client_credentials().
+ * 
  * Calls the Flickr OAuth endpoint to get a request token.
  *
- * Stores the request token in @od fields 'request_token' and
- * 'request_token_secret' on success.
+ * On success, stores the request token in the @fc structure.
  *
  * Return value: non-0 on failure
  */
@@ -839,6 +841,70 @@ flickcurl_oauth_access_token(flickcurl* fc, const char* verifier)
 
 
 /**
+ * flickcurl_get_oauth_client_key:
+ * @fc: flickcurl object
+ *
+ * Get OAuth Client Key (aka Consumer key, API Key)
+ *
+ * See also flickcurl_get_oauth_client_secret()
+ *
+ * Return value: client key or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_client_key(flickcurl *fc)
+{
+  return fc->od.client_key;
+}
+
+
+/**
+ * flickcurl_get_oauth_client_secret:
+ * @fc: flickcurl object
+ *
+ * Get OAuth Client secret
+ *
+ * See also flickcurl_get_oauth_client_key()
+ *
+ * Return value: client secret or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_client_secret(flickcurl *fc)
+{
+  return fc->od.client_secret;
+}
+
+
+/**
+ * flickcurl_set_oauth_client_credentials:
+ * @fc: flickcurl object
+ *
+ * Set OAuth client credentials (aka API key and secret)
+ *
+ * See also flickcurl_get_oauth_client_key() and
+ * flickcurl_get_oauth_client_secret()
+ */
+void
+flickcurl_set_oauth_client_credentials(flickcurl *fc, const char* client_key,
+                                       const char* client_secret)
+{
+  flickcurl_oauth_data* od = &fc->od;
+
+  if(!client_key || !client_secret)
+    return;
+
+  if(fc->od.client_key)
+    free(fc->od.client_key);
+  if(fc->od.client_secret)
+    free(fc->od.client_secret);
+
+  od->client_key = strdup(client_key);
+  od->client_key_len = strlen(client_key);
+  od->client_secret = strdup(client_secret);
+  od->client_secret_len = strlen(client_secret);
+}
+
+
+/**
  * flickcurl_get_oauth_token:
  * @fc: flickcurl object
  *
@@ -899,7 +965,7 @@ void
 flickcurl_set_oauth_token_secret(flickcurl* fc, const char *secret)
 {
 #if FLICKCURL_DEBUG > 1
-  fprintf(stderr, "Legacy Flickr auth Secret: '%s'\n", secret);
+  fprintf(stderr, "OAuth token secret: '%s'\n", secret);
 #endif
   if(fc->od.token_secret)
     free(fc->od.token_secret);
