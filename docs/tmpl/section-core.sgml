@@ -194,6 +194,24 @@ Core library functions
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_get_oauth_token ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_oauth_token_secret ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_set_api_key ##### -->
 <para>
 
@@ -258,6 +276,24 @@ Core library functions
 
 @fc: 
 @value: 
+
+
+<!-- ##### FUNCTION flickcurl_set_oauth_token ##### -->
+<para>
+
+</para>
+
+@fc: 
+@token: 
+
+
+<!-- ##### FUNCTION flickcurl_set_oauth_token_secret ##### -->
+<para>
+
+</para>
+
+@fc: 
+@secret: 
 
 
 <!-- ##### FUNCTION flickcurl_set_proxy ##### -->
