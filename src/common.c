@@ -286,8 +286,6 @@ flickcurl_free(flickcurl *fc)
     xmlFreeParserCtxt(fc->xc); 
   }
 
-  if(fc->api_key)
-    free(fc->api_key);
   if(fc->secret)
     free(fc->secret);
   if(fc->auth_token)
@@ -582,7 +580,7 @@ flickcurl_set_replace_service_uri(flickcurl *fc, const char *uri)
  * @fc: flickcurl object
  * @api_key: API Key
  *
- * Set application API Key for flickcurl requests
+ * Set application API Key (OAuth Consumer key) for flickcurl requests
  */
 void
 flickcurl_set_api_key(flickcurl* fc, const char *api_key)
@@ -590,9 +588,16 @@ flickcurl_set_api_key(flickcurl* fc, const char *api_key)
 #if FLICKCURL_DEBUG > 1
   fprintf(stderr, "API Key: '%s'\n", api_key);
 #endif
-  if(fc->api_key)
-    free(fc->api_key);
-  fc->api_key = strdup(api_key);
+  if(fc->od.client_key)
+    free(fc->od.client_key);
+
+  fc->od.client_key = strdup(api_key);
+  fc->od.client_key_len = strlen(api_key);
+
+  /* Mainly for flickcurl_auth_oauth_getAccessToken() to sign the call
+   * exchanging tokens 
+   */
+  fc->api_key = fc->od.client_key;
 }
 
 
@@ -600,7 +605,7 @@ flickcurl_set_api_key(flickcurl* fc, const char *api_key)
  * flickcurl_get_api_key:
  * @fc: flickcurl object
  *
- * Get current application API Key
+ * Get current application API Key (OAuth Consumer key)
  *
  * Return value: API key or NULL if none set
  */
@@ -616,13 +621,13 @@ flickcurl_get_api_key(flickcurl* fc)
  * @fc: flickcurl object
  * @secret: shared secret
  *
- * Set Shared Secret for flickcurl requests
+ * Set legacy Flickr auth Secret
  */
 void
 flickcurl_set_shared_secret(flickcurl* fc, const char *secret)
 {
 #if FLICKCURL_DEBUG > 1
-  fprintf(stderr, "Secret: '%s'\n", secret);
+  fprintf(stderr, "Legacy Flickr auth Secret: '%s'\n", secret);
 #endif
   if(fc->secret)
     free(fc->secret);
@@ -634,7 +639,7 @@ flickcurl_set_shared_secret(flickcurl* fc, const char *secret)
  * flickcurl_get_shared_secret:
  * @fc: flickcurl object
  *
- * Get current Shared Secret
+ * Get legacy Flickr auth Secret
  *
  * Return value: shared secret or NULL if none set
  */
@@ -650,13 +655,13 @@ flickcurl_get_shared_secret(flickcurl* fc)
  * @fc: flickcurl object
  * @auth_token: auth token
  *
- * Set Auth Token for flickcurl requests
+ * Set legacy Flickr auth Token
  */
 void
 flickcurl_set_auth_token(flickcurl *fc, const char* auth_token)
 {
 #if FLICKCURL_DEBUG > 1
-  fprintf(stderr, "Auth token: '%s'\n", auth_token);
+  fprintf(stderr, "Legacy Flickr auth token: '%s'\n", auth_token);
 #endif
   if(fc->auth_token)
     free(fc->auth_token);
@@ -668,7 +673,7 @@ flickcurl_set_auth_token(flickcurl *fc, const char* auth_token)
  * flickcurl_get_auth_token:
  * @fc: flickcurl object
  *
- * Get current auth token
+ * Get legacy Flickr auth Token
  *
  * Return value: auth token or NULL if none set
  */
@@ -778,11 +783,11 @@ flickcurl_prepare_common(flickcurl *fc,
   }
   
   if(!fc->secret) {
-    flickcurl_error(fc, "No shared secret");
+    flickcurl_error(fc, "No legacy Flickr auth secret");
     return 1;
   }
   if(!fc->api_key) {
-    flickcurl_error(fc, "No API key");
+    flickcurl_error(fc, "No API Key (OAuth Client Key)");
     return 1;
   }
 
