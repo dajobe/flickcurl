@@ -727,13 +727,13 @@ flickcurl_prepare_common(flickcurl *fc,
 {
   int rc;
 
-  if(fc->secret && fc->auth_token)
+  if(fc->api_key && fc->secret)
     /* Call with legacy Flickr auth */
     rc = flickcurl_legacy_prepare_common(fc, url, method,
                                          upload_field, upload_value,
                                          parameters, count,
                                          parameters_in_url, need_auth);
-  else if (fc->od.token && fc->od.token_secret)
+  else if(fc->od.token && fc->od.token_secret)
     /* Call with OAuth */
     rc = flickcurl_oauth_prepare_common(fc, url, method,
                                         upload_field, upload_value,
