@@ -835,6 +835,80 @@ flickcurl_oauth_access_token(flickcurl* fc, const char* verifier)
   
   return rc;
 }
+
+
+
+/**
+ * flickcurl_get_oauth_token:
+ * @fc: flickcurl object
+ *
+ * Get OAuth Token
+ *
+ * Return value: auth token or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_token(flickcurl *fc)
+{
+  return fc->od.token;
+}
+
+
+/**
+ * flickcurl_set_oauth_token:
+ * @fc: flickcurl object
+ * @token: auth token
+ *
+ * Set OAuth Token
+ */
+void
+flickcurl_set_oauth_token(flickcurl *fc, const char* token)
+{
+#if FLICKCURL_DEBUG > 1
+  fprintf(stderr, "OAuth token: '%s'\n", token);
+#endif
+  if(fc->od.token)
+    free(fc->od.token);
+  fc->od.token = strdup(token);
+  fc->od.token_len = strlen(token);
+}
+
+
+/**
+ * flickcurl_get_oauth_token_secret:
+ * @fc: flickcurl object
+ *
+ * Get OAuth token secret
+ *
+ * Return value: secret or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_token_secret(flickcurl* fc)
+{
+  return fc->od.token_secret;
+}
+
+
+/**
+ * flickcurl_set_oauth_token_secret:
+ * @fc: flickcurl object
+ * @secret: shared secret
+ *
+ * Set OAuth token Secret
+ */
+void
+flickcurl_set_oauth_token_secret(flickcurl* fc, const char *secret)
+{
+#if FLICKCURL_DEBUG > 1
+  fprintf(stderr, "Legacy Flickr auth Secret: '%s'\n", secret);
+#endif
+  if(fc->od.token_secret)
+    free(fc->od.token_secret);
+
+  fc->od.token_secret = strdup(secret);
+  fc->od.token_secret_len = strlen(secret);
+}
+
+
 #endif
 
 

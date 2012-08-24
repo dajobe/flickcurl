@@ -1856,6 +1856,14 @@ FLICKCURL_API
 char* flickcurl_auth_getToken(flickcurl* fc, const char* frob);
 FLICKCURL_API
 int flickcurl_auth_oauth_getAccessToken(flickcurl* fc);
+FLICKCURL_API
+const char* flickcurl_get_oauth_token(flickcurl *fc);
+FLICKCURL_API
+void flickcurl_set_oauth_token(flickcurl *fc, const char* token);
+FLICKCURL_API
+const char* flickcurl_get_oauth_token_secret(flickcurl* fc);
+FLICKCURL_API
+void flickcurl_set_oauth_token_secret(flickcurl* fc, const char *secret);
   
 /* flickr.blogs */
 FLICKCURL_API
