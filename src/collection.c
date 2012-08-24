@@ -273,6 +273,7 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case VALUE_TYPE_MEDIA_TYPE:
         case VALUE_TYPE_TAG_STRING:
         case VALUE_TYPE_PERSON_ID:
+        case VALUE_TYPE_TOPIC_ID:
           abort();
       }
       

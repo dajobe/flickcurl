@@ -551,6 +551,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
         case VALUE_TYPE_TAG_STRING:
         case VALUE_TYPE_COLLECTION_ID:
         case VALUE_TYPE_ICON_PHOTOS:
+        case VALUE_TYPE_TOPIC_ID:
         default:
           break;
       }

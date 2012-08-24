@@ -247,6 +247,10 @@ flickcurl_tag_clusters* flickcurl_build_tag_clusters(flickcurl* fc, xmlXPathCont
 /* ticket.c */
 flickcurl_ticket** flickcurl_build_tickets(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* ticket_count_p);
 
+/* person.c */
+flickcurl_topic_list* flickcurl_build_topic_list(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
+flickcurl_topic* flickcurl_build_topic(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* root_xpathExpr);
+
 /* vsnprintf.c */
 extern char* my_vsnprintf(const char *message, va_list arguments);
 

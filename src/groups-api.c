@@ -172,6 +172,118 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
 
 
 /**
+ * flickcurl_groups_join:
+ * @fc: flickcurl context
+ * @group_id: The NSID of the Group in question
+ * @accept_rules: If the group has rules, they must be displayed to the user prior to joining. Passing a "true" value for this argument specifies that the application has displayed the group rules to the user, and that the user has agreed to them. (See flickr.groups.getInfo). (or NULL)
+ * 
+ * Join a public group as a member.
+ *
+ * Implements flickr.groups.join (1.23)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_groups_join(flickcurl* fc, 
+                      const char* group_id, const char* accept_rules)
+{
+  const char* parameters[9][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
+  
+  if(!group_id)
+    return 1;
+
+  parameters[count][0]  = "group_id";
+  parameters[count++][1]= group_id;
+  if(accept_rules) {
+    parameters[count][0]  = "accept_rules";
+    parameters[count++][1]= accept_rules;
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.groups.join", parameters, count))
+    goto tidy;
+
+  flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
+    
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}
+
+
+/**
+ * flickcurl_groups_leave:
+ * @fc: flickcurl context
+ * @group_id: The NSID of the Group to leave
+ * @delete_photos: non-0 to delete all photos by this user from the group
+ * 
+ * Leave a group.
+ *
+ * If the user is the only administrator left, and there are other
+ * members, the oldest member will be promoted to administrator.
+ *
+ * If the user is the last person in the group, the group will be
+ * deleted.
+ *
+ * Implements flickr.groups.leave (1.23)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_groups_leave(flickcurl* fc,
+                       const char* group_id, int delete_photos)
+{
+  const char* parameters[9][2];
+  int count = 0;
+  xmlDocPtr doc = NULL;
+  int result = 1;
+
+  if(!group_id)
+    return 1;
+
+  parameters[count][0]  = "group_id";
+  parameters[count++][1]= group_id;
+  if(delete_photos) {
+    parameters[count][0]  = "delete_photos";
+    parameters[count++][1]= "true";
+  }
+
+  parameters[count][0]  = NULL;
+
+  if(flickcurl_prepare(fc, "flickr.groups.leave", parameters, count))
+    goto tidy;
+
+  flickcurl_set_write(fc, 1);
+  flickcurl_set_data(fc, (void*)"", 0);
+    
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}
+
+
+/**
  * flickcurl_groups_search:
  * @fc: flickcurl context
  * @text: The text to search for.

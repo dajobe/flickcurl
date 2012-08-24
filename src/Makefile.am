@@ -49,6 +49,7 @@ shape.c \
 size.c \
 stat.c \
 ticket.c \
+topic.c \
 user_upload_status.c \
 tags.c \
 video.c \
@@ -63,6 +64,8 @@ favorites-api.c \
 interestingness-api.c \
 galleries-api.c \
 groups-api.c \
+groups-discuss-replies-api.c \
+groups-discuss-topics-api.c \
 groups-members-api.c \
 groups-pools-api.c \
 machinetags-api.c \

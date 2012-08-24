@@ -344,6 +344,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case VALUE_TYPE_TAG_STRING:
         case VALUE_TYPE_COLLECTION_ID:
         case VALUE_TYPE_ICON_PHOTOS:
+        case VALUE_TYPE_TOPIC_ID:
           abort();
       }
       

@@ -89,6 +89,7 @@ extern "C" {
  * @VALUE_TYPE_TAG_STRING: internal
  * @VALUE_TYPE_COLLECTION_ID: internal
  * @VALUE_TYPE_ICON_PHOTOS: internal 
+ * @VALUE_TYPE_TOPIC_ID: topic/reply ID
  * @VALUE_TYPE_LAST: internal offset to last in enum list
  * 
  * Field data types
@@ -109,7 +110,8 @@ typedef enum {
   VALUE_TYPE_TAG_STRING, /* internal */
   VALUE_TYPE_COLLECTION_ID, /* internal */
   VALUE_TYPE_ICON_PHOTOS, /* internal */
-  VALUE_TYPE_LAST = VALUE_TYPE_ICON_PHOTOS
+  VALUE_TYPE_TOPIC_ID, /* internal */
+  VALUE_TYPE_LAST = VALUE_TYPE_TOPIC_ID
 } flickcurl_field_value_type;
   
 
@@ -1558,6 +1560,113 @@ typedef struct {
 } flickcurl_member;
 
 
+/**
+ * flickcurl_topic_field_type:
+ * @TOPIC_FIELD_subject: topic subject
+ * @TOPIC_FIELD_group_nsid: group NSID
+ * @TOPIC_FIELD_group_iconserver: group icon server
+ * @TOPIC_FIELD_group_iconfarm: group icon name
+ * @TOPIC_FIELD_group_name: group name
+ * @TOPIC_FIELD_message: topic/reply message
+ * @TOPIC_FIELD_author_nsid: author NSID
+ * @TOPIC_FIELD_author_name: author name
+ * @TOPIC_FIELD_author_role: author role in group
+ * @TOPIC_FIELD_author_iconserver: author icon server
+ * @TOPIC_FIELD_author_iconfarm: author icon farm
+ * @TOPIC_FIELD_author_can_edit: author can edit
+ * @TOPIC_FIELD_author_can_delete: author can delete
+ * @TOPIC_FIELD_date_created: date created
+ * @TOPIC_FIELD_last_edited: date last edited
+ * @TOPIC_FIELD_reply_to_topic_nsid: this is a replic to topic with NSID
+ * @TOPIC_FIELD_none: internal
+ * @TOPIC_FIELD_FIRST: internal offset to first in enum list
+ * @TOPIC_FIELD_LAST: internal offset to last in enum list
+ *
+ * Fields of a flickcurl_topic*
+ */
+typedef enum {
+  TOPIC_FIELD_none,
+  TOPIC_FIELD_subject,               /* string */
+  TOPIC_FIELD_group_nsid,            /* string */
+  TOPIC_FIELD_group_iconserver,      /* integer */
+  TOPIC_FIELD_group_iconfarm,        /* integer */
+  TOPIC_FIELD_group_name,            /* string */
+  TOPIC_FIELD_message,               /* string */
+  TOPIC_FIELD_author_nsid,           /* string */
+  TOPIC_FIELD_author_name,           /* string */
+  TOPIC_FIELD_author_role,           /* string */
+  TOPIC_FIELD_author_iconserver,     /* integer */
+  TOPIC_FIELD_author_iconfarm,       /* integer */
+  TOPIC_FIELD_author_can_edit,       /* boolean */
+  TOPIC_FIELD_author_can_delete,     /* boolean */
+  TOPIC_FIELD_date_created,          /* dateTime */
+  TOPIC_FIELD_last_edited,           /* dateTime */
+  TOPIC_FIELD_reply_to_topic_nsid,   /* string */
+  TOPIC_FIELD_FIRST = TOPIC_FIELD_subject,
+  TOPIC_FIELD_LAST = TOPIC_FIELD_reply_to_topic_nsid
+} flickcurl_topic_field_type;
+
+
+/**
+ * flickcurl_topic_field:
+ * @string: string field value
+ * @integer: integer field value
+ * @type: field type
+ *
+ * Field of a topic structure
+ */
+typedef struct {
+  char* string;
+  flickcurl_topic_field_type integer;
+  flickcurl_field_value_type type;
+} flickcurl_topic_field;
+  
+
+/**
+ * flickcurl_topic: 
+ * @id: topic NSID
+ * @fields: topic fields
+ *
+ * A group topic or reply.
+ *
+ */
+typedef struct {
+  char *nsid;
+
+  flickcurl_topic_field fields[TOPIC_FIELD_LAST + 1];
+} flickcurl_topic;
+
+   
+/**
+ * flickcurl_topic_list:
+ * @topics: list of topics. May be NULL on failure.
+ * @topics_count: number of topics in @topics. Undefined on failure
+ * @page: current topic list page
+ * @per_page: current topic list per-page
+ * @total_count: total number of topics available of which the current @page and @per_page is a slice
+ *
+ * A Group Topic List
+ */
+typedef struct {
+  flickcurl_topic** topics;
+  int topics_count;
+  int date_created;
+  int date_last_post;
+  char *group_nsid;
+  int icon_server;
+  int icon_farm;
+  char *name;
+  int members;
+  int privacy;
+  char* lang;
+  int ispoolmoderated;
+  int total;
+  int page;
+  int per_page;
+  int total_count;
+} flickcurl_topic_list;
+
+
 /* callback handlers */
 
 /**
@@ -1757,6 +1866,10 @@ void flickcurl_free_shape(flickcurl_shapedata *shape);
 FLICKCURL_API
 void flickcurl_free_shapes(flickcurl_shapedata **shapes_object);
 FLICKCURL_API
+void flickcurl_free_topic(flickcurl_topic *topic);
+FLICKCURL_API
+void flickcurl_free_topic_list(flickcurl_topic_list *topic_list);
+FLICKCURL_API
 void flickcurl_free_video(flickcurl_video *video);
 FLICKCURL_API
 void flickcurl_free_tag_predicate_value(flickcurl_tag_predicate_value* tag_pv);
@@ -1794,6 +1907,9 @@ FLICKCURL_API
 const char* flickcurl_get_field_value_type_label(flickcurl_field_value_type datatype);
 FLICKCURL_API
 const char* flickcurl_get_context_type_field_label(flickcurl_context_type type);
+FLICKCURL_API
+const char*
+flickcurl_get_topic_field_label(flickcurl_topic_field_type field);
 
 FLICKCURL_API
 const char* flickcurl_get_content_type_label(int content_type);
@@ -1931,8 +2047,32 @@ flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
 FLICKCURL_API
 flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
 FLICKCURL_API
+int flickcurl_groups_join(flickcurl* fc,  const char* group_id, const char* accept_rules);
+FLICKCURL_API
+int flickcurl_groups_leave(flickcurl* fc, const char* group_id, int delete_photos);
+FLICKCURL_API
 flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
 
+/* flickr.groups.discuss.replies */
+FLICKCURL_API
+int flickcurl_groups_discuss_replies_add(flickcurl* fc, const char* topic_id, const char* message);
+FLICKCURL_API
+int flickcurl_groups_discuss_replies_delete(flickcurl* fc, const char* topic_id, const char* reply_id);
+FLICKCURL_API
+int flickcurl_groups_discuss_replies_edit(flickcurl* fc, const char* topic_id, const char* reply_id, const char* message);
+FLICKCURL_API
+flickcurl_topic* flickcurl_groups_discuss_replies_getInfo(flickcurl* fc, const char* topic_id, const char* reply_id);
+FLICKCURL_API
+flickcurl_topic_list* flickcurl_groups_discuss_replies_getList(flickcurl* fc, const char* topic_id, int per_page, int page);
+
+/* flickr.groups.discuss.topics */
+FLICKCURL_API
+int flickcurl_groups_discuss_topics_add(flickcurl* fc, const char* group_id, const char* subject, const char* message);
+FLICKCURL_API
+flickcurl_topic* flickcurl_groups_discuss_topics_getInfo(flickcurl* fc, const char* topic_id);
+FLICKCURL_API
+flickcurl_topic_list* flickcurl_groups_discuss_topics_getList(flickcurl* fc, const char* group_id, int per_page, int page);  
+  
 /* flickr.groups.members */
 FLICKCURL_API
 void flickcurl_free_member(flickcurl_member *member_object);
