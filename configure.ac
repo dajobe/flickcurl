@@ -146,9 +146,6 @@ fi
 
 
 AC_CHECK_PROGS(PKG_CONFIG, pkg-config)
-if test "X$PKG_CONFIG" = X; then
-  AC_MSG_ERROR(Please install pkg-config from http://pkg-config.freedesktop.org/)
-fi
 
 PKG_CONFIG_REQUIRES=
 
@@ -159,28 +156,63 @@ AC_SUBST(LIBXML_MIN_VERSION)
 
 AC_ARG_WITH(xml2-config, [  --with-xml2-config=PATH   Location of libxml xml2-config []], xml2_config="$withval", xml2_config="")
 
-if test "X$xml2_config" != "X" ; then
-  AC_MSG_WARN(Ignoring --with-xml2-config parameter: using pkg-config now)
+if test "X$xml2_config" != "Xno" ; then
+  if test "X$xml2_config" != "X" ; then
+    AC_MSG_CHECKING(for $xml2_config)
+
+    if test -f $xml2_config ; then
+      XML_CONFIG=$xml2_config
+      AC_MSG_RESULT(yes)
+    else
+      AC_MSG_RESULT(no - searching PATH)
+    fi
+  fi
+
+  if test "X$XML_CONFIG" = "X" ; then
+    AC_CHECK_PROGS(XML_CONFIG, xml2-config)
+  fi
 fi
 
-AC_MSG_CHECKING(for libxml)
-if $PKG_CONFIG libxml-2.0 --exists; then
-  :
+libxml_source=no
+if test "X$XML_CONFIG" != "X"; then
+  oCPPFLAGS="$CPPFLAGS"
+  oLIBS="$LIBS"
+
+  CPPFLAGS="`$XML_CONFIG --cflags` $CPPFLAGS"
+  LIBS="$LIBS `$XML_CONFIG --libs`"
+  AC_CHECK_FUNC(xmlCreatePushParserCtxt, have_xmlCreatePushParserCtxt=yes, have_xmlCreatePushParserCtxt=no)
+
+  AC_MSG_CHECKING(for libxml via xml2-config)
+  if test $have_xmlCreatePushParserCtxt = yes; then
+    libxml_source="xml2-config"
+    LIBXML_VERSION=`$XML_CONFIG --version`
+  fi
+  CPPFLAGS="$oCPPFLAGS"
+  LIBS="$oLIBS"
+else
+  AC_MSG_CHECKING(for libxml via pkg-config)
+  XML_CONFIG="$PKG_CONFIG libxml-2.0"
+  if $XML_CONFIG --exists; then
+    LIBXML_VERSION=`$XML_CONFIG --modversion 2>/dev/null`
+    libxml_source="pkg-config"
+  fi
+fi
+
+if test "$libxml_source" != "no"; then
+  AC_MSG_RESULT(yes - $LIBXML_VERSION via $libxml_source)
 else
   AC_MSG_RESULT(no - not found)
-  AC_MSG_ERROR(Please install version $LIBXML_MIN_VERSION or newer)
+  AC_MSG_ERROR(Please install version $libxml_min_version or newer)
 fi
 
-LIBXML_VERSION=`$PKG_CONFIG libxml-2.0 --modversion 2>/dev/null`
-AC_MSG_RESULT(yes - $LIBXML_VERSION)
-if $PKG_CONFIG libxml-2.0 --atleast-version=$LIBXML_MIN_VERSION; then
-  :
-else
+libxml_min_version_dec=`echo $libxml_min_version | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+libxml_version_dec=`echo $LIBXML_VERSION | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+if test $libxml_version_dec -lt $libxml_min_version_dec; then
   AC_MSG_ERROR(libxml $LIBXML_VERSION is too old - $libxml_min_version or newer required.)
 fi
 
-LIBS="$LIBS `$PKG_CONFIG libxml-2.0 --libs`"
-CFLAGS="`$PKG_CONFIG libxml-2.0 --cflags` $CFLAGS"
+LIBS="$LIBS `$XML_CONFIG --libs`"
+CFLAGS="`$XML_CONFIG --cflags` $CFLAGS"
 
 if test "X$PKG_CONFIG_REQUIRES" != X; then
   PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
@@ -194,33 +226,69 @@ AC_SUBST(LIBCURL_MIN_VERSION)
 
 AC_ARG_WITH(curl-config, [  --with-curl-config=PATH   Location of libcurl curl-config []], curl_config="$withval", curl_config="")
 
-if test "X$curl_config" != "X" ; then
-  AC_MSG_WARN(Ignoring --with-curl-config parameter: using pkg-config now)
+if test "X$curl_config" != "Xno" ; then
+  if test "X$curl_config" != "X" ; then
+    AC_MSG_CHECKING(for $curl_config)
+
+    if test -f $curl_config ; then
+      CURL_CONFIG=$curl_config
+      AC_MSG_RESULT(yes)
+    else
+      AC_MSG_RESULT(no - searching PATH)
+    fi
+  fi
+
+  if test "X$CURL_CONFIG" = "X" ; then
+    AC_CHECK_PROGS(CURL_CONFIG, curl-config)
+  fi
 fi
 
-AC_MSG_CHECKING(for libcurl)
-if $PKG_CONFIG libcurl --exists; then
-:
+libcurl_source=no
+if test "X$CURL_CONFIG" != "X"; then
+  oCPPFLAGS="$CPPFLAGS"
+  oLIBS="$LIBS"
+
+  CPPFLAGS="`$CURL_CONFIG --cflags` $CPPFLAGS"
+  LIBS="$LIBS `$CURL_CONFIG --libs`"
+  AC_CHECK_FUNC(curl_easy_init, have_curl_easy_init=yes, have_curl_easy_init=no)
+
+  AC_MSG_CHECKING(for libcurl via curl-config)
+  if test $have_curl_easy_init = yes; then
+    libcurl_source="curl-config"
+    LIBCURL_VERSION=`$CURL_CONFIG --version | $AWK '{print $NF}'`
+  fi
+  CPPFLAGS="$oCPPFLAGS"
+  LIBS="$oLIBS"
+else
+  AC_MSG_CHECKING(for libcurl via pkg-config)
+  CURL_CONFIG="$PKG_CONFIG libcurl"
+  if $CURL_CONFIG --exists; then
+    LIBCURL_VERSION=`$CURL_CONFIG --modversion 2>/dev/null`
+    libcurl_source="pkg-config"
+  fi
+fi
+
+if test "$libcurl_source" != "no"; then
+  AC_MSG_RESULT(yes - $LIBCURL_VERSION via $libcurl_source)
 else
   AC_MSG_RESULT(no - not found)
-  AC_MSG_ERROR(Please install version $LIBCURL_MIN_VERSION or newer)
+  AC_MSG_ERROR(Please install version $libcurl_min_version or newer)
 fi
 
-LIBCURL_VERSION=`$PKG_CONFIG libcurl --modversion 2>/dev/null`
-AC_MSG_RESULT(yes - $LIBCURL_VERSION)
-if $PKG_CONFIG libcurl --atleast-version=$LIBCURLL_MIN_VERSION; then
-  :
-else
-  AC_MSG_ERROR(curl $LIBCURL_VERSION is too old - $LIBCURL_MIN_VERSION or newer required.)
+libcurl_min_version_dec=`echo $libcurl_min_version | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+libcurl_version_dec=`echo $LIBCURL_VERSION | $AWK -F. '{printf("%d\n", 10000*$1 + 100*$2 + $3)};'`
+if test $libcurl_version_dec -lt $libcurl_min_version_dec; then
+  AC_MSG_ERROR(libcurl $LIBCURL_VERSION is too old - $libcurl_min_version or newer required.)
 fi
 
-LIBS="$LIBS `$PKG_CONFIG libcurl --libs`"
-CFLAGS="`$PKG_CONFIG libcurl --cflags` $CFLAGS"
+LIBS="$LIBS `$CURL_CONFIG --libs`"
+CFLAGS="`$CURL_CONFIG --cflags` $CFLAGS"
 
 if test "X$PKG_CONFIG_REQUIRES" != X; then
   PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
 fi
 PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libcurl >= $LIBCURL_MIN_VERSION"
+
 
 
 dnl raptor - optional
@@ -372,7 +440,7 @@ AC_OUTPUT
 
 AC_MSG_RESULT([
 Flickcurl build summary:
-  libxml  $LIBXML_VERSION
-  curl    $LIBCURL_VERSION
+  libxml  $LIBXML_VERSION via $libxml_source
+  curl    $LIBCURL_VERSION via $libcurl_source
   raptor  $RAPTOR_VERSION
 ])
