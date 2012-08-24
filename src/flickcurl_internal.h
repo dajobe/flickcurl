@@ -348,13 +348,18 @@ struct flickcurl_s {
    * operations can be done (in most cases).
    */
 
-  /* Flickr shared secret - flickcurl_set_shared_secret() */
+  /* Flickr legacy auth token secret - flickcurl_set_shared_secret() */
   char* secret;
 
-  /* Flickr application/api key  - flickcurl_set_api_key() */
+  /* Flickr application/api key  - flickcurl_set_api_key() 
+   *
+   * Not owned freed here - a pointer into od.client_key
+   *
+   * FIXME: remove at some point
+   */
   char* api_key;
 
-  /* Flickr authentication token - flickcurl_set_auth_token() */
+  /* Flickr legacy auth token - flickcurl_set_auth_token() */
   char* auth_token;
 
   /* API call must be signed even if 'auth_token' is NULL - flickcurl_set_sign()
