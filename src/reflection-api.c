@@ -68,7 +68,8 @@ flickcurl_reflection_getMethods(flickcurl* fc)
   
   parameters[count][0]  = NULL;
 
-  if(flickcurl_prepare(fc, "flickr.reflection.getMethods", parameters, count))
+  if(flickcurl_prepare_noauth(fc, "flickr.reflection.getMethods",
+                              parameters, count))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
