@@ -330,23 +330,14 @@ main(int argc, char *argv[])
 
   /* Request token */
   if(cmd_index == 0) {
-    flickcurl_oauth_data* od = &fc->od;
+    flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
 
-    memset(od, '\0', sizeof(od));
-
-    od->client_key = fc->api_key;
-    od->client_key_len = strlen(od->client_key);
-    od->client_secret = fc->secret;
-    od->client_secret_len = strlen(od->client_secret);
-    
     rc = flickcurl_oauth_request_token(fc);
 
     if(!rc) {
       char* uri;
 
-      fprintf(stderr, 
-              "OAuth request token returned token '%s' secret token '%s'\n",
-              od->request_token, od->request_token_secret);
+      fprintf(stderr, "Flickr OAuth request token returned ok\n");
 
       uri = flickcurl_oauth_get_authorize_uri(fc);
       if(uri) {
@@ -366,10 +357,8 @@ main(int argc, char *argv[])
 
     memset(od, '\0', sizeof(od));
 
-    od->client_key = fc->api_key;
-    od->client_key_len = strlen(od->client_key);
-    od->client_secret = fc->secret;
-    od->client_secret_len = strlen(od->client_secret);
+    flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
+
     od->request_token = (char*)request_token;
     od->request_token_len = strlen(request_token);
     od->request_token_secret = (char*)request_token_secret;
