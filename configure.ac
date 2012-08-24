@@ -73,6 +73,7 @@ AC_SUBST(LIBFLICKCURL_LIBTOOL_VERSION)
 
 
 # Checks for programs.
+AM_PROG_AR
 AM_PROG_CC_C_O
 
 m4_undefine([AC_PROG_CXX])
