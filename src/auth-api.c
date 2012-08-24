@@ -297,17 +297,17 @@ flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
             auth_token, auth_token_secret);
 #endif
 
-    /* Remove legacy Flickr auth fields - not valid or needed */
+    /* Old shared secret becomes OAuth client_secret (paired with client_key) */
+    od->client_secret = fc->secret;
+    fc->secret = NULL;
+
+    /* Remove legacy Flickr auth token - not valid or needed */
     if(fc->auth_token) {
       free(fc->auth_token);
       fc->auth_token = NULL;
     }
-    if(fc->secret) {
-      free(fc->secret);
-      fc->secret = NULL;
-    }
 
-    /* Store OAuth token and secret in the oauth structure */
+    /* Store OAuth token and token secret in the oauth structure */
     od->token = auth_token;
     od->token_len = strlen(auth_token);
     od->token_secret = auth_token_secret;
