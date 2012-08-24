@@ -21,8 +21,12 @@
  *
  * ~/.flickcurl.conf should contain the authentication details in the form:
  * [flickr]
- * auth_token=1234567-8901234567890123
+ * oauth_token=1234567-8901234567890123
+ * oauth_secret=fedcba9876543210
  * api_key=0123456789abcdef0123456789abcdef
+ *
+ * If the old Flickr auth is used the values will be:
+ * auth_token=1234567-8901234567890123
  * secret=fedcba9876543210
  *
  * To authenticate from a FROB - to generate an auth_token from a FROB use:
