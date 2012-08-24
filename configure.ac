@@ -295,15 +295,6 @@ if test $offline = yes -a $capture = yes; then
 fi
 
 
-AC_ARG_ENABLE(oauth, [  --enable-oauth          Compile experimental OAuth code (default disabled).  ], oauth="yes", oauth="no")	
-AC_MSG_CHECKING(experimental OAuth code)
-AC_MSG_RESULT($oauth);
-if test $oauth = yes; then
-  AC_DEFINE(FLICKCURL_OAUTH, 1, [Experimental OAuth code])
-fi
-AM_CONDITIONAL(FLICKCURL_OAUTH, test $oauth = yes)
-
-
 dnl compiler checks
 
 AC_DEFUN([FLICKCURL_CC_TRY_FLAG], [

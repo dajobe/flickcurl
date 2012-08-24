@@ -87,10 +87,18 @@ tags-api.c \
 test-api.c \
 upload-api.c \
 urls-api.c \
-flickcurl_internal.h
+flickcurl_internal.h \
+sha1.c \
+oauth.c \
+$(top_srcdir)/libmtwist/mt.c \
+$(top_srcdir)/libmtwist/seed.c \
+$(top_srcdir)/libmtwist/mtwist.h \
+$(top_srcdir)/libmtwist/mtwist_internal.h \
+mtwist_config.h
 
-AM_CFLAGS=
-libflickcurl_la_LIBADD=
+AM_CFLAGS = -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
+
+libflickcurl_la_LIBADD =
 
 libflickcurl_la_LDFLAGS = -version-info @LIBFLICKCURL_LIBTOOL_VERSION@
 
@@ -101,28 +109,9 @@ libflickcurl_la_LIBADD += @RAPTOR_LIBS@
 endif
 endif
 
-TESTS=
+TESTS=flickcurl_oauth_test
 
 CLEANFILES=$(TESTS)
 
-
-if FLICKCURL_OAUTH
-
-libflickcurl_la_SOURCES += \
-$(top_srcdir)/libmtwist/mt.c \
-$(top_srcdir)/libmtwist/seed.c \
-$(top_srcdir)/libmtwist/mtwist.h \
-$(top_srcdir)/libmtwist/mtwist_internal.h \
-mtwist_config.h
-
-AM_CFLAGS += -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
-
-libflickcurl_la_SOURCES += sha1.c \
-oauth.c
-
-TESTS += flickcurl_oauth_test
-
 flickcurl_oauth_test: $(srcdir)/oauth.c libflickcurl.la
 	$(LINK) $(DEFS) $(CPPFLAGS) -I$(srcdir) -I. -DSTANDALONE $(srcdir)/oauth.c libflickcurl.la $(LIBS)
-
-endif

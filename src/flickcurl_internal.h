@@ -27,10 +27,7 @@
 #include <curl/easy.h>
 
 #include <mtwist_config.h>
-
-#ifdef FLICKCURL_OAUTH
 #include <mtwist.h>
-#endif
 
 #if defined (OFFLINE) && defined (CAPTURE)
 #error "Cannot define both OFFLINE and CAPTURE"
@@ -265,7 +262,6 @@ struct flickcurl_chunk_s {
 typedef struct flickcurl_chunk_s flickcurl_chunk;
 
 
-#ifdef FLICKCURL_OAUTH
 typedef struct {
   /* client credentials */
   char* client_key; /* AKA consumer key or the Flickr API key */
@@ -306,7 +302,6 @@ typedef struct {
   unsigned char* data;
   size_t data_len;
 } flickcurl_oauth_data;
-#endif  
 
 
 struct flickcurl_s {
@@ -430,12 +425,10 @@ struct flickcurl_s {
   /* OAuth access token Web Service URI */
   char *oauth_access_token_uri;
 
-#if FLICKCURL_OAUTH
   /*  Used for OAuth nonce generation */
   mtwist* mt;
 
   flickcurl_oauth_data od;
-#endif
 };
 
 struct flickcurl_serializer_s
@@ -449,17 +442,13 @@ void flickcurl_serializer_init(void);
 void flickcurl_serializer_terminate(void);
 
 
-#ifdef FLICKCURL_OAUTH
-
 /* sha1.c */
 #define SHA1_DIGEST_LENGTH 20
 unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void *key, size_t key_len);
 
 
 /* oauth.c */
-
 #define FLICKCURL_MAX_OAUTH_PARAM_COUNT 8
-
 
 void flickcurl_oauth_free(flickcurl_oauth_data* od);
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
@@ -467,4 +456,3 @@ int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* m
 int flickcurl_oauth_request_token(flickcurl* fc);
 char* flickcurl_oauth_get_authorize_uri(flickcurl* fc);
 int flickcurl_oauth_access_token(flickcurl* fc, const char* verifier);
-#endif
