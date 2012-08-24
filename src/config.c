@@ -295,7 +295,7 @@ flickcurl_config_write_ini(flickcurl *fc,
     fputs(s, fh);
     s = flickcurl_get_oauth_token_secret(fc);
     if(s) {
-      fputs("\noauth_secret=", fh);
+      fputs("\noauth_token_secret=", fh);
       fputs(s, fh);
     }
     s = flickcurl_get_oauth_client_key(fc);
