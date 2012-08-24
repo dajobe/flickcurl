@@ -727,12 +727,13 @@ flickcurl_sort_args(flickcurl *fc, const char *parameters[][2], int count)
 
 
 static int
-flickcurl_prepare_common(flickcurl *fc, 
-                         const char* url,
-                         const char* method,
-                         const char* upload_field, const char* upload_value,
-                         const char* parameters[][2], int count,
-                         int parameters_in_url, int need_auth)
+flickcurl_legacy_prepare_common(flickcurl *fc, 
+                                const char* url,
+                                const char* method,
+                                const char* upload_field,
+                                const char* upload_value,
+                                const char* parameters[][2], int count,
+                                int parameters_in_url, int need_auth)
 {
   int i;
   char *md5_string = NULL;
@@ -947,6 +948,37 @@ flickcurl_prepare_common(flickcurl *fc,
 
   return 0;
 }
+
+
+static int
+flickcurl_prepare_common(flickcurl *fc, 
+                         const char* url,
+                         const char* method,
+                         const char* upload_field,
+                         const char* upload_value,
+                         const char* parameters[][2], int count,
+                         int parameters_in_url, int need_auth)
+{
+  int rc;
+
+  if(fc->secret && fc->auth_token)
+    /* Call with legacy Flickr auth */
+    rc = flickcurl_legacy_prepare_common(fc, url, method,
+                                         upload_field, upload_value,
+                                         parameters, count,
+                                         parameters_in_url, need_auth);
+  else if (fc->od.token && fc->od.token_secret)
+    /* Call with OAuth */
+    rc = flickcurl_oauth_prepare_common(fc, url, method,
+                                        upload_field, upload_value,
+                                        parameters, count,
+                                        parameters_in_url, need_auth);
+  else
+    flickcurl_error(fc, "No legacy or OAuth authentication tokens or secrets");
+
+  return rc;
+}
+
 
 
 int
