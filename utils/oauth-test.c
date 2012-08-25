@@ -48,7 +48,6 @@
 #endif
 
 #include <flickcurl.h>
-#include <flickcurl_internal.h>
 
 
 
@@ -78,58 +77,6 @@ my_message_handler(void *user_data, const char *message)
 {
   fprintf(stderr, "%s: ERROR: %s\n", program, message);
 }
-
-
-static int
-oauth_prepare(flickcurl *fc,
-              const char* method, const char* parameters[][2], int count)
-{
-  if(!method) {
-    flickcurl_error(fc, "No method to prepare");
-    return 1;
-  }
-  
-  return flickcurl_oauth_prepare_common(fc,
-                                        fc->service_uri,
-                                        method,
-                                        NULL, NULL,
-                                        parameters, count,
-                                        1, 1);
-}
-
-
-static int
-oauth_test_echo(flickcurl* fc,
-                const char* key, const char* value)
-{
-  const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
-  int count = 0;
-  xmlDocPtr doc = NULL;
-  int rc = 0;
-  
-  parameters[count][0]  = key;
-  parameters[count++][1]= value;
-
-  parameters[count][0]  = NULL;
-
-  if(oauth_prepare(fc, "flickr.test.echo", parameters, count)) {
-    rc = 1;
-    goto tidy;
-  }
-
-  doc = flickcurl_invoke(fc);
-  if(!doc) {
-    rc = 1;
-    goto tidy;
-  }
-
-  fprintf(stderr, "Flickr echo returned %d bytes\n", fc->total_bytes);
-  
-  tidy:
-  
-  return rc;
-}
-
 
 
 
@@ -332,8 +279,6 @@ main(int argc, char *argv[])
   if(cmd_index == 0) {
     const char* callback = NULL;
 
-    flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
-
     if(argc > 1)
       callback = argv[1];
 
@@ -361,7 +306,6 @@ main(int argc, char *argv[])
     const char* request_token_secret = argv[2];
     const char* verifier = argv[3];
 
-    flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
     flickcurl_set_oauth_request_credentials(fc, request_token, request_token_secret);
     rc = flickcurl_oauth_create_access_token(fc, verifier);
 
@@ -376,7 +320,7 @@ main(int argc, char *argv[])
 
 
   if(cmd_index == 2) {
-    rc = oauth_test_echo(fc, "hello", "world");
+    rc = flickcurl_test_echo(fc, "hello", "world");
   }
   
 
