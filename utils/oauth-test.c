@@ -332,7 +332,7 @@ main(int argc, char *argv[])
   if(cmd_index == 0) {
     flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
 
-    rc = flickcurl_oauth_create_request_token(fc);
+    rc = flickcurl_oauth_create_request_token(fc, NULL);
     if(!rc) {
       char* uri;
 

@@ -1879,7 +1879,7 @@ void flickcurl_set_oauth_request_credentials(flickcurl *fc, const char* request_
 
 /* OAuth flow requests */
 FLICKCURL_API
-int flickcurl_oauth_create_request_token(flickcurl* fc);
+int flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback);
 FLICKCURL_API
 char* flickcurl_oauth_get_authorize_uri(flickcurl* fc);
 FLICKCURL_API

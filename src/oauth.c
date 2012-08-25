@@ -605,20 +605,22 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 /**
  * flickcurl_oauth_create_request_token:
  * @fc: flickcurl object
+ * @callback: callback URL or NULL for out of band
  *
  * Request an OAuth request token from Flickr for the application API Key/secret
  *
  * Requires the OAuth Client key (API key) and Client secret to have
  * been set with flickcurl_set_oauth_client_credentials().
  * 
- * Calls the Flickr OAuth endpoint to get a request token.
+ * Calls the Flickr OAuth endpoint to get a request token for the
+ * given callback or uses out-of-band if @callback is NULL.
  *
  * On success, stores the request token in the @fc structure.
  *
  * Return value: non-0 on failure
  */
 int
-flickcurl_oauth_create_request_token(flickcurl* fc)
+flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback)
 {
   flickcurl_oauth_data* od = &fc->od;
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
@@ -635,7 +637,10 @@ flickcurl_oauth_create_request_token(flickcurl* fc)
   /* Require signature */
   flickcurl_set_sign(fc);
 
-  od->callback = "oob";
+  if(!callback || !*callback)
+    callback = "oob";
+  od->callback = callback;
+
   rc = flickcurl_oauth_prepare_common(fc,
                                       uri,
                                       /* method */ "flickr.oauth.request_token",
