@@ -5649,21 +5649,31 @@ main(int argc, char *argv[])
       }
 
       fprintf(stderr, "%s: Configuration file %s not found.\n\n"
-"1. Visit http://www.flickr.com/services/api/keys/ and obtain a\n"
-"mobile application <API Key>, <Shared Secret> and <Authentication URL>.\n"
+"1. Visit http://www.flickr.com/services/api/keys/ to get an <API Key>\n"
+"    and <Shared Secret>.\n"
 "\n"
 "2. Create %s in this format:\n"
 "[flickr]\n"
-"api_key=<API Key>\n"
-"secret=<Shared Secret>\n"
+"oauth_client_key=<Client key / API Key>\n"
+"oauth_client_secret=<Client secret / Shared Secret>\n"
 "\n"
-"3. Visit the <Authentication URL> in a browser to get a <FROB>\n"
+"3. Call this program with:\n"
+"  %s oauth-create\n"
+"  (or %s oauth-create <Callback URL> if you understand and need that)\n"
+"This gives a <Request Token> <Request Token Secret> and <Authentication URL>\n"
 "\n"
-"4. Call this program with the frob:\n"
-"  %s -a <FROB>\n"
-"to update the configuration file with the authentication token.\n"
+"4. Visit the <Authentication URL> and approve the request to get a <Verifier>\n"
+"\n"
+"5. Call this program with the <Request Token>, <Request Token Secret>\n"
+"    and <Verifier>:\n"
+"  %s oauth-verify <Request Token> <Request Token Secret> <Verifier>\n"
+"\n"
+"This will write the configuration file with the OAuth access tokens.\n"
 "See http://librdf.org/flickcurl/api/flickcurl-auth.html for full instructions.\n",
-	      program, config_path, config_path, program);
+	      program, config_path,
+              config_path,
+              program, program,
+              program);
       rc = 1;
       goto tidy;
     }
