@@ -1060,8 +1060,8 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                     string_value, (long)unix_time, new_value);
 #endif
             free(string_value);
-            string_value= new_value;
-            int_value= (int)unix_time;
+            string_value = new_value;
+            int_value = (int)unix_time;
             datatype = VALUE_TYPE_DATETIME;
           } else
             /* failed to convert, make it a string */
@@ -1072,6 +1072,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case VALUE_TYPE_BOOLEAN:
           if(!*string_value && datatype == VALUE_TYPE_BOOLEAN) {
             /* skip setting field with a boolean value '' */
+            free(string_value);
             special = 1;
             break;
           }
@@ -1084,6 +1085,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           photo->tags = flickcurl_build_tags_from_string(fc, photo,
                                                          (const char*)string_value,
                                                          &photo->tags_count);
+          free(string_value);
           special = 1;
           break;
 
@@ -1100,6 +1102,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           abort();
       }
 
+      /* If special, do not store here */
       if(special)
         continue;
 
