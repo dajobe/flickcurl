@@ -261,7 +261,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
   for(i = 0, person_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
-    flickcurl_person* person;
+    flickcurl_person* person = NULL;
     int expri;
     xmlXPathContextPtr xpathNodeCtx = NULL;
     
@@ -358,10 +358,22 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 #endif
       
       if(fc->failed)
-        goto tidy;
-    }
+        break;
+    } /* end for person fields */
 
-    persons[person_count++] = person;
+    if(fc->failed) {
+      if(person)
+        flickcurl_free_person(person);
+    } else {
+      persons[person_count++] = person;
+    }
+    
+    if(xpathNodeCtx)
+      xmlXPathFreeContext(xpathNodeCtx);
+
+    if(fc->failed)
+      goto tidy;
+
   } /* for persons */
   
   if(person_count_p)
@@ -371,8 +383,11 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
-  if(fc->failed)
+  if(fc->failed) {
+    if(persons)
+      flickcurl_free_persons(persons);
     persons = NULL;
+  }
 
   return persons;
 }
