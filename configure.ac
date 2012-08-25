@@ -250,12 +250,13 @@ if test "X$CURL_CONFIG" != "X"; then
 
   CPPFLAGS="`$CURL_CONFIG --cflags` $CPPFLAGS"
   LIBS="$LIBS `$CURL_CONFIG --libs`"
+  AC_CHECK_HEADER(curl/curl.h)
   AC_CHECK_FUNC(curl_easy_init, have_curl_easy_init=yes, have_curl_easy_init=no)
 
   AC_MSG_CHECKING(for libcurl via curl-config)
   if test $have_curl_easy_init = yes; then
     libcurl_source="curl-config"
-    LIBCURL_VERSION=`$CURL_CONFIG --version | $AWK '{print $NF}'`
+    LIBCURL_VERSION=`$CURL_CONFIG --version | sed -e 's/^libcurl *//'`
   fi
   CPPFLAGS="$oCPPFLAGS"
   LIBS="$oLIBS"
