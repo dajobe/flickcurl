@@ -185,7 +185,7 @@ print_help_string(void)
 
   fputs("\nCOMMANDS\n", stdout);
 
-  puts("  request_token\n    Ask for an OAuth request token and show the authorize url.\n");
+  puts("  request_token  [CALLBACK-URI]\n    Ask for an OAuth request token with CALLBACK-URI (or \"oob\")\n    and show the user authorize url.\n");
   puts("  access_token   REQUEST_TOKEN REQUEST_TOKEN_SECRET VERIFIER\n    Use a request token with verifier to get an access token.\n");
   puts("  echo\n    Run the test.echo API call using OAuth.\n");
 }
@@ -330,9 +330,14 @@ main(int argc, char *argv[])
 
   /* Request token */
   if(cmd_index == 0) {
+    const char* callback = NULL;
+
     flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
 
-    rc = flickcurl_oauth_create_request_token(fc, NULL);
+    if(argc > 1)
+      callback = argv[1];
+
+    rc = flickcurl_oauth_create_request_token(fc, callback);
     if(!rc) {
       char* uri;
 
@@ -371,10 +376,6 @@ main(int argc, char *argv[])
 
 
   if(cmd_index == 2) {
-    flickcurl_oauth_data* od = &fc->od;
-
-    memset(od, '\0', sizeof(od));
-
     rc = oauth_test_echo(fc, "hello", "world");
   }
   
