@@ -1870,7 +1870,21 @@ FLICKCURL_API
 const char* flickcurl_get_oauth_client_secret(flickcurl *fc);
 FLICKCURL_API
 void flickcurl_set_oauth_client_credentials(flickcurl *fc, const char* client_key, const char* client_secret);
-  
+FLICKCURL_API
+const char* flickcurl_get_oauth_request_token(flickcurl* fc);
+FLICKCURL_API
+const char* flickcurl_get_oauth_request_token_secret(flickcurl* fc);
+FLICKCURL_API
+void flickcurl_set_oauth_request_credentials(flickcurl *fc, const char* request_token, const char* request_token_secret);
+
+/* OAuth flow requests */
+FLICKCURL_API
+int flickcurl_oauth_create_request_token(flickcurl* fc);
+FLICKCURL_API
+char* flickcurl_oauth_get_authorize_uri(flickcurl* fc);
+FLICKCURL_API
+int flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier);
+
 /* flickr.blogs */
 FLICKCURL_API
 flickcurl_blog** flickcurl_blogs_getList(flickcurl* fc);

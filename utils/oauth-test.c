@@ -332,13 +332,15 @@ main(int argc, char *argv[])
   if(cmd_index == 0) {
     flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
 
-    rc = flickcurl_oauth_request_token(fc);
-
+    rc = flickcurl_oauth_create_request_token(fc);
     if(!rc) {
       char* uri;
 
-      fprintf(stderr, "Flickr OAuth request token returned ok\n");
-
+      fprintf(stderr, "%s: Request token %s and request token secret %s\n",
+              program,
+              flickcurl_get_oauth_request_token(fc),
+              flickcurl_get_oauth_request_token_secret(fc));
+      
       uri = flickcurl_oauth_get_authorize_uri(fc);
       if(uri) {
         fprintf(stderr, "%s: Authorize uri is %s\n", program, uri);
@@ -350,26 +352,19 @@ main(int argc, char *argv[])
 
   /* Access token */
   if(cmd_index == 1) {
-    flickcurl_oauth_data* od = &fc->od;
     const char* request_token = argv[1];
     const char* request_token_secret = argv[2];
     const char* verifier = argv[3];
 
-    memset(od, '\0', sizeof(od));
-
     flickcurl_set_oauth_client_credentials(fc, fc->api_key, fc->secret);
-
-    od->request_token = (char*)request_token;
-    od->request_token_len = strlen(request_token);
-    od->request_token_secret = (char*)request_token_secret;
-    od->request_token_secret_len = strlen(request_token_secret);
-    
-    rc = flickcurl_oauth_access_token(fc, verifier);
+    flickcurl_set_oauth_request_credentials(fc, request_token, request_token_secret);
+    rc = flickcurl_oauth_create_access_token(fc, verifier);
 
     if(!rc) {
       fprintf(stderr, 
               "OAuth access token returned token '%s' secret token '%s'\n",
-              od->token, od->token_secret);
+              flickcurl_get_oauth_token(fc),
+              flickcurl_get_oauth_token_secret(fc));
     }
 
   }

@@ -603,7 +603,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 
 
 /**
- * flickcurl_oauth_request_token:
+ * flickcurl_oauth_create_request_token:
  * @fc: flickcurl object
  *
  * Request an OAuth request token from Flickr for the application API Key/secret
@@ -618,7 +618,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
  * Return value: non-0 on failure
  */
 int
-flickcurl_oauth_request_token(flickcurl* fc)
+flickcurl_oauth_create_request_token(flickcurl* fc)
 {
   flickcurl_oauth_data* od = &fc->od;
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
@@ -691,15 +691,21 @@ flickcurl_oauth_request_token(flickcurl* fc)
 }
 
 
-/*
+/**
  * flickcurl_oauth_get_authorize_uri:
  * @fc: flickcurl object
  *
- * INTERNAL - get the URL for the user to authorize an application
+ * Get the URL for the user to authorize Flickr OAuth of an application
  *
  * Forms the URL the user needs to start at to authorize the
- * application.  The application should pass the verifier to
- * flickcurl_oauth_access_token() for the final step in OAuth.
+ * application.
+ *
+ * This function requires flickcurl_oauth_create_request_token() to have
+ * been called to build a request token / secret pair.
+ *
+ * After this function, the application should pass the verifier to
+ * flickcurl_oauth_create_access_token() for the final step in OAuth along
+ * with the request token and request token secret.
  *
  * Return value: authorize URI or NULL on failure
  */
@@ -734,26 +740,21 @@ flickcurl_oauth_get_authorize_uri(flickcurl* fc)
 }
 
 
-/*
- * flickcurl_oauth_access_token:
+/**
+ * flickcurl_oauth_create_access_token:
  * @fc: flickcurl object
  * @verifier: verifier from OOB authentication
  *
- * INTERNAL - get a Flickr OAuth access token from a verifier
+ * Get a Flickr OAuth access token from request token credentials and verifier
  *
  * Calls the Flickr OAuth access token endpoint using the verifier
- * from out of band authentication to get an access token.
- *
- * Uses the @verifier and the @od fields 'request_token' and
- * 'request_token_secret' to get an access token stored which on
- * success is stored in the @od fields 'access_token' and
- * 'access_token_secret'.  The request token fields are deleted on
- * success.
+ * from out of band authentication to get an access token to enable
+ * authenticated calls to the Flickr API.
  *
  * Return value: non-0 on failure
  */
 int
-flickcurl_oauth_access_token(flickcurl* fc, const char* verifier)
+flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
 {
   flickcurl_oauth_data* od = &fc->od;
   const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
@@ -765,6 +766,9 @@ flickcurl_oauth_access_token(flickcurl* fc, const char* verifier)
   const char* uri = fc->oauth_access_token_uri;
   int i;
   
+  if(!verifier)
+    return 1;
+
   parameters[count][0]  = NULL;
 
   /* Require signature */
@@ -877,6 +881,8 @@ flickcurl_get_oauth_client_secret(flickcurl *fc)
 /**
  * flickcurl_set_oauth_client_credentials:
  * @fc: flickcurl object
+ * @client_key: client key (API key)
+ * @client_secret: client secret (shared secret)
  *
  * Set OAuth client credentials (aka API key and secret)
  *
@@ -975,6 +981,72 @@ flickcurl_set_oauth_token_secret(flickcurl* fc, const char *secret)
 }
 
 
+/**
+ * flickcurl_get_oauth_request_token:
+ * @fc: flickcurl object
+ *
+ * Get OAuth request token
+ *
+ * Return value: request token or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_request_token(flickcurl* fc)
+{
+  return fc->od.request_token;
+}
+
+
+/**
+ * flickcurl_get_oauth_request_token_secret:
+ * @fc: flickcurl object
+ *
+ * Get OAuth request token secret
+ *
+ * Return value: request token secret or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_request_token_secret(flickcurl* fc)
+{
+  return fc->od.request_token_secret;
+}
+
+
+
+/**
+ * flickcurl_set_oauth_request_credentials:
+ * @fc: flickcurl object
+ * @request_token: request token
+ * @request_token_secret: request token secret
+ *
+ * Set OAuth request token credentials
+ *
+ * See also flickcurl_get_oauth_request_token() and
+ * flickcurl_get_oauth_request_token_secret().
+ */
+void
+flickcurl_set_oauth_request_credentials(flickcurl *fc,
+                                        const char* request_token,
+                                        const char* request_token_secret)
+{
+  flickcurl_oauth_data* od = &fc->od;
+
+  if(!request_token || !request_token_secret)
+    return;
+
+  if(fc->od.request_token)
+    free(fc->od.request_token);
+  if(fc->od.request_token_secret)
+    free(fc->od.request_token_secret);
+
+  od->request_token = strdup(request_token);
+  od->request_token_len = strlen(request_token);
+  od->request_token_secret = strdup(request_token_secret);
+  od->request_token_secret_len = strlen(request_token_secret);
+}
+
+
+
+
 #endif
 
 
@@ -1042,7 +1114,7 @@ test_request_token(flickcurl* fc)
 
   oauth_init_test_secrets(od);
 
-  rc = flickcurl_oauth_request_token(fc);
+  rc = flickcurl_oauth_create_request_token(fc);
 
   memset(od, '\0', sizeof(*od));
 
@@ -1067,7 +1139,7 @@ test_access_token(flickcurl* fc)
   
   oauth_init_test_secrets(od);
 
-  rc = flickcurl_oauth_access_token(fc, verifier);
+  rc = flickcurl_oauth_create_access_token(fc, verifier);
 
   memset(od, '\0', sizeof(*od));
 
