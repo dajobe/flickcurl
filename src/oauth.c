@@ -898,27 +898,25 @@ void
 flickcurl_set_oauth_client_credentials(flickcurl *fc, const char* client_key,
                                        const char* client_secret)
 {
-  flickcurl_oauth_data* od = &fc->od;
-
-  if(od.client_key) {
-    free(od.client_key);
-    od->client_key = NULL;
-    od->client_key_len = 0;
+  if(fc->od.client_key) {
+    free(fc->od.client_key);
+    fc->od.client_key = NULL;
+    fc->od.client_key_len = 0;
   }
 
-  if(od.client_secret) {
-    free(od.client_secret);
-    od->client_secret = NULL;
-    od->client_secret_len = 0;
+  if(fc->od.client_secret) {
+    free(fc->od.client_secret);
+    fc->od.client_secret = NULL;
+    fc->od.client_secret_len = 0;
   }
   
   if(client_key) {
-    od->client_key = strdup(client_key);
-    od->client_key_len = strlen(client_key);
+    fc->od.client_key = strdup(client_key);
+    fc->od.client_key_len = strlen(client_key);
   }
   if(client_secret) {
-    od->client_secret = strdup(client_secret);
-    od->client_secret_len = strlen(client_secret);
+    fc->od.client_secret = strdup(client_secret);
+    fc->od.client_secret_len = strlen(client_secret);
   }
 }
 
@@ -1053,10 +1051,10 @@ flickcurl_set_oauth_request_credentials(flickcurl *fc,
 {
   if(fc->od.request_token) {
     free(fc->od.request_token);
-    fc->od->request_token = NULL;
-    fc->od->request_token_len = 0;
+    fc->od.request_token = NULL;
+    fc->od.request_token_len = 0;
   }
-  if(od.request_token_secret) {
+  if(fc->od.request_token_secret) {
     free(fc->od.request_token_secret);
     fc->od.request_token_secret = NULL;
     fc->od.request_token_secret = 0;
