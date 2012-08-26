@@ -1869,7 +1869,9 @@ const char* flickcurl_get_oauth_client_key(flickcurl *fc);
 FLICKCURL_API
 const char* flickcurl_get_oauth_client_secret(flickcurl *fc);
 FLICKCURL_API
-void flickcurl_set_oauth_client_credentials(flickcurl *fc, const char* client_key, const char* client_secret);
+void flickcurl_set_oauth_client_key(flickcurl *fc, const char* client_key);
+FLICKCURL_API
+void flickcurl_set_oauth_client_secret(flickcurl *fc, const char* client_secret);
 FLICKCURL_API
 const char* flickcurl_get_oauth_request_token(flickcurl* fc);
 FLICKCURL_API

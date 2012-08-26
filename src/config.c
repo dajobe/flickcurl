@@ -245,9 +245,9 @@ flickcurl_config_var_handler(void* userdata,
   else if(!strcmp(key, "auth_token"))
     flickcurl_set_auth_token(fc, value);
   else if(!strcmp(key, "oauth_client_key"))
-    flickcurl_set_oauth_client_credentials(fc, value, flickcurl_get_oauth_client_key(fc));
+    flickcurl_set_oauth_client_key(fc, value);
   else if(!strcmp(key, "oauth_client_secret"))
-    flickcurl_set_oauth_client_credentials(fc, flickcurl_get_oauth_client_secret(fc), value);
+    flickcurl_set_oauth_client_secret(fc, value);
   else if(!strcmp(key, "oauth_token"))
     flickcurl_set_oauth_token(fc, value);
   else if(!strcmp(key, "oauth_token_secret"))

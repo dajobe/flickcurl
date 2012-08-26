@@ -884,19 +884,17 @@ flickcurl_get_oauth_client_secret(flickcurl *fc)
 
 
 /**
- * flickcurl_set_oauth_client_credentials:
+ * flickcurl_set_oauth_client_key:
  * @fc: flickcurl object
  * @client_key: client key (API key)
- * @client_secret: client secret (shared secret)
  *
- * Set OAuth client credentials (aka API key and secret)
+ * Set OAuth client key (aka API key)
  *
  * See also flickcurl_get_oauth_client_key() and
- * flickcurl_get_oauth_client_secret()
+ * flickcurl_set_oauth_client_credentials()
  */
 void
-flickcurl_set_oauth_client_credentials(flickcurl *fc, const char* client_key,
-                                       const char* client_secret)
+flickcurl_set_oauth_client_key(flickcurl *fc, const char* client_key)
 {
   if(fc->od.client_key) {
     free(fc->od.client_key);
@@ -904,16 +902,32 @@ flickcurl_set_oauth_client_credentials(flickcurl *fc, const char* client_key,
     fc->od.client_key_len = 0;
   }
 
+  if(client_key) {
+    fc->od.client_key = strdup(client_key);
+    fc->od.client_key_len = strlen(client_key);
+  }
+}
+
+
+/**
+ * flickcurl_set_oauth_client_secret:
+ * @fc: flickcurl object
+ * @client_secret: client key (shared key)
+ *
+ * Set OAuth client key (aka shared secret)
+ *
+ * See also flickcurl_set_oauth_client_secret() and
+ * flickcurl_set_oauth_client_credentials()
+ */
+void
+flickcurl_set_oauth_client_secret(flickcurl *fc, const char* client_secret)
+{
   if(fc->od.client_secret) {
     free(fc->od.client_secret);
     fc->od.client_secret = NULL;
     fc->od.client_secret_len = 0;
   }
   
-  if(client_key) {
-    fc->od.client_key = strdup(client_key);
-    fc->od.client_key_len = strlen(client_key);
-  }
   if(client_secret) {
     fc->od.client_secret = strdup(client_secret);
     fc->od.client_secret_len = strlen(client_secret);
