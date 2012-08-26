@@ -93,6 +93,10 @@ static const char* program;
 static FILE* output_fh;
 static const char *output_filename = "<stdout>";
 
+static const char* config_filename = ".flickcurl.conf";
+static const char* config_section = "flickr";
+char config_path[1024];
+
 
 static const char*
 my_basename(const char *name)
@@ -4936,6 +4940,72 @@ command_favorites_getContext(flickcurl* fc, int argc, char *argv[])
 }
 
 
+static int
+command_oauth_create(flickcurl* fc, int argc, char *argv[])
+{
+  char *callback = NULL;
+  char* uri;
+  int rc;
+
+  if(argc > 1)
+    callback = argv[1];
+ 
+  rc = flickcurl_oauth_create_request_token(fc, callback);
+  if(rc) {
+    fprintf(stderr, "%s: Failed to create OAuth Request token/secret\n",
+            program);
+    return 1;
+  }
+
+  fprintf(stderr, "%s: Request token %s and request token secret %s\n",
+          program,
+          flickcurl_get_oauth_request_token(fc),
+          flickcurl_get_oauth_request_token_secret(fc));
+ 
+  uri = flickcurl_oauth_get_authorize_uri(fc);
+  if(uri) {
+    fprintf(stderr, "%s: Authorize uri is %s\n", program, uri);
+    free(uri);
+  }
+
+  return 0;
+}
+
+
+static int
+command_oauth_verify(flickcurl* fc, int argc, char *argv[])
+{
+  int rc;
+
+  const char* request_token = argv[1];
+  const char* request_token_secret = argv[2];
+  const char* verifier = argv[3];
+
+  flickcurl_set_oauth_request_credentials(fc,
+                                          request_token, request_token_secret);
+  rc = flickcurl_oauth_create_access_token(fc, verifier);
+  if(rc) {
+    fprintf(stderr, "%s: Failed to verify OAuth Request\n",
+            program);
+    return 1;
+  }
+
+  fprintf(stderr,
+          "%s: OAuth access token returned token '%s' secret token '%s'\n",
+          program,
+          flickcurl_get_oauth_token(fc),
+          flickcurl_get_oauth_token_secret(fc));
+
+  rc = flickcurl_config_write_ini(fc, config_path, config_section);
+  if(!rc)
+    fprintf(stdout,
+            "%s: Updated configuration file %s with authentication token\n",
+            program, config_path);
+
+  return 0;
+}
+
+
 
 
 typedef struct {
@@ -5520,6 +5590,14 @@ static flickcurl_cmd commands[] = {
    "IMAGE-URL", "Get the photo id from a raw flickr farm IMAGE-URL", 
    command_source_uri_to_photoid,  1, 1},
 
+  {"oauth.create",
+   "[CALLBACK]", "Create OAuth request token/secret pair and show the authentication URL", 
+   command_oauth_create,  0, 1},
+
+  {"oauth.verify",
+   "REQUEST-TOKEN REQUEST-TOKEN-SECRET VERIFIER", "Verify an OAuth request from `oauth-create'", 
+   command_oauth_verify,  3, 3},
+
   {NULL, 
    NULL, NULL,
    NULL, 0, 0}
@@ -5529,8 +5607,6 @@ static flickcurl_cmd commands[] = {
 
 static const char *title_format_string = "Flickr API utility %s\n";
 
-static const char* config_filename = ".flickcurl.conf";
-static const char* config_section = "flickr";
 
 
 static void
@@ -5607,7 +5683,6 @@ main(int argc, char *argv[])
   int read_auth = 1;
   int i;
   const char* home;
-  char config_path[1024];
   int request_delay= -1;
   char *command = NULL;
 
