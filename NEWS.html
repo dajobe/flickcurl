@@ -34,7 +34,40 @@ parameter.  This fixes
 <a href="https://github.com/dajobe/flickcurl/issues/15">GitHub issue 15</a>
 </p>
 
+<p>New API calls to set OAuth parameters</p>
+
+<pre>
+  const char* flickcurl_get_oauth_token(flickcurl *fc);
+  void flickcurl_set_oauth_token(flickcurl *fc, const char* token);
+
+  const char* flickcurl_get_oauth_token_secret(flickcurl* fc);
+  void flickcurl_set_oauth_token_secret(flickcurl* fc, const char *secret);
+
+  const char* flickcurl_get_oauth_client_key(flickcurl *fc);
+  void flickcurl_set_oauth_client_key(flickcurl *fc, const char* client_key);
+
+  const char* flickcurl_get_oauth_client_secret(flickcurl *fc);
+  void flickcurl_set_oauth_client_secret(flickcurl *fc, const char* client_secret);
+
+  const char* flickcurl_get_oauth_request_token(flickcurl* fc);
+
+  const char* flickcurl_get_oauth_request_token_secret(flickcurl* fc);
+
+  void flickcurl_set_oauth_request_credentials(flickcurl *fc, const char* request_token, const char* request_token_secret);
+</pre>
+
+<p>New API calls for initiating the OAuth flow</p>
+
+<pre>
+  int flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback);
+
+  char* flickcurl_oauth_get_authorize_uri(flickcurl* fc);
+
+  int flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier);
+</pre>
+
 <p>Updated to 2012-04-18</p>
+
 
 
 <h2 id="D2011-12-28-V1.22">2011-12-28 Flickcurl Version 1.22 Released</h2>
