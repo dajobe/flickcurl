@@ -1076,14 +1076,14 @@ flickcurl_places_placesForUser(flickcurl* fc,
                                int woe_id, const char* place_id,
                                int threshold)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
   const char* place_type_str;
   char woe_id_str[20];
   char threshold_str[4];
+
+  flickcurl_init_params(fc);
 
   place_type_str = flickcurl_get_place_type_label(place_type);
   if(!place_type_str) {
@@ -1100,27 +1100,23 @@ flickcurl_places_placesForUser(flickcurl* fc,
     return NULL;
   }
 
-  parameters[count][0]  = "place_type";
-  parameters[count++][1]= place_type_str;
+  flickcurl_add_param(fc, "place_type", place_type_str);
 
   if(woe_id >= 0) {
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   }
 
   if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   }
 
   if(threshold >= 0) {
     sprintf(threshold_str, "%d", threshold);
-    parameters[count][0]  = "threshold";
-    parameters[count++][1]= threshold_str;
+    flickcurl_add_param(fc, "threshold", threshold_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
   if(flickcurl_prepare(fc, "flickr.places.placesForUser"))
     goto tidy;

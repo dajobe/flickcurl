@@ -145,16 +145,15 @@ flickcurl_reflection_getMethods(flickcurl* fc)
 flickcurl_method*
 flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name)
 {
-  const char * parameters[6][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_method* method = NULL;
   
-  parameters[count][0]  = "method_name";
-  parameters[count++][1]= name;
+  flickcurl_init_params(fc);
 
-  parameters[count][0]  = NULL;
+  flickcurl_add_param(fc, "method_name", name);
+
+  flickcurl_end_params(fc);
 
   if(flickcurl_prepare(fc, "flickr.reflection.getMethodInfo"))
     goto tidy;
