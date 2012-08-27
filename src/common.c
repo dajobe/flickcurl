@@ -716,13 +716,44 @@ flickcurl_set_request_delay(flickcurl *fc, long delay_msec)
 }
 
 
+/*
+ * INTERNAL: initialise parameter array
+ */
+void
+flickcurl_init_params(flickcurl *fc)
+{
+  fc->count = 0;
+  fc->parameters[fc->count][0] = NULL;
+}
+
+
+/*
+ * INTERNAL: add a new (key, value) to array of parameters
+ */
+void
+flickcurl_add_param(flickcurl *fc, const char* key, const char* value)
+{
+  fc->parameters[fc->count][0] = key;
+  fc->parameters[fc->count][1] = value;
+  fc->count++;
+}
+
+/*
+ * INTERNAL: finish parameters
+ */
+void
+flickcurl_end_params(flickcurl *fc)
+{
+  fc->parameters[fc->count][0] = NULL;
+}
+
+
 static int
 flickcurl_prepare_common(flickcurl *fc, 
                          const char* url,
                          const char* method,
                          const char* upload_field,
                          const char* upload_value,
-                         int count,
                          int parameters_in_url, int need_auth)
 {
   int rc;
@@ -731,13 +762,11 @@ flickcurl_prepare_common(flickcurl *fc,
     /* Call with legacy Flickr auth */
     rc = flickcurl_legacy_prepare_common(fc, url, method,
                                          upload_field, upload_value,
-                                         count,
                                          parameters_in_url, need_auth);
   else if(fc->od.token && fc->od.token_secret)
     /* Call with OAuth */
     rc = flickcurl_oauth_prepare_common(fc, url, method,
                                         upload_field, upload_value,
-                                        count,
                                         parameters_in_url, need_auth);
   else
     flickcurl_error(fc, "No legacy or OAuth authentication tokens or secrets");
@@ -748,8 +777,7 @@ flickcurl_prepare_common(flickcurl *fc,
 
 
 int
-flickcurl_prepare_noauth(flickcurl *fc, const char* method,
-                         int count)
+flickcurl_prepare_noauth(flickcurl *fc, const char* method)
 {
   if(!method) {
     flickcurl_error(fc, "No method to prepare");
@@ -760,13 +788,12 @@ flickcurl_prepare_noauth(flickcurl *fc, const char* method,
                                   fc->service_uri,
                                   method,
                                   NULL, NULL,
-                                  count,
                                   1, 0);
 }
 
 
 int
-flickcurl_prepare(flickcurl *fc, const char* method, int count)
+flickcurl_prepare(flickcurl *fc, const char* method)
 {
   if(!method) {
     flickcurl_error(fc, "No method to prepare");
@@ -777,7 +804,6 @@ flickcurl_prepare(flickcurl *fc, const char* method, int count)
                                   fc->service_uri,
                                   method,
                                   NULL, NULL,
-                                  count,
                                   1, 1);
 }
 
@@ -785,14 +811,12 @@ flickcurl_prepare(flickcurl *fc, const char* method, int count)
 int
 flickcurl_prepare_upload(flickcurl *fc, 
                          const char* url,
-                         const char* upload_field, const char* upload_value,
-                         int count)
+                         const char* upload_field, const char* upload_value)
 {
   return flickcurl_prepare_common(fc,
                                   url,
                                   NULL,
                                   upload_field, upload_value,
-                                  count,
                                   0, 1);
 }
 
@@ -1735,19 +1759,18 @@ flickcurl_call_get_one_string_field(flickcurl* fc,
                                     const char* method,
                                     const xmlChar* xpathExpr)
 {
-  int count = 0;
   char *result = NULL;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
 
+  flickcurl_init_params(fc);  
   if(key && value) {
-    fc->parameters[count][0]  = key;
-    fc->parameters[count++][1]= value;
+    flickcurl_add_param(fc, key, value);
   }
 
-  fc->parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, method, count))
+  if(flickcurl_prepare(fc, method))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -2103,7 +2126,6 @@ flickcurl_get_feed_format_info(int feed_format,
  * flickcurl_append_photos_list_params:
  * @fc: fc
  * @list_params: in parameter - photos list paramater
- * @count_p: in/out parameter - updated as new parameters added
  * @format_p: out parameter - result format requested or NULL
  *
  * INTERNAL - append #flickcurl_photos_list_params to parameter list for API call
@@ -2113,13 +2135,12 @@ flickcurl_get_feed_format_info(int feed_format,
 int
 flickcurl_append_photos_list_params(flickcurl* fc,
                                     flickcurl_photos_list_params* list_params,
-                                    int* count_p,
                                     const char** format_p)
 {
   /* NOTE: These are SHARED and pointed to by flickcurl_prepare() to
    * build the URL */
-  static char per_page_s[4];
-  static char page_s[4];
+  static char per_page_s[FLICKCURL_MAX_LIST_PARAM_COUNT];
+  static char page_s[FLICKCURL_MAX_LIST_PARAM_COUNT];
   int this_count = 0;
   
   if(format_p)
@@ -2129,33 +2150,25 @@ flickcurl_append_photos_list_params(flickcurl* fc,
     return 0;
   
   if(list_params->extras) {
-    fc->parameters[*count_p][0]  = "extras";
-    fc->parameters[*count_p][1]= list_params->extras;
-    (*count_p)++;
+    flickcurl_add_param(fc, "extras", list_params->extras);
     this_count++;
   }
   if(list_params->per_page) {
     if(list_params->per_page >= 0 && list_params->per_page <= 999) {
       sprintf(per_page_s, "%d", list_params->per_page);
-      fc->parameters[*count_p][0]  = "per_page";
-      fc->parameters[*count_p][1]= per_page_s;
-      (*count_p)++;
+      flickcurl_add_param(fc, "per_page", per_page_s);
       this_count++;
     }
   }
   if(list_params->page) {
     if(list_params->page >= 0 && list_params->page <= 999) {
       sprintf(page_s, "%d", list_params->page);
-      fc->parameters[*count_p][0]  = "page";
-      fc->parameters[*count_p][1]= page_s;
-      (*count_p)++;
+      flickcurl_add_param(fc, "page", page_s);
       this_count++;
     }
   }
   if(list_params->format) {
-    fc->parameters[*count_p][0]  = "format";
-    fc->parameters[*count_p][1]= list_params->format;
-    (*count_p)++;
+    flickcurl_add_param(fc, "format", list_params->format);
     this_count++;
 
     if(format_p)

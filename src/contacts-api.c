@@ -61,8 +61,6 @@ flickcurl_contact**
 flickcurl_contacts_getList(flickcurl* fc, const char* filter,
                            int page, int per_page)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_contact** contacts = NULL;
@@ -70,24 +68,23 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   char page_str[10];
   char per_page_str[10];
 
+  flickcurl_init_params(fc);
+
   if(filter) {
-    parameters[count][0]  = "filter";
-    parameters[count++][1]= filter;
+    flickcurl_add_param(fc, "filter", filter);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.contacts.getList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.contacts.getList"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -142,28 +139,25 @@ flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
                                            int date_lastupload,
                                            const char* filter)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_contact** contacts = NULL;
   int contacts_count = 0;
   char date_lastupload_str[20];
   
+  flickcurl_init_params(fc);
+
   if(date_lastupload >= 0) {
-    parameters[count][0]  = "date_lastupload";
     sprintf(date_lastupload_str, "%d", date_lastupload);
-    parameters[count++][1]= date_lastupload_str;
+    flickcurl_add_param(fc, "date_lastupload", date_lastupload_str);
   }
   if(filter) {
-    parameters[count][0]  = "filter";
-    parameters[count++][1]= filter;
+    flickcurl_add_param(fc, "filter", filter);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.contacts.getListRecentlyUploaded",
-                       parameters, count))
+  if(flickcurl_prepare(fc, "flickr.contacts.getListRecentlyUploaded"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -210,8 +204,6 @@ flickcurl_contact**
 flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
                                  int page, int per_page)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_contact** contacts = NULL;
@@ -219,27 +211,25 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
   char page_str[10];
   char per_page_str[10];
  
+  flickcurl_init_params(fc);
+
   if (!user_id)
     return NULL;
 
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "user_id", user_id);
 
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.contacts.getPublicList", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.contacts.getPublicList"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);

@@ -66,8 +66,6 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
                            int note_x, int note_y, int note_w, int note_h,
                            const char* note_text)
 {
-  const char* parameters[13][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char *id = NULL;
@@ -76,29 +74,25 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
   char note_w_s[10];
   char note_h_s[10];
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !note_text)
     return NULL;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "note_x";
+  flickcurl_add_param(fc, "photo_id", photo_id);
   sprintf(note_x_s, "%d", note_x);
-  parameters[count++][1]= note_x_s;
-  parameters[count][0]  = "note_y";
+  flickcurl_add_param(fc, "note_x", note_x_s);
   sprintf(note_y_s, "%d", note_y);
-  parameters[count++][1]= note_y_s;
-  parameters[count][0]  = "note_w";
+  flickcurl_add_param(fc, "note_y", note_y_s);
   sprintf(note_w_s, "%d", note_w);
-  parameters[count++][1]= note_w_s;
-  parameters[count][0]  = "note_h";
+  flickcurl_add_param(fc, "note_w", note_w_s);
   sprintf(note_h_s, "%d", note_h);
-  parameters[count++][1]= note_h_s;
-  parameters[count][0]  = "note_text";
-  parameters[count++][1]= note_text;
+  flickcurl_add_param(fc, "note_h", note_h_s);
+  flickcurl_add_param(fc, "note_text", note_text);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.notes.add", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.notes.add"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -143,20 +137,19 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
 int
 flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int result = 1;
   
+  flickcurl_init_params(fc);
+
   if(!note_id)
     return 1;
 
-  parameters[count][0]  = "note_id";
-  parameters[count++][1]= note_id;
+  flickcurl_add_param(fc, "note_id", note_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.notes.delete", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.notes.delete"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -199,8 +192,6 @@ flickcurl_photos_notes_edit(flickcurl* fc,
                             int note_x, int note_y, int note_w, int note_h,
                             const char* note_text)
 {
-  const char* parameters[13][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int result = 1;
   char note_x_s[10];
@@ -208,29 +199,25 @@ flickcurl_photos_notes_edit(flickcurl* fc,
   char note_w_s[10];
   char note_h_s[10];
   
+  flickcurl_init_params(fc);
+
   if(!note_id || !note_text)
     return 1;
 
-  parameters[count][0]  = "note_id";
-  parameters[count++][1]= note_id;
-  parameters[count][0]  = "note_x";
+  flickcurl_add_param(fc, "note_id", note_id);
   sprintf(note_x_s, "%d", note_x);
-  parameters[count++][1]= note_x_s;
-  parameters[count][0]  = "note_y";
+  flickcurl_add_param(fc, "note_x", note_x_s);
   sprintf(note_y_s, "%d", note_y);
-  parameters[count++][1]= note_y_s;
-  parameters[count][0]  = "note_w";
+  flickcurl_add_param(fc, "note_y", note_y_s);
   sprintf(note_w_s, "%d", note_w);
-  parameters[count++][1]= note_w_s;
-  parameters[count][0]  = "note_h";
+  flickcurl_add_param(fc, "note_w", note_w_s);
   sprintf(note_h_s, "%d", note_h);
-  parameters[count++][1]= note_h_s;
-  parameters[count][0]  = "note_text";
-  parameters[count++][1]= note_text;
+  flickcurl_add_param(fc, "note_h", note_h_s);
+  flickcurl_add_param(fc, "note_text", note_text);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.notes.edit", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.notes.edit"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);

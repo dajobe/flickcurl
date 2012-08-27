@@ -67,14 +67,14 @@ flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
                                           flickcurl_location* location,
                                           const char* place_id, int woe_id)
 {
-  const char* parameters[12][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   char latitude_s[50];
   char longitude_s[50];
   char accuracy_s[50];
   char woe_id_str[10];
   int result = 0;
+
+  flickcurl_init_params(fc);
 
   if(!place_id || !woe_id)
     return 1;
@@ -91,28 +91,22 @@ flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
     location->accuracy = 0;
   
 
-  parameters[count][0]  = "lat";
   sprintf(latitude_s, "%f", location->latitude);
-  parameters[count++][1]= latitude_s;
-  parameters[count][0]  = "lon";
+  flickcurl_add_param(fc, "lat", latitude_s);
   sprintf(longitude_s, "%f", location->longitude);
-  parameters[count++][1]= longitude_s;
-  parameters[count][0]  = "accuracy";
+  flickcurl_add_param(fc, "lon", longitude_s);
   sprintf(accuracy_s, "%d", location->accuracy);
-  parameters[count++][1]= accuracy_s;
+  flickcurl_add_param(fc, "accuracy", accuracy_s);
   if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   }
   if(woe_id > 0) {
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   }
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.batchCorrectLocation",
-                       parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.batchCorrectLocation"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -151,29 +145,25 @@ int
 flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id,
                                      const char* place_id, int woe_id)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
   char woe_id_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "place_id";
-  parameters[count++][1]= place_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "place_id", place_id);
   if(woe_id > 0) {
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   }
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.correctLocation", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.correctLocation"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -215,21 +205,20 @@ flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id,
 flickcurl_location*
 flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_location* location = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return NULL;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.getLocation", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.getLocation"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -272,21 +261,20 @@ flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id)
 flickcurl_perms*
 flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_perms* perms = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return NULL;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.getPerms", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.getPerms"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -331,13 +319,13 @@ flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
                                               flickcurl_location* location,
                                               flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[13][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   char latitude_s[50];
   char longitude_s[50];
   char accuracy_s[50];
   const char* format = NULL;
+
+  flickcurl_init_params(fc);
 
   if(!location)
     return NULL;
@@ -354,23 +342,19 @@ flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
     location->accuracy = 0;
   
 
-  parameters[count][0]  = "lat";
   sprintf(latitude_s, "%f", location->latitude);
-  parameters[count++][1]= latitude_s;
-  parameters[count][0]  = "lon";
+  flickcurl_add_param(fc, "lat", latitude_s);
   sprintf(longitude_s, "%f", location->longitude);
-  parameters[count++][1]= longitude_s;
-  parameters[count][0]  = "accuracy";
+  flickcurl_add_param(fc, "lon", longitude_s);
   sprintf(accuracy_s, "%d", location->accuracy);
-  parameters[count++][1]= accuracy_s;
+  flickcurl_add_param(fc, "accuracy", accuracy_s);
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &format);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.photosForLocation", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.photosForLocation"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
@@ -447,20 +431,18 @@ flickcurl_photos_geo_photosForLocation(flickcurl* fc,
 int
 flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.removeLocation", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.removeLocation"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -495,25 +477,23 @@ int
 flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id,
                                 int context)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char context_str[3];
   void* result = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || context < 0 || context > 2)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "context";
+  flickcurl_add_param(fc, "photo_id", photo_id);
   sprintf(context_str, "%d", context);
-  parameters[count++][1]= context_str;
+  flickcurl_add_param(fc, "context", context_str);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.setContext", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.setContext"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -561,14 +541,14 @@ int
 flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
                                  flickcurl_location* location)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   char latitude_s[50];
   char longitude_s[50];
   char accuracy_s[50];
   int result = 1;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return 1;
 
@@ -584,23 +564,19 @@ flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
     location->accuracy = 0;
   
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "lat";
+  flickcurl_add_param(fc, "photo_id", photo_id);
   sprintf(latitude_s, "%f", location->latitude);
-  parameters[count++][1]= latitude_s;
-  parameters[count][0]  = "lon";
+  flickcurl_add_param(fc, "lat", latitude_s);
   sprintf(longitude_s, "%f", location->longitude);
-  parameters[count++][1]= longitude_s;
+  flickcurl_add_param(fc, "lon", longitude_s);
   if(location->accuracy >= 1) {
-    parameters[count][0]  = "accuracy";
     sprintf(accuracy_s, "%d", location->accuracy);
-    parameters[count++][1]= accuracy_s;
+    flickcurl_add_param(fc, "accuracy", accuracy_s);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.setLocation", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.setLocation"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -636,8 +612,6 @@ int
 flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id,
                               flickcurl_perms* perms)
 {
-  const char* parameters[12][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   char is_public_str[2];
   char is_contact_str[2];
@@ -645,27 +619,24 @@ flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id,
   char is_family_str[2];
   int result = 1;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !perms)
     return 1;
 
-  parameters[count][0]  = "is_public";
   sprintf(is_public_str, "%d", (perms->is_public ? 1 : 0));
-  parameters[count++][1]= is_public_str;
-  parameters[count][0]  = "is_contact";
+  flickcurl_add_param(fc, "is_public", is_public_str);
   sprintf(is_contact_str, "%d", (perms->is_contact ? 1 : 0));
-  parameters[count++][1]= is_contact_str;
-  parameters[count][0]  = "is_friend";
+  flickcurl_add_param(fc, "is_contact", is_contact_str);
   sprintf(is_friend_str, "%d", (perms->is_friend ? 1 : 0));
-  parameters[count++][1]= is_friend_str;
-  parameters[count][0]  = "is_family";
+  flickcurl_add_param(fc, "is_friend", is_friend_str);
   sprintf(is_family_str, "%d", (perms->is_family ? 1 : 0));
-  parameters[count++][1]= is_family_str;
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "is_family", is_family_str);
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.geo.setPerms", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.geo.setPerms"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);

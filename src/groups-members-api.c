@@ -67,8 +67,6 @@ flickcurl_groups_members_getList(flickcurl* fc, const char* group_id,
                                  const char* membertypes,
                                  int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_member** members = NULL;
@@ -76,28 +74,26 @@ flickcurl_groups_members_getList(flickcurl* fc, const char* group_id,
   char per_page_s[10];
   char page_s[10];
   
+  flickcurl_init_params(fc);
+
   if(!group_id)
     return NULL;
 
-  parameters[count][0]  = "group_id";
-  parameters[count++][1]= group_id;
+  flickcurl_add_param(fc, "group_id", group_id);
   if(membertypes) {
-    parameters[count][0]  = "membertypes";
-    parameters[count++][1]= membertypes;
+    flickcurl_add_param(fc, "membertypes", membertypes);
   }
   if(per_page >= 0) {
     sprintf(per_page_s, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_s;
+    flickcurl_add_param(fc, "per_page", per_page_s);
   }
   if(page >= 0) {
     sprintf(page_s, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_s;
+    flickcurl_add_param(fc, "page", page_s);
   }
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.groups.members.getList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.groups.members.getList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

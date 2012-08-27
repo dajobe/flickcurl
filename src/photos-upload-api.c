@@ -57,23 +57,22 @@ flickcurl_ticket**
 flickcurl_photos_upload_checkTickets(flickcurl* fc,
                                      const char** tickets_ids)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_ticket** tickets = NULL;
   char* tickets_ids_string = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!tickets_ids)
     return NULL;
 
   tickets_ids_string = flickcurl_array_join(tickets_ids, ',');
-  parameters[count][0]  = "tickets";
-  parameters[count++][1]= tickets_ids_string;
+  flickcurl_add_param(fc, "tickets", tickets_ids_string);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.upload.checkTickets", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.upload.checkTickets"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

@@ -99,18 +99,17 @@ flickcurl_people_findByUsername(flickcurl* fc, const char* username)
 flickcurl_person*
 flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
 {
-  const char * parameters[6][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_person* person = NULL;
   
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_init_params(fc);
 
-  parameters[count][0]  = NULL;
+  flickcurl_add_param(fc, "user_id", user_id);
 
-  if(flickcurl_prepare(fc, "flickr.people.getInfo", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.people.getInfo"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -150,21 +149,20 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
 flickcurl_group**
 flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_group** groups = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!user_id)
     return NULL;
 
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "user_id", user_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.people.getPublicGroups", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.people.getPublicGroups"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -214,24 +212,23 @@ flickcurl_photos_list*
 flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id, 
                                         flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[12][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!user_id)
     return NULL;
 
   /* API parameters */
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "user_id", user_id);
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &format);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.people.getPublicPhotos", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.people.getPublicPhotos"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
@@ -306,15 +303,15 @@ flickcurl_people_getPublicPhotos(flickcurl* fc, const char* user_id,
 flickcurl_user_upload_status*
 flickcurl_people_getUploadStatus(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_user_upload_status* status = NULL;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.people.getUploadStatus", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.people.getUploadStatus"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -374,57 +371,49 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
                                   int privacy_filter,
                                   flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[18][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   char safe_search_s[4];
   char content_type_s[4];
   char privacy_filter_s[4];
   
+  flickcurl_init_params(fc);
+
   if(!user_id)
     return NULL;
 
-  parameters[count][0] = "user_id";
-  parameters[count++][1] = user_id;
+  flickcurl_add_param(fc, "user_id", user_id);
   if(safe_search >= 0 && safe_search < 10) {
     sprintf(safe_search_s, "%d", safe_search);
-    parameters[count][0] = "safe_search";
-    parameters[count++][1] = safe_search_s;
+    flickcurl_add_param(fc, "safe_search", safe_search_s);
   }
   if(min_upload_date) {
-    parameters[count][0] = "min_upload_date";
-    parameters[count++][1] = min_upload_date;
+    flickcurl_add_param(fc, "min_upload_date", min_upload_date);
   }
   if(max_upload_date) {
-    parameters[count][0] = "max_upload_date";
-    parameters[count++][1] = max_upload_date;
+    flickcurl_add_param(fc, "max_upload_date", max_upload_date);
   }
   if(min_taken_date) {
-    parameters[count][0] = "min_taken_date";
-    parameters[count++][1] = min_taken_date;
+    flickcurl_add_param(fc, "min_taken_date", min_taken_date);
   }
   if(max_taken_date) {
-    parameters[count][0] = "max_taken_date";
-    parameters[count++][1] = max_taken_date;
+    flickcurl_add_param(fc, "max_taken_date", max_taken_date);
   }
   if(content_type >= 0 && content_type < 10) {
     sprintf(content_type_s, "%d", content_type);
-    parameters[count][0] = "content_type";
-    parameters[count++][1] = content_type_s;
+    flickcurl_add_param(fc, "content_type", content_type_s);
   }
   if(privacy_filter >= 0 && privacy_filter < 10) {
     sprintf(privacy_filter_s, "%d", privacy_filter);
-    parameters[count][0] = "privacy_filter";
-    parameters[count++][1] = privacy_filter_s;
+    flickcurl_add_param(fc, "privacy_filter", privacy_filter_s);
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &format);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.people.getPhotos", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.people.getPhotos"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
@@ -526,23 +515,22 @@ flickcurl_photos_list*
 flickcurl_people_getPhotosOf_params(flickcurl* fc, const char* user_id,
                                     flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[11][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!user_id)
     return photos_list;
 
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "user_id", user_id);
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &format);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.people.getPhotosOf", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.people.getPhotosOf"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,

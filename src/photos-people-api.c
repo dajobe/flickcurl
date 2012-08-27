@@ -63,8 +63,6 @@ flickcurl_photos_people_add(flickcurl* fc, const char* photo_id,
                             int person_x, int person_y,
                             int person_w, int person_h)
 {
-  const char* parameters[13][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   int rc = 0;
@@ -73,38 +71,34 @@ flickcurl_photos_people_add(flickcurl* fc, const char* photo_id,
   char person_w_str[10];
   char person_h_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !user_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "user_id", user_id);
 
   if(person_x >= 0) {
     sprintf(person_x_str, "%d", person_x);
-    parameters[count][0]  = "person_x";
-    parameters[count++][1]= person_x_str;
+    flickcurl_add_param(fc, "person_x", person_x_str);
   }
   if(person_y >= 0) {
     sprintf(person_y_str, "%d", person_y);
-    parameters[count][0]  = "person_y";
-    parameters[count++][1]= person_y_str;
+    flickcurl_add_param(fc, "person_y", person_y_str);
   }
   if(person_w >= 0) {
     sprintf(person_w_str, "%d", person_w);
-    parameters[count][0]  = "person_w";
-    parameters[count++][1]= person_w_str;
+    flickcurl_add_param(fc, "person_w", person_w_str);
   }
   if(person_h >= 0) {
     sprintf(person_h_str, "%d", person_h);
-    parameters[count][0]  = "person_h";
-    parameters[count++][1]= person_h_str;
+    flickcurl_add_param(fc, "person_h", person_h_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.people.add", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.people.add"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -152,23 +146,21 @@ int
 flickcurl_photos_people_delete(flickcurl* fc, const char* photo_id,
                                const char* user_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !user_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "user_id", user_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.people.delete", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.people.delete"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -216,24 +208,21 @@ int
 flickcurl_photos_people_deleteCoords(flickcurl* fc, const char* photo_id,
                                      const char* user_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !user_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "user_id", user_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.people.deleteCoords", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.people.deleteCoords"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -287,8 +276,6 @@ flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
                                    int person_x, int person_y,
                                    int person_w, int person_h)
 {
-  const char* parameters[13][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   int rc = 0;
@@ -297,32 +284,27 @@ flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
   char person_w_str[10];
   char person_h_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !user_id || 
      person_x < 0  || person_y < 0 || person_w <0 || person_h < 0)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "user_id", user_id);
 
   sprintf(person_x_str, "%d", person_x);
-  parameters[count][0]  = "person_x";
-  parameters[count++][1]= person_x_str;
+  flickcurl_add_param(fc, "person_x", person_x_str);
   sprintf(person_y_str, "%d", person_y);
-  parameters[count][0]  = "person_y";
-  parameters[count++][1]= person_y_str;
+  flickcurl_add_param(fc, "person_y", person_y_str);
   sprintf(person_w_str, "%d", person_w);
-  parameters[count][0]  = "person_w";
-  parameters[count++][1]= person_w_str;
+  flickcurl_add_param(fc, "person_w", person_w_str);
   sprintf(person_h_str, "%d", person_h);
-  parameters[count][0]  = "person_h";
-  parameters[count++][1]= person_h_str;
+  flickcurl_add_param(fc, "person_h", person_h_str);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.people.editCoords", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.people.editCoords"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -368,21 +350,20 @@ flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
 flickcurl_person**
 flickcurl_photos_people_getList(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_person** people = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return NULL;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.people.getList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.people.getList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

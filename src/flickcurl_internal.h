@@ -107,11 +107,11 @@
 
 /* flickcurl.c */
 /* Prepare Flickr API request - GET or POST with URI parameters with auth */
-int flickcurl_prepare(flickcurl *fc, const char* method, int count);
+int flickcurl_prepare(flickcurl *fc, const char* method);
 /* Prepare Flickr API request - GET or POST with URI parameters without auth */
-int flickcurl_prepare_noauth(flickcurl *fc, const char* method, int count);
+int flickcurl_prepare_noauth(flickcurl *fc, const char* method);
 /* Prepare Flickr API request - POST with form-data parameters */
-int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_field, const char* upload_value, int count);
+int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_field, const char* upload_value);
 
 /* Invoke Flickr API at URi prepared above and get back an XML document DOM */
 xmlDocPtr flickcurl_invoke(flickcurl *fc);
@@ -153,7 +153,12 @@ char* flickcurl_xpath_eval_to_tree_string(flickcurl* fc, xmlXPathContextPtr xpat
 
 char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const char* value, const char* method, const xmlChar* xpathExpr);
 
-int flickcurl_append_photos_list_params(flickcurl* fc, flickcurl_photos_list_params* list_params, int* count_p, const char** format_p);
+int flickcurl_append_photos_list_params(flickcurl* fc, flickcurl_photos_list_params* list_params, const char** format_p);
+
+void flickcurl_init_params(flickcurl *fc);
+void flickcurl_add_param(flickcurl *fc, const char* key, const char* value);
+void flickcurl_end_params(flickcurl *fc);
+
 
 /* activity.c */
 flickcurl_activity** flickcurl_build_activities(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr, int* activity_count_p);
@@ -254,11 +259,14 @@ extern char* my_vsnprintf(const char *message, va_list arguments);
 flickcurl_video* flickcurl_build_video(flickcurl* fc, xmlXPathContextPtr xpathCtx, const xmlChar* xpathExpr);
 
 
+/* flickcurl_photos_search_params */
+#define FLICKCURL_MAX_PARAM_COUNT 30
+
+#define FLICKCURL_MAX_LIST_PARAM_COUNT 4
+
 #define FLICKCURL_MAX_OAUTH_PARAM_COUNT 8
 
-/* flickcurl_places_placesForTags */
-#define FLICKCURL_MAX_PARAM_COUNT 12
-
+#define FLICKCURL_TOTAL_PARAM_COUNT (FLICKCURL_MAX_PARAM_COUNT + FLICKCURL_MAX_LIST_PARAM_COUNT + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1)
 
 struct flickcurl_chunk_s {
   char* content;
@@ -442,7 +450,8 @@ struct flickcurl_s {
 
   flickcurl_oauth_data od;
 
-  const char *parameters[FLICKCURL_MAX_OAUTH_PARAM_COUNT + FLICKCURL_MAX_PARAM_COUNT][2];
+  const char *parameters[FLICKCURL_TOTAL_PARAM_COUNT][2];
+  int count;
 };
 
 struct flickcurl_serializer_s
@@ -462,9 +471,9 @@ unsigned char* flickcurl_hmac_sha1(const void *data, size_t data_len, const void
 
 
 /* legacy-auth.c */
-int flickcurl_legacy_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, int count, int parameters_in_url, int need_auth);
+int flickcurl_legacy_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, int parameters_in_url, int need_auth);
 
 /* oauth.c */
 void flickcurl_oauth_free(flickcurl_oauth_data* od);
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
-int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, int count, int parameters_in_url, int need_auth);
+int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, int parameters_in_url, int need_auth);

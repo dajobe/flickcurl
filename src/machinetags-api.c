@@ -60,27 +60,23 @@ flickcurl_tag_namespace**
 flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
                                     int per_page, int page)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_namespace** tag_namespaces = NULL;
   
-  parameters[count][0]  = "predicate";
-  parameters[count++][1]= predicate;
-  parameters[count][0]  = "per_page";
+  flickcurl_init_params(fc);
+
+  flickcurl_add_param(fc, "predicate", predicate);
   sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
+  flickcurl_add_param(fc, "per_page", per_page_s);
   sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  flickcurl_add_param(fc, "page", page_s);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.machinetags.getNamespaces", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.machinetags.getNamespaces"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -134,28 +130,24 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
                                const char* predicate,
                                int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
-  parameters[count][0]  = "namespace";
-  parameters[count++][1]= nspace;
-  parameters[count][0]  = "predicate";
-  parameters[count++][1]= predicate;
-  parameters[count][0]  = "per_page";
+  flickcurl_init_params(fc);
+
+  flickcurl_add_param(fc, "namespace", nspace);
+  flickcurl_add_param(fc, "predicate", predicate);
   sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
+  flickcurl_add_param(fc, "per_page", per_page_s);
   sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  flickcurl_add_param(fc, "page", page_s);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.machinetags.getPairs", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.machinetags.getPairs"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -208,27 +200,23 @@ flickcurl_tag_predicate_value**
 flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
                                     int per_page, int page)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
-  parameters[count][0]  = "namespace";
-  parameters[count++][1]= nspace;
-  parameters[count][0]  = "per_page";
+  flickcurl_init_params(fc);
+
+  flickcurl_add_param(fc, "namespace", nspace);
   sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
+  flickcurl_add_param(fc, "per_page", per_page_s);
   sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  flickcurl_add_param(fc, "page", page_s);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.machinetags.getPredicates", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.machinetags.getPredicates"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -283,31 +271,27 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
                                 const char* predicate,
                                 int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char per_page_s[4];
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!nspace || !predicate)
     return NULL;
 
-  parameters[count][0]  = "namespace";
-  parameters[count++][1]= nspace;
-  parameters[count][0]  = "predicate";
-  parameters[count++][1]= predicate;
-  parameters[count][0]  = "per_page";
+  flickcurl_add_param(fc, "namespace", nspace);
+  flickcurl_add_param(fc, "predicate", predicate);
   sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
+  flickcurl_add_param(fc, "per_page", per_page_s);
   sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  flickcurl_add_param(fc, "page", page_s);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.machinetags.getValues", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.machinetags.getValues"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -357,33 +341,29 @@ flickcurl_machinetags_getRecentValues(flickcurl* fc,
                                       const char* predicate,
                                       int added_since)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   char added_since_s[20];
 
+  flickcurl_init_params(fc);
+
   if(nspace) {
-    parameters[count][0]  = "namespace";
-    parameters[count++][1]= nspace;
+    flickcurl_add_param(fc, "namespace", nspace);
   }
 
   if(predicate) {
-    parameters[count][0]  = "predicate";
-    parameters[count++][1]= predicate;
+    flickcurl_add_param(fc, "predicate", predicate);
   }
 
   if(added_since >= 0) {
     sprintf(added_since_s, "%d", added_since);
-    parameters[count][0]  = "added_since";
-    parameters[count++][1]= added_since_s;
+    flickcurl_add_param(fc, "added_since", added_since_s);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.machinetags.getRecentValues",
-                       parameters, count))
+  if(flickcurl_prepare(fc, "flickr.machinetags.getRecentValues"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

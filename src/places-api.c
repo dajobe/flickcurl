@@ -67,21 +67,20 @@
 flickcurl_place**
 flickcurl_places_find(flickcurl* fc, const char* query)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!query)
     return NULL;
 
-  parameters[count][0]  = "query";
-  parameters[count++][1]= query;
+  flickcurl_add_param(fc, "query", query);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.find", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.find"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -134,8 +133,6 @@ flickcurl_place*
 flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
                               int accuracy)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
@@ -143,22 +140,21 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
   char lon_str[20];
   char accuracy_str[4];
   
+  flickcurl_init_params(fc);
+
   if(accuracy < 0 || accuracy > 16)
     accuracy = 16;
   
   sprintf(lat_str, "%f", lat);
-  parameters[count][0]  = "lat";
-  parameters[count++][1]= lat_str;
+  flickcurl_add_param(fc, "lat", lat_str);
   sprintf(lon_str, "%f", lon);
-  parameters[count][0]  = "lon";
-  parameters[count++][1]= lon_str;
+  flickcurl_add_param(fc, "lon", lon_str);
   sprintf(accuracy_str, "%d", accuracy);
-  parameters[count][0]  = "accuracy";
-  parameters[count++][1]= accuracy_str;
+  flickcurl_add_param(fc, "accuracy", accuracy_str);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.findByLatLon", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.findByLatLon"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -232,27 +228,24 @@ flickcurl_place**
 flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
                                               const char* place_id, int woe_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
   char woe_id_str[10];
 
+  flickcurl_init_params(fc);
+
   if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   } else if(woe_id >= 0) {
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   } else
     return NULL;
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.getChildrenWithPhotosPublic",
-                       parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.getChildrenWithPhotosPublic"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -330,26 +323,24 @@ flickcurl_place* flickcurl_places_getInfo(flickcurl* fc,
 flickcurl_place*
 flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
   char woe_id_str[10];
 
+  flickcurl_init_params(fc);
+
   if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   } else if(woe_id >= 0) {
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   } else
     return NULL;
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare_noauth(fc, "flickr.places.getInfo", parameters, count))
+  if(flickcurl_prepare_noauth(fc, "flickr.places.getInfo"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -396,21 +387,20 @@ flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
 flickcurl_place*
 flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!url)
     return NULL;
 
-  parameters[count][0]  = "url";
-  parameters[count++][1]= url;
+  flickcurl_add_param(fc, "url", url);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.getInfoByUrl", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.getInfoByUrl"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -451,15 +441,15 @@ flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
 flickcurl_place_type_info**
 flickcurl_places_getPlaceTypes(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place_type_info** place_types = NULL;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.getPlaceTypes", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.places.getPlaceTypes"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -514,29 +504,27 @@ flickcurl_shapedata**
 flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
                                  int woe_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_shapedata** shapes = NULL;
   char woe_id_str[20];
   
+  flickcurl_init_params(fc);
+
   if(!place_id && woe_id < 0)
     return NULL;
 
   if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   }
   if(woe_id >= 0) {
-    parameters[count][0]  = "woe_id";
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.getShapeHistory", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.getShapeHistory"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -586,8 +574,6 @@ flickcurl_places_getTopPlacesList(flickcurl* fc,
                                   const char* date, int woe_id, 
                                   const char* place_id)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
@@ -595,31 +581,29 @@ flickcurl_places_getTopPlacesList(flickcurl* fc,
   int place_type_id;
   char place_type_id_str[3];
   
+  flickcurl_init_params(fc);
+
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
     return NULL;
 
-  parameters[count][0]  = "place_type_id";
   sprintf(place_type_id_str, "%d", place_type_id);
-  parameters[count++][1]= place_type_id_str;
+  flickcurl_add_param(fc, "place_type_id", place_type_id_str);
 
   if(date) {
-    parameters[count][0]  = "date";
-    parameters[count++][1]= date;
+    flickcurl_add_param(fc, "date", date);
   }
   if(woe_id >= 0) {
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count][0]  = "woe_id";
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   } else if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   }
   
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.getTopPlacesList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.getTopPlacesList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -676,8 +660,6 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
                                       double maximum_longitude,
                                       double maximum_latitude)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
@@ -685,27 +667,25 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
   int place_type_id = -1;
   char bbox[255];
 
+  flickcurl_init_params(fc);
+
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
     return NULL;
 
   sprintf(bbox, "%f,%f,%f,%f",  minimum_longitude, minimum_latitude,
           maximum_longitude, maximum_latitude);
-  parameters[count][0]  = "bbox";
-  parameters[count++][1]= bbox;
+  flickcurl_add_param(fc, "bbox", bbox);
   /* deliberately not using deprecated parameter place_type */
 /*
-  parameters[count][0]  = "place_type";
-  parameters[count++][1]= place_type;
+  flickcurl_add_param(fc, "place_type", place_type);
 */
-  parameters[count][0]  = "place_type_id";
   sprintf(place_type_id_str, "%d", place_type_id);
-  parameters[count++][1]= place_type_id_str;
+  flickcurl_add_param(fc, "place_type_id", place_type_id_str);
   
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.placesForBoundingBox", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.places.placesForBoundingBox"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -768,8 +748,6 @@ flickcurl_places_placesForContacts(flickcurl* fc,
                                    int min_taken_date,
                                    int max_taken_date)
 {
-  const char* parameters[17][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
@@ -782,6 +760,8 @@ flickcurl_places_placesForContacts(flickcurl* fc,
   char woe_id_str[10];
   char threshold_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!woe_id && !place_id)
     return NULL;
   
@@ -791,54 +771,43 @@ flickcurl_places_placesForContacts(flickcurl* fc,
   
   /* deliberately not using deprecated parameter place_type */
 /*  
-  parameters[count][0]  = "place_type";
-  parameters[count++][1]= place_type;
+  flickcurl_add_param(fc, "place_type", place_type);
 */
-  parameters[count][0]  = "place_type_id";
   sprintf(place_type_id_str, "%d", place_type_id);
-  parameters[count++][1]= place_type_id_str;
+  flickcurl_add_param(fc, "place_type_id", place_type_id_str);
   if(woe_id >= 0) {
-    parameters[count][0]  = "woe_id";
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   }
   if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   }
-  parameters[count][0]  = "threshold";
   sprintf(threshold_str, "%d", threshold);
-  parameters[count++][1]= threshold_str;
+  flickcurl_add_param(fc, "threshold", threshold_str);
 
   if(contacts) {
-    parameters[count][0]  = "contacts";
-    parameters[count++][1]= contacts;
+    flickcurl_add_param(fc, "contacts", contacts);
   }
   if(min_upload_date >= 0) {
     sprintf(min_upload_date_s, "%d", min_upload_date);
-    parameters[count][0]  = "min_upload_date";
-    parameters[count++][1]= min_upload_date_s;
+    flickcurl_add_param(fc, "min_upload_date", min_upload_date_s);
   }
   if(max_upload_date >= 0) {
     sprintf(max_upload_date_s, "%d", max_upload_date);
-    parameters[count][0]  = "max_upload_date";
-    parameters[count++][1]= max_upload_date_s;
+    flickcurl_add_param(fc, "max_upload_date", max_upload_date_s);
   }
   if(min_taken_date >= 0) {
     sprintf(min_taken_date_s, "%d", min_taken_date);
-    parameters[count][0]  = "min_taken_date";
-    parameters[count++][1]= min_taken_date_s;
+    flickcurl_add_param(fc, "min_taken_date", min_taken_date_s);
   }
   if(max_taken_date >= 0) {
     sprintf(max_taken_date_s, "%d", max_taken_date);
-    parameters[count][0]  = "max_taken_date";
-    parameters[count++][1]= max_taken_date_s;
+    flickcurl_add_param(fc, "max_taken_date", max_taken_date_s);
   }
   
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.placesForContacts", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.places.placesForContacts"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -915,8 +884,6 @@ flickcurl_places_placesForTags(flickcurl* fc,
                                const char* min_upload_date, const char* max_upload_date,
                                const char* min_taken_date, const char* max_taken_date)
 {
-  const char* parameters[19][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
@@ -924,40 +891,30 @@ flickcurl_places_placesForTags(flickcurl* fc,
   int place_type_id;
   char woe_id_str[10];
   
+  flickcurl_init_params(fc);
+
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
     return 1;
 
-  parameters[count][0]  = "place_type_id";
   sprintf(place_type_id_str, "%d", place_type_id);
-  parameters[count++][1]= place_type_id_str;
-  parameters[count][0]  = "woe_id";
+  flickcurl_add_param(fc, "place_type_id", place_type_id_str);
   sprintf(woe_id_str, "%d", woe_id);
-  parameters[count++][1]= woe_id_str;
-  parameters[count][0]  = "place_id";
-  parameters[count++][1]= place_id;
-  parameters[count][0]  = "threshold";
-  parameters[count++][1]= threshold;
-  parameters[count][0]  = "tags";
-  parameters[count++][1]= tags;
-  parameters[count][0]  = "tag_mode";
-  parameters[count++][1]= tag_mode;
-  parameters[count][0]  = "machine_tags";
-  parameters[count++][1]= machine_tags;
-  parameters[count][0]  = "machine_tag_mode";
-  parameters[count++][1]= machine_tag_mode;
-  parameters[count][0]  = "min_upload_date";
-  parameters[count++][1]= min_upload_date;
-  parameters[count][0]  = "max_upload_date";
-  parameters[count++][1]= max_upload_date;
-  parameters[count][0]  = "min_taken_date";
-  parameters[count++][1]= min_taken_date;
-  parameters[count][0]  = "max_taken_date";
-  parameters[count++][1]= max_taken_date;
+  flickcurl_add_param(fc, "woe_id", woe_id_str);
+  flickcurl_add_param(fc, "place_id", place_id);
+  flickcurl_add_param(fc, "threshold", threshold);
+  flickcurl_add_param(fc, "tags", tags);
+  flickcurl_add_param(fc, "tag_mode", tag_mode);
+  flickcurl_add_param(fc, "machine_tags", machine_tags);
+  flickcurl_add_param(fc, "machine_tag_mode", machine_tag_mode);
+  flickcurl_add_param(fc, "min_upload_date", min_upload_date);
+  flickcurl_add_param(fc, "max_upload_date", max_upload_date);
+  flickcurl_add_param(fc, "min_taken_date", min_taken_date);
+  flickcurl_add_param(fc, "max_taken_date", max_taken_date);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.placesForTags", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.placesForTags"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -999,22 +956,20 @@ flickcurl_places_placesForTags(flickcurl* fc,
 flickcurl_place*
 flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!place_id)
     return NULL;
 
-  parameters[count][0]  = "place_id";
-  parameters[count++][1]= place_id;
+  flickcurl_add_param(fc, "place_id", place_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare_noauth(fc, "flickr.places.resolvePlaceId",
-                              parameters, count))
+  if(flickcurl_prepare_noauth(fc, "flickr.places.resolvePlaceId"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -1057,22 +1012,20 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
 flickcurl_place*
 flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!url)
     return NULL;
 
-  parameters[count][0]  = "url";
-  parameters[count++][1]= url;
+  flickcurl_add_param(fc, "url", url);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare_noauth(fc, "flickr.places.resolvePlaceURL",
-                              parameters, count))
+  if(flickcurl_prepare_noauth(fc, "flickr.places.resolvePlaceURL"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -1169,7 +1122,7 @@ flickcurl_places_placesForUser(flickcurl* fc,
 
   parameters[count][0]  = NULL;
 
-  if(flickcurl_prepare(fc, "flickr.places.placesForUser", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.placesForUser"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -1244,8 +1197,6 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
                               int min_upload_date, int max_upload_date,
                               int min_taken_date, int max_taken_date)
 {
-  const char* parameters[13][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char woe_id_str[20];
@@ -1255,42 +1206,38 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
   char max_taken_date_str[20];
   flickcurl_tag** tags = NULL;
   
+  flickcurl_init_params(fc);
+
   if(woe_id < 0 && !place_id)
     return NULL;
 
   if(woe_id >= 0) {
-    parameters[count][0]  = "woe_id";
     sprintf(woe_id_str, "%d", woe_id);
-    parameters[count++][1]= woe_id_str;
+    flickcurl_add_param(fc, "woe_id", woe_id_str);
   }
   if(place_id) {
-    parameters[count][0]  = "place_id";
-    parameters[count++][1]= place_id;
+    flickcurl_add_param(fc, "place_id", place_id);
   }
   if(min_upload_date) {
-    parameters[count][0]  = "min_upload_date";
     sprintf(min_upload_date_str, "%d", min_upload_date);
-    parameters[count++][1]= min_upload_date_str;
+    flickcurl_add_param(fc, "min_upload_date", min_upload_date_str);
   }
   if(min_upload_date) {
-    parameters[count][0]  = "max_upload_date";
     sprintf(min_upload_date_str, "%d", min_upload_date);    
-    parameters[count++][1]= max_upload_date_str;
+    flickcurl_add_param(fc, "max_upload_date", max_upload_date_str);
   }
   if(max_upload_date) {
-    parameters[count][0]  = "min_taken_date";
     sprintf(max_upload_date_str, "%d", max_upload_date);    
-    parameters[count++][1]= min_taken_date_str;
+    flickcurl_add_param(fc, "min_taken_date", min_taken_date_str);
   }
   if(min_taken_date) {
-    parameters[count][0]  = "max_taken_date";
     sprintf(min_taken_date_str, "%d", min_taken_date);    
-    parameters[count++][1]= max_taken_date_str;
+    flickcurl_add_param(fc, "max_taken_date", max_taken_date_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.places.tagsForPlace", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.places.tagsForPlace"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

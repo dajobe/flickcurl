@@ -57,28 +57,26 @@
 flickcurl_activity**
 flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_activity** activities = NULL;
   char page_str[10];
   char per_page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.activity.userComments", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.activity.userComments"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -124,32 +122,29 @@ flickcurl_activity**
 flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
                               int per_page, int page)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_activity** activities = NULL;
   char page_str[10];
   char per_page_str[10];
 
+  flickcurl_init_params(fc);
+
   if(timeframe) {
-    parameters[count][0]  = "timeframe";
-    parameters[count++][1]= timeframe;
+    flickcurl_add_param(fc, "timeframe", timeframe);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1]= page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1]= per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.activity.userPhotos", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.activity.userPhotos"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

@@ -56,20 +56,19 @@
 int
 flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.favorites.add", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.favorites.add"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -117,8 +116,6 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
                                int num_next,
                                const char* extras)
 {
-  const char* parameters[12][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_photos_list** photos_lists = NULL;
@@ -126,34 +123,31 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
   char num_next_str[10];
   int i;
 
+  flickcurl_init_params(fc);
+
   if(!photo_id || !user_id)
     return NULL;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "user_id", user_id);
   if(num_prev >= 0) {
     sprintf(num_prev_str, "%d", num_prev);
-    parameters[count][0]  = "num_prev";
-    parameters[count++][1]= num_prev_str;
+    flickcurl_add_param(fc, "num_prev", num_prev_str);
   }
   if(num_next >= 0) {
     sprintf(num_next_str, "%d", num_next);
-    parameters[count][0]  = "num_next";
-    parameters[count++][1]= num_next_str;
+    flickcurl_add_param(fc, "num_next", num_next_str);
   }
   /* this is the only standard photos response parameter supported 
    * so using flickcurl_append_photos_list_params() is not really needed
    */
   if(extras) {
-    parameters[count][0]  = "extras";
-    parameters[count++][1]= extras;
+    flickcurl_add_param(fc, "extras", extras);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.favorites.getContext", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.favorites.getContext"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -245,22 +239,21 @@ flickcurl_photos_list*
 flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
                                    flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[12][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
    
+  flickcurl_init_params(fc);
+
   /* API parameters */
   if(user_id) {
-    parameters[count][0]  = "user_id";
-    parameters[count++][1]= user_id;
+    flickcurl_add_param(fc, "user_id", user_id);
   }
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &format);
   
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.favorites.getList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.favorites.getList"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
@@ -338,24 +331,23 @@ flickcurl_photos_list*
 flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
                                          flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[13][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!user_id)
     return NULL;
 
   /* API parameters */
-  parameters[count][0]  = "user_id";
-  parameters[count++][1]= user_id;
+  flickcurl_add_param(fc, "user_id", user_id);
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &format);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.favorites.getPublicList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.favorites.getPublicList"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
@@ -432,20 +424,19 @@ flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id,
 int
 flickcurl_favorites_remove(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.favorites.remove", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.favorites.remove"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);

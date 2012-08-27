@@ -43,9 +43,9 @@ compare_args(const void *a, const void *b)
 
 
 static void
-flickcurl_sort_args(flickcurl *fc, int count)
+flickcurl_sort_args(flickcurl *fc)
 {
-  qsort((void*)fc->parameters, count, sizeof(char*[2]), compare_args);
+  qsort((void*)fc->parameters, fc->count, sizeof(char*[2]), compare_args);
 }
 
 
@@ -55,14 +55,13 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
                                 const char* method,
                                 const char* upload_field,
                                 const char* upload_value,
-                                int count,
                                 int parameters_in_url, int need_auth)
 {
   int i;
   char *md5_string = NULL;
   size_t* values_len = NULL;
   unsigned int fc_uri_len = 0;
- 
+  
   if(!url)
     return 1;
  
@@ -123,28 +122,23 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
   else
     fc->method = NULL;
 
-  if(fc->method) {
-    fc->parameters[count][0]  = "method";
-    fc->parameters[count++][1]= fc->method;
-  }
+  if(fc->method)
+    flickcurl_add_param(fc, "method", fc->method);
 
-  fc->parameters[count][0]  = "api_key";
-  fc->parameters[count++][1]= fc->api_key;
+  flickcurl_add_param(fc, "api_key", fc->api_key);
 
-  if(need_auth && fc->auth_token) {
-    fc->parameters[count][0]  = "auth_token";
-    fc->parameters[count++][1]= fc->auth_token;
-  }
+  if(need_auth && fc->auth_token)
+    flickcurl_add_param(fc, "auth_token", fc->auth_token);
 
-  fc->parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
   /* +1 for api_sig +1 for NULL terminating pointer */
-  fc->param_fields = (char**)calloc(count+2, sizeof(char*));
-  fc->param_values = (char**)calloc(count+2, sizeof(char*));
-  values_len = (size_t*)calloc(count+2, sizeof(size_t));
+  fc->param_fields = (char**)calloc(fc->count + 2, sizeof(char*));
+  fc->param_values = (char**)calloc(fc->count + 2, sizeof(char*));
+  values_len = (size_t*)calloc(fc->count + 2, sizeof(size_t));
 
   if((need_auth && fc->auth_token) || fc->sign)
-    flickcurl_sort_args(fc, count);
+    flickcurl_sort_args(fc);
 
   fc_uri_len = strlen(url);
  
@@ -195,31 +189,31 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
 #endif
     md5_string = MD5_string(buf);
    
-    fc->parameters[count][0]  = "api_sig";
-    fc->parameters[count][1]= md5_string;
+    flickcurl_add_param(fc, "api_sig", md5_string);
+    fc->count--;
 
     /* Add a new parameter pair */
-    values_len[count] = 32; /* MD5 is always 32 */
-    fc->param_fields[count] = (char*)malloc(7+1); /* 7 = strlen(api_sig) */
-    strcpy(fc->param_fields[count], fc->parameters[count][0]);
-    fc->param_values[count] = (char*)malloc(32+1); /* 32 = MD5 */
-    strcpy(fc->param_values[count], fc->parameters[count][1]);
+    values_len[fc->count] = 32; /* MD5 is always 32 */
+    fc->param_fields[fc->count] = (char*)malloc(7+1); /* 7 = strlen(api_sig) */
+    strcpy(fc->param_fields[fc->count], fc->parameters[fc->count][0]);
+    fc->param_values[fc->count] = (char*)malloc(32+1); /* 32 = MD5 */
+    strcpy(fc->param_values[fc->count], fc->parameters[fc->count][1]);
 
     fc_uri_len += 7 /* "api_sig" */ + 1 /* = */ + 32 /* MD5 value: never escaped */;
-
-    count++;
+    
+    fc->count++;
    
 #ifdef FLICKCURL_DEBUG
-    fprintf(stderr, "Signature: '%s'\n", fc->parameters[count-1][1]);
+    fprintf(stderr, "Signature: '%s'\n", fc->parameters[fc->count - 1][1]);
 #endif
    
     free(buf);
    
-    fc->parameters[count][0] = NULL;
+    flickcurl_end_params(fc);
   }
 
   /* add &s between parameters */
-  fc_uri_len += count-1;
+  fc_uri_len += fc->count - 1;
 
   /* reuse or grow uri buffer */
   if(fc->uri_len < fc_uri_len) {

@@ -57,8 +57,6 @@
 flickcurl_upload_status*
 flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
 {
-  const char* parameters[13][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_upload_status* status = NULL;
@@ -69,6 +67,8 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   char content_type_s[2];
   char hidden_s[2];
   
+  flickcurl_init_params(fc);
+
   if(!params->photo_file)
     return NULL;
 
@@ -105,43 +105,33 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   }
 
   if(params->title) {
-    parameters[count][0]  = "title";
-    parameters[count++][1]= params->title;
+    flickcurl_add_param(fc, "title", params->title);
   }
   if(params->description) {
-    parameters[count][0]  = "description";
-    parameters[count++][1]= params->description;
+    flickcurl_add_param(fc, "description", params->description);
   }
   if(params->tags) {
-    parameters[count][0]  = "tags";
-    parameters[count++][1]= params->tags;
+    flickcurl_add_param(fc, "tags", params->tags);
   }
   if(params->safety_level >= 0) {
-    parameters[count][0]  = "safety_level";
-    parameters[count++][1]= safety_level_s;
+    flickcurl_add_param(fc, "safety_level", safety_level_s);
   }
   if(params->content_type >= 0) {
-    parameters[count][0]  = "content_type";
-    parameters[count++][1]= content_type_s;
+    flickcurl_add_param(fc, "content_type", content_type_s);
   }
-  parameters[count][0]  = "is_public";
-  parameters[count++][1]= is_public_s;
-  parameters[count][0]  = "is_friend";
-  parameters[count++][1]= is_friend_s;
-  parameters[count][0]  = "is_family";
-  parameters[count++][1]= is_family_s;
+  flickcurl_add_param(fc, "is_public", is_public_s);
+  flickcurl_add_param(fc, "is_friend", is_friend_s);
+  flickcurl_add_param(fc, "is_family", is_family_s);
   if(params->hidden >= 0) {
-    parameters[count][0]  = "hidden";
-    parameters[count++][1]= hidden_s;
+    flickcurl_add_param(fc, "hidden", hidden_s);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
 
   if(flickcurl_prepare_upload(fc,
                               fc->upload_service_uri,
-                              "photo", params->photo_file,
-                              parameters, count))
+                              "photo", params->photo_file))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -240,13 +230,13 @@ flickcurl_upload_status*
 flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
                          const char *photo_id, int async)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_upload_status* status = NULL;
   char async_s[2];
   
+  flickcurl_init_params(fc);
+
   if(!photo_file || !photo_id)
     return NULL;
 
@@ -259,17 +249,14 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
   async_s[0] = async ? '1' : '0';
   async_s[1] = '\0';
   
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "async";
-  parameters[count++][1]= async_s;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "async", async_s);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
   if(flickcurl_prepare_upload(fc,
                               fc->replace_service_uri,
-                              "photo", photo_file,
-                              parameters, count))
+                              "photo", photo_file))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

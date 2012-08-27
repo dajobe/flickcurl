@@ -58,24 +58,22 @@ int
 flickcurl_photos_transform_rotate(flickcurl* fc, const char* photo_id,
                                   int degrees)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   char degrees_str[4];
   int result = 0;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !(degrees == 90 || degrees == 180 || degrees == 270))
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
   sprintf(degrees_str, "%d", degrees);
-  parameters[count][0]  = "degrees";
-  parameters[count++][1]= degrees_str;
+  flickcurl_add_param(fc, "degrees", degrees_str);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.transform.rotate", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.transform.rotate"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

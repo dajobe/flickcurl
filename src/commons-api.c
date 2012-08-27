@@ -58,15 +58,15 @@
 flickcurl_institution**
 flickcurl_commons_getInstitutions(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_institution** institutions = NULL;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.commons.getInstitutions", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.commons.getInstitutions"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

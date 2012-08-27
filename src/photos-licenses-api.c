@@ -60,8 +60,6 @@ compare_licenses(const void *a, const void *b)
 static void
 flickcurl_read_licenses(flickcurl *fc)
 {
-  const char * parameters[5][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   xmlXPathObjectPtr xpathObj = NULL;
@@ -70,9 +68,11 @@ flickcurl_read_licenses(flickcurl *fc)
   int i;
   int size;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.licenses.getInfo", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.photos.licenses.getInfo"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -219,25 +219,22 @@ int
 flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id,
                                      int license_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int result = 1;
   char license_id_s[5];
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return 1;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "license_id";
+  flickcurl_add_param(fc, "photo_id", photo_id);
   sprintf(license_id_s, "%d", license_id);
-  parameters[count++][1]= license_id_s;
+  flickcurl_add_param(fc, "license_id", license_id_s);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.licenses.setLicense", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.licenses.setLicense"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);

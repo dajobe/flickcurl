@@ -63,22 +63,20 @@ flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
                                 const char* cluster_id,
                                 flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[10][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!tag || !cluster_id)
     return NULL;
 
-  parameters[count][0]  = "tag";
-  parameters[count++][1]= tag;
-  parameters[count][0]  = "cluster_id";
-  parameters[count++][1]= cluster_id;
+  flickcurl_add_param(fc, "tag", tag);
+  flickcurl_add_param(fc, "cluster_id", cluster_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getClusterPhotos", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.tags.getClusterPhotos"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
@@ -117,21 +115,20 @@ flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
 flickcurl_tag_clusters*
 flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag_clusters* clusters = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!tag)
     return NULL;
 
-  parameters[count][0]  = "tag";
-  parameters[count++][1]= tag;
+  flickcurl_add_param(fc, "tag", tag);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getClusters", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.tags.getClusters"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -177,30 +174,28 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
 flickcurl_tag**
 flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
   char tag_count_str[10];
   
+  flickcurl_init_params(fc);
+
   if(period) {
     if(!strcmp(period, "day") || !strcmp(period, "week")) {
-      parameters[count][0]  = "period";
-      parameters[count++][1]= period;
+      flickcurl_add_param(fc, "period", period);
     } else
       return NULL;
   }
 
   if(tag_count >= 0) {
     sprintf(tag_count_str, "%d", tag_count);
-    parameters[count][0]  = "count";
-    parameters[count++][1]= tag_count_str;
+    flickcurl_add_param(fc, "count", tag_count_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getHotList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.tags.getHotList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -244,18 +239,17 @@ flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
 flickcurl_tag**
 flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[6][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
   
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_init_params(fc);
 
-  parameters[count][0]  = NULL;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getListPhoto", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.tags.getListPhoto"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -301,20 +295,19 @@ flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
 flickcurl_tag**
 flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
 {
-  const char* parameters[6][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
+  flickcurl_init_params(fc);
+
   if(user_id) {
-    parameters[count][0]  = "user_id";
-    parameters[count++][1]= user_id;
+    flickcurl_add_param(fc, "user_id", user_id);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getListUser", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.tags.getListUser"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -360,26 +353,24 @@ flickcurl_tag**
 flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
                                   int pop_count)
 {
-  const char* parameters[7][2];
   char pop_count_str[10];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
+  flickcurl_init_params(fc);
+
   if(user_id) {
-    parameters[count][0]  = "user_id";
-    parameters[count++][1]= user_id;
+    flickcurl_add_param(fc, "user_id", user_id);
   }
   if(pop_count >= 0) {
     sprintf(pop_count_str, "%d", pop_count);
-    parameters[count][0]  = "count";
-    parameters[count++][1]= pop_count_str;
+    flickcurl_add_param(fc, "count", pop_count_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getListUserPopular", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.tags.getListUserPopular"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -423,20 +414,19 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
 flickcurl_tag**
 flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
 {
-  const char* parameters[6][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
+  flickcurl_init_params(fc);
+
   if(tag) {
-    parameters[count][0]  = "tag";
-    parameters[count++][1]= tag;
+    flickcurl_add_param(fc, "tag", tag);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getListUserRaw", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.tags.getListUserRaw"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -480,21 +470,20 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
 flickcurl_tag**
 flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
 {
-  const char* parameters[6][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
+  flickcurl_init_params(fc);
+
   if(!tag)
     return NULL;
   
-  parameters[count][0]  = "tag";
-  parameters[count++][1]= tag;
+  flickcurl_add_param(fc, "tag", tag);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.tags.getRelated", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.tags.getRelated"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

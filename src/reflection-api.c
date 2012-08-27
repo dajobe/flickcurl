@@ -55,8 +55,6 @@
 char**
 flickcurl_reflection_getMethods(flickcurl* fc)
 {
-  const char * parameters[5][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   xmlXPathObjectPtr xpathObj = NULL;
@@ -65,11 +63,13 @@ flickcurl_reflection_getMethods(flickcurl* fc)
   int i;
   int size;
   char **methods = NULL;
+  int count;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare_noauth(fc, "flickr.reflection.getMethods",
-                              parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare_noauth(fc, "flickr.reflection.getMethods"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -156,7 +156,7 @@ flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name)
 
   parameters[count][0]  = NULL;
 
-  if(flickcurl_prepare(fc, "flickr.reflection.getMethodInfo", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.reflection.getMethodInfo"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

@@ -58,24 +58,21 @@ char*
 flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
                                      const char* comment_text)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* id = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id || !comment_text)
     return NULL;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "comment_text";
-  parameters[count++][1]= comment_text;
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "comment_text", comment_text);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.comments.addComment", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.comments.addComment"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -119,21 +116,19 @@ flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
 int
 flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int result = 1;
   
+  flickcurl_init_params(fc);
+
   if(!comment_id)
     return 1;
 
-  parameters[count][0]  = "comment_id";
-  parameters[count++][1]= comment_id;
+  flickcurl_add_param(fc, "comment_id", comment_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.comments.deleteComment", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.comments.deleteComment"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -169,23 +164,20 @@ int
 flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
                                       const char* comment_text)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int result = 1;
   
+  flickcurl_init_params(fc);
+
   if(!comment_id || !comment_text)
     return 1;
 
-  parameters[count][0]  = "comment_id";
-  parameters[count++][1]= comment_id;
-  parameters[count][0]  = "comment_text";
-  parameters[count++][1]= comment_text;
+  flickcurl_add_param(fc, "comment_id", comment_id);
+  flickcurl_add_param(fc, "comment_text", comment_text);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.comments.editComment", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photos.comments.editComment"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -219,22 +211,21 @@ flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
 flickcurl_comment**
 flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_comment** comments = NULL;
   int comments_count = 0;
   
+  flickcurl_init_params(fc);
+
   if(!photo_id)
     return NULL;
 
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.comments.getList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.comments.getList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -284,29 +275,26 @@ flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc,
                                                       const char* contacts_filter,
                                                       flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[12][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   char date_lastcomment_str[20];
   
+  flickcurl_init_params(fc);
+
   /* API parameters */
   if(date_lastcomment >= 0) {
-    parameters[count][0]  = "date_lastcomment";
     sprintf(date_lastcomment_str, "%d", date_lastcomment);
-    parameters[count++][1]= date_lastcomment_str;
+    flickcurl_add_param(fc, "date_lastcomment", date_lastcomment_str);
   }
   if(contacts_filter) {
-    parameters[count][0]  = "contacts_filter";
-    parameters[count++][1]= contacts_filter;
+    flickcurl_add_param(fc, "contacts_filter", contacts_filter);
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
-  parameters[count][0]  = NULL;
+  flickcurl_append_photos_list_params(fc, list_params, &format);
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photos.comments.getRecentForContacts",
-                       parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photos.comments.getRecentForContacts"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,

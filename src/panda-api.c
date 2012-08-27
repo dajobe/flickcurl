@@ -121,15 +121,15 @@ flickcurl_build_pandas(flickcurl* fc,
 char**
 flickcurl_panda_getList(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char **pandas = NULL;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.panda.getList", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.panda.getList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -185,21 +185,20 @@ flickcurl_panda_getList(flickcurl* fc)
 flickcurl_photo**
 flickcurl_panda_getPhotos(flickcurl *fc, const char *panda_name)
 {
-  const char* parameters[8][2];
-  int count = 0;
   flickcurl_photo** photos = NULL;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!panda_name)
     return NULL;
 
-  parameters[count][0]  = "panda_name";
-  parameters[count++][1]= panda_name;
+  flickcurl_add_param(fc, "panda_name", panda_name);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.panda.getPhotos", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.panda.getPhotos"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,

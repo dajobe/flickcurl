@@ -55,15 +55,15 @@
 flickcurl_blog**
 flickcurl_blogs_getList(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_blog** blogs = NULL;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.blogs.getList", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.blogs.getList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -102,15 +102,15 @@ flickcurl_blogs_getList(flickcurl* fc)
 flickcurl_blog_service**
 flickcurl_blogs_getServices(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_blog_service **services = NULL;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.blogs.getServices", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.blogs.getServices"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -159,30 +159,25 @@ flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id,
                           const char* photo_id, const char* title,
                           const char* description, const char* blog_password)
 {
-  const char* parameters[12][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
+  flickcurl_init_params(fc);
+
   if(!blog_id || !photo_id || !title || !description)
     return 1;
 
-  parameters[count][0]  = "blog_id";
-  parameters[count++][1]= blog_id;
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1]= photo_id;
-  parameters[count][0]  = "title";
-  parameters[count++][1]= title;
-  parameters[count][0]  = "description";
-  parameters[count++][1]= description;
+  flickcurl_add_param(fc, "blog_id", blog_id);
+  flickcurl_add_param(fc, "photo_id", photo_id);
+  flickcurl_add_param(fc, "title", title);
+  flickcurl_add_param(fc, "description", description);
   if(blog_password) {
-    parameters[count][0]  = "blog_password";
-    parameters[count++][1]= blog_password;
+    flickcurl_add_param(fc, "blog_password", blog_password);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.blogs.postPhoto", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.blogs.postPhoto"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

@@ -59,23 +59,22 @@ flickcurl_photos_list*
 flickcurl_interestingness_getList_params(flickcurl* fc, const char* date,
                                          flickcurl_photos_list_params* list_params)
 {
-  const char* parameters[12][2];
-  int count = 0;
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
 
+  flickcurl_init_params(fc);
+
   /* API parameters */
   if(date) {
-    parameters[count][0]  = "date";
-    parameters[count++][1]= date;
+    flickcurl_add_param(fc, "date", date);
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &format);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.interestingness.getList", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.interestingness.getList"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,

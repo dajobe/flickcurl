@@ -258,11 +258,11 @@ compare_args(const void *a, const void *b)
 
 
 static void
-flickcurl_sort_args(flickcurl *fc, int count)
+flickcurl_sort_args(flickcurl *fc)
 {
-  qsort((void*)fc->parameters, count, sizeof(char*[2]), compare_args);
+  qsort((void*)fc->parameters, fc->count, sizeof(char*[2]), compare_args);
 }
-f
+
 
 /*
  * flickcurl_oauth_prepare_common:
@@ -276,7 +276,6 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
                                const char* method,
                                const char* upload_field,
                                const char* upload_value,
-                               int count,
                                int parameters_in_url, int need_auth)
 {
   flickcurl_oauth_data* od = &fc->od;
@@ -292,7 +291,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   const char* http_method = "GET";
   int is_oauth_method = 0;
 
-  if(!url || !parameters)
+  if(!url)
     return 1;
   
   /* If one is given, both are required */
@@ -357,18 +356,13 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
    * oauth_token            access token or request token
    */
 
-  if(fc->method && !is_oauth_method) {
-    fc->parameters[count][0]  = "method";
-    fc->parameters[count++][1]= fc->method;
-  }
+  if(fc->method && !is_oauth_method)
+    flickcurl_add_param(fc, "method", fc->method);
 
-  if(od->callback) {
-    fc->parameters[count][0]  = "oauth_callback";
-    fc->parameters[count++][1]= od->callback;
-  }
+  if(od->callback)
+    flickcurl_add_param(fc, "oauth_callback", od->callback);
   
-  fc->parameters[count][0]  = "oauth_consumer_key";
-  fc->parameters[count++][1]= od->client_key;
+  flickcurl_add_param(fc, "oauth_consumer_key", od->client_key);
 
   nonce = (char*)od->nonce;
   if(!nonce) {
@@ -376,12 +370,10 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     free_nonce = 1;
     sprintf(nonce, "%ld", mtwist_u32rand(fc->mt));
   }
-  fc->parameters[count][0]  = "oauth_nonce";
-  fc->parameters[count++][1]= nonce;
+  flickcurl_add_param(fc, "oauth_nonce", nonce);
 
   /* oauth_signature - computed over these fields */
-  fc->parameters[count][0]  = "oauth_signature_method";
-  fc->parameters[count++][1]= "HMAC-SHA1";
+  flickcurl_add_param(fc, "oauth_signature_method", "HMAC-SHA1");
 
   timestamp = (char*)malloc(20);
   if(od->timestamp)
@@ -391,33 +383,27 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     (void)gettimeofday(&tp, NULL);
     sprintf(timestamp, "%ld", (long)tp.tv_sec);
   }
-  fc->parameters[count][0]  = "oauth_timestamp";
-  fc->parameters[count++][1]= timestamp;
+  flickcurl_add_param(fc, "oauth_timestamp", timestamp);
 
-  fc->parameters[count][0]  = "oauth_version";
-  fc->parameters[count++][1]= "1.0";
+  flickcurl_add_param(fc, "oauth_version", "1.0");
 
-  if(od->token) {
-    fc->parameters[count][0]  = "oauth_token";
-    fc->parameters[count++][1]= od->token;
-  } else if(od->request_token) {
-    fc->parameters[count][0]  = "oauth_token";
-    fc->parameters[count++][1]= od->request_token;
-  }
-  if(od->verifier) {
-    fc->parameters[count][0]  = "oauth_verifier";
-    fc->parameters[count++][1]= od->verifier;
-  }
+  if(od->token)
+    flickcurl_add_param(fc, "oauth_token", od->token);
+  else if(od->request_token) 
+    flickcurl_add_param(fc, "oauth_token", od->request_token);
 
-  fc->parameters[count][0]  = NULL;
+  if(od->verifier)
+    flickcurl_add_param(fc, "oauth_verifier", od->verifier);
+
+  flickcurl_end_params(fc);
 
   /* +FLICKCURL_FLICKCURL_MAX_OAUTH_PARAM_COUNT for oauth fields +1 for NULL terminating pointer */
-  fc->param_fields = (char**)calloc(count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
-  fc->param_values = (char**)calloc(count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
-  values_len       = (size_t*)calloc(count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(size_t));
+  fc->param_fields = (char**)calloc(fc->count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  fc->param_values = (char**)calloc(fc->count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  values_len       = (size_t*)calloc(fc->count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(size_t));
 
   if((need_auth && (od->client_secret || od->token_secret)) || fc->sign)
-    flickcurl_sort_args(fc, count);
+    flickcurl_sort_args(fc);
 
 
   fc_uri_len = strlen(url);
@@ -517,20 +503,20 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     free(od->key);
     od->key = NULL;
 
-    fc->parameters[count][0]  = "oauth_signature";
-    fc->parameters[count][1]  = signature_string;
-
+    flickcurl_add_param(fc, "oauth_signature", signature_string);
+    fc->count--;
+    
     /* Add a new parameter pair */
-    values_len[count] = vlen;
+    values_len[fc->count] = vlen;
     /* 15 = strlen(oauth_signature) */
-    fc->param_fields[count] = (char*)malloc(15 + 1);
-    strcpy(fc->param_fields[count], fc->parameters[count][0]);
-    fc->param_values[count] = (char*)malloc(vlen + 1);
-    strcpy(fc->param_values[count], fc->parameters[count][1]);
+    fc->param_fields[fc->count] = (char*)malloc(15 + 1);
+    strcpy(fc->param_fields[fc->count], fc->parameters[fc->count][0]);
+    fc->param_values[fc->count] = (char*)malloc(vlen + 1);
+    strcpy(fc->param_values[fc->count], fc->parameters[fc->count][1]);
 
     fc_uri_len += 15 /* "oauth_signature" */ + 1 /* = */ + vlen;
-
-    count++;
+    
+    fc->count++;
     
 #ifdef FLICKCURL_DEBUG
     fprintf(stderr, "HMAC-SHA1 signature:\n  %s\n", signature_string);
@@ -540,11 +526,11 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     od->data = NULL;
     od->data_len = 0;
     
-    fc->parameters[count][0] = NULL;
+    flickcurl_end_params(fc);
   }
 
   /* add &s between fc->parameters */
-  fc_uri_len += count-1;
+  fc_uri_len += fc->count - 1;
 
   /* reuse or grow uri buffer */
   if(fc->uri_len < fc_uri_len) {
@@ -646,7 +632,6 @@ flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback)
                                       /* method */ "flickr.oauth.request_token",
                                       /* upload_field */ NULL,
                                       /* upload_value */ NULL,
-                                      parameters, count,
                                       /* parameters_in_url */ 1,
                                       /* need_auth */ 1);
   od->callback = NULL;
@@ -787,7 +772,6 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
                                       /* method */ "flickr.oauth.access_token",
                                       /* upload_field */ NULL,
                                       /* upload_value */ NULL,
-                                      parameters, count,
                                       /* parameters_in_url */ 1,
                                       /* need_auth */ 1);
 

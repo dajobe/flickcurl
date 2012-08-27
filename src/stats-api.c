@@ -86,38 +86,33 @@ flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
                                      const char* collection_id,
                                      int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
+  flickcurl_add_param(fc, "date", date);
   if(collection_id) {
-    parameters[count][0]  = "collection_id";
-    parameters[count++][1] = collection_id;
+    flickcurl_add_param(fc, "collection_id", collection_id);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getCollectionDomains", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.stats.getCollectionDomains"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -174,40 +169,34 @@ flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
                                        const char* collection_id,
                                        int per_page, int page)
 {
-  const char* parameters[12][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date || !domain)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
-  parameters[count][0]  = "domain";
-  parameters[count++][1] = domain;
+  flickcurl_add_param(fc, "date", date);
+  flickcurl_add_param(fc, "domain", domain);
   if(collection_id) {
-    parameters[count][0]  = "collection_id";
-    parameters[count++][1] = collection_id;
+    flickcurl_add_param(fc, "collection_id", collection_id);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getCollectionReferrers", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.stats.getCollectionReferrers"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -258,23 +247,22 @@ int
 flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date,
                                    const char* collection_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* count_str;
+  int count;
   
+  flickcurl_init_params(fc);
+
   if(!date || !collection_id)
     return -1;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
-  parameters[count][0]  = "collection_id";
-  parameters[count++][1] = collection_id;
+  flickcurl_add_param(fc, "date", date);
+  flickcurl_add_param(fc, "collection_id", collection_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getCollectionStats", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getCollectionStats"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -332,37 +320,33 @@ flickcurl_stat**
 flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
                                 const char* photo_id, int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
+  flickcurl_add_param(fc, "date", date);
   if(photo_id) {
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1] = photo_id;
+  flickcurl_add_param(fc, "photo_id", photo_id);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotoDomains", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotoDomains"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -418,39 +402,34 @@ flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
                                   const char* domain, const char* photo_id,
                                   int per_page, int page)
 {
-  const char* parameters[12][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date || !domain)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
-  parameters[count][0]  = "domain";
-  parameters[count++][1] = domain;
+  flickcurl_add_param(fc, "date", date);
+  flickcurl_add_param(fc, "domain", domain);
   if(photo_id) {
-    parameters[count][0]  = "photo_id";
-    parameters[count++][1] = photo_id;
+    flickcurl_add_param(fc, "photo_id", photo_id);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotoReferrers", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotoReferrers"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -505,37 +484,33 @@ flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
                                    const char* photoset_id,
                                    int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
+  flickcurl_add_param(fc, "date", date);
   if(photoset_id) {
-    parameters[count][0]  = "photoset_id";
-    parameters[count++][1] = photoset_id;
+    flickcurl_add_param(fc, "photoset_id", photoset_id);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotosetDomains", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotosetDomains"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -592,40 +567,34 @@ flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date,
                                      const char* photoset_id,
                                      int per_page, int page)
 {
-  const char* parameters[12][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date || !domain)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
-  parameters[count][0]  = "domain";
-  parameters[count++][1] = domain;
+  flickcurl_add_param(fc, "date", date);
+  flickcurl_add_param(fc, "domain", domain);
   if(photoset_id) {
-    parameters[count][0]  = "photoset_id";
-    parameters[count++][1] = photoset_id;
+    flickcurl_add_param(fc, "photoset_id", photoset_id);
   }
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotosetReferrers", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotosetReferrers"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -677,23 +646,22 @@ int
 flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date,
                                  const char* photoset_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* count_str;
-  
+  int count;
+
+  flickcurl_init_params(fc);
+
   if(!date || !photoset_id)
     return -1;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
-  parameters[count][0]  = "photoset_id";
-  parameters[count++][1] = photoset_id;
+  flickcurl_add_param(fc, "date", date);
+  flickcurl_add_param(fc, "photoset_id", photoset_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotosetStats", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotosetStats"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -749,24 +717,22 @@ flickcurl_stat*
 flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date,
                               const char* photo_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   flickcurl_stat* stat1 = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!date || !photo_id)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
-  parameters[count][0]  = "photo_id";
-  parameters[count++][1] = photo_id;
+  flickcurl_add_param(fc, "date", date);
+  flickcurl_add_param(fc, "photo_id", photo_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotoStats", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotoStats"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -825,34 +791,30 @@ flickcurl_stat**
 flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
                                       int per_page, int page)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
+  flickcurl_add_param(fc, "date", date);
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotostreamDomains", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotostreamDomains"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -907,36 +869,31 @@ flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
                                         const char* domain,
                                         int per_page, int page)
 {
-  const char* parameters[11][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
   char per_page_str[10];
   char page_str[10];
   
+  flickcurl_init_params(fc);
+
   if(!date || !domain)
     return NULL;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
-  parameters[count][0]  = "domain";
-  parameters[count++][1] = domain;
+  flickcurl_add_param(fc, "date", date);
+  flickcurl_add_param(fc, "domain", domain);
   if(per_page >= 0) {
     sprintf(per_page_str, "%d", per_page);
-    parameters[count][0]  = "per_page";
-    parameters[count++][1] = per_page_str;
+    flickcurl_add_param(fc, "per_page", per_page_str);
   }
   if(page >= 0) {
     sprintf(page_str, "%d", page);
-    parameters[count][0]  = "page";
-    parameters[count++][1] = page_str;
+    flickcurl_add_param(fc, "page", page_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotostreamReferrers", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotostreamReferrers"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -986,21 +943,21 @@ flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
 int
 flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* count_str;
-  
+  int count;
+
+  flickcurl_init_params(fc);
+
   if(!date)
     return -1;
 
-  parameters[count][0]  = "date";
-  parameters[count++][1] = date;
+  flickcurl_add_param(fc, "date", date);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPhotostreamStats", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPhotostreamStats"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -1062,12 +1019,12 @@ flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date,
                                  const char* extras)
 {
   flickcurl_photos_list_params list_params;
-  const char* parameters[14][2];
-  int count = 0;
   const char* format = NULL;
   flickcurl_photos_list* photos_list = NULL;
   flickcurl_photo** photos = NULL;
   
+  flickcurl_init_params(fc);
+
   memset(&list_params, '\0', sizeof(list_params));
   list_params.format   = NULL;
   list_params.extras   = extras;
@@ -1075,20 +1032,18 @@ flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date,
   list_params.page     = page;
 
   if(date) {
-    parameters[count][0]  = "date";
-    parameters[count++][1] = date;
+    flickcurl_add_param(fc, "date", date);
   }
   if(sort) {
-    parameters[count][0]  = "sort";
-    parameters[count++][1] = sort;
+    flickcurl_add_param(fc, "sort", sort);
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(fc, &list_params, &count, &format);
+  flickcurl_append_photos_list_params(fc, &list_params, &format);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getPopularPhotos", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getPopularPhotos"))
     goto tidy;
 
   photos_list = flickcurl_invoke_photos_list(fc,
@@ -1135,21 +1090,20 @@ flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date,
 flickcurl_view_stats*
 flickcurl_stats_getTotalViews(flickcurl* fc, const char* date)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_view_stats* views = NULL;
   char* count_str;
 
+  flickcurl_init_params(fc);
+
   if(date) {
-    parameters[count][0]  = "date";
-    parameters[count++][1] = date;
+    flickcurl_add_param(fc, "date", date);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.stats.getTotalViews", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.stats.getTotalViews"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

@@ -53,21 +53,20 @@
 flickcurl_collection*
 flickcurl_collections_getInfo(flickcurl* fc, const char* collection_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_collection* collection = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!collection_id)
     return NULL;
 
-  parameters[count][0]  = "collection_id";
-  parameters[count++][1]= collection_id;
+  flickcurl_add_param(fc, "collection_id", collection_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.collections.getInfo", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.collections.getInfo"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -112,24 +111,22 @@ flickcurl_collection*
 flickcurl_collections_getTree(flickcurl* fc, const char* collection_id,
                               const char* user_id)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_collection* collection  =  NULL;
   
+  flickcurl_init_params(fc);
+
   if(collection_id) {
-    parameters[count][0]  = "collection_id";
-    parameters[count++][1]= collection_id;
+    flickcurl_add_param(fc, "collection_id", collection_id);
   }
   if(user_id) {
-    parameters[count][0]  = "user_id";
-    parameters[count++][1]= user_id;
+    flickcurl_add_param(fc, "user_id", user_id);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.collections.getTree", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.collections.getTree"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

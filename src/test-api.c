@@ -59,17 +59,16 @@
 int
 flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
 {
-  const char * parameters[6][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int rc = 0;
   
-  parameters[count][0]  = key;
-  parameters[count++][1]= value;
+  flickcurl_init_params(fc);
 
-  parameters[count][0]  = NULL;
+  flickcurl_add_param(fc, key, value);
 
-  if(flickcurl_prepare(fc, "flickr.test.echo", parameters, count)) {
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.test.echo")) {
     rc = 1;
     goto tidy;
   }
@@ -102,15 +101,15 @@ flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
 char*
 flickcurl_test_login(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* username = NULL;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.test.login", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.test.login"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -152,14 +151,14 @@ flickcurl_test_login(flickcurl* fc)
 int
 flickcurl_test_null(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.test.null", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.test.null"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

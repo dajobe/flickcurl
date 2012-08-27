@@ -51,16 +51,16 @@
 int
 flickcurl_prefs_getContentType(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* content_type_str = NULL;
   int content_type= -1;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.prefs.getContentType", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.prefs.getContentType"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -137,16 +137,16 @@ flickcurl_prefs_getGeoPerms(flickcurl* fc)
 int
 flickcurl_prefs_getHidden(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* hidden_str = NULL;
   int hidden= -1;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.prefs.getHidden", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.prefs.getHidden"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -195,16 +195,16 @@ flickcurl_prefs_getHidden(flickcurl* fc)
 int
 flickcurl_prefs_getPrivacy(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* privacy_level_str= NULL;
   int privacy_level= -1;
   
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.prefs.getPrivacy", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.prefs.getPrivacy"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -251,16 +251,16 @@ flickcurl_prefs_getPrivacy(flickcurl* fc)
 int
 flickcurl_prefs_getSafetyLevel(flickcurl* fc)
 {
-  const char* parameters[7][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* safety_level_str= NULL;
   int safety_level= -1;
 
-  parameters[count][0]  = NULL;
+  flickcurl_init_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.prefs.getSafetyLevel", parameters, count))
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.prefs.getSafetyLevel"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

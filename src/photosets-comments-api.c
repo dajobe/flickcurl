@@ -59,24 +59,21 @@ flickcurl_photosets_comments_addComment(flickcurl* fc,
                                         const char* photoset_id,
                                         const char* comment_text)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* id = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!photoset_id || !comment_text)
     return NULL;
 
-  parameters[count][0]  = "photoset_id";
-  parameters[count++][1]= photoset_id;
-  parameters[count][0]  = "comment_text";
-  parameters[count++][1]= comment_text;
+  flickcurl_add_param(fc, "photoset_id", photoset_id);
+  flickcurl_add_param(fc, "comment_text", comment_text);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photosets.comments.addComment", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photosets.comments.addComment"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -122,21 +119,19 @@ int
 flickcurl_photosets_comments_deleteComment(flickcurl* fc,
                                            const char* comment_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int result = 1;
   
+  flickcurl_init_params(fc);
+
   if(!comment_id)
     return 1;
 
-  parameters[count][0]  = "comment_id";
-  parameters[count++][1]= comment_id;
+  flickcurl_add_param(fc, "comment_id", comment_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photosets.comments.deleteComment",
-                       parameters, count))
+  if(flickcurl_prepare(fc, "flickr.photosets.comments.deleteComment"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -173,23 +168,20 @@ flickcurl_photosets_comments_editComment(flickcurl* fc,
                                          const char* comment_id,
                                          const char* comment_text)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   int result = 1;
   
+  flickcurl_init_params(fc);
+
   if(!comment_id || !comment_text)
     return 1;
 
-  parameters[count][0]  = "comment_id";
-  parameters[count++][1]= comment_id;
-  parameters[count][0]  = "comment_text";
-  parameters[count++][1]= comment_text;
+  flickcurl_add_param(fc, "comment_id", comment_id);
+  flickcurl_add_param(fc, "comment_text", comment_text);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photosets.comments.editComment", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photosets.comments.editComment"))
     goto tidy;
 
   flickcurl_set_write(fc, 1);
@@ -223,23 +215,21 @@ flickcurl_photosets_comments_editComment(flickcurl* fc,
 flickcurl_comment**
 flickcurl_photosets_comments_getList(flickcurl* fc, const char* photoset_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_comment** comments = NULL;
   int comments_count = 0;
   
+  flickcurl_init_params(fc);
+
   if(!photoset_id)
     return NULL;
 
-  parameters[count][0]  = "photoset_id";
-  parameters[count++][1]= photoset_id;
+  flickcurl_add_param(fc, "photoset_id", photoset_id);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.photosets.comments.getList", parameters,
-                       count))
+  if(flickcurl_prepare(fc, "flickr.photosets.comments.getList"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);

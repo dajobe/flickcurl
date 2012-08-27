@@ -56,22 +56,21 @@
 flickcurl_category*
 flickcurl_groups_browse(flickcurl* fc, int cat_id)
 {
-  const char* parameters[8][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_category* category = NULL;
   char cat_id_str[10];
   
+  flickcurl_init_params(fc);
+
   if(cat_id >= 0) {
     sprintf(cat_id_str, "%d", cat_id);
-    parameters[count][0]  = "cat_id";
-    parameters[count++][1]= cat_id_str;
+    flickcurl_add_param(fc, "cat_id", cat_id_str);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.groups.browse", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.groups.browse"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -118,26 +117,24 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
 flickcurl_group*
 flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
 {
-  const char* parameters[9][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_group **groups = NULL;
   flickcurl_group *group = NULL;
   
+  flickcurl_init_params(fc);
+
   if(!group_id)
     return NULL;
 
-  parameters[count][0]  = "group_id";
-  parameters[count++][1]= group_id;
+  flickcurl_add_param(fc, "group_id", group_id);
   if(lang) {
-    parameters[count][0]  = "lang";
-    parameters[count++][1]= lang;
+    flickcurl_add_param(fc, "lang", lang);
   }
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.groups.getInfo", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.groups.getInfo"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
@@ -188,29 +185,26 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
 flickcurl_group**
 flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
 {
-  const char* parameters[10][2];
-  int count = 0;
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_group **groups = NULL;
   char per_page_s[10];
   char page_s[10];
   
+  flickcurl_init_params(fc);
+
   if(!text)
     return NULL;
 
-  parameters[count][0]  = "text";
-  parameters[count++][1]= text;
-  parameters[count][0]  = "per_page";
+  flickcurl_add_param(fc, "text", text);
   sprintf(per_page_s, "%d", per_page);
-  parameters[count++][1]= per_page_s;
-  parameters[count][0]  = "page";
+  flickcurl_add_param(fc, "per_page", per_page_s);
   sprintf(page_s, "%d", page);
-  parameters[count++][1]= page_s;
+  flickcurl_add_param(fc, "page", page_s);
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
-  if(flickcurl_prepare(fc, "flickr.groups.search", parameters, count))
+  if(flickcurl_prepare(fc, "flickr.groups.search"))
     goto tidy;
 
   doc = flickcurl_invoke(fc);
