@@ -1,3 +1,271 @@
+2012-08-27  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c: Remove unused parameters vars
+	(flickcurl_oauth_create_request_token,
+	flickcurl_oauth_create_access_token): Use flickcurl_end_params()
+	and count for form field counting
+
+	* src/flickcurl.h, src/flickcurl_internal.h,
+	src/win32_flickcurl_config.h: 2012
+
+	* utils/codegen.c, utils/flickcurl.c, utils/flickrdf.c,
+	utils/list-methods.c, utils/oauth-test.c, utils/raptor_fake.c,
+	utils/raptor_fake.h: 2012
+
+	* src/activity-api.c, src/auth-api.c, src/blogs-api.c,
+	src/collection.c, src/collections-api.c, src/common.c,
+	src/commons-api.c, src/config.c, src/contacts-api.c,
+	src/favorites-api.c, src/galleries-api.c, src/groups-api.c,
+	src/groups-members-api.c, src/groups-pools-api.c,
+	src/interestingness-api.c, src/machinetags-api.c, src/oauth.c,
+	src/panda-api.c, src/people-api.c, src/person.c, src/photo.c,
+	src/photos-api.c, src/photos-comments-api.c, src/photos-geo-api.c,
+	src/photos-licenses-api.c, src/photos-notes-api.c,
+	src/photos-people-api.c, src/photos-transform-api.c,
+	src/photos-upload-api.c, src/photosets-api.c,
+	src/photosets-comments-api.c, src/places-api.c, src/prefs-api.c,
+	src/reflection-api.c, src/serializer.c, src/stats-api.c,
+	src/tags-api.c, src/test-api.c, src/upload-api.c, src/urls-api.c:
+	2012
+
+2012-08-26  Dave Beckett <dave@dajobe.org>
+
+	* src/places-api.c, src/reflection-api.c: Update count parameter
+	use to new style here too
+
+	* src/activity-api.c, src/auth-api.c, src/blogs-api.c,
+	src/collections-api.c, src/common.c, src/commons-api.c,
+	src/contacts-api.c, src/favorites-api.c, src/flickcurl_internal.h,
+	src/galleries-api.c, src/groups-api.c, src/groups-members-api.c,
+	src/groups-pools-api.c, src/interestingness-api.c,
+	src/legacy-auth.c, src/machinetags-api.c, src/oauth.c,
+	src/panda-api.c, src/people-api.c, src/photos-api.c,
+	src/photos-comments-api.c, src/photos-geo-api.c,
+	src/photos-licenses-api.c, src/photos-notes-api.c,
+	src/photos-people-api.c, src/photos-transform-api.c,
+	src/photos-upload-api.c, src/photosets-api.c,
+	src/photosets-comments-api.c, src/places-api.c, src/prefs-api.c,
+	src/reflection-api.c, src/stats-api.c, src/tags-api.c,
+	src/test-api.c, src/upload-api.c: Move all use of 'count' var to
+	use fc->count (flickcurl_init_params, flickcurl_add_param,
+	flickcurl_end_param): Added and used in every API call to replace
+	by-hand construction of params and adjusting count variable.
+
+	(flickcurl_prepare_common, flickcurl_legacy_prepare_common,
+	flickcurl_oauth_prepare_common, flickcurl_prepare_noauth,
+	flickcurl_prepare): Lose count param and use fc->count directly
+	for computing parameters and requests.
+
+	(flickcurl_call_get_one_string_field): Use flickcurl_add_param
+	etc.
+
+	(flickcurl_append_photos_list_params): Lose count param and use
+	flickcurl_add_param instead. Update all callers.
+
+	* src/favorites-api.c, src/galleries-api.c,
+	src/groups-pools-api.c, src/interestingness-api.c,
+	src/people-api.c, src/photos-api.c, src/photos-comments-api.c,
+	src/photos-geo-api.c, src/photosets-api.c, src/stats-api.c: Update
+	flickcurl_append_photos_list_params calls without parameters
+
+	* src/common.c, src/flickcurl_internal.h, src/legacy-auth.c,
+	src/oauth.c: Move parameters into flickcurl object as a fixed
+	array
+
+	(flickcurl_prepare_common, flickcurl_prepare_noauth,
+	flickcurl_prepare_upload, flickcurl_append_photos_list_params,
+	flickcurl_sort_args, flickcurl_oauth_prepare_common): Remove
+	parameters argument from multiple calls, replacing it with use of
+	fc->parameters
+
+	(flickcurl_call_get_one_string_field): use fc->parameters Declared
+	largest array of parameters once using
+	FLICKCURL_MAX_OAUTH_PARAM_COUNT and FLICKCURL_MAX_PARAM_COUNT
+
+	* src/config.c, src/flickcurl.h, src/oauth.c: Replace
+	flickcurl_set_oauth_client_credentials() with two calls
+
+	(flickcurl_set_oauth_client_key,
+	flickcurl_set_oauth_client_secret): Added.
+
+	* src/config.c:
+	(flickcurl_config_var_handler): client key/secret get switched
+
+	* src/oauth.c: Now legal C
+
+	* utils/flickcurl.c: Add oauth-create and oauth-verify commands to
+	invoke OAuth flow
+
+	(command_oauth_create): Added to create the request token/secret
+
+	(command_oauth_verify): Added to verify the request from the OAuth
+	frob to give the access tokens. Saves the OAuth tokens to the
+	config file too.
+
+	* src/oauth.c: Allow setting NULL fields in OAuth credential set
+	calls
+
+	(flickcurl_set_oauth_client_credentials,
+	flickcurl_set_oauth_token, flickcurl_set_oauth_token_secret,
+	flickcurl_set_oauth_request_credentials): Allow NULL args and
+	set/cleanup correctly.
+
+2012-08-25  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c:
+	oauth docs
+
+	* utils/oauth-test.c: Just use public APIs
+
+	(oauth_prepare, oauth_test_echo): Removed
+
+	(main): Remove flickcurl_set_oauth_client_credentials - the client
+	key/secret must be in the configuration file now.  Call
+	flickcurl_test_echo().
+
+	* utils/oauth-test.c:
+	Allow callback URI
+
+	* src/flickcurl.h, src/oauth.c, utils/oauth-test.c:
+	(flickcurl_oauth_create_request_token): Allow optional callback
+
+	* src/flickcurl.h, src/flickcurl_internal.h, src/oauth.c,
+	utils/oauth-test.c: Expose oauth authentication calls to public
+	API
+
+	(flickcurl_oauth_create_request_token): Made public, was
+	flickcurl_oauth_request_token internally.
+
+	(flickcurl_oauth_create_request_token): Was
+	flickcurl_oauth_request_token
+
+	(flickcurl_oauth_get_authorize_uri):
+	Made public.
+
+	(flickcurl_oauth_create_access_token): Made public,
+	was flickcurl_oauth_access_token internally.
+
+	(flickcurl_get_oauth_request_token,
+	flickcurl_get_oauth_request_token_secret,
+	flickcurl_set_oauth_request_credentials): Added to get/set the
+	request tokens.
+
+	* src/person.c:
+	(flickcurl_build_persons): Tidy up better on loop exit and error
+	path Fixed leaks of - xpathNodeCtx always - person object and
+	persons array on errors
+
+	* src/photo.c:
+	(flickcurl_build_photos): Fix leak of string_value for tags
+
+	* configure.ac:
+	Curl version line fix
+
+2012-08-24  Dave Beckett <dave@dajobe.org>
+
+	* configure.ac: Use xml2-config and curl-config as well as
+	pkg-config
+
+	* src/common.c:
+	(flickcurl_prepare_common): Make legacy auth work again
+
+	* utils/flickcurl.c: OAuth
+
+	* src/config.c: oauth_token_secret
+
+	* src/config.c: Read oauth fields from config
+
+	* utils/oauth-test.c: Use flickcurl_set_oauth_client_credentials()
+
+	* src/flickcurl.h, src/oauth.c: Added getter/setters for OAuth
+	client key and secret
+
+	(flickcurl_get_oauth_client_key,
+	flickcurl_get_oauth_client_secret): Added getters
+
+	(flickcurl_set_oauth_client_credentials): Added setter.
+
+	* src/common.c:
+	docs
+
+	* src/auth-api.c:
+	(flickcurl_auth_oauth_getAccessToken): old secret becomes
+	client_secret
+
+2012-08-23  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c: Turn code into a check for test failure
+
+	* docs/tmpl/section-core.sgml: update tmpls
+
+	* src/reflection-api.c:
+	(flickcurl_reflection_getMethods): No auth needed
+
+	* docs/flickcurl-sections.txt: Added oauth get/setters
+	flickcurl_get_oauth_token flickcurl_get_oauth_token_secret
+	flickcurl_set_oauth_token flickcurl_set_oauth_token_secret
+
+	* src/Makefile.am, src/common.c, src/flickcurl_internal.h,
+	src/legacy-auth.c: Move legacy auth code to new module
+	src/legacy-auth.c
+
+	* src/common.c: Call legacy or OAuth to prepare and sign calls
+	(flickcurl_legacy_prepare_common): Renamed from
+	flickcurl_prepare_common.
+
+	(flickcurl_prepare_common): Call legacy Flickr Auth - above - or
+	OAuth via flickcurl_oauth_prepare_common.
+
+	* src/flickcurl_internal.h: docs for legacy auth fields
+
+	* src/auth-api.c:
+	(flickcurl_auth_getToken): Store exchanged OAuth token/secret
+
+	* utils/flickcurl.c: Document oauth_token and oauth_secret in
+	config
+
+	* src/config.c:
+	(flickcurl_config_write_ini): Write oauth fields if set
+
+	* src/common.c: Switch API Key source from fc->api_key to
+	fc->od.client_key Update docs to 'legacy Flickr auth' for
+	get/setters for legacy token and secret.
+
+	* src/flickcurl.h, src/oauth.c: Add get/setters for OAuth tokens
+
+	(flickcurl_get_oauth_token, flickcurl_set_oauth_token,
+	flickcurl_get_oauth_token_secret,
+	flickcurl_set_oauth_token_secret): Added
+
+	* configure.ac, src/Makefile.am, src/common.c,
+	src/flickcurl_internal.h, utils/Makefile.am: Enable OAuth support
+	always
+
+	* build/.gitignore, configure.ac: Add AM_PROG_AR for linking
+
+2012-04-18  Dave Beckett <dave@dajobe.org>
+
+	* src/photos-api.c:
+	(flickcurl_photos_setDates): Actually send date_taken parameter
+	Fixes GitHub issue https://github.com/dajobe/flickcurl/issues/15
+
+2012-03-11  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h: Document sizes
+
+2011-12-29  Dave Beckett <dave@dajobe.org>
+
+	* src/auth-api.c: 1.23
+
+	* NEWS.html: 1.23
+
+	* coverage.html: 1.22 and 1.23
+
+2011-12-28  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac:
+	Bumped version to 1.23
+
 2011-11-11  Dave Beckett <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_22 for 1.22 release (GIT
