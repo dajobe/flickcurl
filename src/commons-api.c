@@ -5,7 +5,7 @@
  * Commons API announced 2009-01-29
  * http://flickr.com/groups/api/discuss/72157613093793775/
  *
- * Copyright (C) 2009, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2009-2012, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
