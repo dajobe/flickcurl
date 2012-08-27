@@ -531,7 +531,7 @@ flickcurl_photosets_getPhotos_params(flickcurl* fc, const char* photoset_id,
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 

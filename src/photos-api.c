@@ -231,7 +231,7 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 
@@ -364,7 +364,7 @@ flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
   
   parameters[count][0]  = NULL;
 
@@ -877,7 +877,7 @@ flickcurl_get_photoslist_params(flickcurl* fc,
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 
@@ -1073,7 +1073,7 @@ flickcurl_photos_getRecent_params(flickcurl* fc,
   /* No API parameters */
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 
@@ -1520,7 +1520,7 @@ flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
   }
   
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 
@@ -1851,7 +1851,7 @@ flickcurl_photos_search_params(flickcurl* fc,
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 

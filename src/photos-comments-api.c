@@ -302,7 +302,7 @@ flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc,
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
   parameters[count][0]  = NULL;
 
   if(flickcurl_prepare(fc, "flickr.photos.comments.getRecentForContacts",

@@ -1084,7 +1084,7 @@ flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date,
   }
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(&list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, &list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 

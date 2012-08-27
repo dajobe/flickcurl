@@ -256,7 +256,7 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
     parameters[count++][1]= user_id;
   }
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
   
   parameters[count][0]  = NULL;
 
@@ -351,7 +351,7 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
   parameters[count++][1]= user_id;
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 

@@ -617,7 +617,7 @@ flickcurl_galleries_getPhotos_params(flickcurl* fc, const char* gallery_id,
   parameters[count++][1]= gallery_id;
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 

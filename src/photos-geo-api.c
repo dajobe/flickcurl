@@ -365,7 +365,7 @@ flickcurl_photos_geo_photosForLocation_params(flickcurl* fc,
   parameters[count++][1]= accuracy_s;
 
   /* Photos List parameters */
-  flickcurl_append_photos_list_params(list_params, parameters, &count, &format);
+  flickcurl_append_photos_list_params(fc, list_params, &count, &format);
 
   parameters[count][0]  = NULL;
 
