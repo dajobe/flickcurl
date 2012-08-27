@@ -609,16 +609,15 @@ int
 flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback)
 {
   flickcurl_oauth_data* od = &fc->od;
-  const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
-  int count = 0;
   char* request_token = NULL;
   char* request_token_secret = NULL;
   char** form = NULL;
   int rc = 0;
   const char* uri = fc->oauth_request_token_uri;
   int i;
+  int count;
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
   /* Require signature */
   flickcurl_set_sign(fc);
@@ -747,19 +746,18 @@ int
 flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
 {
   flickcurl_oauth_data* od = &fc->od;
-  const char * parameters[2 + FLICKCURL_MAX_OAUTH_PARAM_COUNT][2];
-  int count = 0;
   char* access_token = NULL;
   char* access_token_secret = NULL;
   char** form = NULL;
   int rc = 0;
   const char* uri = fc->oauth_access_token_uri;
   int i;
+  int count;
   
   if(!verifier)
     return 1;
 
-  parameters[count][0]  = NULL;
+  flickcurl_end_params(fc);
 
   /* Require signature */
   flickcurl_set_sign(fc);
