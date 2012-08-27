@@ -12,13 +12,14 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2011-XX-XX-V1.23">2011-XX-XX Flickcurl Version 1.23 Released</h2>
+<h2 id="D2012-XX-XX-V1.23">2012-XX-XX Flickcurl Version 1.23 Released</h2>
 
 <p>Not yet released.
 </p>
 
-<p>This release is intended to support using Flickr via OAuth and
-converting from the Flickr auth to OAuth.
+<p>This release supports using Flickr via OAuth and converting from
+the legacy Flickr auth to OAuth.  It currently supports both forms
+fully but Flickr has deprecated the legacy auth.
 </p>
 
 <p>Added API call to exchange old auth access token for OAuth access
@@ -26,6 +27,14 @@ token (deletes / revokes old token).</p>
 <pre>
     int flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
 </pre>
+
+<p>
+In <code>flickcurl_photos_setDates()</code> actually send date_taken
+parameter.  This fixes 
+<a href="https://github.com/dajobe/flickcurl/issues/15">GitHub issue 15</a>
+</p>
+
+<p>Updated to 2012-04-18</p>
 
 
 <h2 id="D2011-12-28-V1.22">2011-12-28 Flickcurl Version 1.22 Released</h2>
