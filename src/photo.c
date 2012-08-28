@@ -1153,8 +1153,11 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   tidy:
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
-  if(fc->failed)
+  if(fc->failed) {
+    if(photos)
+      flickcurl_free_photos(photos);
     photos = NULL;
+  }
 
   return photos;
 }
@@ -1218,6 +1221,9 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
   size_t format_len;
 
   photos_list = flickcurl_new_photos_list(fc);
+  if(!photos_list)
+    return NULL;
+
   if(format) {
     nformat = format;
     format_len = strlen(format);
