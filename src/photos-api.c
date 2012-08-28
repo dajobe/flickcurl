@@ -526,7 +526,8 @@ flickcurl_build_photocounts(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "todate")) {
         row[2] = atoi(attr_value);
         free(attr_value);
-      }
+      } else
+        free(attr_value);
     }
 
 #if FLICKCURL_DEBUG > 1
@@ -616,8 +617,11 @@ flickcurl_photos_getCounts(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(counts)
+      free(counts);
     counts = NULL;
+  }
 
   if(dates)
     free(dates);
