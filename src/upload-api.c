@@ -157,8 +157,11 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(status)
+      free(status);
     status = NULL;
+  }
 
   return status;
 }
@@ -283,8 +286,11 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(status)
+      free(status);
     status = NULL;
+  }
 
   return status;
 }
