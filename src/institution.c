@@ -267,8 +267,11 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
-  if(fc->failed)
+  if(fc->failed) {
+    if(institutions)
+      flickcurl_free_institutions(institutions);
     institutions = NULL;
+  }
 
   return institutions;
 }
