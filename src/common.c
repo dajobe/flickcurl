@@ -583,8 +583,9 @@ flickcurl_set_replace_service_uri(flickcurl *fc, const char *uri)
  * Set legacy Flickr auth application API Key (OAuth Client key)
  *
  * For OAuth this is not sufficient and
- * flickcurl_set_oauth_client_credentials() should be used to pass
- * both the client key and client secret.
+ * flickcurl_set_oauth_client_key() and
+ * flickcurl_set_oauth_client_secret() be used
+ * to pass both the client key and client secret.
  */
 void
 flickcurl_set_api_key(flickcurl* fc, const char *api_key)

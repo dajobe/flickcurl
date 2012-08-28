@@ -4981,8 +4981,8 @@ command_oauth_verify(flickcurl* fc, int argc, char *argv[])
   const char* request_token_secret = argv[2];
   const char* verifier = argv[3];
 
-  flickcurl_set_oauth_request_credentials(fc,
-                                          request_token, request_token_secret);
+  flickcurl_set_oauth_request_token(fc, request_token);
+  flickcurl_set_oauth_request_token_secret(fc, request_token_secret);
   rc = flickcurl_oauth_create_access_token(fc, verifier);
   if(rc) {
     fprintf(stderr, "%s: Failed to verify OAuth Request\n",

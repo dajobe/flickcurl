@@ -596,7 +596,8 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
  * Request an OAuth request token from Flickr for the application API Key/secret
  *
  * Requires the OAuth Client key (API key) and Client secret to have
- * been set with flickcurl_set_oauth_client_credentials().
+ * been set with flickcurl_set_oauth_client_key() and
+ * flickcurl_set_oauth_client_secret() respectively.
  * 
  * Calls the Flickr OAuth endpoint to get a request token for the
  * given callback or uses out-of-band if @callback is NULL.
@@ -872,8 +873,7 @@ flickcurl_get_oauth_client_secret(flickcurl *fc)
  *
  * Set OAuth client key (aka API key)
  *
- * See also flickcurl_get_oauth_client_key() and
- * flickcurl_set_oauth_client_credentials()
+ * See also flickcurl_get_oauth_client_key()
  */
 void
 flickcurl_set_oauth_client_key(flickcurl *fc, const char* client_key)
@@ -898,8 +898,7 @@ flickcurl_set_oauth_client_key(flickcurl *fc, const char* client_key)
  *
  * Set OAuth client key (aka shared secret)
  *
- * See also flickcurl_set_oauth_client_secret() and
- * flickcurl_set_oauth_client_credentials()
+ * See also flickcurl_set_oauth_client_secret()
  */
 void
 flickcurl_set_oauth_client_secret(flickcurl *fc, const char* client_secret)
@@ -1028,41 +1027,57 @@ flickcurl_get_oauth_request_token_secret(flickcurl* fc)
 }
 
 
-
 /**
- * flickcurl_set_oauth_request_credentials:
+ * flickcurl_set_oauth_request_token:
  * @fc: flickcurl object
- * @request_token: request token
- * @request_token_secret: request token secret
+ * @token: request token
  *
- * Set OAuth request token credentials
+ * Set OAuth request token
  *
- * See also flickcurl_get_oauth_request_token() and
- * flickcurl_get_oauth_request_token_secret().
+ * See also flickcurl_get_oauth_request_token()
  */
 void
-flickcurl_set_oauth_request_credentials(flickcurl *fc,
-                                        const char* request_token,
-                                        const char* request_token_secret)
+flickcurl_set_oauth_request_token(flickcurl *fc, const char* token)
 {
+#if FLICKCURL_DEBUG > 1
+  fprintf(stderr, "OAuth request token: '%s'\n", token);
+#endif
   if(fc->od.request_token) {
     free(fc->od.request_token);
     fc->od.request_token = NULL;
     fc->od.request_token_len = 0;
   }
+
+  if(token) {
+    fc->od.request_token = strdup(token);
+    fc->od.request_token_len = strlen(token);
+  }
+}
+
+
+/**
+ * flickcurl_set_oauth_request_token_secret:
+ * @fc: flickcurl object
+ * @secret: request token secret
+ *
+ * Set OAuth request token secret credentials
+ *
+ * See also flickcurl_get_oauth_request_token_secret()
+ */
+void
+flickcurl_set_oauth_request_token_secret(flickcurl *fc, const char* secret)
+{
+#if FLICKCURL_DEBUG > 1
+  fprintf(stderr, "OAuth request token secret: '%s'\n", secret);
+#endif
   if(fc->od.request_token_secret) {
     free(fc->od.request_token_secret);
     fc->od.request_token_secret = NULL;
     fc->od.request_token_secret = 0;
   }
-
-  if(request_token) {
-    fc->od.request_token = strdup(request_token);
-    fc->od.request_token_len = strlen(request_token);
-  }
-  if(request_token_secret) {
-    fc->od.request_token_secret = strdup(request_token_secret);
-    fc->od.request_token_secret_len = strlen(request_token_secret);
+  if(secret) {
+    fc->od.request_token_secret = strdup(secret);
+    fc->od.request_token_secret_len = strlen(secret);
   }
 }
 
