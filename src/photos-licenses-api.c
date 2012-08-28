@@ -129,7 +129,8 @@ flickcurl_read_licenses(flickcurl *fc)
           l->url = attr_value;
         else
           free(attr_value);
-      }
+      } else
+          free(attr_value);
     }
     
 #if FLICKCURL_DEBUG > 1
