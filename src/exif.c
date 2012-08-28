@@ -135,6 +135,8 @@ flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         free(attr_value);
       } else if(!strcmp(attr_name, "label"))
         e->label = attr_value;
+      else
+        free(attr_value);
     }
 
     /* Walk children nodes for <raw> or <clean> elements */
