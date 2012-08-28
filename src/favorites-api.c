@@ -168,7 +168,7 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
   /* Decode the prev and next into photo lists */
   for(i = 0; i < 2; i++) {
     const xmlChar* xpathExpr = (i == 0) ? (const xmlChar*)"/rsp/prevphoto" : (const xmlChar*)"/rsp/nextphoto";
-    flickcurl_photos_list* photos_list = photos_lists[i];
+    flickcurl_photos_list* photos_list;
     xmlXPathObjectPtr xpathObj = NULL;
 
     xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
@@ -207,8 +207,11 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(photos_lists)
+      free(photos_lists);
     photos_lists = NULL;
+  }
 
   return photos_lists;
 }
