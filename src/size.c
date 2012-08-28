@@ -139,7 +139,8 @@ flickcurl_build_sizes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         s->url = attr_value;
       } else if(!strcmp(attr_name, "media")) {
         s->media = attr_value;
-      }
+      } else
+        free(attr_value);
     }
 
 #if FLICKCURL_DEBUG > 1
