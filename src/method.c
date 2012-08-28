@@ -156,8 +156,11 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
                                     &method->args_count);
 
   tidy:
-  if(fc->failed)
+  if(fc->failed) {
+    if(method)
+      free(method);
     method = NULL;
+  }
 
   return method;
 }
