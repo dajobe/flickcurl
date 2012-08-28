@@ -559,8 +559,11 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
-  if(fc->failed)
+  if(fc->failed) {
+    if(places)
+      flickcurl_free_places(places);
     places = NULL;
+  }
 
   return places;
 }
@@ -667,7 +670,8 @@ flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  place_types = (flickcurl_place_type_info**)calloc(sizeof(flickcurl_place_type*), nodes_count + 1);
+  place_types = (flickcurl_place_type_info**)calloc(nodes_count + 1,
+                                                    sizeof(flickcurl_place_type_info*));
   
   for(i = 0, place_type_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -681,7 +685,7 @@ flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    pt = (flickcurl_place_type_info*)calloc(sizeof(flickcurl_place_type), 1);
+    pt = (flickcurl_place_type_info*)calloc(1, sizeof(*pt));
     
     for(attr = node->properties; attr; attr = attr->next) {
       const char *attr_name = (const char*)attr->name;
@@ -694,7 +698,8 @@ flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         pt->id = atoi(attr_value);
         free(attr_value);
         pt->type = flickcurl_place_id_to_type(pt->id);
-      }
+      } else
+        free(attr_value);
     }
 
     /* Walk children nodes for name text */
