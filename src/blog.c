@@ -122,6 +122,8 @@ flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         free(attr_value);
       } else if(!strcmp(attr_name, "url"))
         b->url = attr_value;
+      else
+        free(attr_value);
     } /* end attributes */
 
 
@@ -228,6 +230,8 @@ flickcurl_build_blog_services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       
       if(!strcmp(attr_name, "id"))
         b->id = attr_value;
+      else
+        free(attr_value);
     } /* end attributes */
 
     for(chnode = node->children; chnode; chnode = chnode->next) {
