@@ -149,7 +149,8 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
         /* from tags.getHotList <tag score = "NN">TAG</tag> */
         t->count = atoi(attr_value);
         free(attr_value);
-      }
+      } else
+        free(attr_value);
     }
 
     /* Walk children nodes for <raw> element or text */
@@ -220,8 +221,8 @@ flickcurl_build_tags_from_string(flickcurl* fc, flickcurl_photo* photo,
     
     len = p-string;
 
-    t->cooked = (char*)malloc(len+1);
-    strncpy(t->cooked, string, len);
+    t->cooked = (char*)malloc(len + 1);
+    memcpy(t->cooked, string, len);
     t->cooked[len] = '\0';
     
     if(fc->tag_handler)
@@ -338,8 +339,10 @@ flickcurl_build_tag_clusters(flickcurl* fc,
         tags_count = atoi(attr_value);
     }
 
-    if(tags_count <= 0)
+    if(tags_count <= 0) {
+      free(tc);
       continue;
+    }
     
     tc->tags = (char**)calloc(sizeof(char*), tags_count+1);
 
@@ -367,6 +370,12 @@ flickcurl_build_tag_clusters(flickcurl* fc,
   tcs->clusters[tcs->count] = NULL;
 
  tidy:
+  if(fc->failed) {
+    if(tcs)
+      flickcurl_free_tag_clusters(tcs);
+    tcs = NULL;
+  }
+
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
 
