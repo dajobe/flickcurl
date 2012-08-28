@@ -121,7 +121,8 @@ flickcurl_build_notes(flickcurl* fc, flickcurl_photo* photo,
       } else if(!strcmp(attr_name, "h")) {
         n->h = atoi(attr_value);
         free(attr_value);
-      }
+      } else
+        free(attr_value);
     }
 
     /* Walk children nodes for text */
