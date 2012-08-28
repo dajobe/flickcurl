@@ -87,9 +87,10 @@ flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     for(attr = node->properties; attr; attr = attr->next) {
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
-
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      size_t attr_value_len = strlen((const char*)attr->children->content);
+      
+      attr_value = (char*)malloc(attr_value_len + 1);
+      memcpy(attr_value, attr->children->content, attr_value_len + 1);
       
       if(!strcmp(attr_name, "latitude"))
         location->latitude = atoi(attr_value);
@@ -97,6 +98,8 @@ flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         location->longitude = atoi(attr_value);
       else if(!strcmp(attr_name, "accuracy"))
         location->accuracy = atoi(attr_value);
+
+      free(attr_value);
     }
 
     
