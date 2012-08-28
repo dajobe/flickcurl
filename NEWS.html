@@ -22,19 +22,44 @@ the legacy Flickr auth to OAuth.  It currently supports both forms
 fully but Flickr has deprecated the legacy auth.
 </p>
 
-<p>Added API call to exchange old auth access token for OAuth access
-token (deletes / revokes old token).</p>
+<p>Flickr Legacy auth flow:</p>
+<ul>
+  <li>Initial configuration needed is API Key and Shared Secret</li>
+  <li>Authentication URL is shown in Flickr App Garden which results in
+  a user visible Frob</li>
+  <li>Authentication completes when
+  <code>flickcurl_auth_getFullToken()</code> exchanges the Frob for
+  the final Auth Token.</li>
+  <li>The config file stores: auth_token, api_key and secret.</li>
+</ul>
+
+<p>Flickr OAuth 1.0 flow:</p>
+<ul>
+  <li>Initial configuration needed is Client Key (API Key) and Client
+  Secret (Shared Secret)</li>
+  <li>Authentication starts with a call to
+  <code>flickcurl_oauth_create_request_token()</code> to return the
+  request token and request token secret</li>
+  <li>Authentication URL is made with
+  <code>flickcurl_oauth_get_authorize_uri()</code> which results
+  in a user visible Verifier</li>
+  <li>Authentication completes with
+  <code>flickcurl_oauth_create_access_token()</code> to exchange
+  request token, request token secret and verifier for the final Access
+  Token and Access Token Secret</li>
+  <li>The config file stores: oauth_token, oauth_token_secret,
+  oauth_client_key and oauth_client_secret.
+  </li>
+</ul>
+
+<p>Added API call to upgrade from the Flickr legacy to Flickr
+OAuth. This deletes / revokes the legacy 'auth_token' and returns an
+OAuth Access Token and Access Token Secret pair.</p>
 <pre>
     int flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
 </pre>
 
-<p>
-In <code>flickcurl_photos_setDates()</code> actually send date_taken
-parameter.  This fixes 
-<a href="https://github.com/dajobe/flickcurl/issues/15">GitHub issue 15</a>
-</p>
-
-<p>New API calls to set OAuth parameters</p>
+<p>Added new API calls to get and set OAuth parameters:</p>
 
 <pre>
   const char* flickcurl_get_oauth_token(flickcurl *fc);
@@ -56,7 +81,7 @@ parameter.  This fixes
   void flickcurl_set_oauth_request_token_secret(flickcurl *fc, const char* secret);
 </pre>
 
-<p>New API calls for initiating the OAuth flow</p>
+<p>Added new API calls for initiating the OAuth flow</p>
 
 <pre>
   int flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback);
@@ -66,7 +91,30 @@ parameter.  This fixes
   int flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier);
 </pre>
 
-<p>Updated to 2012-04-18</p>
+<p>
+In <code>flickcurl_photos_setDates()</code> actually send date_taken
+parameter.  This fixes 
+<a href="https://github.com/dajobe/flickcurl/issues/15">GitHub issue 15</a>
+</p>
+
+<p>Updated <code>configure</code> to use xml2-config and curl-config
+as well as pkg-config, for systems that do not ship with the
+pkg-config files, such as OSX 10.8.</p>
+
+<p>Fixed memory leak in <code>flickcurl_build_persons() on loop exit
+(always) and on the error path.</code></p>
+
+<p>Fixed memory leak in <code>flickcurl_build_photos()</code> of
+string_value for tags.</p>
+
+<p>Updated <code>flickcurl</code> utility to handle the OAuth
+authentication flow with new commands <code>oauth-create</code> and
+<code>oauth-verify</code>, while still supporting legacy Flickr auth
+flow with the existing <code>-a FROB</code> form.</p>
+
+<p>Multiple internal changes in the construction of parameters to
+make the code more readable and handle the extra parameters needed by
+OAuth.</p>
 
 
 
