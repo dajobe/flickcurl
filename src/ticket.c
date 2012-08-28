@@ -125,7 +125,8 @@ flickcurl_build_tickets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "invalid")) {
         t->invalid = atoi(attr_value);
         free(attr_value);
-      }
+      } else
+        free(attr_value);
     }
 
 #if FLICKCURL_DEBUG > 1
