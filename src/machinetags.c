@@ -110,7 +110,8 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "predicates")) {
         tn->predicates_count = atoi(attr_value);
         free(attr_value);
-      }
+      } else
+        free(attr_value);
     }
 
     /* Walk children for text */
@@ -263,7 +264,8 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         tpv->predicate = attr_value;
       } else if(!strcmp(attr_name, "value")) {
         tpv->value = attr_value;
-      }
+      } else
+        free(attr_value);
     }
 
     if(content_mode >= 1 && content_mode <= 2) {
