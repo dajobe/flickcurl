@@ -50,10 +50,10 @@ parameter.  This fixes
   void flickcurl_set_oauth_client_secret(flickcurl *fc, const char* client_secret);
 
   const char* flickcurl_get_oauth_request_token(flickcurl* fc);
+  void flickcurl_set_oauth_request_token(flickcurl *fc, const char* token);
 
   const char* flickcurl_get_oauth_request_token_secret(flickcurl* fc);
-
-  void flickcurl_set_oauth_request_credentials(flickcurl *fc, const char* request_token, const char* request_token_secret);
+  void flickcurl_set_oauth_request_token_secret(flickcurl *fc, const char* secret);
 </pre>
 
 <p>New API calls for initiating the OAuth flow</p>
