@@ -135,6 +135,8 @@ flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         c->count = atoi(attr_value);
         free(attr_value);
       }
+      else
+        free(attr_value);
     }
 
 #if FLICKCURL_DEBUG > 1
