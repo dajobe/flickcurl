@@ -314,8 +314,11 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
-  if(fc->failed)
+  if(fc->failed) {
+    if(shapes)
+      flickcurl_free_shapes(shapes);
     shapes = NULL;
+  }
 
   return shapes;
 }
