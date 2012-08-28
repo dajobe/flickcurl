@@ -124,8 +124,8 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
       nodes_count++;
   }
 
-  contexts = (flickcurl_context**)calloc(sizeof(flickcurl_context**),
-                                       nodes_count+1);
+  contexts = (flickcurl_context**)calloc(sizeof(flickcurl_context*),
+                                         nodes_count + 1);
 
   /* walk children elements of root element */
   xnp = xmlDocGetRootElement(doc);
@@ -179,6 +179,8 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
         context->url = attr_value;
       else if(!strcmp(attr_name, "thumb"))
         context->thumb = attr_value;
+      else
+        free(attr_value);
     } /* for attributes */
     
 #if FLICKCURL_DEBUG > 1
