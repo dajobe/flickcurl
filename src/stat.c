@@ -150,6 +150,8 @@ flickcurl_build_stats(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         s->url = attr_value;
       else if(!strcmp(attr_name, "searchterms"))
         s->searchterms = attr_value;
+      else
+        free(attr_value);
     } /* end attributes */
 
 
