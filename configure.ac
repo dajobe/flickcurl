@@ -145,6 +145,23 @@ int main(int argc, char* argv) {
 fi
 
 
+AC_CHECK_PROGS(RECHO, echo)
+RECHO_C=
+RECHO_N=
+case `$RECHO -n x` in
+  -n*)
+    case `$RECHO 'xy\c'` in
+      *c*)
+         ;;
+      xy)
+         RECHO_C='\c'
+         ;;
+    esac;;
+  *)
+    RECHO_N='-n'
+    ;;
+esac
+
 AC_CHECK_PROGS(PKG_CONFIG, pkg-config)
 
 PKG_CONFIG_REQUIRES=
