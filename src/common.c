@@ -757,7 +757,7 @@ flickcurl_prepare_common(flickcurl *fc,
                          const char* upload_value,
                          int parameters_in_url, int need_auth)
 {
-  int rc;
+  int rc = 1;
 
   if(fc->api_key && fc->secret)
     /* Call with legacy Flickr auth */
@@ -1861,14 +1861,15 @@ flickcurl_array_split(const char *str, char delim)
 
     for(p = str; *p && *p != delim; p++)
       ;
-    item_len = p-str;
-    array[i] = (char*)malloc(item_len+1);
+    item_len = p - str;
+    array[i] = (char*)malloc(item_len + 1);
     if(!array[i]) {
       while(--i >= 0)
         free(array[i]);
+      free(array);
       return NULL;
     }
-    strncpy(array[i], str, item_len);
+    memcpy(array[i], str, item_len);
     array[i][item_len] = '\0';
     str+= item_len;
     if(*str == delim)
