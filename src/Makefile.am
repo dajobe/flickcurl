@@ -120,7 +120,8 @@ ANALYZE_COMMAND = $(ANALYZE) \
 
 TESTS=flickcurl_oauth_test
 
-CLEANFILES=$(TESTS)
+CLEANFILES=$(TESTS) \
+*.plist
 
 flickcurl_oauth_test: $(srcdir)/oauth.c libflickcurl.la
 	$(LINK) $(DEFS) $(CPPFLAGS) -I$(srcdir) -I. -DSTANDALONE $(srcdir)/oauth.c libflickcurl.la $(LIBS)

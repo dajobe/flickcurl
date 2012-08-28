@@ -1,9 +1,10 @@
-*.o
-*.lo
 *.la
+*.lo
+*.o
+*.plist
+*_test
 .deps
 .libs
 config.h
 config.h.in
 stamp-*
-*_test
