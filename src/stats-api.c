@@ -250,7 +250,7 @@ flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* count_str;
-  int count;
+  int count = -1;
   
   flickcurl_init_params(fc);
 
@@ -649,7 +649,7 @@ flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* count_str;
-  int count;
+  int count = -1;
 
   flickcurl_init_params(fc);
 
@@ -946,7 +946,7 @@ flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   char* count_str;
-  int count;
+  int count = -1;
 
   flickcurl_init_params(fc);
 
@@ -1159,8 +1159,11 @@ flickcurl_stats_getTotalViews(flickcurl* fc, const char* date)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(views)
+      free(views);
     views = NULL;
+  }
 
   return views;
 }
