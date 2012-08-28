@@ -319,8 +319,11 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           break;
       }
       
-      if(fc->failed)
+      if(fc->failed) {
+        if(collection)
+          flickcurl_free_collection(collection);
         goto tidy;
+      }
     }
 
 #if FLICKCURL_DEBUG > 1
@@ -344,8 +347,11 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   
-  if(fc->failed)
+  if(fc->failed) {
+    if(collections)
+      flickcurl_free_collections(collections);
     collections = NULL;
+  }
 
   return collections;
 }
