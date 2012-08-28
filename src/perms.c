@@ -105,6 +105,8 @@ flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         perms->perm_comment = atoi(attr_value);
       else if(!strcmp(attr_name, "permaddmeta"))
         perms->perm_addmeta = atoi(attr_value);
+
+      free(attr_value);
     }
 
     
