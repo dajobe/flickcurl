@@ -153,8 +153,11 @@ flickcurl_panda_getList(flickcurl* fc)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(pandas)
+      free(pandas);
     pandas = NULL;
+  }
 
   return pandas;
 }
