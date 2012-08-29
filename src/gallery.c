@@ -128,8 +128,9 @@ flickcurl_build_galleries(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     /* initialise primary photo object */
     g->primary_photo = (flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
     /* assumes it is a photo */
-    g->primary_photo->media_type = (char*)malloc(6);
-    strncpy(g->primary_photo->media_type, "photo", 6);
+#define PHOTO_STR_LEN 5
+    g->primary_photo->media_type = (char*)malloc(PHOTO_STR_LEN + 1);
+    memcpy(g->primary_photo->media_type, "photo", PHOTO_STR_LEN + 1);
     /* empty list of tags (1 NULL pointer) */
     g->primary_photo->tags = (flickcurl_tag**)calloc(sizeof(flickcurl_tag*), 1);
 

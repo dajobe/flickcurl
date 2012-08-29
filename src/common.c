@@ -989,11 +989,11 @@ flickcurl_curl_header_callback(void* ptr,  size_t  size, size_t nmemb,
   if(!strncmp((char*)ptr, "X-FlickrErrCode: ", EC_HEADER_LEN)) {
     fc->error_code = atoi((char*)ptr+EC_HEADER_LEN);
   } else if(!strncmp((char*)ptr, "X-FlickrErrMessage: ", EM_HEADER_LEN)) {
-    int len = bytes-EM_HEADER_LEN;
+    int len = bytes - EM_HEADER_LEN;
     if(fc->error_msg)
       free(fc->error_msg);
-    fc->error_msg = (char*)malloc(len+1);
-    strncpy(fc->error_msg, (char*)ptr+EM_HEADER_LEN, len);
+    fc->error_msg = (char*)malloc(len + 1);
+    memcpy(fc->error_msg, (char*)ptr + EM_HEADER_LEN, len + 1);
     fc->error_msg[len] = '\0';
     while(fc->error_msg[len-1] == '\r' || fc->error_msg[len-1] == '\n') {
       fc->error_msg[len-1] = '\0';
@@ -1560,7 +1560,7 @@ flickcurl_unixtime_to_isotime(time_t unix_time)
   strftime(date_buffer, len+1, ISO_DATE_FORMAT, structured_time);
   
   value = (char*)malloc(len + 1);
-  strncpy((char*)value, date_buffer, len+1);
+  memcpy(value, date_buffer, len + 1);
   return value;
 }
 
@@ -1580,7 +1580,7 @@ flickcurl_unixtime_to_sqltimestamp(time_t unix_time)
   strftime(date_buffer, len+1, SQL_DATETIME_FORMAT, structured_time);
   
   value = (char*)malloc(len + 1);
-  strncpy((char*)value, date_buffer, len+1);
+  memcpy(value, date_buffer, len + 1);
   return value;
 }
 
@@ -1589,20 +1589,21 @@ char*
 flickcurl_sqltimestamp_to_isotime(const char* timestamp)
 {
 /* SQL DATETIME FORMAT "%Y %m %d %H:%M:%S"  (19 chars) */
+#define SQL_DATE_LEN 19
 /* ISO DATE FORMAT     "%Y-%m-%dT%H:%M:%SZ" (20 chars) */
 #define ISO_DATE_LEN 20
   size_t len = ISO_DATE_LEN;
   char *value = NULL;
   
   value = (char*)malloc(len + 1);
-  strncpy((char*)value, timestamp, len);
+  memcpy(value, timestamp, SQL_DATE_LEN);
   value[4] = '-';
   value[7] = '-';
   value[10] = 'T';
   value[13] = ':';
   value[16] = ':';
   value[19] = 'Z';
-  value[20] = '\0';
+  value[ISO_DATE_LEN] = '\0';
   
   return value;
 }
@@ -1875,8 +1876,8 @@ flickcurl_array_join(const char *array[], char delim)
   p = str;
   for(i = 0; array[i]; i++) {
     size_t item_len = strlen(array[i]);
-    strncpy(p, array[i], item_len);
-    p+= item_len;
+    memcpy(p, array[i], item_len);
+    p += item_len;
     if(i < array_size)
       *p++ = delim;
   }

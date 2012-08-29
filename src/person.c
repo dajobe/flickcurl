@@ -244,7 +244,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   int i;
   
   xpathExpr_len = strlen((const char*)xpathExpr);
-  strncpy((char*)full_xpath, (const char*)xpathExpr, xpathExpr_len+1);
+  memcpy(full_xpath, xpathExpr, xpathExpr_len + 1);
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {

@@ -229,8 +229,8 @@ flickcurl_photo_as_page_uri(flickcurl_photo *photo)
           photo->fields[PHOTO_FIELD_owner_nsid].string, photo->id);
 
   len = strlen(buf);
-  result = (char*)malloc(len+1);
-  strncpy(result, buf, len+1);
+  result = (char*)malloc(len + 1);
+  memcpy(result, buf, len + 1);
   return result;
 }
 
@@ -286,7 +286,7 @@ flickcurl_photo_id_as_short_uri(char *photo_id)
     return NULL;
   
   r = result;
-  strncpy(result, short_uri_prefix, SHORT_URI_PREFIX_LEN);
+  memcpy(result, short_uri_prefix, SHORT_URI_PREFIX_LEN);
   r += SHORT_URI_PREFIX_LEN;
   /* now copy it backwards into new result string */
   while(p != buf)
@@ -971,7 +971,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   int i;
   
   xpathExpr_len = strlen((const char*)xpathExpr);
-  strncpy((char*)full_xpath, (const char*)xpathExpr, xpathExpr_len+1);
+  memcpy(full_xpath, xpathExpr, xpathExpr_len + 1);
   
   xpathObj = xmlXPathEvalExpression(xpathExpr, xpathCtx);
   if(!xpathObj) {
@@ -1140,8 +1140,9 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                                          &photo->notes_count);
 
     if(!photo->media_type) {
-      photo->media_type = (char*)malloc(6);
-      strncpy(photo->media_type, "photo", 6);
+#define PHOTO_STR_LEN 5
+      photo->media_type = (char*)malloc(PHOTO_STR_LEN + 1);
+      memcpy(photo->media_type, "photo", PHOTO_STR_LEN + 1);
     }
 
     if(xpathNodeCtx)
