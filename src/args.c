@@ -100,7 +100,7 @@ flickcurl_build_args(flickcurl* fc,
     /* Walk children nodes for description text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        size_t len = strlen((const char*)attr->children->content);
+        size_t len = strlen((const char*)chnode->content);
         arg->description = (char*)malloc(len + 1);
         memcpy(arg->description, (const char*)chnode->content, len + 1);
         break;
