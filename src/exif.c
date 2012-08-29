@@ -119,11 +119,12 @@ flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     e = (flickcurl_exif*)calloc(sizeof(flickcurl_exif), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "tagspace"))
         e->tagspace = attr_value;
@@ -144,11 +145,13 @@ flickcurl_build_exifs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       const char *chnode_name = (const char*)chnode->name;
       if(chnode->type == XML_ELEMENT_NODE) {
         if(!strcmp(chnode_name, "raw")) {
-          e->raw = (char*)malloc(strlen((const char*)chnode->children->content)+1);
-          strcpy(e->raw, (const char*)chnode->children->content);
+          size_t len = strlen((const char*)chnode->children->content);
+          e->raw = (char*)malloc(len + 1);
+          memcpy(e->raw, chnode->children->content, len + 1);
         } else if(!strcmp(chnode_name, "clean")) {
-          e->clean = (char*)malloc(strlen((const char*)chnode->children->content)+1);
-          strcpy(e->clean, (const char*)chnode->children->content);
+          size_t len = strlen((const char*)chnode->children->content);
+          e->clean = (char*)malloc(len + 1);
+          memcpy(e->clean, chnode->children->content, len + 1);
         }
       }
     }

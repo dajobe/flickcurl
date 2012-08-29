@@ -95,10 +95,11 @@ flickcurl_build_user_upload_status(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     if(!strcmp(node_name, "username")) {
       xmlNodePtr chnode;
       for(chnode = node->children; chnode; chnode = chnode->next) {
+        size_t len = strlen((const char*)chnode->content);
         if(chnode->type != XML_TEXT_NODE)
           continue;
-        u->username = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(u->username, (const char*)chnode->content);
+        u->username = (char*)malloc(len + 1);
+        memcpy(u->username, chnode->content, len + 1);
         break;
       }
     } else if(!strcmp(node_name, "bandwidth")) {
@@ -129,11 +130,12 @@ flickcurl_build_user_upload_status(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       }
     } else if(!strcmp(node_name, "sets")) {
       for(attr = node->properties; attr; attr = attr->next) {
+        size_t attr_len = strlen((const char*)attr->children->content);
         const char *attr_name = (const char*)attr->name;
         char *attr_value;
         
-        attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-        strcpy(attr_value, (const char*)attr->children->content);
+        attr_value = (char*)malloc(attr_len + 1);
+        memcpy(attr_value, attr->children->content, attr_len + 1);
         
         if(!strcmp(attr_name, "created")) {
           u->sets_created = atoi(attr_value);

@@ -123,11 +123,12 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     g = (flickcurl_group*)calloc(sizeof(flickcurl_group), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "nsid") || !strcmp(attr_name, "id"))
         g->nsid = attr_value;
@@ -161,16 +162,19 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     for(chnode = node->children; chnode; chnode = chnode->next) {
       const char *chnode_name = (const char*)chnode->name;
       char* value;
+      size_t value_len;
+
       if(chnode->type != XML_ELEMENT_NODE)
         continue;
       
       if(!strcmp(chnode_name, "throttle")) {
         for(attr = chnode->properties; attr; attr = attr->next) {
+          size_t attr_len = strlen((const char*)attr->children->content);
           const char *attr_name = (const char*)attr->name;
           char *attr_value;
           
-          attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-          strcpy(attr_value, (const char*)attr->children->content);
+          attr_value = (char*)malloc(attr_len + 1);
+          memcpy(attr_value, attr->children->content, attr_len + 1);
           if(!strcmp(attr_name, "count")) {
             g->throttle_count = atoi(attr_value);
             free(attr_value);
@@ -188,8 +192,9 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(!chnode->children)
         continue;
       
-      value = (char*)malloc(strlen((const char*)chnode->children->content)+1);
-      strcpy(value, (const char*)chnode->children->content);
+      value_len = strlen((const char*)chnode->children->content);
+      value = (char*)malloc(value_len + 1);
+      memcpy(value, chnode->children->content, value_len + 1);
 
       if(!strcmp(chnode_name, "name"))
         g->name = value;

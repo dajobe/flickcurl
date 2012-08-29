@@ -688,11 +688,12 @@ flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     pt = (flickcurl_place_type_info*)calloc(1, sizeof(*pt));
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "id")) {
         pt->id = atoi(attr_value);
@@ -705,8 +706,9 @@ flickcurl_build_place_types(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     /* Walk children nodes for name text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        pt->name = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(pt->name, (const char*)chnode->content);
+        size_t len = strlen((const char*)chnode->content);
+        pt->name = (char*)malloc(len + 1);
+        memcpy(pt->name, chnode->content, len + 1);
       }
     }
 

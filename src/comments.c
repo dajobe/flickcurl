@@ -121,11 +121,12 @@ flickcurl_build_comments(flickcurl* fc,
     comment_object = (flickcurl_comment*)calloc(sizeof(flickcurl_comment), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
       
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "id"))
         comment_object->id = attr_value;
@@ -145,8 +146,9 @@ flickcurl_build_comments(flickcurl* fc,
     /* Walk children nodes for comment text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        comment_object->text = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(comment_object->text, (const char*)chnode->content);
+        size_t len = strlen((const char*)chnode->content);
+        comment_object->text = (char*)malloc(len + 1);
+        memcpy(comment_object->text, chnode->content, len +1);
         break;
       }
     }

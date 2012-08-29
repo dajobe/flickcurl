@@ -135,11 +135,12 @@ flickcurl_build_galleries(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "id"))
         g->id = attr_value;
@@ -180,13 +181,15 @@ flickcurl_build_galleries(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(chnode->type == XML_ELEMENT_NODE) {
         if(!strcmp(chnode_name, "title")) {
           if(chnode->children) {
-            g->title = (char*)malloc(strlen((const char*)chnode->children->content)+1);
-            strcpy(g->title, (const char*)chnode->children->content);
+            size_t len = strlen((const char*)chnode->children->content);
+            g->title = (char*)malloc(len + 1);
+            memcpy(g->title, chnode->children->content, len + 1);
           }
         } else if(!strcmp(chnode_name, "description")) {
           if(chnode->children) {
-            g->description = (char*)malloc(strlen((const char*)chnode->children->content)+1);
-            strcpy(g->description, (const char*)chnode->children->content);
+            size_t len = strlen((const char*)chnode->children->content);
+            g->description = (char*)malloc(len + 1);
+            memcpy(g->description, chnode->children->content, len + 1);
           }
         }
       }

@@ -215,7 +215,7 @@ flickcurl_free_serializer(flickcurl_serializer* serializer)
 
 
 static flickrdf_nspace*
-nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri)
+nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri) 
 {
   flickrdf_nspace* ns;
 
@@ -223,11 +223,11 @@ nspace_add_new(flickrdf_nspace* list, char* prefix, char *uri)
   ns->prefix_len = strlen(prefix);
   ns->uri_len = strlen(uri);
 
-  ns->prefix = (char*)malloc(ns->prefix_len+1);
-  strcpy(ns->prefix, prefix);
+  ns->prefix = (char*)malloc(ns->prefix_len + 1);
+  memcpy(ns->prefix, prefix, ns->prefix_len + 1);
 
-  ns->uri = (char*)malloc(ns->uri_len+1);
-  strcpy(ns->uri, uri);
+  ns->uri = (char*)malloc(ns->uri_len + 1);
+  memcpy(ns->uri, uri, ns->uri_len + 1);
 
   ns->next = list;
   return ns;

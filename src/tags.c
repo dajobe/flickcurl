@@ -119,11 +119,12 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
     t->photo = photo;
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "id"))
         t->id = attr_value;
@@ -158,13 +159,15 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
       const char *chnode_name = (const char*)chnode->name;
       if(chnode->type == XML_ELEMENT_NODE) {
         if(saw_clean && !strcmp(chnode_name, "raw")) {
-          t->raw = (char*)malloc(strlen((const char*)chnode->children->content)+1);
-          strcpy(t->raw, (const char*)chnode->children->content);
+          size_t len = strlen((const char*)chnode->children->content);
+          t->raw = (char*)malloc(len + 1);
+          memcpy(t->raw, chnode->children->content, len + 1);
         }
       } else if(chnode->type == XML_TEXT_NODE) {
         if(!saw_clean) {
-          t->cooked = (char*)malloc(strlen((const char*)chnode->content)+1);
-          strcpy(t->cooked, (const char*)chnode->content);
+          size_t len = strlen((const char*)chnode->children->content);
+          t->cooked = (char*)malloc(len + 1);
+          memcpy(t->cooked, chnode->children->content, len + 1);
         }
       }
     }
@@ -351,8 +354,9 @@ flickcurl_build_tag_clusters(flickcurl* fc,
       const char *chnode_name = (const char*)chnode->name;
       if(chnode->type == XML_ELEMENT_NODE && !strcmp(chnode_name, "tag")) {
         size_t len = strlen((const char*)chnode->children->content);
-        char *tag_name = (char*)malloc(len+1);
-        strcpy(tag_name, (const char*)chnode->children->content);
+        char *tag_name = (char*)malloc(len + 1);
+
+        memcpy(tag_name, (const char*)chnode->children->content, len + 1);
         tc->tags[tc->count++] = tag_name;
 
 #if FLICKCURL_DEBUG > 1

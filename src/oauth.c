@@ -423,20 +423,23 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
       fc->parameters[i][1] = "";
     }
     fc->param_fields[i] = (char*)malloc(param_len + 1);
-    strcpy(fc->param_fields[i], fc->parameters[i][0]);
+    memcpy(fc->param_fields[i], fc->parameters[i][0], param_len + 1);
+
     fc->param_values[i] = (char*)malloc(values_len[i] + 1);
-    strcpy(fc->param_values[i], fc->parameters[i][1]);
+    memcpy(fc->param_values[i], fc->parameters[i][1], values_len[i] + 1);
 
     /* 3x value len is conservative URI %XX escaping on every char */
     fc_uri_len += param_len + 1 /* = */ + 3 * values_len[i];
   }
 
   if(upload_field) {
-    fc->upload_field = (char*)malloc(strlen(upload_field) + 1);
-    strcpy(fc->upload_field, upload_field);
+    size_t len = strlen(upload_field);
+    fc->upload_field = (char*)malloc(len + 1);
+    memcpy(fc->upload_field, upload_field, len + 1);
 
-    fc->upload_value = (char*)malloc(strlen(upload_value) + 1);
-    strcpy(fc->upload_value, upload_value);
+    len = strlen(upload_value);
+    fc->upload_value = (char*)malloc(len + 1);
+    memcpy(fc->upload_value, upload_value, len + 1);
   }
 
 
@@ -512,9 +515,10 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     values_len[fc->count] = vlen;
     /* 15 = strlen(oauth_signature) */
     fc->param_fields[fc->count] = (char*)malloc(15 + 1);
-    strcpy(fc->param_fields[fc->count], fc->parameters[fc->count][0]);
+    memcpy(fc->param_fields[fc->count], fc->parameters[fc->count][0], 15 + 1);
+
     fc->param_values[fc->count] = (char*)malloc(vlen + 1);
-    strcpy(fc->param_values[fc->count], fc->parameters[fc->count][1]);
+    memcpy(fc->param_values[fc->count], fc->parameters[fc->count][1], vlen + 1);
 
     fc_uri_len += 15 /* "oauth_signature" */ + 1 /* = */ + vlen;
     
@@ -537,10 +541,11 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   /* reuse or grow uri buffer */
   if(fc->uri_len < fc_uri_len) {
     free(fc->uri);
-    fc->uri = (char*)malloc(fc_uri_len+1);
+    fc->uri = (char*)malloc(fc_uri_len + 1);
     fc->uri_len = fc_uri_len;
   }
-  strcpy(fc->uri, url);
+  memcpy(fc->uri, url, fc_uri_len);
+  fc->uri[fc_uri_len] = '\0';
 
   if(need_to_add_query)
     strcat(fc->uri, "?");

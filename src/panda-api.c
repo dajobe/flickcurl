@@ -77,8 +77,9 @@ flickcurl_build_pandas(flickcurl* fc,
     /* Use first text child node of <panda> as panda name */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type  == XML_TEXT_NODE) {
-        panda = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(panda, (const char*)chnode->content);
+        size_t len = strlen((const char*)chnode->content);
+        panda = (char*)malloc(len + 1);
+        memcpy(panda, chnode->content, len + 1);
         break;
       }
     }

@@ -112,11 +112,12 @@ flickcurl_build_activity_event(flickcurl* fc, xmlNodePtr node)
     return NULL;
     
   for(attr = node->properties; attr; attr = attr->next) {
+    size_t attr_len = strlen((const char*)attr->children->content);
     const char *attr_name = (const char*)attr->name;
     char *attr_value;
     
-    attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-    strcpy(attr_value, (const char*)attr->children->content);
+    attr_value = (char*)malloc(attr_len + 1);
+    memcpy(attr_value, attr->children->content, attr_len + 1);
       
     if(!strcmp(attr_name, "type"))
       ae->type = attr_value;
@@ -136,8 +137,9 @@ flickcurl_build_activity_event(flickcurl* fc, xmlNodePtr node)
   /* Walk children nodes for value text */
   for(chnode = node->children; chnode; chnode = chnode->next) {
     if(chnode->type == XML_TEXT_NODE) {
-      ae->value = (char*)malloc(strlen((const char*)chnode->content)+1);
-      strcpy(ae->value, (const char*)chnode->content);
+      size_t len = strlen((const char*)chnode->content);
+      ae->value = (char*)malloc(len + 1);
+      memcpy(ae->value, chnode->content, len + 1);
       break;
     }
   }
@@ -186,11 +188,12 @@ flickcurl_build_activities(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     a = (flickcurl_activity*)calloc(sizeof(flickcurl_activity), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "type"))
         a->type = attr_value;
@@ -247,8 +250,9 @@ flickcurl_build_activities(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       const char *chnode_name = (const char*)chnode->name;
       if(chnode->type == XML_ELEMENT_NODE) {
         if(!strcmp(chnode_name, "title")) {
-          a->title = (char*)malloc(strlen((const char*)chnode->children->content)+1);
-          strcpy(a->title, (const char*)chnode->children->content);
+          size_t len = strlen((const char*)chnode->children->content);
+          a->title = (char*)malloc(len + 1);
+          memcpy(a->title,  chnode->children->content, len + 1);
         } else if(!strcmp(chnode_name, "activity")) {
           xmlNodePtr chnode2;
           for(chnode2 = chnode->children; chnode2; chnode2 = chnode2->next) {

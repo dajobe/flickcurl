@@ -96,11 +96,12 @@ flickcurl_build_notes(flickcurl* fc, flickcurl_photo* photo,
     n = (flickcurl_note*)calloc(sizeof(flickcurl_note), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "id")) {
         n->id = atoi(attr_value);
@@ -128,8 +129,9 @@ flickcurl_build_notes(flickcurl* fc, flickcurl_photo* photo,
     /* Walk children nodes for text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        n->text = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(n->text, (const char*)chnode->content);
+        size_t len = strlen((const char*)chnode->content);
+        n->text = (char*)malloc(len + 1);
+        memcpy(n->text, chnode->content, len + 1);
       }
     }
     

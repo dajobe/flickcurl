@@ -110,8 +110,9 @@ flickcurl_reflection_getMethods(flickcurl* fc)
     /* Walk children nodes for description text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        methods[count] = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(methods[count], (const char*)chnode->content);
+        size_t len = strlen((const char*)chnode->content);
+        methods[count] = (char*)malloc(len + 1);
+        memcpy(methods[count], chnode->content, len + 1);
         count++;
         break;
       }

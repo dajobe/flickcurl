@@ -107,11 +107,12 @@ flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     b = (flickcurl_blog*)calloc(sizeof(flickcurl_blog), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "id"))
         b->id = attr_value;
@@ -222,11 +223,12 @@ flickcurl_build_blog_services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     b = (flickcurl_blog_service*)calloc(sizeof(flickcurl_blog_service), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "id"))
         b->id = attr_value;
@@ -236,8 +238,9 @@ flickcurl_build_blog_services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        b->name = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(b->name, (const char*)chnode->content);
+        size_t len = strlen((const char*)chnode->content);
+        b->name = (char*)malloc(len + 1);
+        memcpy(b->name, chnode->content, len + 1);
       }
     }
     

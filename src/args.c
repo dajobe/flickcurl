@@ -90,8 +90,9 @@ flickcurl_build_args(flickcurl* fc,
     for(attr = node->properties; attr; attr = attr->next) {
       const char *attr_name = (const char*)attr->name;
       if(!strcmp(attr_name, "name")) {
-        arg->name = (char*)malloc(strlen((const char*)attr->children->content)+1);
-        strcpy(arg->name, (const char*)attr->children->content);
+        size_t len = strlen((const char*)attr->children->content);
+        arg->name = (char*)malloc(len + 1);
+        memcpy(arg->name, attr->children->content, len + 1);
       } else if(!strcmp(attr_name, "optional"))
         arg->optional = atoi((const char*)attr->children->content);
     }
@@ -99,8 +100,9 @@ flickcurl_build_args(flickcurl* fc,
     /* Walk children nodes for description text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        arg->description = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(arg->description, (const char*)chnode->content);
+        size_t len = strlen((const char*)attr->children->content);
+        arg->description = (char*)malloc(len + 1);
+        memcpy(arg->description, (const char*)chnode->content, len + 1);
         break;
       }
     }
