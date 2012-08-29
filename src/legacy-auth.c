@@ -117,9 +117,11 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
  
   if(fc->method)
     free(fc->method);
-  if(method)
-    fc->method = strdup(method);
-  else
+  if(method) {
+    size_t len = strlen(method);
+    fc->method = (char*)malloc(len + 1);
+    memcpy(fc->method, method, len + 1);
+  } else
     fc->method = NULL;
 
   if(fc->method)

@@ -336,8 +336,10 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   
   if(fc->method)
     free(fc->method);
-  if(method) {
-    fc->method = strdup(method);
+  if(method) { 
+    size_t len = strlen(method);
+    fc->method = (char*)malloc(len + 1);
+    memcpy(fc->method, method, len + 1);
     is_oauth_method = !strncmp(method, "flickr.oauth.", 13);
   } else
     fc->method = NULL;
@@ -660,10 +662,15 @@ flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback)
 
   if(request_token && request_token_secret) {
     /* Take copies that are owned by od */
-    od->request_token = strdup(request_token);
-    od->request_token_len = strlen(od->request_token);
-    od->request_token_secret = strdup(request_token_secret);
-    od->request_token_secret_len = strlen(od->request_token_secret);
+    size_t len = strlen(request_token);
+    od->request_token = (char*)malloc(len + 1);
+    memcpy(od->request_token, request_token, len + 1);
+    od->request_token_len = len;
+
+    len = strlen(request_token_secret);
+    od->request_token_secret = (char*)malloc(len + 1);
+    memcpy(od->request_token_secret, request_token_secret, len + 1);
+    od->request_token_secret_len = len;
 
 #ifdef FLICKCURL_DEBUG
     fprintf(stderr,
@@ -801,10 +808,15 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
 
   if(access_token && access_token_secret) {
     /* Take copies that are owned by od */
-    od->token = strdup(access_token);
-    od->token_len = strlen(od->token);
-    od->token_secret = strdup(access_token_secret);
-    od->token_secret_len = strlen(od->token_secret);
+    size_t len = strlen(access_token);
+    od->token = (char*)malloc(len + 1);
+    memcpy(od->token, access_token, len + 1);
+    od->token_len = len;
+
+    len = strlen(access_token_secret);
+    od->token_secret = (char*)malloc(len + 1);
+    memcpy(od->token_secret, access_token_secret, len + 1);
+    od->token_secret_len = len;
 
     /* Delete temporary request token and secret */
     free(od->request_token);
@@ -885,8 +897,10 @@ flickcurl_set_oauth_client_key(flickcurl *fc, const char* client_key)
   }
 
   if(client_key) {
-    fc->od.client_key = strdup(client_key);
-    fc->od.client_key_len = strlen(client_key);
+    size_t len = strlen(client_key);
+    fc->od.client_key = (char*)malloc(len + 1);
+    memcpy(fc->od.client_key, client_key, len + 1);
+    fc->od.client_key_len = len;
   }
 }
 
@@ -910,8 +924,10 @@ flickcurl_set_oauth_client_secret(flickcurl *fc, const char* client_secret)
   }
   
   if(client_secret) {
-    fc->od.client_secret = strdup(client_secret);
-    fc->od.client_secret_len = strlen(client_secret);
+    size_t len = strlen(client_secret);
+    fc->od.client_secret = (char*)malloc(len + 1);
+    memcpy(fc->od.client_secret, client_secret, len + 1);
+    fc->od.client_secret_len = len;
   }
 }
 
@@ -950,8 +966,10 @@ flickcurl_set_oauth_token(flickcurl *fc, const char* token)
     fc->od.token_len = 0;
   }
   if(token) {
-    fc->od.token = strdup(token);
-    fc->od.token_len = strlen(token);
+    size_t len = strlen(token);
+    fc->od.token = (char*)malloc(len + 1);
+    memcpy(fc->od.token, token, len + 1);
+    fc->od.token_len = len;
   }
 }
 
@@ -991,8 +1009,10 @@ flickcurl_set_oauth_token_secret(flickcurl* fc, const char *secret)
   }
   
   if(secret) {
-    fc->od.token_secret = strdup(secret);
-    fc->od.token_secret_len = strlen(secret);
+    size_t len = strlen(secret);
+    fc->od.token_secret = (char*)malloc(len + 1);
+    memcpy(fc->od.token_secret, secret, len + 1);
+    fc->od.token_secret_len = len;
   }
 }
 
@@ -1049,8 +1069,10 @@ flickcurl_set_oauth_request_token(flickcurl *fc, const char* token)
   }
 
   if(token) {
-    fc->od.request_token = strdup(token);
-    fc->od.request_token_len = strlen(token);
+    size_t len = strlen(token);
+    fc->od.request_token = (char*)malloc(len + 1);
+    memcpy(fc->od.request_token, token, len + 1);
+    fc->od.request_token_len = len;
   }
 }
 
@@ -1076,8 +1098,10 @@ flickcurl_set_oauth_request_token_secret(flickcurl *fc, const char* secret)
     fc->od.request_token_secret = 0;
   }
   if(secret) {
-    fc->od.request_token_secret = strdup(secret);
-    fc->od.request_token_secret_len = strlen(secret);
+    size_t len = strlen(secret);
+    fc->od.request_token_secret = (char*)malloc(len + 1);
+    memcpy(fc->od.request_token_secret, secret, len + 1);
+    fc->od.request_token_secret_len = len;
   }
 }
 

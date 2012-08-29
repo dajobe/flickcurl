@@ -204,16 +204,31 @@ flickcurl*
 flickcurl_new_with_handle(void* curl_handle)
 {
   flickcurl* fc;
-
+  size_t len;
+  
   fc = (flickcurl*)calloc(1, sizeof(flickcurl));
   if(!fc)
     return NULL;
 
-  fc->service_uri = strdup(flickcurl_flickr_service_uri);
-  fc->upload_service_uri = strdup(flickcurl_flickr_upload_service_uri);
-  fc->replace_service_uri = strdup(flickcurl_flickr_replace_service_uri);
-  fc->oauth_request_token_uri = strdup(flickcurl_flickr_oauth_request_token_uri);
-  fc->oauth_access_token_uri = strdup(flickcurl_flickr_oauth_access_token_uri);
+  len = strlen(flickcurl_flickr_service_uri);
+  fc->service_uri = (char*)malloc(len + 1);
+  memcpy(fc->service_uri, flickcurl_flickr_service_uri, len + 1);
+  
+  len = strlen(flickcurl_flickr_upload_service_uri);
+  fc->upload_service_uri = (char*)malloc(len + 1);
+  memcpy(fc->upload_service_uri, flickcurl_flickr_upload_service_uri, len +1);
+
+  len = strlen(flickcurl_flickr_replace_service_uri);
+  fc->replace_service_uri = (char*)malloc(len + 1);
+  memcpy(fc->replace_service_uri, flickcurl_flickr_replace_service_uri, len +1);
+
+  len = strlen(flickcurl_flickr_oauth_request_token_uri);
+  fc->oauth_request_token_uri = (char*)malloc(len + 1);
+  memcpy(fc->oauth_request_token_uri, flickcurl_flickr_oauth_request_token_uri, len +1);
+
+  len = strlen(flickcurl_flickr_oauth_access_token_uri);
+  fc->oauth_access_token_uri = (char*)malloc(len + 1);
+  memcpy(fc->oauth_access_token_uri, flickcurl_flickr_oauth_access_token_uri, len +1);
 
   /* DEFAULT delay between requests is 1000ms i.e 1 request/second max */
   fc->request_delay = 1000;
@@ -513,15 +528,20 @@ flickcurl_set_http_accept(flickcurl* fc, const char *value)
 void
 flickcurl_set_service_uri(flickcurl *fc, const char *uri)
 {
+  size_t len;
+  
   if(!uri)
     uri = flickcurl_flickr_service_uri;
     
 #if FLICKCURL_DEBUG > 1
-    fprintf(stderr, "Service URI set to: '%s'\n", uri);
+  fprintf(stderr, "Service URI set to: '%s'\n", uri);
 #endif
-    if(fc->service_uri)
-      free(fc->service_uri);
-    fc->service_uri = strdup(uri);
+  if(fc->service_uri)
+    free(fc->service_uri);
+
+  len = strlen(uri);
+  fc->service_uri = (char*)malloc(len + 1);
+  memcpy(fc->service_uri, uri, len + 1);
 }
 
 
@@ -538,6 +558,8 @@ flickcurl_set_service_uri(flickcurl *fc, const char *uri)
 void
 flickcurl_set_upload_service_uri(flickcurl *fc, const char *uri)
 {
+  size_t len;
+
   if(!uri)
     uri = flickcurl_flickr_upload_service_uri;
     
@@ -546,7 +568,10 @@ flickcurl_set_upload_service_uri(flickcurl *fc, const char *uri)
 #endif
     if(fc->upload_service_uri)
       free(fc->upload_service_uri);
-    fc->upload_service_uri = strdup(uri);
+
+  len = strlen(uri);
+  fc->upload_service_uri = (char*)malloc(len + 1);
+  memcpy(fc->upload_service_uri, uri, len + 1);
 }
 
 
@@ -563,6 +588,8 @@ flickcurl_set_upload_service_uri(flickcurl *fc, const char *uri)
 void
 flickcurl_set_replace_service_uri(flickcurl *fc, const char *uri)
 {
+  size_t len;
+
   if(!uri)
     uri = flickcurl_flickr_replace_service_uri;
     
@@ -571,7 +598,10 @@ flickcurl_set_replace_service_uri(flickcurl *fc, const char *uri)
 #endif
     if(fc->replace_service_uri)
       free(fc->replace_service_uri);
-    fc->replace_service_uri = strdup(uri);
+
+  len = strlen(uri);
+  fc->replace_service_uri = (char*)malloc(len + 1);
+  memcpy(fc->replace_service_uri, uri, len + 1);
 }
 
 
@@ -590,14 +620,18 @@ flickcurl_set_replace_service_uri(flickcurl *fc, const char *uri)
 void
 flickcurl_set_api_key(flickcurl* fc, const char *api_key)
 {
+  size_t len;
+  
 #if FLICKCURL_DEBUG > 1
   fprintf(stderr, "API Key: '%s'\n", api_key);
 #endif
   if(fc->od.client_key)
     free(fc->od.client_key);
 
-  fc->od.client_key = strdup(api_key);
-  fc->od.client_key_len = strlen(api_key);
+  len = strlen(api_key);
+  fc->od.client_key = (char*)malloc(len + 1);
+  memcpy(fc->od.client_key, api_key, len + 1);
+  fc->od.client_key_len = len;
 
   /* Mainly for flickcurl_auth_oauth_getAccessToken() to sign the call
    * exchanging tokens 
@@ -631,12 +665,16 @@ flickcurl_get_api_key(flickcurl* fc)
 void
 flickcurl_set_shared_secret(flickcurl* fc, const char *secret)
 {
+  size_t len;
+  
 #if FLICKCURL_DEBUG > 1
   fprintf(stderr, "Legacy Flickr auth Secret: '%s'\n", secret);
 #endif
   if(fc->secret)
     free(fc->secret);
-  fc->secret = strdup(secret);
+  len = strlen(secret);
+  fc->secret = (char*)malloc(len + 1);
+  memcpy(fc->secret, secret, len + 1);
 }
 
 
@@ -665,12 +703,17 @@ flickcurl_get_shared_secret(flickcurl* fc)
 void
 flickcurl_set_auth_token(flickcurl *fc, const char* auth_token)
 {
+  size_t len;
+  
 #if FLICKCURL_DEBUG > 1
   fprintf(stderr, "Legacy Flickr auth token: '%s'\n", auth_token);
 #endif
   if(fc->auth_token)
     free(fc->auth_token);
-  fc->auth_token = strdup(auth_token);
+
+  len = strlen(auth_token);
+  fc->auth_token = (char*)malloc(len + 1);
+  memcpy(fc->auth_token, auth_token, len + 1);
 }
 
 
@@ -1365,8 +1408,11 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
         const char *attr_value = (const char*)attr->children->content;
         if(!strcmp(attr_name, "code"))
           fc->error_code = atoi(attr_value);
-        else if(!strcmp(attr_name, "msg"))
-          fc->error_msg = strdup(attr_value);
+        else if(!strcmp(attr_name, "msg")) {
+          size_t len = strlen(attr_value);
+          fc->error_msg = (char*)malloc(len + 1);
+          memcpy(fc->error_msg, attr_value, len + 1);
+        }
       }
       if(fc->method)
         flickcurl_error(fc, "Method %s failed with error %d - %s", 
@@ -1585,8 +1631,11 @@ flickcurl_xpath_eval(flickcurl *fc, xmlXPathContextPtr xpathCtx,
       fc->failed = 1;
       break;
     }
-    if(node->children)
-      value = strdup((char*)node->children->content);
+    if(node->children) {
+      size_t len = strlen((char*)node->children->content);
+      value = (char*)malloc(len + 1);
+      memcpy(value, node->children->content, len + 1);
+    }
     break;
   }
 
@@ -1640,7 +1689,7 @@ flickcurl_xpath_eval_to_tree_string(flickcurl* fc,
   value = (char*)malloc(value_len+1);
   if(!value)
     goto tidy;
-  memcpy(value, xmlBufferContent(buffer), value_len+1);
+  memcpy(value, xmlBufferContent(buffer), value_len + 1);
 
   tidy:
   if(buffer)

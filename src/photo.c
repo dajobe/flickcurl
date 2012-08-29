@@ -1336,7 +1336,7 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
     fc->failed = 1;
     goto tidy;
   }
-  memcpy(photos_list->format, nformat, format_len+1);
+  memcpy(photos_list->format, nformat, format_len + 1);
 
   tidy:
   if(xpathNodeCtx)
