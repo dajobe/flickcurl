@@ -283,6 +283,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   char *signature_string = NULL;
   size_t* values_len = NULL;
   unsigned int fc_uri_len = 0;
+  unsigned int full_uri_len = 0;
   char* nonce = NULL;
   int free_nonce = 0;
   char* timestamp = NULL;
@@ -290,6 +291,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   int need_to_add_query = 0;
   const char* http_method = "GET";
   int is_oauth_method = 0;
+  char *p;
 
   if(!url)
     return 1;
@@ -409,7 +411,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 
 
   fc_uri_len = strlen(url);
-  if(url[fc_uri_len -1] != '?')
+  full_uri_len = fc_uri_len;
+
+  if(url[fc_uri_len - 1] != '?')
     need_to_add_query++;
   
   /* Save away the parameters and calculate the value lengths */
@@ -429,7 +433,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     memcpy(fc->param_values[i], fc->parameters[i][1], values_len[i] + 1);
 
     /* 3x value len is conservative URI %XX escaping on every char */
-    fc_uri_len += param_len + 1 /* = */ + 3 * values_len[i];
+    full_uri_len += param_len + 1 /* = */ + 3 * values_len[i];
   }
 
   if(upload_field) {
@@ -453,22 +457,30 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     char *escaped_value = NULL;
     size_t http_method_len;
     size_t escaped_value_len;
-    char *p;
     
     for(i = 0; fc->parameters[i][0]; i++)
       param_buf_len += strlen(fc->parameters[i][0]) + 3 + (3 * values_len[i]) + 3;
     param_buf = (char*)malloc(param_buf_len + 1);
     *param_buf = '\0';
     
+    p = param_buf;
+
     for(i = 0; fc->parameters[i][0]; i++) {
+      size_t len = strlen(fc->parameters[i][0]);
       if(i > 0)
-        strcat(param_buf, "&");
-      strcat(param_buf, fc->parameters[i][0]);
-      strcat(param_buf, "=");
+        *p++ = '&';
+      memcpy(p, fc->parameters[i][0], len);
+      p += len;
+
+      *p++ = '=';
+
       escaped_value = curl_escape(fc->parameters[i][1], 0);
-      strcat(param_buf, escaped_value);
+      escaped_value_len = strlen(escaped_value);
+      memcpy(p, escaped_value, escaped_value_len);
+      p += escaped_value_len;
       curl_free(escaped_value);
     }
+    *p = '\0';
 
     http_method_len = strlen(http_method);
 
@@ -537,7 +549,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     fc->param_values[fc->count] = (char*)malloc(vlen + 1);
     memcpy(fc->param_values[fc->count], fc->parameters[fc->count][1], vlen + 1);
 
-    fc_uri_len += 15 /* "oauth_signature" */ + 1 /* = */ + vlen;
+    full_uri_len += 15 /* "oauth_signature" */ + 1 /* = */ + vlen;
     
     fc->count++;
     
@@ -553,38 +565,46 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   }
 
   /* add &s between fc->parameters */
-  fc_uri_len += fc->count - 1;
+  full_uri_len += fc->count - 1;
 
   /* reuse or grow uri buffer */
-  if(fc->uri_len < fc_uri_len) {
+  if(fc->uri_len < full_uri_len) {
     free(fc->uri);
-    fc->uri = (char*)malloc(fc_uri_len + 1);
-    fc->uri_len = fc_uri_len;
+    fc->uri = (char*)malloc(full_uri_len + 1);
+    fc->uri_len = full_uri_len;
   }
   memcpy(fc->uri, url, fc_uri_len);
-  fc->uri[fc_uri_len] = '\0';
+
+  p = fc->uri + fc_uri_len;
+  *p = '\0';
 
   if(need_to_add_query)
-    strcat(fc->uri, "?");
+    *p++ = '?';
 
   if(parameters_in_url) {
     for(i = 0; fc->parameters[i][0]; i++) {
       char *value = (char*)fc->parameters[i][1];
-      char *escaped_value = NULL;
+      size_t len;
 
       if(!fc->parameters[i][1])
         continue;
 
-      strcat(fc->uri, fc->parameters[i][0]);
-      strcat(fc->uri, "=");
-      escaped_value = curl_escape(value, values_len[i]);
-      strcat(fc->uri, escaped_value);
-      curl_free(escaped_value);
-      strcat(fc->uri, "&");
+      len = strlen(fc->parameters[i][0]);
+      memcpy(p, fc->parameters[i][0], len);
+      p += len;
+      *p++ = '=';
+
+      value = curl_escape(value, values_len[i]);
+      len = strlen(value);
+      memcpy(p, value, len);
+      p += len;
+      curl_free(value);
+
+      *p++ = '&';
     }
 
-    /* zap last & */
-    fc->uri[strlen(fc->uri)-1] = '\0';
+    /* zap last & and terminate fc->url */
+    *--p = '\0';
   }
 
 #ifdef FLICKCURL_DEBUG
