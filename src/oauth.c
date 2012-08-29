@@ -1217,7 +1217,7 @@ test_request_token(flickcurl* fc)
 
   oauth_init_test_secrets(od);
 
-  rc = flickcurl_oauth_create_request_token(fc);
+  rc = flickcurl_oauth_create_request_token(fc, NULL);
 
   memset(od, '\0', sizeof(*od));
 
