@@ -74,24 +74,6 @@ Core library functions
 </para>
 
 
-<!-- ##### VARIABLE flickcurl_flickr_oauth_access_token_uri ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### VARIABLE flickcurl_flickr_oauth_authorize_uri ##### -->
-<para>
-
-</para>
-
-
-<!-- ##### VARIABLE flickcurl_flickr_oauth_request_token_uri ##### -->
-<para>
-
-</para>
-
-
 <!-- ##### USER_FUNCTION flickcurl_message_handler ##### -->
 <para>
 
@@ -144,24 +126,6 @@ Core library functions
 @fc: 
 
 
-<!-- ##### FUNCTION flickcurl_get_api_key ##### -->
-<para>
-
-</para>
-
-@fc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION flickcurl_get_auth_token ##### -->
-<para>
-
-</para>
-
-@fc: 
-@Returns: 
-
-
 <!-- ##### FUNCTION flickcurl_get_current_request_wait ##### -->
 <para>
 
@@ -192,42 +156,6 @@ Core library functions
 @label_p: 
 @mime_type_p: 
 @Returns: 
-
-
-<!-- ##### FUNCTION flickcurl_get_oauth_token ##### -->
-<para>
-
-</para>
-
-@fc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION flickcurl_get_oauth_token_secret ##### -->
-<para>
-
-</para>
-
-@fc: 
-@Returns: 
-
-
-<!-- ##### FUNCTION flickcurl_set_api_key ##### -->
-<para>
-
-</para>
-
-@fc: 
-@api_key: 
-
-
-<!-- ##### FUNCTION flickcurl_set_auth_token ##### -->
-<para>
-
-</para>
-
-@fc: 
-@auth_token: 
 
 
 <!-- ##### USER_FUNCTION flickcurl_curl_setopt_handler ##### -->
@@ -278,24 +206,6 @@ Core library functions
 @value: 
 
 
-<!-- ##### FUNCTION flickcurl_set_oauth_token ##### -->
-<para>
-
-</para>
-
-@fc: 
-@token: 
-
-
-<!-- ##### FUNCTION flickcurl_set_oauth_token_secret ##### -->
-<para>
-
-</para>
-
-@fc: 
-@secret: 
-
-
 <!-- ##### FUNCTION flickcurl_set_proxy ##### -->
 <para>
 
@@ -339,15 +249,6 @@ Core library functions
 
 @fc: 
 @uri: 
-
-
-<!-- ##### FUNCTION flickcurl_set_shared_secret ##### -->
-<para>
-
-</para>
-
-@fc: 
-@secret: 
 
 
 <!-- ##### FUNCTION flickcurl_set_sign ##### -->

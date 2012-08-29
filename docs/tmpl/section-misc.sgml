@@ -103,15 +103,6 @@ Miscellaneous functions.
 @Returns: 
 
 
-<!-- ##### FUNCTION flickcurl_get_shared_secret ##### -->
-<para>
-
-</para>
-
-@fc: 
-@Returns: 
-
-
 <!-- ##### FUNCTION flickcurl_interestingness_getList ##### -->
 <para>
 
