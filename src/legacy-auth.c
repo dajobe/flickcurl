@@ -61,6 +61,7 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
   char *md5_string = NULL;
   size_t* values_len = NULL;
   unsigned int fc_uri_len = 0;
+  unsigned int full_uri_len = 0;
   
   if(!url)
     return 1;
@@ -143,6 +144,7 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
     flickcurl_sort_args(fc);
 
   fc_uri_len = strlen(url);
+  full_uri_len = fc_uri_len;
  
   /* Save away the parameters and calculate the value lengths */
   for(i = 0; fc->parameters[i][0]; i++) {
@@ -154,37 +156,51 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
       values_len[i] = 0;
       fc->parameters[i][1] = "";
     }
-    fc->param_fields[i] = (char*)malloc(param_len+1);
-    strcpy(fc->param_fields[i], fc->parameters[i][0]);
-    fc->param_values[i] = (char*)malloc(values_len[i]+1);
-    strcpy(fc->param_values[i], fc->parameters[i][1]);
+
+    fc->param_fields[i] = (char*)malloc(param_len + 1);
+    memcpy(fc->param_fields[i], fc->parameters[i][0], param_len + 1);
+
+    fc->param_values[i] = (char*)malloc(values_len[i] + 1);
+    memcpy(fc->param_values[i], fc->parameters[i][1], values_len[i] + 1);
 
     /* 3x value len is conservative URI %XX escaping on every char */
-    fc_uri_len += param_len + 1 /* = */ + 3 * values_len[i];
+    full_uri_len += param_len + 1 /* = */ + 3 * values_len[i];
   }
 
   if(upload_field) {
-    fc->upload_field = (char*)malloc(strlen(upload_field)+1);
-    strcpy(fc->upload_field, upload_field);
+    size_t len = strlen(upload_field);
+    fc->upload_field = (char*)malloc(len + 1);
+    memcpy(fc->upload_field, upload_field, len + 1);
 
-    fc->upload_value = (char*)malloc(strlen(upload_value)+1);
-    strcpy(fc->upload_value, upload_value);
+    len = strlen(upload_value);
+    fc->upload_value = (char*)malloc(len + 1);
+    memcpy(fc->upload_value, upload_value, len + 1);
   }
 
   if((need_auth && fc->auth_token) || fc->sign) {
+    size_t secret_len;
     size_t buf_len = 0;
     char *buf;
+    char *p;
    
-    buf_len = strlen(fc->secret);
+    secret_len = strlen(fc->secret);
+    buf_len = secret_len;
     for(i = 0; fc->parameters[i][0]; i++)
       buf_len += strlen(fc->parameters[i][0]) + values_len[i];
 
-    buf = (char*)malloc(buf_len+1);
-    strcpy(buf, fc->secret);
+    buf = (char*)malloc(buf_len + 1);
+
+    p = buf;
+    memcpy(p, fc->secret, secret_len);
+    p += secret_len;
     for(i = 0; fc->parameters[i][0]; i++) {
-      strcat(buf, fc->parameters[i][0]);
-      strcat(buf, fc->parameters[i][1]);
+      size_t len = strlen(fc->parameters[i][0]);
+      memcpy(p, fc->parameters[i][0], len);
+      p += len;
+      memcpy(p, fc->parameters[i][1], values_len[i]);
+      p += values_len[i];
     }
+    *p = '\0';
    
 #ifdef FLICKCURL_DEBUG
     fprintf(stderr, "MD5 Buffer '%s'\n", buf);
@@ -197,11 +213,12 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
     /* Add a new parameter pair */
     values_len[fc->count] = 32; /* MD5 is always 32 */
     fc->param_fields[fc->count] = (char*)malloc(7+1); /* 7 = strlen(api_sig) */
-    strcpy(fc->param_fields[fc->count], fc->parameters[fc->count][0]);
-    fc->param_values[fc->count] = (char*)malloc(32+1); /* 32 = MD5 */
-    strcpy(fc->param_values[fc->count], fc->parameters[fc->count][1]);
+    memcpy(fc->param_fields[fc->count], fc->parameters[fc->count][0], 7 + 1);
 
-    fc_uri_len += 7 /* "api_sig" */ + 1 /* = */ + 32 /* MD5 value: never escaped */;
+    fc->param_values[fc->count] = (char*)malloc(32+1); /* 32 = MD5 */
+    memcpy(fc->param_values[fc->count], fc->parameters[fc->count][1], 32 + 1);
+
+    full_uri_len += 7 /* "api_sig" */ + 1 /* = */ + 32 /* MD5 value: never escaped */;
     
     fc->count++;
    
@@ -215,47 +232,59 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
   }
 
   /* add &s between parameters */
-  fc_uri_len += fc->count - 1;
+  full_uri_len += fc->count - 1;
 
   /* reuse or grow uri buffer */
-  if(fc->uri_len < fc_uri_len) {
+  if(fc->uri_len < full_uri_len) {
     free(fc->uri);
-    fc->uri = (char*)malloc(fc_uri_len+1);
-    fc->uri_len = fc_uri_len;
+    fc->uri = (char*)malloc(full_uri_len + 1);
+    fc->uri_len = full_uri_len;
   }
-  strcpy(fc->uri, url);
+  memcpy(fc->uri, url, fc_uri_len);
+  fc->uri[fc_uri_len] = '\0';
 
   if(parameters_in_url) {
+    char* p = fc->uri + fc_uri_len;
+
     for(i = 0; fc->parameters[i][0]; i++) {
       char *value = (char*)fc->parameters[i][1];
-      char *escaped_value = NULL;
+      int value_is_escaped = 0;
+      size_t len;
 
       if(!fc->parameters[i][1])
         continue;
 
-      strcat(fc->uri, fc->parameters[i][0]);
-      strcat(fc->uri, "=");
+      len = strlen(fc->parameters[i][0]);
+      memcpy(p, fc->parameters[i][0], len);
+      p += len;
+      *p++ = '=';
+
+      len = values_len[i];
       if(!strcmp(fc->parameters[i][0], "method")) {
         /* do not touch method name */
-      } else
-        escaped_value = curl_escape(value, values_len[i]);
+      } else {
+        value = curl_escape(value, len);
+        len = strlen(value);
+        value_is_escaped = 1;
+      }
 
-      if(escaped_value) {
-        strcat(fc->uri, escaped_value);
-        curl_free(escaped_value);
-      } else
-        strcat(fc->uri, value);
-      strcat(fc->uri, "&");
+      memcpy(p, value, len);
+      p += len;
+
+      if(value_is_escaped)
+        curl_free(value);
+
+      *p++ = '&';
     }
 
-    /* zap last & */
-    fc->uri[strlen(fc->uri)-1]= '\0';
+    /* zap last & and terminate fc->url */
+    *--p = '\0';
   }
 
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "URI is '%s'\n", fc->uri);
 
-  FLICKCURL_ASSERT((strlen(fc->uri) == fc_uri_len),
+  FLICKCURL_ASSERT((strlen(fc->uri) == full_uri_len),
                    "Final URI does not match expected length");
 #endif
 
