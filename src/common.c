@@ -457,10 +457,12 @@ flickcurl_set_tag_handler(flickcurl* fc,
 void
 flickcurl_set_user_agent(flickcurl* fc, const char *user_agent)
 {
-  char *ua_copy = (char*)malloc(strlen(user_agent)+1);
+  size_t len = strlen(user_agent);
+  char *ua_copy = (char*)malloc(len + 1);
   if(!ua_copy)
     return;
-  strcpy(ua_copy, user_agent);
+
+  memcpy(ua_copy, user_agent, len + 1);
   
   fc->user_agent = ua_copy;
 }
@@ -476,10 +478,12 @@ flickcurl_set_user_agent(flickcurl* fc, const char *user_agent)
 void
 flickcurl_set_proxy(flickcurl* fc, const char *proxy)
 {
-  char *proxy_copy = (char*)malloc(strlen(proxy)+1);
+  size_t len = strlen(proxy);
+  char *proxy_copy = (char*)malloc(len + 1);
   if(!proxy_copy)
     return;
-  strcpy(proxy_copy, proxy);
+
+  memcpy(proxy_copy, proxy, len + 1);
   
   fc->proxy = proxy_copy;
 }
@@ -496,21 +500,22 @@ void
 flickcurl_set_http_accept(flickcurl* fc, const char *value)
 {
   char *value_copy;
-  size_t len = 8; /* strlen("Accept:")+1 */
+  size_t len = 7; /* strlen("Accept:") */
   
   if(value)
-    len += 1+strlen(value); /* " "+value */
+    len += 1 + strlen(value); /* " "+value */
   
-  value_copy = (char*)malloc(len);
+  value_copy = (char*)malloc(len + 1);
   if(!value_copy)
     return;
+
   fc->http_accept = value_copy;
 
-  strcpy(value_copy, "Accept:");
+  memcpy(value_copy, "Accept:", 8); /* copy NUL */
   value_copy += 7;
   if(value) {
     *value_copy++ = ' ';
-    strcpy(value_copy, value);
+    memcpy(value_copy, value, (len - 8) + 1);
   }
 
 }
@@ -1087,6 +1092,7 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   if(1) {
 #ifdef HAVE_RAPTOR
     char* uri_string;
+    size_t len;
 #endif
     
     if(access(filename, R_OK)) {
@@ -1096,7 +1102,8 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     }
 #ifdef HAVE_RAPTOR
     uri_string = raptor_uri_filename_to_uri_string(filename);
-    strcpy(fc->uri, uri_string);
+    len = strlen(uri_string);
+    memcpy(fc->uri, uri_string, len + 1);
     raptor_free_memory(uri_string);
 #else
     sprintf(fc->uri, "file:%s", filename);
@@ -1409,9 +1416,9 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
         if(!strcmp(attr_name, "code"))
           fc->error_code = atoi(attr_value);
         else if(!strcmp(attr_name, "msg")) {
-          size_t len = strlen(attr_value);
-          fc->error_msg = (char*)malloc(len + 1);
-          memcpy(fc->error_msg, attr_value, len + 1);
+          size_t attr_len = strlen(attr_value);
+          fc->error_msg = (char*)malloc(attr_len + 1);
+          memcpy(fc->error_msg, attr_value, attr_len + 1);
         }
       }
       if(fc->method)
