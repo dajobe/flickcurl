@@ -98,11 +98,12 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     tn = (flickcurl_tag_namespace*)calloc(sizeof(flickcurl_tag_namespace), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, (const char*)attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "usage")) {
         tn->usage_count = atoi(attr_value);
@@ -117,8 +118,9 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     /* Walk children for text */
     for(chnode = node->children; chnode; chnode = chnode->next) {
       if(chnode->type == XML_TEXT_NODE) {
-        tn->name = (char*)malloc(strlen((const char*)chnode->content)+1);
-        strcpy(tn->name, (const char*)chnode->content);
+        size_t len = strlen((const char*)chnode->content);
+        tn->name = (char*)malloc(len + 1);
+        memcpy(tn->name, chnode->content, len + 1);
       }
     }
     
@@ -248,11 +250,12 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     tpv = (flickcurl_tag_predicate_value*)calloc(sizeof(flickcurl_tag_predicate_value), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
+      size_t attr_len = strlen((const char*)attr->children->content);
       const char *attr_name = (const char*)attr->name;
       char *attr_value;
 
-      attr_value = (char*)malloc(strlen((const char*)attr->children->content)+1);
-      strcpy(attr_value, (const char*)attr->children->content);
+      attr_value = (char*)malloc(attr_len + 1);
+      memcpy(attr_value, attr->children->content, attr_len + 1);
       
       if(!strcmp(attr_name, "usage")) {
         tpv->usage_count = atoi(attr_value);
@@ -272,9 +275,10 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       /* Walk children for predicate */
       for(chnode = node->children; chnode; chnode = chnode->next) {
         if(chnode->type == XML_TEXT_NODE) {
+          size_t len = strlen((const char*)chnode->content);
           char **ptr = (content_mode == 1) ? &tpv->predicate : &tpv->value;
-          *ptr = (char*)malloc(strlen((const char*)chnode->content)+1);
-          strcpy(*ptr, (const char*)chnode->content);
+          *ptr = (char*)malloc(len + 1);
+          memcpy(*ptr, chnode->content, len + 1);
         }
       }
     }
