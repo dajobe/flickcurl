@@ -24,36 +24,39 @@ authentication, so it might go away at any time.
 </p>
 
 <p>Flickr <a href="http://www.flickr.com/services/api/misc.userauth.html">Legacy authentication</a> flow with Flickcurl:</p>
-<ul>
-  <li>Initial configuration needed is API Key and Shared Secret</li>
-  <li>Authentication URL is shown in Flickr App Garden which results in
-  a user visible Frob</li>
-  <li>Authentication completes when
-  <code>flickcurl_auth_getFullToken()</code> exchanges the Frob for
-  the final Auth Token.</li>
+<ol>
+  <li>The initial configuration needed is the <em>API Key</em> and <em>Shared Secret</em>, obtained from the <a href="http://www.flickr.com/services/">Flickr App Garden</a>.</li>
+  <li>Get the <em>Authentication URL</em> from the Flickr App Garden.</li>
+  <li>Show the Authentication URL to the user who approves the app resulting in
+  a user visible <em>Frob</em>.</li>
+  <li>Authentication completes using
+  <code>flickcurl_auth_getFullToken()</code> which exchanges the Frob for
+  the final <em>Auth Token</em>.</li>
   <li>Optionally, the <code>flickcurl(1)</code> utility will store in
-  the configuration file: auth_token, api_key and secret.</li>
-</ul>
+  the configuration file: auth_token, api_key and secret.  Otherwise the
+application should do this.</li>
+</ol>
 
-<p><a href="http://www.flickr.com/services/api/auth.oauth.html">Flickr OAuth</a>a> 1.0 flow with Flickcurl:</p>
-<ul>
-  <li>Initial configuration needed is Client Key (API Key) and Client
-  Secret (Shared Secret)</li>
+<p>Flickr <a href="http://www.flickr.com/services/api/auth.oauth.html">Flickr OAuth</a> 1.0 flow with Flickcurl:</p>
+<ol>
+  <li>The initial configuration needed is the <em>Client Key</em> (API Key) and <em>Client Secret</em> (Shared Secret), obtained from the <a href="http://www.flickr.com/services/">Flickr App Garden</a>.</li>
   <li>Authentication starts with a call to
-  <code>flickcurl_oauth_create_request_token()</code> to return the
-  request token and request token secret</li>
-  <li>Authentication URL is made with
-  <code>flickcurl_oauth_get_authorize_uri()</code> which results
-  in a user visible Verifier</li>
-  <li>Authentication completes with
+  <code>flickcurl_oauth_create_request_token()</code> to get the
+  <em>Request Token</em> and <em>Request Token Secret</em>.</li>
+  <li>Get the <em>Authentication URL</em> using
+  <code>flickcurl_oauth_get_authorize_uri()</code>.</li>
+  <li>Show the Authentication URL to the user who approves the app resulting in
+  a user visible <em>Verifier</em>.</li>
+  <li>Authentication completes using
   <code>flickcurl_oauth_create_access_token()</code> to exchange
-  request token, request token secret and verifier for the final Access
-  Token and Access Token Secret</li>
+  the request token, request token secret and verifier for the final
+  <em>Access Token</em> and <em>Access Token Secret</em>.</li>
   <li>Optionally, the <code>flickcurl(1)</code> utility will store in
   the configuration file: oauth_token, oauth_token_secret,
-  oauth_client_key and oauth_client_secret.
+  oauth_client_key and oauth_client_secret.  Otherwise the
+  application should do this.
   </li>
-</ul>
+</ol>
 
 <p>Added an API call to upgrade from the Flickr legacy authentication
 to OAuth 1.0. This revokes and deletes the legacy 'auth_token' and
