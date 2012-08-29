@@ -201,7 +201,8 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(chnode_name, "privacy")) {
         g->privacy = atoi(value);
         free(value);
-      }
+      } else
+        free(value);
     }
     
 
