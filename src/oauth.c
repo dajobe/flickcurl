@@ -451,6 +451,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     size_t param_buf_len = 0;
     size_t vlen = 0;
     char *escaped_value = NULL;
+    size_t http_method_len;
+    size_t escaped_value_len;
+    char *p;
     
     for(i = 0; fc->parameters[i][0]; i++)
       param_buf_len += strlen(fc->parameters[i][0]) + 3 + (3 * values_len[i]) + 3;
@@ -467,23 +470,37 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
       curl_free(escaped_value);
     }
 
-    buf_len = strlen(http_method);
+    http_method_len = strlen(http_method);
+
+    buf_len = http_method_len;
     buf_len += 1; /* & */
     buf_len += (3 * strlen(url));
     buf_len += 1; /* & */
     buf_len += param_buf_len * 3;
 
     buf = (char*)malloc(buf_len + 1);
-    strcpy(buf, http_method);
-    strcat(buf, "&");
+
+    p = buf;
+    memcpy(p, http_method, http_method_len);
+    p += http_method_len;
+
+    *p++ = '&';
+
     escaped_value = curl_escape(url, 0);
-    strcat(buf, escaped_value);
-    curl_free(escaped_value);
-    strcat(buf, "&");
-    escaped_value = curl_escape(param_buf, 0);
-    strcat(buf, escaped_value);
+    escaped_value_len = strlen(escaped_value);
+    memcpy(p, escaped_value, escaped_value_len);
+    p += escaped_value_len;
     curl_free(escaped_value);
 
+    *p++ = '&';
+
+    escaped_value = curl_escape(param_buf, 0);
+    escaped_value_len = strlen(escaped_value);
+    memcpy(p, escaped_value, escaped_value_len);
+    p += escaped_value_len;
+    curl_free(escaped_value);
+    *p = '\0';
+    
     free(param_buf);
 
     if(flickcurl_oauth_build_key(od)) {
