@@ -203,8 +203,8 @@ flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
             photo->fields[PHOTO_FIELD_secret].string);
   }
   len = strlen(buf);
-  result = (char*)malloc(len+1);
-  strcpy(result, buf);
+  result = (char*)malloc(len + 1);
+  memcpy(result, buf, len + 1);
   return result;
 }
 
