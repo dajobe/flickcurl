@@ -76,15 +76,15 @@ HTML_IMAGES = \
 # Extra options to supply to gtkdoc-fixref
 FIXXREF_OPTIONS=
 
-include $(top_srcdir)/gtk-doc.make
+# include $(top_srcdir)/gtk-doc.make
 
-EXTRA_DIST+= \
+EXTRA_DIST = \
 $(man_MANS) \
 flickcurl.1.in \
 version.xml.in \
 flickcurl-extras.xml
 
-CLEANFILES+= search-photos.c
+CLEANFILES = search-photos.c
 
 dist-hook-local: html-build.stamp
 	@file=$(srcdir)/html/style.css; \
