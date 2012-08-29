@@ -405,18 +405,21 @@ flickcurl_user_icon_uri(int farm, int server, char *nsid)
 {
   char buf[1024];
   char *result;
-  size_t len;
   
-  if(server && farm && nsid)
-  /* http://farm{icon-farm}.static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg */
+  if(server && farm && nsid) {
+    size_t len;
+    /* http://farm{icon-farm}.static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg */
     sprintf(buf, "http://farm%d.static.flickr.com/%d/buddicons/%s.jpg", 
-            farm, server, nsid);
-  else
-    strcpy(buf, "http://www.flickr.com/images/buddyicon.jpg");
+            farm, server, nsid); 
+    len = strlen(buf);
+    result = (char*)malloc(len + 1);
+    memcpy(result, buf, len + 1);
+  } else {
+    #define MAGIC_LEN 42
+    result = (char*)malloc(MAGIC_LEN + 1);
+    memcpy(result, "http://www.flickr.com/images/buddyicon.jpg", MAGIC_LEN + 1);
+  }
 
-  len = strlen(buf);
-  result = (char*)malloc(len+1);
-  strncpy(result, buf, len+1);
   return result;
 }
 
