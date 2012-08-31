@@ -1,10 +1,10 @@
 #                                               -*- Autoconf -*-
 # Copyright (C) 2007-2011 David Beckett http://www.dajobe.org/
 
-AC_PREREQ(2.62)
-AC_INIT(Flickcurl, 1.23, http://bugs.librdf.org/, flickcurl)
+AC_PREREQ([2.68])
+AC_INIT([Flickcurl],[1.23],[http://bugs.librdf.org/],[flickcurl])
 AC_CONFIG_SRCDIR([src/flickcurl.h])
-AM_CONFIG_HEADER([src/config.h])
+AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR(build)
 AC_CONFIG_MACRO_DIR(build)
 AM_INIT_AUTOMAKE([1.11 check-news std-options -Wall])
@@ -80,7 +80,7 @@ m4_undefine([AC_PROG_CXX])
 m4_defun([AC_PROG_CXX],[])
 m4_undefine([AC_PROG_F77])
 m4_defun([AC_PROG_F77],[])
-AC_PROG_LIBTOOL
+LT_INIT
 
 # Checks for libraries.
 
@@ -116,16 +116,14 @@ AC_SEARCH_LIBS(nanosleep, rt posix4,
 AM_CONDITIONAL(GETOPT, test $ac_cv_func_getopt = no -a $ac_cv_func_getopt_long = no)
 
 AC_MSG_CHECKING(whether need to declare optind)
-AC_TRY_LINK([#ifdef HAVE_GETOPT_H
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[#ifdef HAVE_GETOPT_H
 #include <getopt.h>
-#endif], [int x=optind;],
-            AC_MSG_RESULT(no),
-            AC_DEFINE(NEED_OPTIND_DECLARATION, 1, [need 'extern int optind' declaration?])
-            AC_MSG_RESULT(yes))
+#endif]], [[int x=optind;]])],[AC_MSG_RESULT(no)],[AC_DEFINE(NEED_OPTIND_DECLARATION, 1, need 'extern int optind' declaration?)
+            AC_MSG_RESULT(yes)])
 
 if test $ac_cv_func_vsnprintf = yes; then
   AC_MSG_CHECKING(vsnprintf has C99 compatible return value)
-  AC_TRY_RUN([#include <stdarg.h>
+  AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdarg.h>
 int is_c99(char *s, ...) {
   char buffer[32];
   va_list args;
@@ -139,9 +137,8 @@ int is_c99(char *s, ...) {
 
 int main(int argc, char* argv) {
   return is_c99("1234567");
-}], AC_MSG_RESULT(no),
-    AC_DEFINE(HAVE_C99_VSNPRINTF, 1, [vsnprint has C99 compatible return value])
-    AC_MSG_RESULT(yes))
+}]])],[AC_MSG_RESULT(no)],[AC_DEFINE(HAVE_C99_VSNPRINTF, 1, vsnprint has C99 compatible return value)
+    AC_MSG_RESULT(yes)],[])
 fi
 
 
