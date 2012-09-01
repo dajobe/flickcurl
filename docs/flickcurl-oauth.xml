@@ -1,31 +1,24 @@
 <!DOCTYPE refentry PUBLIC "-//OASIS//DTD DocBook XML V4.3//EN" 
                "http://www.oasis-open.org/docbook/xml/4.3/docbookx.dtd">
-<chapter id="flickcurl-legacy-auth">
+<chapter id="flickcurl-auth">
 
-<title>Authenticating Flickcurl for Legacy Flickr Authentication</title>
+<title>Authenticating Flickcurl for OAuth</title>
 
-<section id="flickcurl-legacy-auth-intro">
+<section id="flickcurl-auth-intro">
 
 <title>Introduction</title>
 
 <para>
-This chapter describes the <emphasis>deprecated</emphasis>
-legacy Flickr authentication.  This may be removed at any time by
-Flickr after August 2012, so this functionality should be migrated
-to the
-<link linkend="flickcurl-auth">Flickr OAuth authentication</link>
+This section describes the <emphasis>supported</emphasis>
+Flickr authentication - the legacy authentication was deprecated at
+the start of August 2012 and should not be used for new applications.
 </para>
 
 </section>
 
-<section id="flickcurl-legacy-auth-build">
+<section id="flickcurl-auth-build">
 
 <title>Build Flickcurl library and flickcurl utility</title>
-
-<para>This section describes using
-the <emphasis>deprecated</emphasis> legacy Flickr authentication.
-See the <link linkend="flickcurl-auth">Flickr OAuth authentication</link>
-</para>
 
 <programlisting>
   $ ./configure
@@ -47,8 +40,9 @@ You should get an error if you now try the utility:
 </para>
 <programlisting>
   $ flickcurl photos.getInfo 1234567
-  flickcurl: ERROR: No shared secret
-  flickcurl: Command photos.getInfo failed
+  flickcurl: Configuration file /Users/dajobe/.flickcurl.conf not found.
+
+  ...
 </programlisting>
 
 <para>
@@ -62,19 +56,14 @@ are obtained.
 </section>
 
 
-<section id="flickcurl-legacy-auth-register">
+<section id="flickcurl-auth-register">
 
-<title>Register application to get API Key and Shared Secret</title>
-
-<para>This section describes using
-the <emphasis>deprecated</emphasis> legacy Flickr authentication.
-See the <link linkend="flickcurl-auth">Flickr OAuth authentication</link>
-</para>
+<title>Register application to get Client Key and Client Secret</title>
 
 <para>NOTE: In the pictures below, the Flickr web site is shown in
-English and the screenshots taken in early December 2009.  Flickr
-upgrade the web site often so these instructions may not match the
-latest look.  Hopefully you can figure it out!</para>
+English and the screenshots are valid as of August 2012.  Flickr
+upgrade the web site now and then so these instructions may not match
+the latest look.  Hopefully you can figure it out!</para>
 
 
 <para>
@@ -139,18 +128,22 @@ API <emphasis>Key</emphasis> that looks something like:
 </programlisting>
 
 <para>
-These strings should be used for the values of the <code>api</code>
-and <code>secret</code> keys in either the <filename>~/.flickcurl.conf</filename>
-if used with the flickcurl utility or in code, with the
-<link linkend="flickcurl-set-api-key">flickcurl_set_api_key()</link>
+These strings should be used for the values of the Client Key
+(<function>oauth_client_key</function>) and Client Secret
+(<function>oauth_client_secret</function>) keys in either
+the <filename>~/.flickcurl.conf</filename> if used with the flickcurl utility
+or in code, with the
+<link linkend="flickcurl-set-oauth-client-key">flickcurl_set_oauth_client_key()</link>
 and
-<link linkend="flickcurl-set-shared-secret">flickcurl_set_shared_secret()</link>
+<link linkend="flickcurl-set-oauth-client-secret">flickcurl_set_oauth_client_secret()</link>
 functions.
 </para>
 
 <para>
-You now need to change the key to be of type mobile since no callback
+You may need to change the key to be of type mobile since no callback
 URL is usually appropriate for a command-line application or library.
+This step is probably no longer needed since the callback is
+specified in a later step.
 </para>
 
 <para>
@@ -181,11 +174,11 @@ appropriate.
 <para>
 This sequence will make the new key 'Auth mode Mobile'
 and an <emphasis>authentication URL</emphasis> will be shown on the
-same page and look something like this:
+same page something like
+<code>http://www.flickr.com/auth-11111111111111111</code>.
+This URL should <emphasis>NOT</emphasis> be used and is only for
+the legacy Flickr authentication flow.
 </para>
-<programlisting>
-http://www.flickr.com/auth-11111111111111111
-</programlisting>
 
 <para>Finish with the 'Save Changes' button to confirm and return
 you to the application page.</para>
@@ -209,29 +202,62 @@ If you ever need to alter or view the authentication, use the link
 </section>
 
 
-<section id="flickcurl-legacy-auth-authenticate">
+<section id="flickcurl-auth-authenticate">
 
-<title>Getting Authentication Token from API Key and Secret</title>
-
-<para>This section describes using
-the <emphasis>deprecated</emphasis> legacy Flickr authentication.
-See the <link linkend="flickcurl-auth">Flickr OAuth authentication</link>
-</para>
+<title>Getting Authentication Token from Client Key and Client Secret</title>
 
 <para>
-Create a file <code>~/.flickcurl.conf</code> with the two
-values above (API Key, Shared Secret) like this:
+If using the flickcurl command line tool, create a
+file <filename>~/.flickcurl.conf</filename> with the two values found in
+the previous section - API, Shared Secret - like this:
 </para>
 
 <programlisting>
 [flickr]
-api_key=0123456789abcdef0123456789abcdef
-secret=fedcba9876543210
+oauth_client_key=0123456789abcdef0123456789abcdef
+oauth_client_secret=fedcba9876543210
 </programlisting>
 
-<para>Then prompt the user to visit the Authentication URL mentioned
-in the previous section
-(http://www.flickr.com/auth-11111111111111111) in a web browser.
+<para>Next the Request Token, Request Token Secret need to be
+created and the Authentication URL generated from them.
+</para>
+
+<para>The request token creation is done using the API request:
+<link linkend="flickcurl-oauth-create-request-token">flickcurl_oauth_create_request_token()</link>
+which takes an optional <emphasis>Callback URL</emphasis> argument,
+that can be used for the browser to redirect to, if required.
+Otherwise use <code>"oob"</code> or <code>NULL</code>.  It creates
+and sets the Request Token and Request Token Secret in
+the <type>flickcurl</type> object, which can be read with:
+<link linkend="flickcurl-oauth-get-request-token">flickcurl_get_oauth_request_token()</link>
+and
+<link linkend="flickcurl-oauth-get-request-token-secret">flickcurl_get_oauth_request_token_secret()</link>.
+</para>
+
+<programlisting>
+   rc = flickcurl_oauth_create_request_token(fc, callback);
+   request_token = flickcurl_get_oauth_request_token(fc);
+   request_token_secret = flickcurl_get_oauth_request_token_secret(fc);
+   uri = flickcurl_oauth_get_authorize_uri(fc);
+</programlisting>
+
+<para>The flickcurl utility can also perform this sequence with:</para>
+<programlisting>
+$ flickcurl oauth-create
+</programlisting>
+<para>which will print the request token, request token secret and
+Authentication URL.  This command takes an optional callback URL
+argument.
+</para>
+
+<para>The resulting request token and secret will look like
+<code>72157626737672178-022bbd2f4c2f3432</code> and
+<code>fccb68c4e6103197</code> respectively.
+
+
+<para>
+The Authentication URL should then be used to prompt the user a web
+browser to validate the request.
 </para>
 
 <para>Flickr will return a page that says something like:</para>
@@ -252,38 +278,53 @@ with the text:</para>
 </mediaobject>
 
 
-<para>Flickr will return on the next page a
-9-digit <emphasis>FROB</emphasis> that looks like this:</para>
-<programlisting>
-  123-456-789
-</programlisting>
+<para>Flickr will then return the
+9-digit <emphasis>Verifier</emphasis> that looks
+like <code>123-456-789</code> In one of two ways depending if a
+callback URL was given:</para>
+
+<orderedlist>
+    <listitem><para>Callback URL: Returns a redirect to
+    the <emphasis>Callback URL</emphasis> with a query
+    parameter <code>oauth_verifier</code> whose value is the Verifier.
+    </para></listitem>
+
+    <listitem><para>No callback URL: Will display a page that shows the 
+    <emphasis>Verifier</emphasis>.
+    </para></listitem>
+</orderedlist>
 
 <para>
-Switch back to the command line and run the flickcurl utility with that FROB:
-</para>
-<programlisting>
-$ flickcurl -a 123-456-789
-</programlisting>
+Now the Request Token, Request Token Secret and Verifier can be used
+to generate the <emphasis>Access Token</emphasis>.</para>
 
-<para>The result will be that an
-<emphasis>Authentication Token</emphasis> (auth token) is calculated
-and returned.  The flickcurl utility will reply:</para>
 <programlisting>
-flickcurl: Successfully exchanged frob 123-456-789 for authentication token
+  /* These are needed if not already set */
+  flickcurl_set_oauth_request_token(fc, request_token);
+  flickcurl_set_oauth_request_token_secret(fc, request_token_secret);
+
+  rc = flickcurl_oauth_create_access_token(fc, verifier);
+<programlisting>
+
+<para>The flickcurl utility can also perform this sequence with:</para>
+<programlisting>
+$ flickcurl oauth-verify 123-456-789
+flickcurl: OAuth access token returned token '72157626737672178-022bbd2f4c2f3432' secret token 'fccb68c4e6103197'
+flickcurl: Successfully exchanged verify 123-456-789 for authentication token
 flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
 </programlisting>
-
-<para>The flickcurl utility has automatically updated the
-<code>~/.flickcurl.conf</code> configuration file (as the message
-will show) with the <code>auth_token</code> field to give something
-like:</para>
+<para>It will write the resulting Access Token and Access Token
+Secret to the <code>~/.flickcurl.conf</code> configuration file as
+the <code>oauth_token</code> and <code>oauth_token_secret</code>
+fields to give something like:</para>
 
 <programlisting>
 $ cat ~/.flickcurl.conf
 [flickr]
-auth_token=1234567-8901234567890123
-api_key=0123456789abcdef0123456789abcdef
-secret=fedcba9876543210
+oauth_token=72157626737672178-022bbd2f4c2f3432
+oauth_token_secret=fccb68c4e6103197
+oauth_client_key=0123456789abcdef0123456789abcdef
+oauth_client_secret=fedcba9876543210
 </programlisting>
 
 <para>
@@ -293,14 +334,9 @@ At this stage, the utility (or library) is authenticated and ready to use.
 </section>
 
 
-<section id="flickcurl-legacy-auth-use">
+<section id="flickcurl-auth-use">
 
 <title>Use flickcurl</title>
-
-<para>This section describes using
-the <emphasis>deprecated</emphasis> legacy Flickr authentication.
-See the <link linkend="flickcurl-auth">Flickr OAuth authentication</link>
-</para>
 
 <para>Now the configuration has been created and authentication
 completed, the library and utility will work.
