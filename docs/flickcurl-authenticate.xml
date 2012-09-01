@@ -20,7 +20,7 @@ to the
 
 <section id="flickcurl-legacy-auth-build">
 
-<title>Build Flickcurl library and flickcurl utility</title>
+<title>Build Flickcurl library and <command>flickcurl(1)</command> utility</title>
 
 <para>This section describes using
 the <emphasis>deprecated</emphasis> legacy Flickr authentication.
@@ -53,7 +53,8 @@ You should get an error if you now try the utility:
 
 <para>
 This is because there is no configuration set for the library.  For
-the flickcurl utility, it reads the configuration from a file
+the <command>flickcurl(1)</command> utility, it reads the
+configuration from a file
 <filename>~/.flickcurl.conf</filename> which contains parameters used
 for authentication.  This section describes how those parameters
 are obtained.
@@ -141,7 +142,7 @@ API <emphasis>Key</emphasis> that looks something like:
 <para>
 These strings should be used for the values of the <code>api</code>
 and <code>secret</code> keys in either the <filename>~/.flickcurl.conf</filename>
-if used with the flickcurl utility or in code, with the
+if used with the <command>flickcurl(1)</command> utility or in code, with the
 <link linkend="flickcurl-set-api-key">flickcurl_set_api_key()</link>
 and
 <link linkend="flickcurl-set-shared-secret">flickcurl_set_shared_secret()</link>
@@ -259,7 +260,8 @@ with the text:</para>
 </programlisting>
 
 <para>
-Switch back to the command line and run the flickcurl utility with that FROB:
+Switch back to the command line and run
+the <command>flickcurl(1)</command> utility with that FROB:
 </para>
 <programlisting>
 $ flickcurl -a 123-456-789
@@ -267,13 +269,13 @@ $ flickcurl -a 123-456-789
 
 <para>The result will be that an
 <emphasis>Authentication Token</emphasis> (auth token) is calculated
-and returned.  The flickcurl utility will reply:</para>
+and returned.  The <command>flickcurl(1)</command> utility will reply:</para>
 <programlisting>
 flickcurl: Successfully exchanged frob 123-456-789 for authentication token
 flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
 </programlisting>
 
-<para>The flickcurl utility has automatically updated the
+<para>The <command>flickcurl(1)</command> utility has automatically updated the
 <code>~/.flickcurl.conf</code> configuration file (as the message
 will show) with the <code>auth_token</code> field to give something
 like:</para>
@@ -303,7 +305,8 @@ See the <link linkend="flickcurl-auth">Flickr OAuth authentication</link>
 </para>
 
 <para>Now the configuration has been created and authentication
-completed, the library and utility will work.
+completed, the library and the <command>flickcurl(1)</command>
+utility will work.
 </para>
 
 <programlisting>
