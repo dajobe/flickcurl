@@ -130,8 +130,8 @@ API <emphasis>Key</emphasis> that looks something like:
 
 <para>
 These strings should be used for the values of the Client Key
-(<function>oauth_client_key</function>) and Client Secret
-(<function>oauth_client_secret</function>) keys in either
+(<code>oauth_client_key</code>) and Client Secret
+(<code>oauth_client_secret</code>) keys in either
 the <filename>~/.flickcurl.conf</filename> if used with the <command>flickcurl(1)</command> utility
 or in code, with the
 <link linkend="flickcurl-set-oauth-client-key">flickcurl_set_oauth_client_key()</link>
@@ -215,9 +215,9 @@ and the Shared Secret becomes <code>oauth_client_secret</code> like this:
 </para>
 
 <programlisting>
-[flickr]
-oauth_client_key=0123456789abcdef0123456789abcdef
-oauth_client_secret=fedcba9876543210
+  [flickr]
+  oauth_client_key=0123456789abcdef0123456789abcdef
+  oauth_client_secret=fedcba9876543210
 </programlisting>
 
 <para>Next the <emphasis>Request Token</emphasis>, <emphasis>Request
@@ -247,7 +247,7 @@ and
 <para>The <command>flickcurl(1)</command> utility can also perform this
 sequence with:</para>
 <programlisting>
-$ flickcurl oauth-create
+  $ flickcurl oauth-create
 </programlisting>
 <para>which will print the request token, request token secret and
 Authentication URL.  This command takes an optional callback URL
@@ -327,9 +327,9 @@ calls along with the Client Key and Client Secret.
 <para>The <command>flickcurl(1)</command> utility can also perform this
 verification with:</para>
 <programlisting>
-$ flickcurl oauth-verify 72157626737672178-022bbd2f4c2f3432 fccb68c4e6103197 123-456-789
-flickcurl: OAuth access token returned token '72157626737672178-022bbd2f4c2f3432' secret token 'fccb68c4e6103197'
-flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
+  $ flickcurl oauth-verify 72157626737672178-022bbd2f4c2f3432 fccb68c4e6103197 123-456-789
+  flickcurl: OAuth access token returned token '72157626737672178-022bbd2f4c2f3432' secret token 'fccb68c4e6103197'
+  flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
 </programlisting>
 
 <para>It writes the resulting Access Token and Access Token Secret to
@@ -338,12 +338,12 @@ the <filename>~/.flickcurl.conf</filename> configuration file as the
 to give something like:</para>
 
 <programlisting>
-$ cat ~/.flickcurl.conf
-[flickr]
-oauth_token=72157626737672178-022bbd2f4c2f3432
-oauth_token_secret=fccb68c4e6103197
-oauth_client_key=0123456789abcdef0123456789abcdef
-oauth_client_secret=fedcba9876543210
+  $ cat ~/.flickcurl.conf
+  [flickr]
+  oauth_token=72157626737672178-022bbd2f4c2f3432
+  oauth_token_secret=fccb68c4e6103197
+  oauth_client_key=0123456789abcdef0123456789abcdef
+  oauth_client_secret=fedcba9876543210
 </programlisting>
 
 <para>
@@ -373,7 +373,7 @@ work.
 
 <section id="flickcurl-auth-upgrade">
 
-<title>Upgrading from Flickr legacy authentication</title>
+<title>Upgrading from legacy Flickr authentication</title>
 
 <para>
 The <link linkend="flickcurl-auth-oauth-getAccessToken">flickcurl_auth_oauth_getAccessToken()</link>
@@ -388,13 +388,27 @@ longer be used.
 </programlisting>
 
 <para>The OAuth access token and access token secret are then
-saved to the flickcurl object and can be read via
+saved to the <code>flickcurl</code> object and can be read via
 <link linkend="flickcurl-get-oauth-token">flickcurl_get_oauth_token()</link>
 and
 <link linkend="flickcurl-get-oauth-token-secret">flickcurl_get_oauth_token_secret()</link>
 and saved along with the Client Key (was API) and Client Secret (was
-shared secret).
+Shared Secret).
 </para>
+
+<para>The <command>flickcurl(1)</command> utility can also perform
+this upgrade with:</para>
+<programlisting>
+  $ flickcurl oauth-upgrade
+</programlisting>
+
+<para>It writes the resulting Access Token and Access Token Secret to
+the <filename>~/.flickcurl.conf</filename> configuration file as the
+<code>oauth_token</code> and <code>oauth_token_secret</code> and
+rewrites the <code>api_key</code> (API Key) and <code>secret</code>
+(Shared Secret fields) as <code>oauth_client_key</code> (Client Key)
+and <code>oauth_client_secret</code> (Client Secret) respectively.
+.</para>
 
 </section>
 

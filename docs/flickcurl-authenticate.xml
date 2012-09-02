@@ -182,11 +182,9 @@ appropriate.
 <para>
 This sequence will make the new key 'Auth mode Mobile'
 and an <emphasis>authentication URL</emphasis> will be shown on the
-same page and look something like this:
+same page and look something
+like <code>http://www.flickr.com/auth-11111111111111111</code>
 </para>
-<programlisting>
-http://www.flickr.com/auth-11111111111111111
-</programlisting>
 
 <para>Finish with the 'Save Changes' button to confirm and return
 you to the application page.</para>
@@ -225,9 +223,9 @@ values above (API Key, Shared Secret) like this:
 </para>
 
 <programlisting>
-[flickr]
-api_key=0123456789abcdef0123456789abcdef
-secret=fedcba9876543210
+  [flickr]
+  api_key=0123456789abcdef0123456789abcdef
+  secret=fedcba9876543210
 </programlisting>
 
 <para>Then prompt the user to visit the Authentication URL mentioned
@@ -264,15 +262,15 @@ Switch back to the command line and run
 the <command>flickcurl(1)</command> utility with that FROB:
 </para>
 <programlisting>
-$ flickcurl -a 123-456-789
+  $ flickcurl -a 123-456-789
 </programlisting>
 
 <para>The result will be that an
 <emphasis>Authentication Token</emphasis> (auth token) is calculated
 and returned.  The <command>flickcurl(1)</command> utility will reply:</para>
 <programlisting>
-flickcurl: Successfully exchanged frob 123-456-789 for authentication token
-flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
+  flickcurl: Successfully exchanged frob 123-456-789 for authentication token
+  flickcurl: Updated configuration file /Users/NAME/.flickcurl.conf with authentication token
 </programlisting>
 
 <para>The <command>flickcurl(1)</command> utility has automatically updated the
@@ -281,11 +279,11 @@ will show) with the <code>auth_token</code> field to give something
 like:</para>
 
 <programlisting>
-$ cat ~/.flickcurl.conf
-[flickr]
-auth_token=1234567-8901234567890123
-api_key=0123456789abcdef0123456789abcdef
-secret=fedcba9876543210
+  $ cat ~/.flickcurl.conf
+  [flickr]
+  auth_token=1234567-8901234567890123
+  api_key=0123456789abcdef0123456789abcdef
+  secret=fedcba9876543210
 </programlisting>
 
 <para>
