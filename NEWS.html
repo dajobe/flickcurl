@@ -12,15 +12,12 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2012-XX-XX-V1.23">2012-XX-XX Flickcurl Version 1.23 Released</h2>
+<h2 id="D2012-09-01-V1.23">2012-09-01 Flickcurl Version 1.23 Released</h2>
 
-<p>Not yet released.
-</p>
-
-<p>This release supports using Flickr via OAuth 1.0 and converting
-from the legacy Flickr authentication to OAuth.  It currently
-supports both forms fully but Flickr has deprecated the legacy
-authentication, so it might go away at any time.
+<p>This release fully supports using Flickr via OAuth 1.0 and
+converting from the legacy Flickr authentication to OAuth.  It
+supports both authentication flows but Flickr has deprecated the
+legacy authentication, so it might stop working at any time.
 </p>
 
 <p>Flickr <a href="http://www.flickr.com/services/api/misc.userauth.html">Legacy authentication</a> flow with Flickcurl:</p>
@@ -65,6 +62,11 @@ to be saved.</p>
 <pre>
     int flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
 </pre>
+
+<p>The upgrade can also be performed by using the
+<code>oauth.upgrade</code> command of the <code>flickcurl(1)</code>
+utility.
+</p>
 
 <p>Added new API calls to get and set OAuth parameters:</p>
 
@@ -124,6 +126,12 @@ flow with the existing <code>-a FROB</code> form.</p>
 make the code more readable and handle the extra parameters needed by
 OAuth.</p>
 
+<p>Multiple internal changes for error path and leaks found by the
+LLVM <a href="http://clang-analyzer.llvm.org/">clang</a> static code
+analyzer.
+</p>
+
+<p>Removed all strncpy, strcat and strcpy with counted memcpy.</p>
 
 
 <h2 id="D2011-12-28-V1.22">2011-12-28 Flickcurl Version 1.22 Released</h2>
