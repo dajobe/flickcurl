@@ -1,4 +1,7 @@
-2012-09-01  Dave Beckett <dave@dajobe.org>
+2012-09-01  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_23 for 1.23 release (GIT
+	29b6f5b550599ce9398504b975c784eac4cb2ba1)
 
 	* docs/flickcurl-authenticate.xml, docs/flickcurl-oauth.xml: docs
 
