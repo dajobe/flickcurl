@@ -4991,7 +4991,7 @@ command_oauth_verify(flickcurl* fc, int argc, char *argv[])
   }
 
   fprintf(stderr,
-          "%s: OAuth access token returned token '%s' secret token '%s'\n",
+          "%s: Returned OAuth token '%s' and token secret '%s'\n",
           program,
           flickcurl_get_oauth_token(fc),
           flickcurl_get_oauth_token_secret(fc));
@@ -4999,7 +4999,34 @@ command_oauth_verify(flickcurl* fc, int argc, char *argv[])
   rc = flickcurl_config_write_ini(fc, config_path, config_section);
   if(!rc)
     fprintf(stdout,
-            "%s: Updated configuration file %s with authentication token\n",
+            "%s: Updated configuration file %s with OAuth tokens\n",
+            program, config_path);
+
+  return 0;
+}
+
+
+static int
+command_oauth_upgrade(flickcurl* fc, int argc, char *argv[])
+{
+  int rc;
+
+  rc = flickcurl_auth_oauth_getAccessToken(fc);
+  if(rc) {
+    fprintf(stderr, "%s: Failed to upgrade to OAuth\n", program);
+    return 1;
+  }
+
+  fprintf(stderr,
+          "%s: Upgraded to OAuth token '%s' and token secret '%s'\n",
+          program,
+          flickcurl_get_oauth_token(fc),
+          flickcurl_get_oauth_token_secret(fc));
+
+  rc = flickcurl_config_write_ini(fc, config_path, config_section);
+  if(!rc)
+    fprintf(stdout,
+            "%s: Updated configuration file %s with OAuth tokens\n",
             program, config_path);
 
   return 0;
@@ -5597,6 +5624,10 @@ static flickcurl_cmd commands[] = {
   {"oauth.verify",
    "REQUEST-TOKEN REQUEST-TOKEN-SECRET VERIFIER", "Verify an OAuth request from `oauth-create'", 
    command_oauth_verify,  3, 3},
+
+  {"oauth.upgrade",
+   "", "Upgrade legacy authentication to OAuth", 
+   command_oauth_upgrade,  0, 0},
 
   {NULL, 
    NULL, NULL,
