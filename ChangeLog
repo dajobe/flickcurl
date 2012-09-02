@@ -1,4 +1,267 @@
+2012-09-01  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-authenticate.xml, docs/flickcurl-oauth.xml: docs
+
+	* utils/flickcurl.c: Add oauth.verify command to upgrade legacy
+	auth to OAuth
+
+	* docs/flickcurl-authenticate.xml, docs/flickcurl-oauth.xml: More
+	oauth docs
+
+	* docs/Makefile.am, docs/flickcurl-authenticate.xml,
+	docs/flickcurl-docs.xml, docs/flickcurl-oauth.xml: OAuth docs
+
+2012-08-31  Dave Beckett <dave@dajobe.org>
+
+	* autogen.sh: autogen.sh docs
+
+	* autogen.sh, configure.ac: Update autogen.sh and configure.ac via
+	autoupdate
+
+2012-08-29  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html: words
+
+	* NEWS.html: html
+
 2012-08-28  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c:
+	(test_request_token): Fix call to
+	flickcurl_oauth_create_request_token
+
+	* utils/Makefile.am, utils/oauth-test.c: Remove oauth-test utility
+	no longer needed
+
+	* docs/tmpl/section-auth.sgml, docs/tmpl/section-core.sgml,
+	docs/tmpl/section-misc.sgml: Update tmpls
+
+	* docs/flickcurl-sections.txt: Add new functions to sections
+
+	* src/collection.c, src/common.c, src/gallery.c, src/person.c,
+	src/photo.c: Replace strncpy with memcpy
+
+	* ChangeLog: #changes
+
+	* src/oauth.c: Remove final strcat from OAuth code
+
+	(flickcurl_oauth_prepare_common): replaced strcat with pointer
+	movement and memcpy
+
+	* src/oauth.c: Remove strcpy and stract from OAuth code
+
+	(flickcurl_oauth_prepare_common): strcpy and strcat replaced with
+	pointer movement and memcpy
+
+	* src/photo.c:
+	(flickcurl_user_icon_uri): 42
+
+	* src/photo.c:
+	(flickcurl_photo_as_source_uri): Remove strcpy
+
+	* src/machinetags.c: Switch to strlen / malloc / memcpy form
+
+	(flickcurl_build_tag_namespaces,
+	flickcurl_build_tag_predicate_values):
+	Switch from sequence:
+	  dest = malloc(strlen(str) + 1);
+	  strcpy(dest, str);
+	to
+	  len = strlen(str)
+	  dest = malloc(len + 1)
+	  memcpy(dest, str, len + 1)
+
+	to get rid of strcpy for known string length
+
+	* src/legacy-auth.c: Remove strcpy from legacy auth code
+
+	(flickcurl_legacy_prepare_common): Lots of url and parameter
+	counting. strcpy and strcat replaced with pointer movement and
+	memcpy
+
+	* src/args.c:
+	(flickcurl_build_args): Fix strlen/malloc/memcpy cut-n-pasto
+
+	* src/activity.c, src/args.c, src/blog.c, src/category.c,
+	src/comments.c, src/contacts.c, src/context.c, src/exif.c,
+	src/gallery.c, src/group.c, src/members.c, src/note.c,
+	src/oauth.c, src/panda-api.c, src/perms.c, src/photos-api.c,
+	src/photos-licenses-api.c, src/photoset.c, src/place.c,
+	src/reflection-api.c, src/serializer.c, src/size.c, src/stat.c,
+	src/tags.c, src/ticket.c, src/user_upload_status.c, src/common.c:
+	Switch to strlen / malloc / memcpy form for setters
+
+	Switch from sequence:
+	  dest = malloc(strlen(str) + 1);
+	  strcpy(dest, str);
+	to
+	  len = strlen(str)
+	  dest = malloc(len + 1)
+	  memcpy(dest, str, len + 1)
+
+	to get rid of strcpy for known string length
+
+	(flickcurl_set_user_agent, flickcurl_set_proxy,
+	flickcurl_set_http_accept): swtich from "malloc(strcpy); strcpy"
+	to "strlen(); malloc(); memcpy()" sequence
+
+	(flickcurl_invoke_common): Use same for raptor building URIs from
+	filename.
+
+	* src/common.c, src/legacy-auth.c, src/oauth.c, src/photo.c:
+	Change slightly unportable strdup() with malloc + memcpy
+
+	* src/group.c: Free attribute values if not used [clang]
+
+	(flickcurl_build_groups): Free value from child node always
+
+	* libmtwist: Update submodule libmtwist
+
+	* src/upload-api.c: Free status on error path [clang]
+
+	(flickcurl_photos_upload_params, flickcurl_photos_replace): Free
+	status on error exist.
+
+	* src/ticket.c: Free attribute values if not used [clang]
+
+	(flickcurl_build_tickets): Free attr_value
+
+	* src/tags.c: Free attribute values if not used. Free vars in loop
+	[clang]
+
+	(flickcurl_build_tags): Free attr_value
+
+	(flickcurl_build_tags_from_string): Use memcpy for known length
+	string.
+
+	(flickcurl_build_tag_clusters): Free tc on loop skip Free tag
+	cluster on error exit.
+
+	* src/stats-api.c: Initialise vars for errors. Free results on an
+	error [clang]
+
+	(flickcurl_stats_getCollectionStats,
+	flickcurl_stats_getPhotosetStats,
+	flickcurl_stats_getPhotostreamStats): Initialize count vars for
+	error case.
+
+	(flickcurl_stats_getTotalViews): Initialize count vars for error
+	case. Free views on error exits
+
+	* src/stat.c:
+	Free attribute values if not used [clang]
+
+	(flickcurl_build_stats): Free attr_value
+
+	* src/size.c:
+	Free attribute values if not used [clang]
+
+	(flickcurl_build_sizes): Free attr_value
+
+	* src/shape.c:
+	Free results on an error [clang]
+
+	(flickcurl_build_shapes): Free shapes on error exits
+
+	* src/place.c: Free results on an error, attribute values, calloc
+	fixes [clang]
+
+	(flickcurl_build_places): Free places on error exits
+
+	(flickcurl_build_place_types): Calloc correct object
+	pointer (semantic error but not dangerous).  Calloc correct
+	parameter order.  Free attribute value if not used.
+
+	* src/photos-licenses-api.c: Free attribute values if not used
+	[clang]
+
+	(flickcurl_read_licenses): Free attr_value
+
+	* src/photos-api.c: Free attribute values if not used and objects
+	on error path [clang]
+
+	(flickcurl_build_photocounts): Free attr_value
+
+	(flickcurl_photos_getCounts): Free counts on error exit
+
+	* src/photo.c: Free results on an error [clang]
+
+	(flickcurl_build_photos): Free photos on error exits
+
+	(flickcurl_invoke_photos_list): Check for NULL photos_list before
+	trying to call it
+
+	* src/perms.c:
+	Free attribute values if not used [clang]
+
+	(flickcurl_build_perms): Free attr_value
+
+	* src/panda-api.c:
+	Free results on an error [clang]
+
+	(flickcurl_panda_getList): Free pandas on error exits
+
+	* src/note.c:
+	Free attribute values if not used [clang]
+
+	(flickcurl_build_notes): Free attr_value
+
+	* src/method.c:
+	Free results on an error [clang]
+
+	(flickcurl_build_method): Free method on error exits
+
+	* src/machinetags.c: Free attribute values if not used [clang]
+
+	(flickcurl_build_tag_namespaces,
+	flickcurl_build_tag_predicate_values): Free attr_value
+
+	* src/location.c: Memcpy and attribute value fixes [clang]
+
+	(flickcurl_build_location): memcpy instead of strcpy. Always free
+	attribute value.
+
+	* src/institution.c: Free results on an error [clang]
+
+	(flickcurl_build_institutions): Free institutions on error exits
+
+	* src/favorites-api.c: Free results on an error [clang]
+
+	(flickcurl_favorites_getContext): Do not set an unused value.  Free
+	photos lists on error exits
+
+	* src/exif.c: Free attribute values if not used [clang]
+
+	(flickcurl_build_exifs): Free attr_value
+
+	* src/context.c: Fix allocation and freeing attribute values
+	[clang]
+
+	(flickcurl_build_contexts): Calloc correct sized pointer (no
+	danger, but a semantic error).  Free unused attribute values.
+
+	* src/common.c: Set a return value always [clang]
+
+	(flickcurl_prepare_common): Set rc and use memcpy for string
+
+	* src/collection.c: Free results on an error [clang]
+
+	(flickcurl_build_collections): Free collections on error exits
+
+	* src/category.c: Free attribute values if not used [clang]
+
+	(flickcurl_build_categories): Free attr_value
+
+	* src/blog.c: Free attribute values if not used [clang]
+
+	(flickcurl_build_blogs, flickcurl_build_blog_services): Free
+	attr_value
+
+	* src/.gitignore, src/Makefile.am: Add analyze target for source
+
+	* configure.ac: Add RECHO, RECHO_C, RECHO_N
+
+	* analyze
 
 	* src/oauth.c: Remove final strcat from OAuth code
 
