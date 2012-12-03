@@ -1919,15 +1919,31 @@ static void
 command_print_group(flickcurl_group* g)
 {
   fprintf(stdout,
-          "group: nsid %s  name '%s'  description '%s'  lang '%s'\n"
-          "  admin %d  pool moderated %d  18+ %d  privacy %d\n"
-          "  photos %d  iconserver %d  members %d\n"
-          "  throttle count %d  mode '%s'  remaining %d\n",
-          g->nsid, g->name, (g->description ? g->description : ""),
-            (g->lang ? g->lang : ""),
-          g->is_admin, g->is_pool_moderated, g->is_eighteenplus, g->privacy,
-          g->photos, g->iconserver, g->members,
-          g->throttle_count, (g->throttle_mode ? g->throttle_mode : ""), g->throttle_remaining);
+          "group: nsid %s  name '%s'\n"
+          "  description '%s'  lang '%s'\n"
+          "  rules '%s'\n"
+          "  user is?  admin %d moderator %d member %d\n"
+          "  pool moderated %d  privacy %d\n"
+          "  iconserver %d  iconfarm %d\n"
+          "  photos %d   members %d\n"
+          "  throttle count %d  mode '%s'  remaining %d\n"
+          "  pool count %d  topic count %d\n"
+          "  restrictions photos %d videos %d images %d screens %d art %d\n"
+          "  restrictions safe %d moderate %d restricted %d\n"
+          "  restrictions has geo %d\n",
+          g->nsid, g->name,
+          (g->description ? g->description : ""), (g->lang ? g->lang : ""),
+          (g->rules ? g->rules: ""),
+          g->is_admin, g->is_moderator, g->is_member,
+          g->is_pool_moderated, g->privacy,
+          g->iconserver, g->iconfarm,
+          g->photos, g->members,
+          g->throttle_count, (g->throttle_mode ? g->throttle_mode : ""), g->throttle_remaining,
+          g->pool_count, g->topic_count,
+          g->photos_ok, g->videos_ok, g->images_ok, g->screens_ok, g->art_ok,
+          g->safe_ok, g->moderate_ok, g->restricted_ok,
+          g->has_geo
+          );
 }
 
 

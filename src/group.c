@@ -136,8 +136,14 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         g->name = attr_value;
       else if(!strcmp(attr_name, "lang"))
         g->lang = attr_value;
-      else if(!strcmp(attr_name, "admin")) {
+      else if(!strcmp(attr_name, "is_admin")) {
         g->is_admin = atoi(attr_value);
+        free(attr_value);
+      } else if(!strcmp(attr_name, "is_moderator")) {
+        g->is_moderator = atoi(attr_value);
+        free(attr_value);
+      } else if(!strcmp(attr_name, "is_member")) {
+        g->is_member = atoi(attr_value);
         free(attr_value);
       } else if(!strcmp(attr_name, "privacy")) {
         g->privacy = atoi(attr_value);
@@ -151,8 +157,8 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "ispoolmoderated")) {
         g->is_pool_moderated = atoi(attr_value);
         free(attr_value);
-      } else if(!strcmp(attr_name, "eightteenplus")) {
-        g->is_eighteenplus = atoi(attr_value);
+      } else if(!strcmp(attr_name, "iconfarm")) {
+        g->iconfarm = atoi(attr_value);
         free(attr_value);
       }
     } /* end attributes */
@@ -189,6 +195,45 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         continue;
       }
 
+      if(!strcmp(chnode_name, "restrictions")) {
+        for(attr = chnode->properties; attr; attr = attr->next) {
+          size_t attr_len = strlen((const char*)attr->children->content);
+          const char *attr_name = (const char*)attr->name;
+          char *attr_value;
+          
+          attr_value = (char*)malloc(attr_len + 1);
+          memcpy(attr_value, attr->children->content, attr_len + 1);
+          if(!strcmp(attr_name, "photos_ok")) {
+            g->photos_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "videos_ok")) {
+            g->videos_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "images_ok")) {
+            g->images_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "screens_ok")) {
+            g->screens_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "art_ok")) {
+            g->art_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "safe_ok")) {
+            g->safe_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "moderate_ok")) {
+            g->moderate_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "restricted_ok")) {
+            g->restricted_ok = atoi(attr_value);
+            free(attr_value);
+          } else if(!strcmp(attr_name, "has_geo")) {
+            g->has_geo = atoi(attr_value);
+            free(attr_value);
+          }
+        }
+      }
+        
       if(!chnode->children)
         continue;
       
@@ -206,6 +251,14 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(chnode_name, "privacy")) {
         g->privacy = atoi(value);
         free(value);
+      } else if(!strcmp(chnode_name, "rules")) {
+        g->rules = value;
+      } else if(!strcmp(chnode_name, "pool_count")) {
+        g->pool_count = atoi(value);
+        free(value);
+      } else if(!strcmp(chnode_name, "topic_count")) {
+        g->topic_count = atoi(value);
+        free(value);
       } else
         free(value);
     }
@@ -213,14 +266,31 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
 #if FLICKCURL_DEBUG > 1
     fprintf(stderr,
-            "group: nsid %s  name '%s'  description '%s'  lang '%s'\n"
-            "  admin %d  pool moderated %d  18+ %d  privacy %d\n"
-            "  photos %d  iconserver %d  members %d\n"
-            "  throttle count %d  mode '%s'  remaining %d\n",
-            g->nsid, g->name, g->description, g->lang,
-            g->is_admin, g->is_pool_moderated, g->is_eighteenplus, g->privacy,
-            g->photos, g->iconserver, g->members,
-            g->throttle_count, g->throttle_mode, g->throttle_remaining);
+            "group: nsid %s  name '%s'\n"
+            "  description '%s'  lang '%s'\n"
+            "  rules '%s'\n"
+            "  user is?  admin %d moderator %d member %d\n"
+            "  pool moderated %d  privacy %d\n"
+            "  iconserver %d iconfarm %d\n"
+            "  photos %d  members %d\n"
+            "  throttle count %d  mode '%s'  remaining %d\n"
+            "  pool count %d  topic count %d\n"
+            "  restrictions photos %d videos %d images %d screens %d art %d\n"
+            "  restrictions safe %d moderate %d restricted %d\n"
+            "  restrictions has geo %d\n",
+            g->nsid, g->name,
+            (g->description ? g->description : ""), (g->lang ? g->lang : ""),
+            (g->rules ? g->rules: ""),
+            g->is_admin, g->is_moderator, g->is_member,
+            g->is_pool_moderated, g->privacy,
+            g->iconserver, g->iconfarm,
+            g->photos, g->members,
+            g->throttle_count, (g->throttle_mode ? g->throttle_mode : ""), g->throttle_remaining,
+            g->pool_count, g->topic_count,
+            g->photos_ok, g->videos_ok, g->images_ok, g->screens_ok, g->art_ok,
+            g->safe_ok, g->moderate_ok, g->restricted_ok,
+            g->has_geo
+            );
 #endif
     
     groups[group_count++] = g;

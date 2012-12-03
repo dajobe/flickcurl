@@ -912,9 +912,9 @@ typedef struct {
  * @name: Group Name
  * @description: Description
  * @lang: Language
- * @is_admin: is admin flag
+ * @is_admin: user is a group admin
  * @is_pool_moderated: is the pool moderated
- * @is_eighteenplus: 18+ group
+ * @is_eighteenplus: NOT USED (will always be 0)
  * @privacy: privacy level
  * @photos: photos in group count
  * @iconserver: icon server ID
@@ -922,6 +922,21 @@ typedef struct {
  * @throttle_count: throttle count
  * @throttle_mode: throttle mode (day, ...)
  * @throttle_remaining: throttle remaining
+ * @iconfarm: icon farm ID
+ * @is_moderator: user is a moderator
+ * @is_member: user is a member
+ * @rules: group rules
+ * @pool_count: pool count
+ * @topic_count: topic count
+ * @photos_ok: photos are ok
+ * @videos_ok: videos are ok
+ * @images_ok: images are ok
+ * @screens_ok: screens are ok
+ * @art_ok: art is ok
+ * @safe_ok: safe content is ok
+ * @moderate_ok: moderate content is ok
+ * @restricted_ok: restricted content is ok
+ * @has_geo: has geolocation
  *
  * A group.
  */
@@ -940,6 +955,21 @@ typedef struct {
   int throttle_count;
   char* throttle_mode;
   int throttle_remaining;
+  int iconfarm;
+  int is_moderator;
+  int is_member;
+  char* rules;
+  int pool_count;
+  int topic_count;
+  int photos_ok;
+  int videos_ok;
+  int images_ok;
+  int screens_ok;
+  int art_ok;
+  int safe_ok;
+  int moderate_ok;
+  int restricted_ok;
+  int has_geo;
 } flickcurl_group;
 
 
