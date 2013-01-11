@@ -30,6 +30,12 @@
 #include <win32_flickcurl_config.h>
 #endif
 
+/* for atof() */
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#undef HAVE_STDLIB_H
+#endif
+
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
 
@@ -93,9 +99,9 @@ flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       memcpy(attr_value, attr->children->content, attr_value_len + 1);
       
       if(!strcmp(attr_name, "latitude"))
-        location->latitude = atoi(attr_value);
+        location->latitude = atof(attr_value);
       else if(!strcmp(attr_name, "longitude"))
-        location->longitude = atoi(attr_value);
+        location->longitude = atof(attr_value);
       else if(!strcmp(attr_name, "accuracy"))
         location->accuracy = atoi(attr_value);
 
