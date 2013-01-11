@@ -165,9 +165,9 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
         }
       } else if(chnode->type == XML_TEXT_NODE) {
         if(!saw_clean) {
-          size_t len = strlen((const char*)chnode->children->content);
+          size_t len = strlen((const char*)chnode->content);
           t->cooked = (char*)malloc(len + 1);
-          memcpy(t->cooked, chnode->children->content, len + 1);
+          memcpy(t->cooked, chnode->content, len + 1);
         }
       }
     }
