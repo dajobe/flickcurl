@@ -904,8 +904,8 @@ gettimeofday(struct timeval* tp, void* tzp)
   t = ((ft.dwHighDateTime * FOUR_GIGA_NSEC100) - EPOCH_WIN_UNIX_DELTA) +
       (ft.dwLowDateTime  * NSEC100);
 
-  tv->tv_sec  = (long) t;
-  tv->tv_usec = (long) ((t - tv->tv_sec) * 1e6);
+  tp->tv_sec  = (long) t;
+  tp->tv_usec = (long) ((t - tp->tv_sec) * 1e6);
 
   /* tzp is ignored */
 
