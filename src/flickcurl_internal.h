@@ -298,6 +298,12 @@ typedef struct {
   size_t token_len;
   char* token_secret;
   size_t token_secret_len;
+
+  /* username and user_nsid */
+  char* username;
+  size_t username_len;
+  char* user_nsid;
+  size_t user_nsid_len;
   
   /* callback URI or NULL for "oob" */
   const char* callback; /* always shared */
