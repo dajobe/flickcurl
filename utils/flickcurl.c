@@ -5861,6 +5861,14 @@ main(int argc, char *argv[])
         rc = atoi(optarg);
 
         if(rc == 0) {
+          puts(".LP\n"
+               "In the following list of commands:\n"
+               ".br\n"
+               "\\fIPER-PAGE\\fR is photos per result page or '-' for default (10)\n"
+               ".br\n"
+               "\\fIPAGE\\fR is result page number or '-' for default (1 = first page)\n"
+               );
+
           qsort(commands, (sizeof(commands) / sizeof(flickcurl_cmd))-1,
                 sizeof(flickcurl_cmd), flickcurl_cmd_compare);
 
