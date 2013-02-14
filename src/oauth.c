@@ -798,6 +798,8 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
   flickcurl_oauth_data* od = &fc->od;
   char* access_token = NULL;
   char* access_token_secret = NULL;
+  char* username = NULL;
+  char* user_nsid = NULL;
   char** form = NULL;
   int rc = 0;
   const char* uri = fc->oauth_access_token_uri;
@@ -844,8 +846,12 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
       access_token = form[i+1];
     } else if(!strcmp(form[i], "oauth_token_secret")) {
       access_token_secret = form[i+1];
+    } else if(!strcmp(form[i], "username")) {
+      username = form[i+1];
+    } else if(!strcmp(form[i], "user_nsid")) {
+      user_nsid = form[i+1];
     }
-    /* ignoring: fullname, user_nsid, username */
+    /* ignoring: fullname */
   }
 
   if(access_token && access_token_secret) {
@@ -859,6 +865,16 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
     od->token_secret = (char*)malloc(len + 1);
     memcpy(od->token_secret, access_token_secret, len + 1);
     od->token_secret_len = len;
+
+    len = strlen(username);
+    od->username = (char*)malloc(len + 1);
+    memcpy(od->username, username, len + 1);
+    od->username_len = len;
+
+    len = strlen(user_nsid);
+    od->user_nsid = (char*)malloc(len + 1);
+    memcpy(od->user_nsid, user_nsid, len + 1);
+    od->user_nsid_len = len;
 
     /* Delete temporary request token and secret */
     free(od->request_token);
@@ -1030,6 +1046,33 @@ flickcurl_get_oauth_token_secret(flickcurl* fc)
   return fc->od.token_secret;
 }
 
+/**
+ * flickcurl_get_oauth_username:
+ * @fc: flickcurl object
+ *
+ * Get the username for the authenticated user
+ *
+ * Return value: username or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_username(flickcurl* fc)
+{
+  return fc->od.username;
+}
+
+/**
+ * flickcurl_get_oauth_user_nsid:
+ * @fc: flickcurl object
+ *
+ * Get the user_nsid for the authenticated user
+ *
+ * Return value: user_nsid or NULL if none set
+ */
+const char*
+flickcurl_get_oauth_user_nsid(flickcurl* fc)
+{
+  return fc->od.user_nsid;
+}
 
 /**
  * flickcurl_set_oauth_token_secret:
