@@ -764,9 +764,10 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
 
 
 /**
- * flickcurl_photos_getInfo:
+ * flickcurl_photos_getInfo2:
  * @fc: flickcurl context
  * @photo_id: photo ID
+ * @secret: secret (or NULL)
  * 
  * Get information about a photo
  *
@@ -775,7 +776,8 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
  * Return value: #flickcurl_photo or NULL on failure
  **/
 flickcurl_photo*
-flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
+flickcurl_photos_getInfo2(flickcurl* fc, const char* photo_id,
+                          const char* secret)
 {
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
@@ -784,6 +786,9 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
   flickcurl_init_params(fc);
 
   flickcurl_add_param(fc, "photo_id", photo_id);
+
+  if(secret)
+    flickcurl_add_param(fc, "secret", secret);
 
   flickcurl_end_params(fc);
 
@@ -812,6 +817,25 @@ flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
     photo = NULL;
 
   return photo;
+}
+
+
+/**
+ * flickcurl_photos_getInfo:
+ * @fc: flickcurl context
+ * @photo_id: photo ID
+ * 
+ * Get information about a photo
+ *
+ * Deprecated for flickcurl_photos_getInfo2() that allows passing the
+ * optional secret.
+ * 
+ * Return value: #flickcurl_photo or NULL on failure
+ **/
+flickcurl_photo*
+flickcurl_photos_getInfo(flickcurl* fc, const char* photo_id)
+{
+  return flickcurl_photos_getInfo2(fc, photo_id, NULL);
 }
 
 

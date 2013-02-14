@@ -2,7 +2,7 @@
  *
  * flickcurl.h - Flickcurl API
  *
- * Copyright (C) 2007-2012, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2007-2013, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -2100,6 +2100,8 @@ flickcurl_exif** flickcurl_photos_getExif(flickcurl* fc, const char* photo_id, c
 FLICKCURL_API
 flickcurl_person** flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id, int page, int per_page);
 FLICKCURL_API
+flickcurl_photo* flickcurl_photos_getInfo2(flickcurl *fc, const char* photo_id, const char* secret);
+FLICKCURL_API FLICKCURL_DEPRECATED
 flickcurl_photo* flickcurl_photos_getInfo(flickcurl *fc, const char* photo_id);
 FLICKCURL_API
 flickcurl_photo** flickcurl_photos_getNotInSet(flickcurl* fc, int min_upload_date, int max_upload_date, const char* min_taken_date, const char* max_taken_date, int privacy_filter, const char* extras, int per_page, int page);
