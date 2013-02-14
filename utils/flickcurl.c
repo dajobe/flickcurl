@@ -470,8 +470,12 @@ static int
 command_photos_getInfo(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_photo* photo;
-
-  photo = flickcurl_photos_getInfo(fc, argv[1]);
+  const char *secret = NULL;
+  
+  if(argv[2])
+    secret = argv[2];
+  
+  photo = flickcurl_photos_getInfo2(fc, argv[1], secret);
 
   if(photo) {
     fprintf(stdout, "%s: ", program);
@@ -5279,8 +5283,8 @@ static flickcurl_cmd commands[] = {
    "PHOTO-ID [PER-PAGE [PAGE]]", "Get favourites information about one photo with id PHOTO-ID", 
    command_photos_getFavorites,  1, 3},
   {"photos.getInfo",
-   "PHOTO-ID", "Get information about one photo with id PHOTO-ID", 
-   command_photos_getInfo,  1, 1},
+   "PHOTO-ID [SECRET]", "Get information about one photo PHOTO-ID with optional SECRET", 
+   command_photos_getInfo,  1, 2},
   {"photos.getNotInSet",
    "[PER-PAGE [PAGE [FORMAT]]]", "Get list of photos that are not in any set", 
    command_photos_getNotInSet, 0, 3},
