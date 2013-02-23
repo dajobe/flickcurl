@@ -3557,6 +3557,35 @@ command_contacts_getListRecentlyUploaded(flickcurl* fc, int argc, char *argv[])
 
 
 static int
+command_contacts_getPublicList(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_contact **contacts = NULL;
+  const char* user_id = NULL;
+  int page = -1;
+  int per_page = -1;
+  
+  user_id = argv[1];
+  if(argc >2) {
+    per_page = parse_page_param(argv[2]);
+    if(argc >3) {
+      page = parse_page_param(argv[3]);
+    }
+  }
+
+  contacts = flickcurl_contacts_getPublicList(fc, user_id, page, per_page);
+  if(contacts) {
+    int i;
+    for(i = 0; contacts[i]; i++)
+      command_print_contact(contacts[i], i);
+
+    flickcurl_free_contacts(contacts);
+  }
+
+  return (contacts == NULL);
+}
+
+
+static int
 command_places_getShapeHistory(flickcurl* fc, int argc, char *argv[])
 {
   flickcurl_shapedata **shapes = NULL;
@@ -5128,6 +5157,9 @@ static flickcurl_cmd commands[] = {
   {"contacts.getListRecentlyUploaded",
    "[DATE-LAST-UPLOAD [FILTER]]", "Get a list of recent uploading contacts since DATE-LAST-UPLOAD with optional FILTER", 
    command_contacts_getListRecentlyUploaded, 0, 2},
+  {"contacts.getPublicList",
+   "USER-NSID [PER-PAGE [PAGE]]", "Get the contact list for user USER-ID", 
+   command_contacts_getPublicList, 1, 3},
 
   {"favorites.add",
    "PHOTO-ID", "Adds PHOTO-ID to the current user's favorites.",
