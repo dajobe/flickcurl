@@ -289,7 +289,6 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   char* timestamp = NULL;
   int rc = 0;
   int need_to_add_query = 0;
-  const char* http_method = "GET";
   int is_oauth_method = 0;
   char *p;
 
@@ -455,6 +454,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     size_t param_buf_len = 0;
     size_t vlen = 0;
     char *escaped_value = NULL;
+    const char* http_method;
     size_t http_method_len;
     size_t escaped_value_len;
     
@@ -482,7 +482,8 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     }
     *p = '\0';
 
-    http_method_len = strlen(http_method);
+    http_method = (upload_field || fc->is_write) ? "POST" : "GET";
+    http_method_len = (upload_field || fc->is_write) ? 4  : 3;
 
     buf_len = http_method_len;
     buf_len += 1; /* & */
