@@ -12,10 +12,58 @@
 <h2 style="text-align:center"><a href="http://www.dajobe.org/">Dave Beckett</a></h2>
 
 
-<h2 id="D2012-XX-XX-V1.24">2012-XX-XX Flickcurl Version 1.24 Released</h2>
+<h2 id="D2013-04-XX-V1.24">2013-04-XX Flickcurl Version 1.24 Released</h2>
 
 <p>Not yet released.
 </p>
+
+<p>Fixed uploading with OAuth - incorrect signature since it failed
+to use <code>POST</code>.</p>
+
+<p>Added <code>flickcurl_photos_getInfo2()</code> deprecating
+<code>flickcurl_photos_getInfo()</code> adding the optional
+<code>'secret'</code> parameter that was added sometime to the API.
+See <a href="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=637746">Debian bug 637746</a>.
+</p>
+
+<p>Updated <code>flickcurl(1)</code> to allow photos.getInfo to take an
+optional SECRET arg using the new call below, and 
+to add the missing command <code>contacts.getPublicList</code> which
+fixes <a href="https://github.com/dajobe/flickcurl/issues/19">Issue 19</a>.
+.</p>
+
+<p>Added new APIs calls to make available the Flickr username and
+NSID when OAuth authentication is done.
+</p>
+<pre>
+  const char* flickcurl_get_oauth_username(flickcurl* fc);
+  const char* flickcurl_get_oauth_user_nsid(flickcurl* fc);
+</pre>
+<p>These new calls were from GitHub
+<a href="https://github.com/dajobe/flickcurl/pull/18">pull request 18</a>
+from Jose Carlos Garcia Sogo - thanks.</p>
+
+<p>Added a pile of fields to <code>flickcurl_group</code> to match
+what the API returns rather than what the documentation says:</p>
+<ul>
+<li>iconfarm icon farm number</li>
+<li>is_moderator and is_member booleans</li>
+<li>rules descriptive text </li>
+<li>pool_count and topic_count counts</li>
+<li>group restriction booleans: photos_ok, videos_ok, images_ok, screens_ok, art_ok, safe_ok, moderate_ok, restricted_ok, has_geo.</li>
+</ul>
+
+<p>Fixed grabbing text from a &lt;tag&gt; child text node correctly
+Fixes <a href="https://github.com/dajobe/flickcurl/issues/16">Issue 16</a>.
+</p>p>
+
+<p>Fixed parsing of latitude and longitude value responses.</p>
+
+<p>Fixed a few <code>flickcurl(1)</code> utility manual page wordings.
+See <a href="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=635989">Debian bug 635989</a>
+and <a href="http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=635989">Debian bug 635989</a>.
+</p>
+
 
 <h2 id="D2012-09-01-V1.23">2012-09-01 Flickcurl Version 1.23 Released</h2>
 
