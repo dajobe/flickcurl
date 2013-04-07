@@ -1910,6 +1910,10 @@ FLICKCURL_API
 void flickcurl_set_oauth_request_token(flickcurl *fc, const char* token);
 FLICKCURL_API
 void flickcurl_set_oauth_request_token_secret(flickcurl *fc, const char* secret);
+FLICKCURL_API
+const char* flickcurl_get_oauth_username(flickcurl* fc);
+FLICKCURL_API
+const char* flickcurl_get_oauth_user_nsid(flickcurl* fc);
 
 /* OAuth flow requests */
 FLICKCURL_API
