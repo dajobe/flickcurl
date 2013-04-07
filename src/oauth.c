@@ -169,6 +169,13 @@ flickcurl_oauth_free(flickcurl_oauth_data* od)
   
   if(od->data)
     free(od->data);
+
+  if(od->username)
+    free(od->username);
+  
+  if(od->user_nsid)
+    free(od->user_nsid);
+
 }
 
 
