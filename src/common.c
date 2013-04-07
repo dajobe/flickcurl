@@ -2318,7 +2318,7 @@ flickcurl_photos_list_params_init(flickcurl_photos_list_params* list_params)
   if(!list_params)
     return 1;
   
-  memset(list_params, '\0', sizeof(list_params));
+  memset(list_params, '\0', sizeof(*list_params));
   list_params->version = 1;
 
   list_params->extras = NULL;
