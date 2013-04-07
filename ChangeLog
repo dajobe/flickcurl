@@ -1,3 +1,86 @@
+2013-04-07  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c:
+	(flickcurl_oauth_free): Free oauth username and user_nsid
+
+	* Merge pull request #18 from jcsogo/userid
+	Make available the username and user_nsid when oauth
+	authentication happens
+
+2013-02-22  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Add missing command contacts.getPublicList
+	Fixes https://github.com/dajobe/flickcurl/issues/19
+
+2013-02-14  Jose Carlos Garcia Sogo <jsogo@debian.org>
+
+	* src/oauth.c: Commit forgotten code
+
+2013-02-13  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickcurl.c: Allow photos.getInfo to take an optional
+	SECRET arg
+
+	Call flickcurl_photos_getInfo2() instead of deprecated
+	flickcurl_photos_getInfo()
+
+	* utils/flickcurl.c: Add description of PER-PAGE and PAGE into
+	manpage
+	See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=635989
+
+	* utils/flickcurl.c: Make PER-PAGE PAGE docs match code
+	See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=635989
+
+	* src/flickcurl.h, src/photos-api.c:
+	(flickcurl_photos_getInfo2): Added replacing
+	flickcurl_photos_getInfo
+
+	Adds optional 'secret' parameter that was added sometime to the API.
+	See http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=637746
+
+2013-02-13  Jose Carlos Garcia Sogo <jsogo@debian.org>
+
+	* src/flickcurl.h, src/flickcurl_internal.h: Make available the
+	username and user_nsid when oauth authentication is done
+
+2013-01-16  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(win32 gettimeofday): Use tp-> not tv->
+
+2013-01-11  Dave Beckett <dave@dajobe.org>
+
+	* src/tags.c:
+	Grab text from <tag> child text node correctly.
+
+	Fixes https://github.com/dajobe/flickcurl/issues/16
+
+2013-01-10  Dave Beckett <dave@dajobe.org>
+
+	* src/location.c: Parse double latitude and longitude with atof()
+	not atoi()
+
+	Bug report from Clemens Arth - thanks
+
+2012-12-15  Dave Beckett <dave@dajobe.org>
+
+	* autogen.sh: Handle AM_CONFIG_HEADER AND newer
+	AC_CONFIG_HEADER(S)
+
+2012-12-03  Dave Beckett <dave@dajobe.org>
+
+	* src/flickcurl.h, src/group.c, utils/flickcurl.c: Add a pile of
+	group response fields.
+
+	Added iconfarm icon farm number; is_moderator and is_member
+	booleans, rules description; pool_count, topic_count counts and
+	group restriction booleans: photos_ok, videos_ok, images_ok,
+	screens_ok, art_ok, safe_ok, moderate_ok, restricted_ok, has_geo.
+
+2012-09-02  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bumped version to 1.24
+
 2012-09-01  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_23 for 1.23 release (GIT
