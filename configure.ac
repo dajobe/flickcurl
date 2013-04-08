@@ -76,10 +76,7 @@ AC_SUBST(LIBFLICKCURL_LIBTOOL_VERSION)
 AM_PROG_AR
 AM_PROG_CC_C_O
 
-m4_undefine([AC_PROG_CXX])
-m4_defun([AC_PROG_CXX],[])
-m4_undefine([AC_PROG_F77])
-m4_defun([AC_PROG_F77],[])
+dnl Initialize libtool
 LT_INIT
 
 # Checks for libraries.
