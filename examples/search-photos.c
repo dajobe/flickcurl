@@ -2,7 +2,7 @@
  *
  * search-photos - Search for my interesting photos about a tag
  *
- * Copyright (C) 2009, David Beckett http://www.dajobe.org/
+ * Copyright (C) 2009-2013, David Beckett http://www.dajobe.org/
  * 
  * This file is licensed under the following three licenses as alternatives:
  *   1. GNU Lesser General Public License (LGPL) V2.1 or any newer version
@@ -50,20 +50,6 @@ static void
 my_message_handler(void *user_data, const char *message)
 {
   fprintf(stderr, "%s: ERROR: %s\n", program, message);
-}
-
-
-static void
-my_set_config_var_handler(void* userdata, const char* key, const char* value)
-{
-  flickcurl *fc = (flickcurl *)userdata;
-  
-  if(!strcmp(key, "api_key"))
-    flickcurl_set_api_key(fc, value);
-  else if(!strcmp(key, "secret"))
-    flickcurl_set_shared_secret(fc, value);
-  else if(!strcmp(key, "auth_token"))
-    flickcurl_set_auth_token(fc, value);
 }
 
 
@@ -127,7 +113,7 @@ main(int argc, char *argv[])
 
   if(!access((const char*)config_path, R_OK)) {
     if(read_ini_config(config_path, config_section, fc,
-                       my_set_config_var_handler)) {
+                       flickcurl_config_var_handler)) {
       fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
               program, config_path, strerror(errno));
       rc = 1;
