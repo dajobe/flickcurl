@@ -340,8 +340,8 @@ to give something like:</para>
 <programlisting>
   $ cat ~/.flickcurl.conf
   [flickr]
-  oauth_token=72157626737672178-022bbd2f4c2f3432
-  oauth_token_secret=fccb68c4e6103197
+  oauth_token=12345678901234567-abcdef0123456789
+  oauth_token_secret=abcdef9876543210
   oauth_client_key=0123456789abcdef0123456789abcdef
   oauth_client_secret=fedcba9876543210
 </programlisting>
