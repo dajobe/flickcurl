@@ -31,11 +31,18 @@ int main(int argc, char *argv[]) {
   flickcurl_init(); /* optional static initialising of resources */
   fc = flickcurl_new();
 
-  /* Set configuration, or more likely read from a config file */
+  /* Set configuration explicitly: ... */
   flickcurl_set_oauth_client_key(fc, "...");
   flickcurl_set_oauth_client_secret(fc, "...");
   flickcurl_set_oauth_token(fc, "...");
   flickcurl_set_oauth_token_secret(fc, "...");
+
+  /* or could read from an INI config file like this: */
+  /*
+  flickcurl_config_read_ini(fc, "/home/user/.flickcurl.conf", "flickr",
+                            fc, flickcurl_config_var_handler);
+  */  
+
 
   photo = flickcurl_photos_getInfo(fc, "123456789"); /* photo ID */
 
