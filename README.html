@@ -68,8 +68,8 @@ Flickcurl at the
 
 <h2>Flickr API Configuration</h2>
 
-<p>The library needs to know your Flickr API application key,
-authentication token and shared secret, suitable for calling some of
+<p>The library needs to know your Flickr API OAuth token, token
+secret, client key and client secret, suitable for calling some of
 the API calls.  To obtain these, you need to
 <a href="http://www.flickr.com/services/api/keys/apply/">apply for API keys</a>
 at the Flickr Services site.  When using the utility programs, this
@@ -78,13 +78,14 @@ so that it can be read at run-time.  The configuration file has the
 format:</p>
 <pre>
 [flickr]
-auth_token=1234567-8901234567890123
-api_key=0123456789abcdef0123456789abcdef
-secret=fedcba9876543210
+oauth_token=12345678901234567-abcdef0123456789
+oauth_token_secret=abcdef9876543210
+oauth_client_key=0123456789abcdef0123456789abcdef
+oauth_client_secret=fedcba9876543210
 </pre>
 
 <p>See
-<a href="http://librdf.org/flickcurl/api/flickcurl-auth.html">Authenticating Flickcurl</a>
+<a href="http://librdf.org/flickcurl/api/flickcurl-oauth.html">Authenticating Flickcurl for OAuth</a>
 in the manual for full details of how to build flickcurl,
 authenticate and set up the configuration file above.
 </p>
@@ -95,10 +96,8 @@ authenticate and set up the configuration file above.
 <h3><code>flickcurl</code> - call Flickr API</h3>
 
 <p>This can call some of the Flickr APIs plus help with
-authentication by turning 
-<a href="http://www.flickr.com/services/api/auth.howto.mobile.html">mobile authentication method</a>
-frobs into full auth_tokens with <code>-a&nbsp;<em>NNN-NNN-NNN</em> </code>
-and writing the <code>~/.flickcurl.conf</code> file.  Use
+OAuth authentication steps to get the final set of tokens and secrets
+and writing them into <code>~/.flickcurl.conf</code> file.  Use
 <code>flickcurl -h</code> to get a list of the supported commands and
 their arguments.
 </p>
@@ -116,63 +115,68 @@ with their id, author, raw, cooked and machine tag status.
 
 <pre>
 $ flickcurl photos.getInfo 196308964
-flickcurl: Found photo with URI http://www.flickr.com/photos/dajobe/196308964/ ID 196308964 and 5 tags
-field dateuploaded (1) with dateTime value: '2006-07-23T18:16:13Z' / 1153678573
-field farm (2) with integer value: '1' / 1
-field isfavorite (3) with boolean value: '0' / 0
-field license (4) with integer value: '1' / 1
-field originalformat (5) with string value: 'jpg' / -1
-field rotation (6) with integer value: '0' / 0
-field server (7) with integer value: '57' / 57
-field dates_lastupdate (8) with dateTime value: '2007-02-25T07:45:46Z' / 1172389546
-field dates_posted (9) with dateTime value: '2006-07-23T18:16:13Z' / 1153678573
-field dates_taken (10) with string value: '2006-07-22 22:28:50' / -1
-field dates_takengranularity (11) with integer value: '0' / 0
-field editability_canaddmeta (13) with boolean value: '1' / 1
-field editability_cancomment (14) with boolean value: '1' / 1
-field geoperms_iscontact (15) with boolean value: '0' / 0
-field geoperms_isfamily (16) with boolean value: '0' / 0
-field geoperms_isfriend (17) with boolean value: '0' / 0
-field geoperms_ispublic (18) with boolean value: '1' / 1
-field location_accuracy (19) with integer value: '12' / 12
-field location_latitude (20) with float value: '36.620487' / -1
-field location_longitude (21) with float value: '-121.904468' / -1
-field owner_location (22) with string value: 'Mountain View, California, USA' / -1
-field owner_nsid (23) with string value: '13355580@N00' / -1
-field owner_realname (24) with string value: 'Dave Beckett' / -1
-field owner_username (25) with string value: 'dajobe' / -1
-field title (26) with string value: 'Jellyfish at Monterey Aquarium' / -1
-field visibility_isfamily (27) with boolean value: '0' / 0
-field visibility_isfriend (28) with boolean value: '0' / 0
-field visibility_ispublic (29) with boolean value: '1' / 1
-field secret (30) with string value: '**********' / -1
-field originalsecret (31) with string value: '**********' / -1
-field location_locality (33) with string value: 'Pacific Grove' / -1
-field location_region (35) with string value: 'California' / -1
-field location_country (36) with string value: 'United States' / -1
-field location_placeid (37) with string value: 'WM3JEXSbBZqqRtGA' / -1
-field locality_placeid (39) with string value: 'WM3JEXSbBZqqRtGA' / -1
-field county_placeid (40) with string value: 'AQ4UpRqYA5l0BiyF.A' / -1
-field region_placeid (41) with string value: 'SVrAMtCbAphCLAtP' / -1
-field country_placeid (42) with string value: '4KO02SibApitvSBieQ' / -1
-field location_woeid (43) with string value: '2467327' / -1
-field locality_woeid (45) with string value: '2467327' / -1
-field county_woeid (46) with string value: '12587696' / -1
-field region_woeid (47) with string value: '2347563' / -1
-field country_woeid (48) with string value: '23424977' / -1
-field usage_candownload (49) with boolean value: '1' / 1
-field usage_canblog (50) with boolean value: '1' / 1
-field usage_canprint (51) with boolean value: '1' / 1
+flickcurl: photo with URI http://www.flickr.com/photos/dajobe/196308964/ ID 196308964 and 5 tags
+    field dateuploaded (1) with dateTime value: '2006-07-23T18:16:13Z' / 1153678573
+    field farm (2) with integer value: '1' / 1
+    field isfavorite (3) with boolean value: '0' / 0
+    field license (4) with integer value: '1' / 1
+    field originalformat (5) with string value: 'jpg' / -1
+    field rotation (6) with integer value: '0' / 0
+    field server (7) with integer value: '57' / 57
+    field dates_lastupdate (8) with dateTime value: '2007-02-25T07:45:46Z' / 1172389546
+    field dates_posted (9) with dateTime value: '2006-07-23T18:16:13Z' / 1153678573
+    field dates_taken (10) with string value: '2006-07-22 22:28:50' / -1
+    field dates_takengranularity (11) with integer value: '0' / 0
+    field editability_canaddmeta (13) with boolean value: '1' / 1
+    field editability_cancomment (14) with boolean value: '1' / 1
+    field geoperms_iscontact (15) with boolean value: '0' / 0
+    field geoperms_isfamily (16) with boolean value: '0' / 0
+    field geoperms_isfriend (17) with boolean value: '0' / 0
+    field geoperms_ispublic (18) with boolean value: '1' / 1
+    field location_accuracy (19) with integer value: '12' / 12
+    field location_latitude (20) with float value: '36.620487' / -1
+    field location_longitude (21) with float value: '-121.904468' / -1
+    field owner_location (22) with string value: 'Mountain View, California, USA' / -1
+    field owner_nsid (23) with string value: '13355580@N00' / -1
+    field owner_realname (24) with string value: 'Dave Beckett' / -1
+    field owner_username (25) with string value: 'dajobe' / -1
+    field title (26) with string value: 'Jellyfish at Monterey Aquarium' / -1
+    field visibility_isfamily (27) with boolean value: '0' / 0
+    field visibility_isfriend (28) with boolean value: '0' / 0
+    field visibility_ispublic (29) with boolean value: '1' / 1
+    field secret (30) with string value: 'b34cb0af68' / -1
+    field originalsecret (31) with string value: 'b34cb0af68' / -1
+    field location_locality (33) with string value: 'Pacific Grove' / -1
+    field location_region (35) with string value: 'California' / -1
+    field location_country (36) with string value: 'United States' / -1
+    field location_placeid (37) with string value: 'J1HdelRTVrx7R.g2' / -1
+    field locality_placeid (39) with string value: 'J1HdelRTVrx7R.g2' / -1
+    field county_placeid (40) with string value: 'fpIAzjpQUL9F5MEpDw' / -1
+    field region_placeid (41) with string value: 'NsbUWfBTUb4mbyVu' / -1
+    field country_placeid (42) with string value: 'nz.gsghTUb4c2WAecA' / -1
+    field location_woeid (43) with string value: '2467327' / -1
+    field locality_woeid (45) with string value: '2467327' / -1
+    field county_woeid (46) with string value: '12587696' / -1
+    field region_woeid (47) with string value: '2347563' / -1
+    field country_woeid (48) with string value: '23424977' / -1
+    field usage_candownload (49) with boolean value: '1' / 1
+    field usage_canblog (50) with boolean value: '1' / 1
+    field usage_canprint (51) with boolean value: '1' / 1
+    field views (56) with integer value: '529' / 529
+tags:
 0) regular tag: id 94493-196308964-3362 author ID 13355580@N00 name (Unknown) raw 'jellyfish' cooked 'jellyfish' count 0
 1) regular tag: id 94493-196308964-119180 author ID 13355580@N00 name (Unknown) raw 'montereyaquarium' cooked 'montereyaquarium' count 0
 2) regular tag: id 94493-196308964-2443 author ID 13355580@N00 name (Unknown) raw 'monterey' cooked 'monterey' count 0
 3) machine tag: id 94493-196308964-8499312 author ID 13355580@N00 name (Unknown) raw 'xmlns:dc=http://purl.org/dc/elements/1.1/' cooked 'xmlns:dc=httppurlorgdcelements11' count 0
 4) machine tag: id 94493-196308964-8499315 author ID 13355580@N00 name (Unknown) raw 'dc:subject=jellyfish' cooked 'dc:subject=jellyfish' count 0
-0) place location: id WM3JEXSbBZqqRtGA woeid 2467327
-2) place locality: name 'Pacific Grove' id WM3JEXSbBZqqRtGA woeid 2467327
-3) place county: name 'Monterey' id AQ4UpRqYA5l0BiyF.A woeid 12587696
-4) place region: name 'California' id SVrAMtCbAphCLAtP woeid 2347563
-5) place country: name 'United States' id 4KO02SibApitvSBieQ woeid 23424977
+notes:
+  Location: latitude 36.620487  longitude -121.904468  accuracy unknown
+  0) place location: name '
+		' id J1HdelRTVrx7R.g2 woeid 2467327
+  2) place locality: name 'Pacific Grove' id J1HdelRTVrx7R.g2 woeid 2467327
+  3) place county: name 'Monterey' id fpIAzjpQUL9F5MEpDw woeid 12587696
+  4) place region: name 'California' id NsbUWfBTUb4mbyVu woeid 2347563
+  5) place country: name 'United States' id nz.gsghTUb4c2WAecA woeid 23424977
 </pre>
 
 
@@ -380,17 +384,18 @@ int main(int argc, char *argv[]) {
   int i;
 
   flickcurl_init(); /* optional static initialising of resources */
-  fc=flickcurl_new();
+  fc = flickcurl_new();
 
   /* Set configuration, or more likely read from a config file */
-  flickcurl_set_api_key(fc, "...");
-  flickcurl_set_shared_secret(fc, "...");
-  flickcurl_set_auth_token(fc, "...");
+  flickcurl_set_oauth_client_key(fc, "...");
+  flickcurl_set_oauth_client_secret(fc, "...");
+  flickcurl_set_oauth_token(fc, "...");
+  flickcurl_set_oauth_token_secret(fc, "...");
 
-  photo=flickcurl_photos_getInfo(fc, "123456789"); /* photo ID */
+  photo = flickcurl_photos_getInfo(fc, "123456789"); /* photo ID */
 
-  for(field_type=0; field_type &lt;= PHOTO_FIELD_LAST; field_type++) {
-    flickcurl_field_value_type datatype=photo-&gt;fields[field_type].type;
+  for(field_type = 0; field_type &lt;= PHOTO_FIELD_LAST; field_type++) {
+    flickcurl_field_value_type datatype = photo-&gt;fields[field_type].type;
     
     if(datatype != VALUE_TYPE_NONE)
       fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
@@ -400,7 +405,7 @@ int main(int argc, char *argv[]) {
               photo-&gt;fields[field_type].integer);
   }
 
-  for(i=0; i &lt; photo-&gt;tags_count; i++) {
+  for(i = 0; i &lt; photo-&gt;tags_count; i++) {
     flickcurl_tag* tag=photo-&gt;tags[i];
     fprintf(stderr,
             "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
@@ -427,7 +432,7 @@ which has code that calls all the API functions.
 
 <hr />
 
-<p>Copyright (C) 2007-2011 <a href="http://www.dajobe.org/">Dave Beckett</a></p>
+<p>Copyright (C) 2007-2013 <a href="http://www.dajobe.org/">Dave Beckett</a></p>
 
 </body>
 </html>
