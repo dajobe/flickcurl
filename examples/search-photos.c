@@ -112,8 +112,8 @@ main(int argc, char *argv[])
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
   if(!access((const char*)config_path, R_OK)) {
-    if(read_ini_config(config_path, config_section, fc,
-                       flickcurl_config_var_handler)) {
+    if(flickcurl_config_read_ini(fc, config_path, config_section,
+                                 fc, flickcurl_config_var_handler)) {
       fprintf(stderr, "%s: Failed to read config filename %s: %s\n",
               program, config_path, strerror(errno));
       rc = 1;
