@@ -1,4 +1,36 @@
+2013-04-08  Dave Beckett <dave@dajobe.org>
+
+	* src/md5.c: Do not destroy MD5 digest
+
 2013-04-07  Dave Beckett <dave@dajobe.org>
+
+	* build/.gitignore: ignore more
+
+	* autogen.sh: autoconf
+
+	* configure.ac: autoconf warnings
+
+	Make AC_RUN_IFELSE assume failure when cross compiling and checking
+	for vsnprintf return; pessimisim will work
+
+	* configure.ac: Modernize LT_INIT call for libtool 2.2+
+
+	* README.html: words
+
+	* docs/flickcurl-oauth.xml: update example tokens
+
+	* LICENSE.html, NEWS.html, README.html, docs/flickcurl-docs.xml:
+	2013
+
+	* examples/print-photo-info.c: Use OAuth
+
+	* docs/flickcurl-sections.txt: 1.24 new functions
+
+	* src/common.c, src/md5.c: memset fixes [gcc 4.8]
+
+	* NEWS.html: 1.24
+
+	* ChangeLog: #changes
 
 	* src/oauth.c:
 	(flickcurl_oauth_free): Free oauth username and user_nsid
