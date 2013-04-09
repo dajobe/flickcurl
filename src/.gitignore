@@ -1,7 +1,9 @@
 *.la
 *.lo
+*.log
 *.o
 *.plist
+*.trs
 *_test
 .deps
 .libs
