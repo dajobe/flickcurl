@@ -2,7 +2,7 @@
 # Copyright (C) 2007-2011 David Beckett http://www.dajobe.org/
 
 AC_PREREQ([2.68])
-AC_INIT([Flickcurl], [1.24], [http://bugs.librdf.org/], [flickcurl])
+AC_INIT([Flickcurl], [1.25], [http://bugs.librdf.org/], [flickcurl])
 AC_CONFIG_SRCDIR([src/flickcurl.h])
 AC_CONFIG_HEADERS([src/config.h])
 AC_CONFIG_AUX_DIR(build)
