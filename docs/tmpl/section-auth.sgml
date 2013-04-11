@@ -248,6 +248,24 @@ Authentication of web service requests
 @secret: 
 
 
+<!-- ##### FUNCTION flickcurl_get_oauth_username ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
+<!-- ##### FUNCTION flickcurl_get_oauth_user_nsid ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_oauth_create_request_token ##### -->
 <para>
 

@@ -526,6 +526,17 @@ Photo.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_photos_getInfo2 ##### -->
+<para>
+
+</para>
+
+@fc: 
+@photo_id: 
+@secret: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_photos_getNotInSet ##### -->
 <para>
 

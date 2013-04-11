@@ -39,6 +39,21 @@ Groups of users.
 @throttle_count: 
 @throttle_mode: 
 @throttle_remaining: 
+@iconfarm: 
+@is_moderator: 
+@is_member: 
+@rules: 
+@pool_count: 
+@topic_count: 
+@photos_ok: 
+@videos_ok: 
+@images_ok: 
+@screens_ok: 
+@art_ok: 
+@safe_ok: 
+@moderate_ok: 
+@restricted_ok: 
+@has_geo: 
 
 <!-- ##### FUNCTION flickcurl_free_group ##### -->
 <para>
