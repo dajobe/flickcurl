@@ -874,16 +874,26 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
     memcpy(od->token_secret, access_token_secret, len + 1);
     od->token_secret_len = len;
 
-    len = strlen(username);
-    od->username = (char*)malloc(len + 1);
-    memcpy(od->username, username, len + 1);
-    od->username_len = len;
+    if(username) {
+      len = strlen(username);
+      od->username = (char*)malloc(len + 1);
+      memcpy(od->username, username, len + 1);
+      od->username_len = len;
+    } else {
+      od->username = NULL;
+      od->username_len = 0;
+    }
 
-    len = strlen(user_nsid);
-    od->user_nsid = (char*)malloc(len + 1);
-    memcpy(od->user_nsid, user_nsid, len + 1);
-    od->user_nsid_len = len;
-
+    if(user_nsid) {
+      len = strlen(user_nsid);
+      od->user_nsid = (char*)malloc(len + 1);
+      memcpy(od->user_nsid, user_nsid, len + 1);
+      od->user_nsid_len = len;
+    } else {
+      od->user_nsid = NULL;
+      od->user_nsid_len = 0;
+    }
+    
     /* Delete temporary request token and secret */
     free(od->request_token);
     od->request_token = NULL;
