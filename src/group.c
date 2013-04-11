@@ -198,7 +198,7 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(!strcmp(chnode_name, "restrictions")) {
         for(attr = chnode->properties; attr; attr = attr->next) {
           const char *attr_name = (const char*)attr->name;
-          char *attr_value = attr->children->content;
+          char *attr_value = (char*)attr->children->content;
           
           if(!strcmp(attr_name, "photos_ok")) {
             g->photos_ok = atoi(attr_value);

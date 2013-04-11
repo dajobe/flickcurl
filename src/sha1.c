@@ -308,14 +308,14 @@ flickcurl_hmac_sha1(const void *data, size_t data_len,
   if(!key || !data)
     return NULL;
         
-  result = malloc(SHA1_DIGEST_LENGTH);
+  result = (unsigned char*)malloc(SHA1_DIGEST_LENGTH);
   if(!result)
     return NULL;
   
   if(key_len > HMAC_SHA1_BLOCKSIZE) {
     /* When key (K) is > blocksize, key := sha1-hash(key) */
     SHA1Init(&key_hash);
-    SHA1Update(&key_hash, key, key_len);
+    SHA1Update(&key_hash, (const unsigned char*)key, key_len);
     SHA1Final(&key_hash);
     
     key = key_hash.digest;
@@ -330,7 +330,7 @@ flickcurl_hmac_sha1(const void *data, size_t data_len,
   /* inner := sha1-hash(ipad // message) */
   SHA1Init(&inner);
   SHA1Update(&inner, kpad, HMAC_SHA1_BLOCKSIZE);
-  SHA1Update(&inner, data, data_len);
+  SHA1Update(&inner, (const unsigned char*)data, data_len);
   SHA1Final(&inner);
 
   memset(kpad, '\0', sizeof(kpad));

@@ -207,7 +207,7 @@ flickcurl_oauth_build_key(flickcurl_oauth_data* od)
   else
     od->key_len += od->token_secret_len;
 
-  od->key = malloc(od->key_len + 1); /* for NUL */
+  od->key = (unsigned char*)malloc(od->key_len + 1); /* for NUL */
   if(!od->key)
     return 1;
   
