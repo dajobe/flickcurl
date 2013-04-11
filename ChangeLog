@@ -1,4 +1,34 @@
+2013-04-10  Dave Beckett <dave@dajobe.org>
+
+	* utils/flickrdf.c: Casts for C++
+
+	* src/favorites-api.c, src/group.c, src/oauth.c, src/sha1.c: Casts
+	for C++
+
+	* src/oauth.c:
+	(flickcurl_oauth_create_access_token): Handle NULL username,
+	user_nsid [clang]
+
+	* src/group.c:
+	(flickcurl_build_groups): Do not lose malloced attr values [clang]
+
+	* configure.ac: Only add libcurl and libxml to .pc if they were
+	configured via pkg-config
+
+2013-04-09  Dave Beckett <dave@dajobe.org>
+
+	* src/.gitignore: Ignore more
+
 2013-04-08  Dave Beckett <dave@dajobe.org>
+
+	* examples/print-photo-info.c: Include flickcurl_config_read_in()
+	example code
+
+	* examples/search-photos.c: Use flickcurl_config_read_ini() to get
+	config
+
+	* examples/search-photos.c: Updated for reading OAuth config using
+	flickcurl_config_var_handler()
 
 	* src/md5.c: Do not destroy MD5 digest
 
