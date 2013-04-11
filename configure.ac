@@ -229,11 +229,12 @@ fi
 LIBS="$LIBS `$XML_CONFIG --libs`"
 CFLAGS="`$XML_CONFIG --cflags` $CFLAGS"
 
-if test "X$PKG_CONFIG_REQUIRES" != X; then
-  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
+if test $libxml_source = "pkg-config"; then
+  if test "X$PKG_CONFIG_REQUIRES" != X; then
+    PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
+  fi
+  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libxml-2.0 >= $LIBXML_MIN_VERSION"
 fi
-PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libxml-2.0 >= $LIBXML_MIN_VERSION"
-
 
 dnl curl - required
 LIBCURL_MIN_VERSION=$libcurl_min_version
@@ -300,11 +301,12 @@ fi
 LIBS="$LIBS `$CURL_CONFIG --libs`"
 CFLAGS="`$CURL_CONFIG --cflags` $CFLAGS"
 
-if test "X$PKG_CONFIG_REQUIRES" != X; then
-  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
+if test $libcurl_source = "pkg-config"; then
+  if test "X$PKG_CONFIG_REQUIRES" != X; then
+    PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES,"
+  fi
+  PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libcurl >= $LIBCURL_MIN_VERSION"
 fi
-PKG_CONFIG_REQUIRES="$PKG_CONFIG_REQUIRES libcurl >= $LIBCURL_MIN_VERSION"
-
 
 
 dnl raptor - optional
