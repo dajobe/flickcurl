@@ -197,39 +197,27 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
       if(!strcmp(chnode_name, "restrictions")) {
         for(attr = chnode->properties; attr; attr = attr->next) {
-          size_t attr_len = strlen((const char*)attr->children->content);
           const char *attr_name = (const char*)attr->name;
-          char *attr_value;
+          char *attr_value = attr->children->content;
           
-          attr_value = (char*)malloc(attr_len + 1);
-          memcpy(attr_value, attr->children->content, attr_len + 1);
           if(!strcmp(attr_name, "photos_ok")) {
             g->photos_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "videos_ok")) {
             g->videos_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "images_ok")) {
             g->images_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "screens_ok")) {
             g->screens_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "art_ok")) {
             g->art_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "safe_ok")) {
             g->safe_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "moderate_ok")) {
             g->moderate_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "restricted_ok")) {
             g->restricted_ok = atoi(attr_value);
-            free(attr_value);
           } else if(!strcmp(attr_name, "has_geo")) {
             g->has_geo = atoi(attr_value);
-            free(attr_value);
           }
         }
       }
