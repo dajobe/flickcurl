@@ -1,4 +1,7 @@
-2013-04-10  Dave Beckett <dave@dajobe.org>
+2013-04-10  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_24 for 1.24 release (GIT
+	874b9f7033ac681925a2f9f260c4d5af510e55d2)
 
 	* utils/flickrdf.c: Casts for C++
 
