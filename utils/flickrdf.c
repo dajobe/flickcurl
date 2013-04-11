@@ -163,7 +163,7 @@ ser_emit_triple(void* user_data,
   raptor_free_uri(predicate_ns_uri);
 
   if(object_type == FLICKCURL_TERM_TYPE_RESOURCE)
-    s.object = (void*)raptor_new_term_from_uri_string(rworld, (const unsigned char*)object);
+    s.object = raptor_new_term_from_uri_string(rworld, (const unsigned char*)object);
   else if(object_type == FLICKCURL_TERM_TYPE_BLANK)
     s.object = raptor_new_term_from_blank(rworld, (const unsigned char*)subject);
   else {
