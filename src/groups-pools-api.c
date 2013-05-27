@@ -74,8 +74,6 @@ flickcurl_groups_pools_add(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.groups.pools.add"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -340,8 +338,6 @@ flickcurl_groups_pools_remove(flickcurl* fc, const char* photo_id,
 
   if(flickcurl_prepare(fc, "flickr.groups.pools.remove"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)

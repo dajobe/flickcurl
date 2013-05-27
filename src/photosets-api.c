@@ -74,8 +74,6 @@ flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.addPhoto"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -129,8 +127,6 @@ flickcurl_photosets_create(flickcurl* fc, const char* title,
 
   if(flickcurl_prepare(fc, "flickr.photosets.create"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
@@ -189,8 +185,6 @@ flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id)
   if(flickcurl_prepare(fc, "flickr.photosets.delete"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -236,8 +230,6 @@ flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id,
 
   if(flickcurl_prepare(fc, "flickr.photosets.editMeta"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
@@ -291,8 +283,6 @@ flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id,
 
   if(flickcurl_prepare(fc, "flickr.photosets.editPhotos"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
@@ -656,8 +646,6 @@ flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.removePhoto"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -705,8 +693,6 @@ flickcurl_photosets_removePhotos(flickcurl* fc, const char* photoset_id,
 
   if(flickcurl_prepare(fc, "flickr.photosets.removePhotos"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
@@ -807,8 +793,6 @@ flickcurl_photosets_setPrimaryPhoto(flickcurl* fc, const char* photoset_id,
 
   if(flickcurl_prepare(fc, "flickr.photosets.setPrimaryPhoto"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)

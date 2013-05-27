@@ -239,8 +239,6 @@ flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.licenses.setLicense"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;

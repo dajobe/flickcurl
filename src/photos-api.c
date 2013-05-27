@@ -73,8 +73,6 @@ flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags)
   if(flickcurl_prepare(fc, "flickr.photos.addTags"))
     goto tidy;
   
-  flickcurl_set_data(fc, (void*)"", 0);
-    
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -114,8 +112,6 @@ flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.delete"))
     goto tidy;
   
-  flickcurl_set_data(fc, (void*)"", 0);
-    
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -1612,8 +1608,6 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
   if(flickcurl_prepare(fc, "flickr.photos.removeTag"))
     goto tidy;
   
-  flickcurl_set_data(fc, (void*)"", 0);
-    
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -1906,8 +1900,6 @@ flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setContentType"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -1981,8 +1973,6 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setDates"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -2045,8 +2035,6 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
 
   if(flickcurl_prepare(fc, "flickr.photos.setMeta"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
@@ -2126,8 +2114,6 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setPerms"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -2199,8 +2185,6 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setSafetyLevel"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -2259,8 +2243,6 @@ flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags)
   if(flickcurl_prepare(fc, "flickr.photos.setTags"))
     goto tidy;
   
-  flickcurl_set_data(fc, (void*)"", 0);
-    
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;

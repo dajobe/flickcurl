@@ -785,6 +785,8 @@ flickcurl_init_params(flickcurl *fc, int is_write)
     fc->data_length = 0;
     fc->data_is_xml = 0;
   }
+  if(is_write)
+    flickcurl_set_data(fc, (void*)"", 0);
 }
 
 

@@ -101,8 +101,6 @@ flickcurl_photos_people_add(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.people.add"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -162,8 +160,6 @@ flickcurl_photos_people_delete(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.people.delete"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -222,8 +218,6 @@ flickcurl_photos_people_deleteCoords(flickcurl* fc, const char* photo_id,
 
   if(flickcurl_prepare(fc, "flickr.photos.people.deleteCoords"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
@@ -303,8 +297,6 @@ flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
 
   if(flickcurl_prepare(fc, "flickr.photos.people.editCoords"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)

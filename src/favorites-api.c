@@ -71,8 +71,6 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.favorites.add"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -440,8 +438,6 @@ flickcurl_favorites_remove(flickcurl* fc, const char* photo_id)
 
   if(flickcurl_prepare(fc, "flickr.favorites.remove"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)

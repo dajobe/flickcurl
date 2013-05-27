@@ -75,8 +75,6 @@ flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.comments.addComment"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -130,8 +128,6 @@ flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id)
   if(flickcurl_prepare(fc, "flickr.photos.comments.deleteComment"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -177,8 +173,6 @@ flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
 
   if(flickcurl_prepare(fc, "flickr.photos.comments.editComment"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)

@@ -87,8 +87,6 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   if(flickcurl_prepare(fc, "flickr.contacts.getList"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -230,8 +228,6 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
 
   if(flickcurl_prepare(fc, "flickr.contacts.getPublicList"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)

@@ -109,8 +109,6 @@ flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.photos.geo.batchCorrectLocation"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -444,8 +442,6 @@ flickcurl_photos_geo_removeLocation(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.geo.removeLocation"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -493,8 +489,6 @@ flickcurl_photos_geo_setContext(flickcurl* fc, const char* photo_id,
 
   if(flickcurl_prepare(fc, "flickr.photos.geo.setContext"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
@@ -576,8 +570,6 @@ flickcurl_photos_geo_setLocation(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.geo.setLocation"))
     goto tidy;
 
-  flickcurl_set_data(fc, (void*)"", 0);
-
   doc = flickcurl_invoke(fc);
   if(!doc)
     goto tidy;
@@ -634,8 +626,6 @@ flickcurl_photos_geo_setPerms(flickcurl* fc, const char* photo_id,
 
   if(flickcurl_prepare(fc, "flickr.photos.geo.setPerms"))
     goto tidy;
-
-  flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
   if(!doc)
