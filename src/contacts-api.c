@@ -68,7 +68,7 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   char page_str[10];
   char per_page_str[10];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(filter) {
     flickcurl_add_param(fc, "filter", filter);
@@ -87,7 +87,6 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   if(flickcurl_prepare(fc, "flickr.contacts.getList"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -145,7 +144,7 @@ flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
   int contacts_count = 0;
   char date_lastupload_str[20];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(date_lastupload >= 0) {
     sprintf(date_lastupload_str, "%d", date_lastupload);
@@ -211,7 +210,7 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
   char page_str[10];
   char per_page_str[10];
  
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if (!user_id)
     return NULL;
@@ -232,7 +231,6 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
   if(flickcurl_prepare(fc, "flickr.contacts.getPublicList"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);

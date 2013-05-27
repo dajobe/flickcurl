@@ -71,7 +71,7 @@ flickcurl_photos_people_add(flickcurl* fc, const char* photo_id,
   char person_w_str[10];
   char person_h_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !user_id)
     return 1;
@@ -101,7 +101,6 @@ flickcurl_photos_people_add(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.people.add"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -150,7 +149,7 @@ flickcurl_photos_people_delete(flickcurl* fc, const char* photo_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !user_id)
     return 1;
@@ -163,7 +162,6 @@ flickcurl_photos_people_delete(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.people.delete"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -212,7 +210,7 @@ flickcurl_photos_people_deleteCoords(flickcurl* fc, const char* photo_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !user_id)
     return 1;
@@ -225,7 +223,6 @@ flickcurl_photos_people_deleteCoords(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.people.deleteCoords"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -284,7 +281,7 @@ flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
   char person_w_str[10];
   char person_h_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !user_id || 
      person_x < 0  || person_y < 0 || person_w <0 || person_h < 0)
@@ -307,7 +304,6 @@ flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.people.editCoords"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -354,7 +350,7 @@ flickcurl_photos_people_getList(flickcurl* fc, const char* photo_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_person** people = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id)
     return NULL;

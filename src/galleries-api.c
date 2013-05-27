@@ -59,7 +59,7 @@ flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!gallery_id || !photo_id)
     return 1;
@@ -75,7 +75,6 @@ flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id,
   if(flickcurl_prepare(fc, "flickr.galleries.addPhoto"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -131,7 +130,7 @@ flickcurl_galleries_create(flickcurl* fc,
   xmlXPathContextPtr xpathCtx = NULL; 
   char* gallery_id = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!title || !description)
     return NULL;
@@ -147,7 +146,6 @@ flickcurl_galleries_create(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.galleries.create"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -203,7 +201,7 @@ flickcurl_galleries_editMeta(flickcurl* fc,
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!gallery_id || !title)
     return 1;
@@ -219,7 +217,6 @@ flickcurl_galleries_editMeta(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.galleries.editMeta"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -259,7 +256,7 @@ flickcurl_galleries_editPhoto(flickcurl* fc, const char* gallery_id,
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!gallery_id || !photo_id || !new_comment)
     return 1;
@@ -273,7 +270,6 @@ flickcurl_galleries_editPhoto(flickcurl* fc, const char* gallery_id,
   if(flickcurl_prepare(fc, "flickr.galleries.editPhoto"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -315,7 +311,7 @@ flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id,
   int result = 1;
   char* photo_ids = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!gallery_id || !primary_photo_id || !photo_ids_array)
     return 1;
@@ -330,7 +326,6 @@ flickcurl_galleries_editPhotos(flickcurl* fc, const char* gallery_id,
   if(flickcurl_prepare(fc, "flickr.galleries.editPhotos"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -373,7 +368,7 @@ flickcurl_galleries_getInfo(flickcurl* fc, const char* gallery_id)
   flickcurl_gallery* gallery = NULL;
   flickcurl_gallery** galleries = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!gallery_id)
     return NULL;
@@ -442,7 +437,7 @@ flickcurl_galleries_getList(flickcurl* fc, const char* user_id,
   char page_str[10];
   char per_page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!user_id)
     return NULL;
@@ -515,7 +510,7 @@ flickcurl_galleries_getListForPhoto(flickcurl* fc, const char* photo_id,
   char page_str[10];
   char per_page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id)
     return NULL;
@@ -584,7 +579,7 @@ flickcurl_galleries_getPhotos_params(flickcurl* fc, const char* gallery_id,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!gallery_id)
     return NULL;

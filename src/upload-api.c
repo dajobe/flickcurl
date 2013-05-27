@@ -67,7 +67,7 @@ flickcurl_photos_upload_params(flickcurl* fc, flickcurl_upload_params* params)
   char content_type_s[2];
   char hidden_s[2];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!params->photo_file)
     return NULL;
@@ -238,7 +238,7 @@ flickcurl_photos_replace(flickcurl* fc, const char* photo_file,
   flickcurl_upload_status* status = NULL;
   char async_s[2];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_file || !photo_id)
     return NULL;

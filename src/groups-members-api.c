@@ -74,7 +74,7 @@ flickcurl_groups_members_getList(flickcurl* fc, const char* group_id,
   char per_page_s[10];
   char page_s[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!group_id)
     return NULL;

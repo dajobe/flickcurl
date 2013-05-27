@@ -61,7 +61,7 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
   flickcurl_category* category = NULL;
   char cat_id_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(cat_id >= 0) {
     sprintf(cat_id_str, "%d", cat_id);
@@ -122,7 +122,7 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
   flickcurl_group **groups = NULL;
   flickcurl_group *group = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!group_id)
     return NULL;
@@ -191,7 +191,7 @@ flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
   char per_page_s[10];
   char page_s[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!text)
     return NULL;

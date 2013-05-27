@@ -68,7 +68,7 @@ flickcurl_read_licenses(flickcurl *fc)
   int i;
   int size;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -225,7 +225,7 @@ flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id,
   int result = 1;
   char license_id_s[5];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id)
     return 1;
@@ -239,7 +239,6 @@ flickcurl_photos_licenses_setLicense(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.licenses.setLicense"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);

@@ -62,7 +62,7 @@ flickcurl_test_echo(flickcurl* fc, const char* key, const char* value)
   xmlDocPtr doc = NULL;
   int rc = 0;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, key, value);
 
@@ -105,7 +105,7 @@ flickcurl_test_login(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   char* username = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -154,7 +154,7 @@ flickcurl_test_null(flickcurl* fc)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 

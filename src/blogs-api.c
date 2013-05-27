@@ -59,7 +59,7 @@ flickcurl_blogs_getList(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_blog** blogs = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -106,7 +106,7 @@ flickcurl_blogs_getServices(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_blog_service **services = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -162,7 +162,7 @@ flickcurl_blogs_postPhoto(flickcurl* fc, const char* blog_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!blog_id || !photo_id || !title || !description)
     return 1;

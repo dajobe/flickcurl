@@ -66,7 +66,7 @@ flickcurl_tags_getClusterPhotos(flickcurl* fc, const char* tag,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!tag || !cluster_id)
     return NULL;
@@ -119,7 +119,7 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag_clusters* clusters = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!tag)
     return NULL;
@@ -179,7 +179,7 @@ flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
   flickcurl_tag** tags = NULL;
   char tag_count_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(period) {
     if(!strcmp(period, "day") || !strcmp(period, "week")) {
@@ -243,7 +243,7 @@ flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "photo_id", photo_id);
 
@@ -299,7 +299,7 @@ flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(user_id) {
     flickcurl_add_param(fc, "user_id", user_id);
@@ -358,7 +358,7 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(user_id) {
     flickcurl_add_param(fc, "user_id", user_id);
@@ -418,7 +418,7 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(tag) {
     flickcurl_add_param(fc, "tag", tag);
@@ -474,7 +474,7 @@ flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_tag** tags = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!tag)
     return NULL;

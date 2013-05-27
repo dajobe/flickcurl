@@ -62,7 +62,7 @@ flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   char* id = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !comment_text)
     return NULL;
@@ -75,7 +75,6 @@ flickcurl_photos_comments_addComment(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.comments.addComment"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -119,7 +118,7 @@ flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id)
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!comment_id)
     return 1;
@@ -131,7 +130,6 @@ flickcurl_photos_comments_deleteComment(flickcurl* fc, const char* comment_id)
   if(flickcurl_prepare(fc, "flickr.photos.comments.deleteComment"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -167,7 +165,7 @@ flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!comment_id || !comment_text)
     return 1;
@@ -180,7 +178,6 @@ flickcurl_photos_comments_editComment(flickcurl* fc, const char* comment_id,
   if(flickcurl_prepare(fc, "flickr.photos.comments.editComment"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -216,7 +213,7 @@ flickcurl_photos_comments_getList(flickcurl* fc, const char* photo_id)
   flickcurl_comment** comments = NULL;
   int comments_count = 0;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id)
     return NULL;
@@ -279,7 +276,7 @@ flickcurl_photos_comments_getRecentForContacts_params(flickcurl* fc,
   const char* format = NULL;
   char date_lastcomment_str[20];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* API parameters */
   if(date_lastcomment >= 0) {

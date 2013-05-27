@@ -66,7 +66,7 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
   char page_s[4];
   flickcurl_tag_namespace** tag_namespaces = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "predicate", predicate);
   sprintf(per_page_s, "%d", per_page);
@@ -136,7 +136,7 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "namespace", nspace);
   flickcurl_add_param(fc, "predicate", predicate);
@@ -206,7 +206,7 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "namespace", nspace);
   sprintf(per_page_s, "%d", per_page);
@@ -277,7 +277,7 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
   char page_s[4];
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!nspace || !predicate)
     return NULL;
@@ -346,7 +346,7 @@ flickcurl_machinetags_getRecentValues(flickcurl* fc,
   flickcurl_tag_predicate_value** tag_pvs = NULL;
   char added_since_s[20];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(nspace) {
     flickcurl_add_param(fc, "namespace", nspace);

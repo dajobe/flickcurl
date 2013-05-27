@@ -74,7 +74,7 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
   char note_w_s[10];
   char note_h_s[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !note_text)
     return NULL;
@@ -95,7 +95,6 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.notes.add"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -140,7 +139,7 @@ flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id)
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!note_id)
     return 1;
@@ -152,7 +151,6 @@ flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id)
   if(flickcurl_prepare(fc, "flickr.photos.notes.delete"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -199,7 +197,7 @@ flickcurl_photos_notes_edit(flickcurl* fc,
   char note_w_s[10];
   char note_h_s[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!note_id || !note_text)
     return 1;
@@ -220,7 +218,6 @@ flickcurl_photos_notes_edit(flickcurl* fc,
   if(flickcurl_prepare(fc, "flickr.photos.notes.edit"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);

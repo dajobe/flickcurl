@@ -59,7 +59,7 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id)
     return 1;
@@ -71,7 +71,6 @@ flickcurl_favorites_add(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.favorites.add"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -123,7 +122,7 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
   char num_next_str[10];
   int i;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id || !user_id)
     return NULL;
@@ -245,7 +244,7 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
    
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* API parameters */
   if(user_id) {
@@ -337,7 +336,7 @@ flickcurl_favorites_getPublicList_params(flickcurl* fc, const char* user_id,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!user_id)
     return NULL;
@@ -430,7 +429,7 @@ flickcurl_favorites_remove(flickcurl* fc, const char* photo_id)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id)
     return 1;
@@ -442,7 +441,6 @@ flickcurl_favorites_remove(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.favorites.remove"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);

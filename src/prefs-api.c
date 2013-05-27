@@ -56,7 +56,7 @@ flickcurl_prefs_getContentType(flickcurl* fc)
   char* content_type_str = NULL;
   int content_type= -1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -142,7 +142,7 @@ flickcurl_prefs_getHidden(flickcurl* fc)
   char* hidden_str = NULL;
   int hidden= -1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -200,7 +200,7 @@ flickcurl_prefs_getPrivacy(flickcurl* fc)
   char* privacy_level_str= NULL;
   int privacy_level= -1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -256,7 +256,7 @@ flickcurl_prefs_getSafetyLevel(flickcurl* fc)
   char* safety_level_str= NULL;
   int safety_level= -1;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 

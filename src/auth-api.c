@@ -63,7 +63,7 @@ flickcurl_auth_checkToken(flickcurl* fc, const char* token)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!token)
     return NULL;
@@ -112,7 +112,7 @@ flickcurl_auth_getFrob(flickcurl* fc)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -156,7 +156,7 @@ flickcurl_auth_getFullToken(flickcurl* fc, const char* frob)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "mini_token", (char*)frob);
 
@@ -203,7 +203,7 @@ flickcurl_auth_getToken(flickcurl* fc, const char* frob)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "frob", (char*)frob);
 
@@ -256,7 +256,7 @@ flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   int rc = 0;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 

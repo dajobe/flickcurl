@@ -71,7 +71,7 @@ flickcurl_places_find(flickcurl* fc, const char* query)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place** places = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!query)
     return NULL;
@@ -140,7 +140,7 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
   char lon_str[20];
   char accuracy_str[4];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(accuracy < 0 || accuracy > 16)
     accuracy = 16;
@@ -233,7 +233,7 @@ flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
   flickcurl_place** places = NULL;
   char woe_id_str[10];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(place_id) {
     flickcurl_add_param(fc, "place_id", place_id);
@@ -328,7 +328,7 @@ flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
   flickcurl_place* place = NULL;
   char woe_id_str[10];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(place_id) {
     flickcurl_add_param(fc, "place_id", place_id);
@@ -391,7 +391,7 @@ flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!url)
     return NULL;
@@ -445,7 +445,7 @@ flickcurl_places_getPlaceTypes(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place_type_info** place_types = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -509,7 +509,7 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
   flickcurl_shapedata** shapes = NULL;
   char woe_id_str[20];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!place_id && woe_id < 0)
     return NULL;
@@ -581,7 +581,7 @@ flickcurl_places_getTopPlacesList(flickcurl* fc,
   int place_type_id;
   char place_type_id_str[3];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
@@ -667,7 +667,7 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
   int place_type_id = -1;
   char bbox[255];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
@@ -760,7 +760,7 @@ flickcurl_places_placesForContacts(flickcurl* fc,
   char woe_id_str[10];
   char threshold_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!woe_id && !place_id)
     return NULL;
@@ -891,7 +891,7 @@ flickcurl_places_placesForTags(flickcurl* fc,
   int place_type_id;
   char woe_id_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   place_type_id = flickcurl_place_type_to_id(place_type);
   if(place_type_id < 0)
@@ -960,7 +960,7 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!place_id)
     return NULL;
@@ -1016,7 +1016,7 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_place* place = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!url)
     return NULL;
@@ -1083,7 +1083,7 @@ flickcurl_places_placesForUser(flickcurl* fc,
   char woe_id_str[20];
   char threshold_str[4];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   place_type_str = flickcurl_get_place_type_label(place_type);
   if(!place_type_str) {
@@ -1202,7 +1202,7 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
   char max_taken_date_str[20];
   flickcurl_tag** tags = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(woe_id < 0 && !place_id)
     return NULL;

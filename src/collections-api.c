@@ -57,7 +57,7 @@ flickcurl_collections_getInfo(flickcurl* fc, const char* collection_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_collection* collection = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!collection_id)
     return NULL;
@@ -115,7 +115,7 @@ flickcurl_collections_getTree(flickcurl* fc, const char* collection_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_collection* collection  =  NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(collection_id) {
     flickcurl_add_param(fc, "collection_id", collection_id);

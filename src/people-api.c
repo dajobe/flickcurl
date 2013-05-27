@@ -103,7 +103,7 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_person* person = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "user_id", user_id);
 
@@ -153,7 +153,7 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_group** groups = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!user_id)
     return NULL;
@@ -215,7 +215,7 @@ flickcurl_people_getPublicPhotos_params(flickcurl* fc, const char* user_id,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!user_id)
     return NULL;
@@ -307,7 +307,7 @@ flickcurl_people_getUploadStatus(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_user_upload_status* status = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -377,7 +377,7 @@ flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id,
   char content_type_s[4];
   char privacy_filter_s[4];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!user_id)
     return NULL;
@@ -518,7 +518,7 @@ flickcurl_people_getPhotosOf_params(flickcurl* fc, const char* user_id,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!user_id)
     return photos_list;

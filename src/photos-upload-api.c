@@ -62,7 +62,7 @@ flickcurl_photos_upload_checkTickets(flickcurl* fc,
   flickcurl_ticket** tickets = NULL;
   char* tickets_ids_string = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!tickets_ids)
     return NULL;

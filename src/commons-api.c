@@ -62,7 +62,7 @@ flickcurl_commons_getInstitutions(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_institution** institutions = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 

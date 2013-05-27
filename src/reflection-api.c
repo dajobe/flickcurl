@@ -65,7 +65,7 @@ flickcurl_reflection_getMethods(flickcurl* fc)
   char **methods = NULL;
   int count;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -150,7 +150,7 @@ flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_method* method = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "method_name", name);
 

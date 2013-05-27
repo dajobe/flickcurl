@@ -312,16 +312,6 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     free(fc->error_msg);
     fc->error_msg = NULL;
   }
-  /* Default to read */
-  fc->is_write = 0;
-  /* Default to no data */
-  if(fc->data) {
-    if(fc->data_is_xml)
-      xmlFree(fc->data);
-    fc->data = NULL;
-    fc->data_length = 0;
-    fc->data_is_xml = 0;
-  }
   if(fc->param_fields) {
     for(i = 0; fc->param_fields[i]; i++) {
       free(fc->param_fields[i]);

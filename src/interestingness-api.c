@@ -62,7 +62,7 @@ flickcurl_interestingness_getList_params(flickcurl* fc, const char* date,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* API parameters */
   if(date) {

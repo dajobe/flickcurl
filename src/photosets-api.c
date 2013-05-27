@@ -61,7 +61,7 @@ flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id,
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photoset_id || !photo_id)
     return 1;
@@ -74,7 +74,6 @@ flickcurl_photosets_addPhoto(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.addPhoto"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -115,7 +114,7 @@ flickcurl_photosets_create(flickcurl* fc, const char* title,
   xmlXPathContextPtr xpathCtx = NULL; 
   char* photoset_id = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!title || !primary_photo_id)
     return NULL;
@@ -131,7 +130,6 @@ flickcurl_photosets_create(flickcurl* fc, const char* title,
   if(flickcurl_prepare(fc, "flickr.photosets.create"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -179,7 +177,7 @@ flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id)
 {
   xmlDocPtr doc = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photoset_id)
     return 1;
@@ -191,7 +189,6 @@ flickcurl_photosets_delete(flickcurl* fc, const char* photoset_id)
   if(flickcurl_prepare(fc, "flickr.photosets.delete"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -224,7 +221,7 @@ flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id,
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photoset_id || !title)
     return 1;
@@ -240,7 +237,6 @@ flickcurl_photosets_editMeta(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.editMeta"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -281,7 +277,7 @@ flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id,
   int result = 1;
   char* photo_ids = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photoset_id || !primary_photo_id || !photo_ids_array)
     return 1;
@@ -296,7 +292,6 @@ flickcurl_photosets_editPhotos(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.editPhotos"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -335,7 +330,7 @@ flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc = NULL;
   flickcurl_context** contexts = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id || !photoset_id)
     return NULL;
@@ -381,7 +376,7 @@ flickcurl_photosets_getInfo(flickcurl* fc, const char* photoset_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_photoset* photoset = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photoset_id)
     return NULL;
@@ -436,7 +431,7 @@ flickcurl_photosets_getList(flickcurl* fc, const char* user_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_photoset** photoset_list = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(user_id) {
     flickcurl_add_param(fc, "user_id", user_id);
@@ -500,7 +495,7 @@ flickcurl_photosets_getPhotos_params(flickcurl* fc, const char* photoset_id,
   char privacy_filter_str[2];
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photoset_id)
     return NULL;
@@ -600,7 +595,7 @@ flickcurl_photosets_orderSets(flickcurl* fc, const char** photoset_ids_array)
   int result = 1;
   char* photoset_ids;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photoset_ids_array)
     return 1;
@@ -648,7 +643,7 @@ flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id,
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photoset_id || !photo_id)
     return 1;
@@ -661,7 +656,6 @@ flickcurl_photosets_removePhoto(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.removePhoto"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -698,7 +692,7 @@ flickcurl_photosets_removePhotos(flickcurl* fc, const char* photoset_id,
   int result = 1;
   char* photo_ids = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photoset_id || !photo_ids_array)
     return 1;
@@ -712,7 +706,6 @@ flickcurl_photosets_removePhotos(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.removePhotos"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -752,7 +745,7 @@ flickcurl_photosets_reorderPhotos(flickcurl* fc, const char* photoset_id,
   int result = 1;
   char* photo_ids = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photoset_id || !photo_ids_array)
     return 1;
@@ -802,7 +795,7 @@ flickcurl_photosets_setPrimaryPhoto(flickcurl* fc, const char* photoset_id,
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photoset_id || !photo_id)
     return 1;
@@ -815,7 +808,6 @@ flickcurl_photosets_setPrimaryPhoto(flickcurl* fc, const char* photoset_id,
   if(flickcurl_prepare(fc, "flickr.photosets.setPrimaryPhoto"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);

@@ -62,7 +62,7 @@ flickcurl_photos_transform_rotate(flickcurl* fc, const char* photo_id,
   char degrees_str[4];
   int result = 0;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id || !(degrees == 90 || degrees == 180 || degrees == 270))
     return 1;

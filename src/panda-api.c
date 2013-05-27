@@ -126,7 +126,7 @@ flickcurl_panda_getList(flickcurl* fc)
   xmlXPathContextPtr xpathCtx = NULL; 
   char **pandas = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_end_params(fc);
 
@@ -193,7 +193,7 @@ flickcurl_panda_getPhotos(flickcurl *fc, const char *panda_name)
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!panda_name)
     return NULL;

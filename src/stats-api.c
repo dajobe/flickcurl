@@ -92,7 +92,7 @@ flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date)
     return NULL;
@@ -175,7 +175,7 @@ flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date || !domain)
     return NULL;
@@ -252,7 +252,7 @@ flickcurl_stats_getCollectionStats(flickcurl* fc, const char* date,
   char* count_str;
   int count = -1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date || !collection_id)
     return -1;
@@ -326,7 +326,7 @@ flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date)
     return NULL;
@@ -408,7 +408,7 @@ flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date || !domain)
     return NULL;
@@ -490,7 +490,7 @@ flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date)
     return NULL;
@@ -573,7 +573,7 @@ flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date || !domain)
     return NULL;
@@ -651,7 +651,7 @@ flickcurl_stats_getPhotosetStats(flickcurl* fc, const char* date,
   char* count_str;
   int count = -1;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date || !photoset_id)
     return -1;
@@ -722,7 +722,7 @@ flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date,
   flickcurl_stat** stats = NULL;
   flickcurl_stat* stat1 = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date || !photo_id)
     return NULL;
@@ -797,7 +797,7 @@ flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date)
     return NULL;
@@ -875,7 +875,7 @@ flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
   char per_page_str[10];
   char page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date || !domain)
     return NULL;
@@ -948,7 +948,7 @@ flickcurl_stats_getPhotostreamStats(flickcurl* fc, const char* date)
   char* count_str;
   int count = -1;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!date)
     return -1;
@@ -1023,7 +1023,7 @@ flickcurl_stats_getPopularPhotos(flickcurl* fc, const char* date,
   flickcurl_photos_list* photos_list = NULL;
   flickcurl_photo** photos = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   memset(&list_params, '\0', sizeof(list_params));
   list_params.format   = NULL;
@@ -1095,7 +1095,7 @@ flickcurl_stats_getTotalViews(flickcurl* fc, const char* date)
   flickcurl_view_stats* views = NULL;
   char* count_str;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(date) {
     flickcurl_add_param(fc, "date", date);

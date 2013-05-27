@@ -155,7 +155,7 @@ char* flickcurl_call_get_one_string_field(flickcurl* fc, const char* key, const 
 
 int flickcurl_append_photos_list_params(flickcurl* fc, flickcurl_photos_list_params* list_params, const char** format_p);
 
-void flickcurl_init_params(flickcurl *fc);
+void flickcurl_init_params(flickcurl *fc, int is_write);
 void flickcurl_add_param(flickcurl *fc, const char* key, const char* value);
 void flickcurl_end_params(flickcurl *fc);
 

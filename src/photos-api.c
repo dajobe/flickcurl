@@ -59,7 +59,7 @@ flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags)
 {
   xmlDocPtr doc = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !tags)
     return 1;
@@ -73,7 +73,6 @@ flickcurl_photos_addTags(flickcurl* fc, const char* photo_id, const char* tags)
   if(flickcurl_prepare(fc, "flickr.photos.addTags"))
     goto tidy;
   
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
   doc = flickcurl_invoke(fc);
@@ -103,7 +102,7 @@ flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
   xmlDocPtr doc = NULL;
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id)
     return 1;
@@ -115,7 +114,6 @@ flickcurl_photos_delete(flickcurl* fc, const char* photo_id)
   if(flickcurl_prepare(fc, "flickr.photos.delete"))
     goto tidy;
   
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
   doc = flickcurl_invoke(fc);
@@ -152,7 +150,7 @@ flickcurl_photos_getAllContexts(flickcurl* fc, const char* photo_id)
   xmlDocPtr doc = NULL;
   flickcurl_context** contexts = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "photo_id", photo_id);
 
@@ -204,7 +202,7 @@ flickcurl_photos_getContactsPhotos_params(flickcurl* fc,
   char true_s[2] = "1";
   const char* format = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* API parameters */
   if(contact_count > 1) {
@@ -330,7 +328,7 @@ flickcurl_photos_getContactsPublicPhotos_params(flickcurl* fc,
   char photo_count_s[10];
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!user_id)
     return NULL;
@@ -445,7 +443,7 @@ flickcurl_photos_getContext(flickcurl* fc, const char* photo_id)
   xmlDocPtr doc = NULL;
   flickcurl_context** contexts = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "photo_id", photo_id);
 
@@ -578,7 +576,7 @@ flickcurl_photos_getCounts(flickcurl* fc,
   char* dates = NULL;
   char* taken_dates = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* one must be not empty */
   if(!dates_array && !taken_dates_array)
@@ -657,7 +655,7 @@ flickcurl_photos_getExif(flickcurl* fc, const char* photo_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_exif** exifs = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id)
     return NULL;
@@ -721,7 +719,7 @@ flickcurl_photos_getFavorites(flickcurl* fc, const char* photo_id,
   char per_page_s[4];
   char page_s[4];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id)
     return NULL;
@@ -783,7 +781,7 @@ flickcurl_photos_getInfo2(flickcurl* fc, const char* photo_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_photo* photo = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   flickcurl_add_param(fc, "photo_id", photo_id);
 
@@ -854,7 +852,7 @@ flickcurl_get_photoslist_params(flickcurl* fc,
   char privacy_filter_s[20];
   const char* format = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* API parameters */
   if(min_upload_date > 0) {
@@ -1007,7 +1005,7 @@ flickcurl_photos_getPerms(flickcurl* fc, const char* photo_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_perms* perms = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id)
     return NULL;
@@ -1067,7 +1065,7 @@ flickcurl_photos_getRecent_params(flickcurl* fc,
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* No API parameters */
 
@@ -1154,7 +1152,7 @@ flickcurl_photos_getSizes(flickcurl* fc, const char* photo_id)
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_size** sizes = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(!photo_id)
     return NULL;
@@ -1505,7 +1503,7 @@ flickcurl_photos_recentlyUpdated_params(flickcurl* fc, int min_date,
   char min_date_s[20];
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(min_date <= 0)
     return NULL;
@@ -1602,7 +1600,7 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
 {
   xmlDocPtr doc = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!tag_id)
     return 1;
@@ -1614,7 +1612,6 @@ flickcurl_photos_removeTag(flickcurl* fc, const char* tag_id)
   if(flickcurl_prepare(fc, "flickr.photos.removeTag"))
     goto tidy;
   
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
   doc = flickcurl_invoke(fc);
@@ -1700,7 +1697,7 @@ flickcurl_photos_search_params(flickcurl* fc,
   char geo_context_s[2];
   const char* format = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN_VALUE(params, flickcurl_search_params, NULL);
   
@@ -1892,7 +1889,7 @@ flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id,
   int result = 1;
   char content_type_str[2];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !content_type)
     return 1;
@@ -1909,7 +1906,6 @@ flickcurl_photos_setContentType(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setContentType"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -1952,7 +1948,7 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
   char* date_taken_str = NULL;
   char date_taken_granularity_str[3];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id)
     return 1;
@@ -1985,7 +1981,6 @@ flickcurl_photos_setDates(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setDates"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -2037,7 +2032,7 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   int result = 1;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !title || !description)
     return 1;
@@ -2051,7 +2046,6 @@ flickcurl_photos_setMeta(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setMeta"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -2104,7 +2098,7 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
   char perm_comment_str[2];
   char perm_addmeta_str[2];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !perms)
     return 1;
@@ -2132,7 +2126,6 @@ flickcurl_photos_setPerms(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setPerms"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -2183,7 +2176,7 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
   char safety_level_str[2];
   char hidden_str[2];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id)
     return 1;
@@ -2206,7 +2199,6 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
   if(flickcurl_prepare(fc, "flickr.photos.setSafetyLevel"))
     goto tidy;
 
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
 
   doc = flickcurl_invoke(fc);
@@ -2253,7 +2245,7 @@ flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags)
 {
   xmlDocPtr doc = NULL;
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 1);
 
   if(!photo_id || !tags)
     return 1;
@@ -2267,7 +2259,6 @@ flickcurl_photos_setTags(flickcurl* fc, const char* photo_id, const char* tags)
   if(flickcurl_prepare(fc, "flickr.photos.setTags"))
     goto tidy;
   
-  flickcurl_set_write(fc, 1);
   flickcurl_set_data(fc, (void*)"", 0);
     
   doc = flickcurl_invoke(fc);

@@ -2437,8 +2437,8 @@ FLICKCURL_API
 flickcurl_upload_status* flickcurl_photos_replace(flickcurl* fc, const char* photo_file, const char *photo_id, int async);
 FLICKCURL_API
 void flickcurl_free_upload_status(flickcurl_upload_status* status);
-FLICKCURL_API
-FLICKCURL_DEPRECATED void flickcurl_upload_status_free(flickcurl_upload_status* status);
+FLICKCURL_API FLICKCURL_DEPRECATED
+void flickcurl_upload_status_free(flickcurl_upload_status* status);
 
 FLICKCURL_API
 char* flickcurl_array_join(const char *array[], char delim);

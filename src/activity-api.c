@@ -63,7 +63,7 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
   char page_str[10];
   char per_page_str[10];
   
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(page >= 0) {
     sprintf(page_str, "%d", page);
@@ -128,7 +128,7 @@ flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
   char page_str[10];
   char per_page_str[10];
 
-  flickcurl_init_params(fc);
+  flickcurl_init_params(fc, 0);
 
   if(timeframe) {
     flickcurl_add_param(fc, "timeframe", timeframe);

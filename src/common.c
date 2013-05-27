@@ -769,10 +769,22 @@ flickcurl_set_request_delay(flickcurl *fc, long delay_msec)
  * INTERNAL: initialise parameter array
  */
 void
-flickcurl_init_params(flickcurl *fc)
+flickcurl_init_params(flickcurl *fc, int is_write)
 {
   fc->count = 0;
   fc->parameters[fc->count][0] = NULL;
+
+  /* Default is read only */
+  fc->is_write = is_write;
+
+  /* Default to no data */
+  if(fc->data) {
+    if(fc->data_is_xml)
+      xmlFree(fc->data);
+    fc->data = NULL;
+    fc->data_length = 0;
+    fc->data_is_xml = 0;
+  }
 }
 
 
@@ -1821,7 +1833,7 @@ flickcurl_call_get_one_string_field(flickcurl* fc,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
 
-  flickcurl_init_params(fc);  
+  flickcurl_init_params(fc, 0);
   if(key && value) {
     flickcurl_add_param(fc, key, value);
   }
