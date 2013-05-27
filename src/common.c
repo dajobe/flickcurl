@@ -73,7 +73,7 @@ const char* const flickcurl_home_url_string = "http://librdf.org/flickcurl/";
 const char* const flickcurl_version_string = VERSION;
 
 
-const char* const flickcurl_flickr_service_uri =  "http://www.flickr.com/services/rest/?";
+const char* const flickcurl_flickr_service_uri =  "http://www.flickr.com/services/rest/";
 const char* const flickcurl_flickr_upload_service_uri =  "http://api.flickr.com/services/upload/";
 const char* const flickcurl_flickr_replace_service_uri =  "http://api.flickr.com/services/replace/";
 const char* const flickcurl_flickr_oauth_request_token_uri =  "http://www.flickr.com/services/oauth/request_token";
@@ -813,7 +813,7 @@ flickcurl_end_params(flickcurl *fc)
 
 static int
 flickcurl_prepare_common(flickcurl *fc, 
-                         const char* url,
+                         const char* service_uri,
                          const char* method,
                          const char* upload_field,
                          const char* upload_value,
@@ -823,12 +823,12 @@ flickcurl_prepare_common(flickcurl *fc,
 
   if(fc->api_key && fc->secret)
     /* Call with legacy Flickr auth */
-    rc = flickcurl_legacy_prepare_common(fc, url, method,
+    rc = flickcurl_legacy_prepare_common(fc, service_uri, method,
                                          upload_field, upload_value,
                                          parameters_in_url, need_auth);
   else if(fc->od.token && fc->od.token_secret)
     /* Call with OAuth */
-    rc = flickcurl_oauth_prepare_common(fc, url, method,
+    rc = flickcurl_oauth_prepare_common(fc, service_uri, method,
                                         upload_field, upload_value,
                                         parameters_in_url, need_auth);
   else

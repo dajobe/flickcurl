@@ -51,7 +51,7 @@ flickcurl_sort_args(flickcurl *fc)
 
 int
 flickcurl_legacy_prepare_common(flickcurl *fc,
-                                const char* url,
+                                const char* service_uri,
                                 const char* method,
                                 const char* upload_field,
                                 const char* upload_value,
@@ -63,7 +63,7 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
   unsigned int fc_uri_len = 0;
   unsigned int full_uri_len = 0;
   
-  if(!url)
+  if(!service_uri)
     return 1;
  
   /* If one is given, both are required */
@@ -133,8 +133,12 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
   if((need_auth && fc->auth_token) || fc->sign)
     flickcurl_sort_args(fc);
 
-  fc_uri_len = strlen(url);
+  fc_uri_len = strlen(service_uri);
   full_uri_len = fc_uri_len;
+
+  if(parameters_in_url)
+    /* for ? */
+    full_uri_len++;
  
   /* Save away the parameters and calculate the value lengths */
   for(i = 0; fc->parameters[i][0]; i++) {
@@ -230,11 +234,13 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
     fc->uri = (char*)malloc(full_uri_len + 1);
     fc->uri_len = full_uri_len;
   }
-  memcpy(fc->uri, url, fc_uri_len);
+  memcpy(fc->uri, service_uri, fc_uri_len);
   fc->uri[fc_uri_len] = '\0';
 
   if(parameters_in_url) {
     char* p = fc->uri + fc_uri_len;
+
+    *p++ = '?';
 
     for(i = 0; fc->parameters[i][0]; i++) {
       char *value = (char*)fc->parameters[i][1];

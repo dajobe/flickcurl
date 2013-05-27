@@ -279,7 +279,7 @@ flickcurl_sort_args(flickcurl *fc)
  */
 int
 flickcurl_oauth_prepare_common(flickcurl *fc,
-                               const char* url,
+                               const char* service_uri,
                                const char* method,
                                const char* upload_field,
                                const char* upload_value,
@@ -295,11 +295,10 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   int free_nonce = 0;
   char* timestamp = NULL;
   int rc = 0;
-  int need_to_add_query = 0;
   int is_oauth_method = 0;
   char *p;
 
-  if(!url)
+  if(!service_uri)
     return 1;
   
   /* If one is given, both are required */
@@ -406,11 +405,11 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     flickcurl_sort_args(fc);
 
 
-  fc_uri_len = strlen(url);
+  fc_uri_len = strlen(service_uri);
   full_uri_len = fc_uri_len;
 
-  if(url[fc_uri_len - 1] != '?')
-    need_to_add_query++;
+  if(parameters_in_url)
+    full_uri_len++;
   
   /* Save away the parameters and calculate the value lengths */
   for(i = 0; fc->parameters[i][0]; i++) {
@@ -484,7 +483,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 
     buf_len = http_method_len;
     buf_len += 1; /* & */
-    buf_len += (3 * strlen(url));
+    buf_len += (3 * strlen(service_uri));
     buf_len += 1; /* & */
     buf_len += param_buf_len * 3;
 
@@ -496,7 +495,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 
     *p++ = '&';
 
-    escaped_value = curl_escape(url, 0);
+    escaped_value = curl_escape(service_uri, 0);
     escaped_value_len = strlen(escaped_value);
     memcpy(p, escaped_value, escaped_value_len);
     p += escaped_value_len;
@@ -571,15 +570,14 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     fc->uri = (char*)malloc(full_uri_len + 1);
     fc->uri_len = full_uri_len;
   }
-  memcpy(fc->uri, url, fc_uri_len);
+  memcpy(fc->uri, service_uri, fc_uri_len);
 
   p = fc->uri + fc_uri_len;
   *p = '\0';
 
-  if(need_to_add_query)
+  if(parameters_in_url) {
     *p++ = '?';
 
-  if(parameters_in_url) {
     for(i = 0; fc->parameters[i][0]; i++) {
       char *value = (char*)fc->parameters[i][1];
       size_t len;
