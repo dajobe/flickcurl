@@ -867,7 +867,8 @@ flickcurl_prepare(flickcurl *fc, const char* method)
                                   fc->service_uri,
                                   method,
                                   NULL, NULL,
-                                  1, 1);
+                                  /* parameters_in_url */ 1,
+                                  /* need_auth */ 1);
 }
 
 
@@ -880,7 +881,8 @@ flickcurl_prepare_upload(flickcurl *fc,
                                   url,
                                   NULL,
                                   upload_field, upload_value,
-                                  0, 1);
+                                  /* parameters_in_url */ 0,
+                                  /* need_auth */ 1);
 }
 
 
