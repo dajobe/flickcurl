@@ -280,7 +280,7 @@ flickcurl_legacy_prepare_common(flickcurl *fc,
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "URI is '%s'\n", fc->uri);
 
-  FLICKCURL_ASSERT((strlen(fc->uri) == full_uri_len),
+  FLICKCURL_ASSERT((strlen(fc->uri) != fc_uri_len),
                    "Final URI does not match expected length");
 #endif
 
