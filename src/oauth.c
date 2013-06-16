@@ -289,8 +289,8 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   int i;
   char *signature_string = NULL;
   size_t* values_len = NULL;
-  unsigned int fc_uri_len = 0;
-  unsigned int full_uri_len = 0;
+  unsigned int fc_uri_len = 0; /* length of URI path */
+  unsigned int full_uri_len = 0; /* includes ? and paramters */
   char* nonce = NULL;
   int free_nonce = 0;
   char* timestamp = NULL;
@@ -570,6 +570,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     fc->uri = (char*)malloc(full_uri_len + 1);
     fc->uri_len = full_uri_len;
   }
+  /* fc_uri_len is strlen(service_uri) at this point */
   memcpy(fc->uri, service_uri, fc_uri_len);
 
   p = fc->uri + fc_uri_len;
