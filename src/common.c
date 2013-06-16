@@ -1270,6 +1270,11 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   curl_easy_setopt(fc->curl_handle, CURLOPT_WRITEHEADER, fc);
 
 
+#ifdef FLICKCURL_DEBUG
+  fprintf(stderr, "Preparing CURL with URI '%s' and method %s\n", 
+          fc->uri, ((fc->is_write || fc->upload_field) ? "POST" : "GET"));
+#endif
+  
   if(fc->upload_field) {
     struct curl_httppost* post = NULL;
     struct curl_httppost* last = NULL;
@@ -1277,12 +1282,20 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     
     /* Main parameters */
     for(i = 0; fc->param_fields[i]; i++) {
+#ifdef FLICKCURL_DEBUG
+      fprintf(stderr, "  form parameter %-23s: '%s'\n",
+              fc->param_fields[i], fc->param_values[i]);
+#endif
       curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->param_fields[i],
                    CURLFORM_PTRCONTENTS, fc->param_values[i],
                    CURLFORM_END);
     }
     
     /* Upload parameter */
+#ifdef FLICKCURL_DEBUG
+    fprintf(stderr, "  Upload form parameter %s: <File '%s'>\n",
+            fc->upload_field, fc->upload_value);
+#endif
     curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->upload_field,
                  CURLFORM_FILE, fc->upload_value, CURLFORM_END);
 
@@ -1294,10 +1307,9 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     fc->curl_setopt_handler(fc->curl_handle, fc->curl_setopt_handler_data);
 
 #ifdef FLICKCURL_DEBUG
-  fprintf(stderr, "Resolving URI '%s' with method %s\n", 
-          fc->uri, ((fc->is_write || fc->upload_field) ? "POST" : "GET"));
+  fprintf(stderr, "Invoking CURL to resolve the URL\n");
 #endif
-  
+
   if(curl_easy_perform(fc->curl_handle)) {
     /* failed */
     fc->failed = 1;
