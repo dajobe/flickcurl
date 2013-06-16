@@ -5006,14 +5006,20 @@ command_oauth_create(flickcurl* fc, int argc, char *argv[])
     return 1;
   }
 
-  fprintf(stderr, "%s: Request token %s and request token secret %s\n",
+  fprintf(stderr, "%s: OAuth request token details:\n  Request Token: '%s'\n  Request Token Secret: '%s'\n",
           program,
           flickcurl_get_oauth_request_token(fc),
           flickcurl_get_oauth_request_token_secret(fc));
  
   uri = flickcurl_oauth_get_authorize_uri(fc);
   if(uri) {
-    fprintf(stderr, "%s: Authorize uri is %s\n", program, uri);
+    fprintf(stderr, "%s: OAuth Authentication URL: %s\n", program, uri);
+
+    fprintf(stderr, "%s: Visit this, approve the request, get the <Verifier> and run:\n", program);
+    fprintf(stderr, "  $ %s oauth-verify '%s' '%s' '<Verifier>'", program,
+            flickcurl_get_oauth_request_token(fc),
+            flickcurl_get_oauth_request_token_secret(fc));
+
     free(uri);
   }
 
