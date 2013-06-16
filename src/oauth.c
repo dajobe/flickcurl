@@ -606,9 +606,13 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 
 #ifdef FLICKCURL_DEBUG
   fprintf(stderr, "Request URI:\n  %s\n", fc->uri);
-
-  FLICKCURL_ASSERT((strlen(fc->uri) != fc_uri_len),
-                   "Final URI does not match expected length");
+  do {
+    size_t m_len = strlen(fc->uri);
+    if(m_len > full_uri_len) {
+      fprintf(stderr, "%s:%d: (%s) assertion failed: Final URI len %zu is larger than buffer %zu\n", __FILE__, __LINE__, __func__, m_len, (size_t)full_uri_len);
+      FLICKCURL_ASSERT_DIE
+    }
+  } while(0);
 #endif
 
   tidy:
