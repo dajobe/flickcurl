@@ -1266,9 +1266,6 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     curl_easy_setopt(fc->curl_handle, CURLOPT_POST, 1);
     curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDS, fc->data);
     curl_easy_setopt(fc->curl_handle, CURLOPT_POSTFIELDSIZE, fc->data_length);
-    /* Replace default POST content type 'application/x-www-form-urlencoded' */
-    slist = curl_slist_append(slist, (const char*)"Content-Type: application/xml");
-    /* curl_easy_setopt(fc->curl_handle, CURLOPT_CUSTOMREQUEST, fc->verb); */
   } else if(fc->is_write) {
     /* write with no data: POST */
     /* CURLOPT_NOBODY = 0 sets http request to HEAD - do it first to override */
