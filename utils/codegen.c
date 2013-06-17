@@ -404,12 +404,9 @@ main(int argc, char *argv[])
     fprintf(stdout, ")\n{\n");
 
     fprintf(stdout,
-"  const char* parameters[%d][2];\n"
-"  int count = 0;\n"
 "  xmlDocPtr doc = NULL;\n"
 "  xmlXPathContextPtr xpathCtx = NULL; \n"
-"  void* result = NULL;\n",
-  6+method->args_count);
+"  void* result = NULL;\n");
     if(method->args_count) {
       int argi;
       for(argi = 0; method->args[argi]; argi++) {
@@ -423,7 +420,9 @@ main(int argc, char *argv[])
     }
 
     fputs(
-"  \n",
+"\n"
+"  flickcurl_init_params(fc, 0);\n"
+"\n",
     stdout);
     
     
@@ -464,39 +463,28 @@ main(int argc, char *argv[])
             fprintf(stdout,
 "  if(%s >= 0) {\n"
 "    sprintf(%s_str, \"%%d\", %s);\n"
-"    parameters[count][0]  = \"%s\";\n"
-"    parameters[count++][1]= %s_str;\n"
+"    flickcurl_add_param(fc, \"%s\", %s_str);\n"
 "  }\n",
                     arg->name, arg->name, arg->name, arg->name, arg->name);
             continue;
           }
           fprintf(stdout,
-"  if(%s) {\n",
+"  if(%s)\n",
                   arg->name);
         }
         
         fprintf(stdout,
-"  parameters[count][0]  = \"%s\";\n"
-"  parameters[count++][1]= %s;\n",
+"  flickcurl_add_param(fc, \"%s\", %s);\n",
               arg->name, arg->name);
 
-        if(arg->optional) {
-          fprintf(stdout,
-"  }\n"
-                  );
-        }
-        
       }
     }
 
     fprintf(stdout,
 "\n"
-"  parameters[count][0]  = NULL;\n"
+"  flickcurl_end_params(fc);\n"
 "\n"
-            );
-
-    fprintf(stdout,
-"  if(flickcurl_prepare(fc, \"%s\", parameters, count))\n"
+"  if(flickcurl_prepare(fc, \"%s\"))\n"
 "    goto tidy;\n"
 "\n",
     method->name);
