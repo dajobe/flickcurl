@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">87.5% (182/208)</span>
+<span class="coverage">88.9% (185/208)</span>
 </p>
 
 
@@ -133,9 +133,9 @@ or <span class="unsupported">unsupported</span>.
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.browse.html">flickr.groups.browse</a> (0.13)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.getInfo.html">flickr.groups.getInfo</a> (0.13)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.join.html">flickr.groups.join</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.joinRequest.html">flickr.groups.joinRequest</a></li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.groups.leave.html">flickr.groups.leave</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.join.html">flickr.groups.join</a> (1.25)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.joinRequest.html">flickr.groups.joinRequest</a> (1.25)</li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.leave.html">flickr.groups.leave</a> (1.25)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.groups.search.html">flickr.groups.search</a> (0.13)</li>
 </ul>
 
@@ -466,6 +466,14 @@ or <span class="unsupported">unsupported</span>.
 
 
 <h2>Changes</h2>
+
+<p><strong>1.25</strong>: flickr.groups.join, flickr.groups.joinRequest, flickr.groups.leave (3 new)</p>
+<pre>
+int flickcurl_groups_join(flickcurl* fc, const char* group_id, const char* accept_rules);
+int flickcurl_groups_joinRequest(flickcurl* fc, const char* group_id, const char* message, const char* accept_rules);
+int flickcurl_groups_leave(flickcurl* fc, const char* group_id, const char* delete_photos);
+</pre>
+
 
 <p><strong>1.23</strong>: flickr.auth.oauth.getAccessToken (1 new)</p>
 <pre>
