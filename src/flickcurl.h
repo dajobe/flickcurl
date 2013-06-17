@@ -1266,9 +1266,9 @@ typedef struct {
  * @is_public: is public photo boolean (non-0 true)
  * @is_friend: is friend photo boolean (non-0 true)
  * @is_family: is family photo boolean (non-0 true)
- * @safety_level: 1=safe, 2=moderate, 3=restricted
- * @content_type: 1=photo, 2=screenshot, 3=other/artwork
- * @hidden: 1=in global search, 2=hidden from publish searches (Flickcurl 1.22+)
+ * @safety_level: <=0 default, 1=safe, 2=moderate, 3=restricted
+ * @content_type: <=0 default, 1=photo, 2=screenshot, 3=other/artwork
+ * @hidden: <=0 default, 1=in global search, 2=hidden from publish searches (Flickcurl 1.22+)
  *
  * Photo upload parameters
  */
