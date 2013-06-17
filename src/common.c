@@ -167,7 +167,7 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
     } else
       rc = xmlParseChunk(fc->xc, (const char*)ptr, len, 0);
 
-#if FLICKCURL_DEBUG > 2
+#if FLICKCURL_DEBUG > 1
     fprintf(stderr, "Got >>%s<< (%d bytes)\n", (const char*)ptr, len);
 #endif
 
@@ -181,6 +181,22 @@ flickcurl_write_callback(void *ptr, size_t size, size_t nmemb,
 #endif
   return len;
 }
+
+
+#if FLICKCURL_DEBUG > 1
+static int
+flickcurl_debug_callback(CURL *handle, curl_infotype type,
+                         char *data, size_t size, void *userptr)
+{
+  if(type == CURLINFO_TEXT) {
+    fprintf(stderr, "INFO %s", data);
+  } else {
+    char dir = (type == CURLINFO_HEADER_IN || type == CURLINFO_DATA_IN || type == CURLINFO_SSL_DATA_IN) ? '<' : '>';
+    fprintf(stderr, "%c %s", dir, data);
+  }
+  return 0;
+}
+#endif
 
 
 /**
@@ -260,8 +276,10 @@ flickcurl_new_with_handle(void* curl_handle)
   /* Make it follow Location: headers */
   curl_easy_setopt(fc->curl_handle, CURLOPT_FOLLOWLOCATION, 1);
 
-#if FLICKCURL_DEBUG > 2
+#if FLICKCURL_DEBUG > 1
   curl_easy_setopt(fc->curl_handle, CURLOPT_VERBOSE, (void*)1);
+  curl_easy_setopt(fc->curl_handle, CURLOPT_DEBUGFUNCTION,
+                   flickcurl_debug_callback);
 #endif
 
   curl_easy_setopt(fc->curl_handle, CURLOPT_ERRORBUFFER, fc->error_buffer);
