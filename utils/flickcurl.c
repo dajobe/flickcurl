@@ -524,7 +524,7 @@ command_urls_lookupUser(flickcurl* fc, int argc, char *argv[])
     fprintf(stdout, "%s: NSID %s for user profile/photo URL %s\n",
             program, nsid, url);
   
-  return (nsid != NULL);
+  return (nsid == NULL);
 }
 
 
