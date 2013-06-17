@@ -1283,8 +1283,8 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     /* Main parameters */
     for(i = 0; fc->param_fields[i]; i++) {
 #ifdef FLICKCURL_DEBUG
-      fprintf(stderr, "  form parameter %-23s: '%s'\n",
-              fc->param_fields[i], fc->param_values[i]);
+      fprintf(stderr, "  form param %2d) %-23s: '%s'\n",
+              i, fc->param_fields[i], fc->param_values[i]);
 #endif
       curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->param_fields[i],
                    CURLFORM_PTRCONTENTS, fc->param_values[i],
