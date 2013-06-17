@@ -451,7 +451,7 @@ main(int argc, char *argv[])
     goto tidy;
   }
   
-  photo = flickcurl_photos_getInfo(fc, photo_id);
+  photo = flickcurl_photos_getInfo2(fc, photo_id, NULL);
 
   if(!photo)
     goto tidy;
