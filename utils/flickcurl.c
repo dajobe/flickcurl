@@ -5016,7 +5016,7 @@ command_oauth_create(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: OAuth Authentication URL: %s\n", program, uri);
 
     fprintf(stderr, "%s: Visit this, approve the request, get the <Verifier> and run:\n", program);
-    fprintf(stderr, "  $ %s oauth-verify '%s' '%s' '<Verifier>'\n", program,
+    fprintf(stderr, "  $ %s oauth.verify '%s' '%s' '<Verifier>'\n", program,
             flickcurl_get_oauth_request_token(fc),
             flickcurl_get_oauth_request_token_secret(fc));
 
@@ -5680,7 +5680,7 @@ static flickcurl_cmd commands[] = {
    command_oauth_create,  0, 1},
 
   {"oauth.verify",
-   "REQUEST-TOKEN REQUEST-TOKEN-SECRET VERIFIER", "Verify an OAuth request from `oauth-create'", 
+   "REQUEST-TOKEN REQUEST-TOKEN-SECRET VERIFIER", "Verify an OAuth request from `oauth.create'", 
    command_oauth_verify,  3, 3},
 
   {"oauth.upgrade",
@@ -5822,15 +5822,15 @@ main(int argc, char *argv[])
 "oauth_client_secret=<Client secret / Shared Secret>\n"
 "\n"
 "3. Call this program with:\n"
-"  %s oauth-create\n"
-"  (or %s oauth-create <Callback URL> if you understand and need that)\n"
+"  %s oauth.create\n"
+"  (or %s oauth.create <Callback URL> if you understand and need that)\n"
 "This gives a <Request Token> <Request Token Secret> and <Authentication URL>\n"
 "\n"
 "4. Visit the <Authentication URL> and approve the request to get a <Verifier>\n"
 "\n"
 "5. Call this program with the <Request Token>, <Request Token Secret>\n"
 "    and <Verifier>:\n"
-"  %s oauth-verify <Request Token> <Request Token Secret> <Verifier>\n"
+"  %s oauth.verify <Request Token> <Request Token Secret> <Verifier>\n"
 "\n"
 "This will write the configuration file with the OAuth access tokens.\n"
 "See http://librdf.org/flickcurl/api/flickcurl-auth.html for full instructions.\n",
