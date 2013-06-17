@@ -5,16 +5,19 @@ flickcurl-config \- script to get information about the installed version of fli
 .B flickcurl-config
 [ \fIOPTION\fR ]
 .SH DESCRIPTION
+.IP
+This program is \fBDEPRECATED\fP and pkg-config(1) should be used
+to get flickcurl library parameters and dependencies.  The compiling
+and linking flags are likely to not work since they do not import
+dependendent libraries (such as Raptor).
+.LP
 Known values for OPTION are:
 .TP
-\fB\-\-prefix\fR[=\fIDIR\fP]
-Change flickcurl prefix (the default location is /usr).
+\fB\-\-prefix\fR
+Get the flickcurl installation prefix.
 .TP
 \fB\-\-libs\fR
 Print library linking information.
-.TP
-\fB\-\-libtool\-libs\fR
-Print linking information for use with libtool.
 .TP
 \fB\-\-private\-libs\fR
 Print library private/static linking information.
