@@ -210,6 +210,7 @@ flickcurl_photos_upload(flickcurl* fc, const char* photo_file,
   params.is_family = is_family;  
   params.safety_level= -1;
   params.content_type= -1;
+  params.hidden = -1;
   
   return flickcurl_photos_upload_params(fc, &params);
 }
