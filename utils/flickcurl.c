@@ -5016,7 +5016,7 @@ command_oauth_create(flickcurl* fc, int argc, char *argv[])
     fprintf(stderr, "%s: OAuth Authentication URL: %s\n", program, uri);
 
     fprintf(stderr, "%s: Visit this, approve the request, get the <Verifier> and run:\n", program);
-    fprintf(stderr, "  $ %s oauth-verify '%s' '%s' '<Verifier>'", program,
+    fprintf(stderr, "  $ %s oauth-verify '%s' '%s' '<Verifier>'\n", program,
             flickcurl_get_oauth_request_token(fc),
             flickcurl_get_oauth_request_token_secret(fc));
 
