@@ -517,6 +517,7 @@ flickcurl_upload_status
 flickcurl_user_upload_status
 flickcurl_free_upload_status
 flickcurl_free_user_upload_status
+flickcurl_upload_status_free
 </SECTION>
 
 <SECTION>
