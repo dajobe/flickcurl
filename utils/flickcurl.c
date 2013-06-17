@@ -5087,6 +5087,41 @@ command_oauth_upgrade(flickcurl* fc, int argc, char *argv[])
   return 0;
 }
 
+static int
+command_groups_join(flickcurl* fc, int argc, char *argv[])
+{
+  char* group_id = argv[1];
+  char* accept_rules = NULL;
+  
+  if(argv[2])
+    accept_rules = argv[2];
+  
+  return flickcurl_groups_join(fc, group_id, accept_rules);
+}
+
+static int
+command_groups_joinRequest(flickcurl* fc, int argc, char *argv[])
+{
+  char* group_id = argv[1];
+  char* message = argv[2];
+  char* accept_rules = argv[3];
+
+  return flickcurl_groups_joinRequest(fc, group_id, message, accept_rules);
+}
+
+static int
+command_groups_leave(flickcurl* fc, int argc, char *argv[])
+{
+  char* group_id = argv[1];
+  char* delete_photos = NULL;
+  
+  if(argv[2])
+    delete_photos = argv[2];
+  
+  return flickcurl_groups_leave(fc, group_id, delete_photos);
+}
+
+
 
 
 
@@ -5217,6 +5252,15 @@ static flickcurl_cmd commands[] = {
   {"groups.getInfo",
    "GROUP-ID [LANG]", "Get information on group GROUP-ID with language LANG.",
    command_groups_getInfo, 1, 2},
+  {"groups.join",
+   "GROUP-ID [ACCEPT-RULES]", "Join a group GROUP-ID with optional accepting of rules.",
+   command_groups_join, 1, 2},
+  {"groups.joinRequest",
+   "GROUP-ID MESSAGE ACCEPT-RULES", "Request to join a group GROUP-ID using MESSAGE and accept rules.",
+   command_groups_joinRequest, 3, 3},
+  {"groups.leave",
+   "GROUP-ID [DELETE-PHOTOS]", "Leave a group GROUP-ID and optionally delete photos.",
+   command_groups_leave, 1, 1},
   {"groups.search",
    "TEXT [PER-PAGE [PAGE]]", "Search for groups matching TEXT paging PER-PAGE and PAGE.",
    command_groups_search, 1, 3},

@@ -1997,6 +1997,12 @@ flickcurl_category* flickcurl_groups_browse(flickcurl* fc, int cat_id);
 FLICKCURL_API
 flickcurl_group* flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang);
 FLICKCURL_API
+int flickcurl_groups_join(flickcurl* fc, const char* group_id, const char* accept_rules);
+FLICKCURL_API
+int flickcurl_groups_joinRequest(flickcurl* fc, const char* group_id, const char* message, const char* accept_rules);
+FLICKCURL_API
+int flickcurl_groups_leave(flickcurl* fc, const char* group_id, const char* delete_photos);
+FLICKCURL_API
 flickcurl_group** flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page);
 
 /* flickr.groups.members */

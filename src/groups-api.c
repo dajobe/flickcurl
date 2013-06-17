@@ -169,6 +169,154 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
 
 
 /**
+ * flickcurl_groups_join:
+ * @fc: flickcurl context
+ * @group_id: The NSID of the Group in question
+ * @accept_rules: If the group has rules, they must be displayed to the user prior to joining. Passing a true value for this argument specifies that the application has displayed the group rules to the user, and that the user has agreed to them. (See flickr.groups.getInfo). API DOCS ISSUE: Not clear what value is true. (or NULL)
+ * 
+ * Join a public group as a member.
+ *
+ * Implements flickr.groups.join (1.25)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_groups_join(flickcurl* fc, const char* group_id,
+                      const char* accept_rules)
+{
+  xmlDocPtr doc = NULL;
+  int result = 1;
+
+  flickcurl_init_params(fc, 0);
+
+  if(!group_id)
+    return 1;
+
+  flickcurl_add_param(fc, "group_id", group_id);
+  if(accept_rules)
+    flickcurl_add_param(fc, "accept_rules", accept_rules);
+
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.groups.join"))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}
+
+
+/**
+ * flickcurl_groups_joinRequest:
+ * @fc: flickcurl context
+ * @group_id: The NSID of the group to request joining.
+ * @message: Message to the administrators.
+ * @accept_rules: If the group has rules, they must be displayed to the user prior to joining. Passing a true value for this argument specifies that the application has displayed the group rules to the user, and that the user has agreed to them. (See flickr.groups.getInfo).   API DOCS ISSUE: Not clear what value is true.
+ * 
+ * Request to join a group that is invitation-only.
+ *
+ * Implements flickr.groups.joinRequest (1.25)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_groups_joinRequest(flickcurl* fc, const char* group_id,
+                             const char* message, const char* accept_rules)
+{
+  xmlDocPtr doc = NULL;
+  int result = 1;
+
+  flickcurl_init_params(fc, 0);
+
+  if(!group_id || !message || !accept_rules)
+    return 1;
+
+  flickcurl_add_param(fc, "group_id", group_id);
+  flickcurl_add_param(fc, "message", message);
+  flickcurl_add_param(fc, "accept_rules", accept_rules);
+
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.groups.joinRequest"))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}
+
+
+/**
+ * flickcurl_groups_leave:
+ * @fc: flickcurl context
+ * @group_id: The NSID of the Group to leave
+ * @delete_photos: Delete all photos by this user from the group.  API DOCS ISSUE: Not clear what values this takes. (or NULL)
+ * 
+ * Leave a group.
+ *
+ * If the user is the only administrator left, and there are other
+ * members, the oldest member will be promoted to administrator.
+ * 
+ * If the user is the last person in the group, the group will be deleted.
+ *
+ * Implements flickr.groups.leave (1.25)
+ * 
+ * Return value: non-0 on failure
+ **/
+int
+flickcurl_groups_leave(flickcurl* fc, const char* group_id,
+                       const char* delete_photos)
+{
+  xmlDocPtr doc = NULL;
+  int result = 1;
+
+  flickcurl_init_params(fc, 0);
+
+  if(!group_id)
+    return 1;
+
+  flickcurl_add_param(fc, "group_id", group_id);
+  if(delete_photos)
+    flickcurl_add_param(fc, "delete_photos", delete_photos);
+
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.groups.leave"))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  result = 0;
+
+  tidy:
+  if(fc->failed)
+    result = 1;
+
+  return result;
+}
+
+
+/**
  * flickcurl_groups_search:
  * @fc: flickcurl context
  * @text: The text to search for.

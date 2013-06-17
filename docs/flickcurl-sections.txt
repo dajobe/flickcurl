@@ -200,6 +200,9 @@ flickcurl_free_group
 flickcurl_free_groups
 flickcurl_groups_browse
 flickcurl_groups_getInfo
+flickcurl_groups_join
+flickcurl_groups_joinRequest
+flickcurl_groups_leave
 flickcurl_member
 flickcurl_free_member
 flickcurl_free_members
