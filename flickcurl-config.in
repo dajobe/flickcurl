@@ -10,6 +10,12 @@ VERSION_DECIMAL="@FLICKCURL_VERSION_DECIMAL@";
 
 program=`basename $0`
 
+# pkg-config like vars
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
 
 usage()
 {
@@ -48,38 +54,38 @@ while test $# -gt 0; do
       usage 0
       ;;
     --prefix)
-      echo "@prefix@"
+      echo "${prefix}"
       exit 0
       ;;
     --libs)
       echo "-L${libdir} -lflickcurl"
-      exit 0;
+      exit 0
       ;;
     --cflags)
       echo "-I${includedir}"
-      exit 0;
+      exit 0
       ;;
     --private-libs)
       echo "@LIBS@"
-      exit 0;
+      exit 0
       ;;
     --version)
-      echo "$VERSION"
+      echo "${VERSION}"
       exit 0
       ;;
     --version-decimal)
-      echo "$VERSION_DECIMAL"
+      echo "${VERSION_DECIMAL}"
       exit 0
       ;;
 # Other options are ignored as illegal
       *)
-      args="$args $1"
+      echo "$program: unrecognized argument \`$1'" 1>&2
+      break
       ;;
   esac
 
   shift
 done
   
-echo "$program: unrecognized argument(s) \`$args'" 1>&2
 echo "$program: Try $program --help" 1>&2
 exit 1
