@@ -1,4 +1,129 @@
-2013-04-10  Dave Beckett  <dave@dajobe.org>
+2013-06-17  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-config.1, flickcurl-config.in: Work without
+	pkg-config and deprecate flickcurl-config in docs
+
+	* docs/tmpl/section-group.sgml, docs/tmpl/section-upload.sgml:
+	Update tmpls
+
+	* docs/flickcurl-sections.txt: Add internal / deprecated
+	flickcurl_upload_status_free
+
+	* utils/flickrdf.c:
+	Use non-deprecated flickcurl_photos_getInfo2
+
+	* coverage.html: Update coverage for new groups apis
+
+	* docs/flickcurl-sections.txt, src/flickcurl.h, src/groups-api.c,
+	utils/flickcurl.c: Added new API calls for groups join,
+	joinRequest and leave
+
+	(flickcurl_groups_join, flickcurl_groups_joinRequest)
+	(flickcurl_groups_leave): Added.
+
+	* utils/codegen.c: Update codegen for new parameters calls
+
+	* coverage.html: reorder
+
+	* coverage.html: Added auth.oauth
+
+2013-06-16  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html: updated %age
+
+	* coverage.html: Updated coverage by hand
+
+	* utils/flickcurl.c:
+	(command_urls_lookupUser): Fix failure
+
+	* src/upload-api.c:
+	(flickcurl_photos_upload): Init hidden to default -1
+
+	* src/flickcurl.h: flickcurl_upload_params: annotate default
+	values
+
+	safety_level, content_type and hidden can be left at their default
+	values with values <=0
+
+	* utils/flickcurl.c: Adjust oauth docs to oauth.CMD form
+
+	* utils/flickcurl.c: newline in output
+
+	* src/common.c:
+	(flickcurl_invoke_common): Remove totally wrong XML form content
+	type.
+
+	* src/common.c: Add curl input/output tracing when FLICKCURL_DEBUG
+	> 2
+
+	* src/common.c: debug formatting
+
+	* src/common.c: more CURL debugging details for forms
+
+	* utils/flickcurl.c:
+	(command_oauth_create): Report next step command line for
+	oauth-create
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): Fix assert to look for too small
+	buffer.
+
+	* src/oauth.c: docs
+
+	* src/common.c: 2013
+
+2013-05-29  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: docs
+
+	* src/legacy-auth.c, src/oauth.c: Fix assert to check the right
+	thing
+
+2013-05-27  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c, src/legacy-auth.c, src/oauth.c: Take care not to
+	add '?' for OAuth signature calculations in POST
+
+	Default flickcurl_flickr_service_uri loses the '?'
+
+	(flickcurl_legacy_prepare_common, flickcurl_oauth_prepare_common):
+	Rename parameter to service_uri and use if(parameters_in_url) to
+	decide when to add '?'.
+
+	* src/common.c, src/contacts-api.c, src/favorites-api.c,
+	src/galleries-api.c, src/groups-pools-api.c, src/photos-api.c,
+	src/photos-comments-api.c, src/photos-geo-api.c,
+	src/photos-licenses-api.c, src/photos-notes-api.c,
+	src/photos-people-api.c, src/photosets-api.c,
+	src/photosets-comments-api.c: flickcurl_init_params initialises
+	data to empty
+
+	Remove most flickcurl_set_data calls which all set the data to
+	empty; it's not used to set non-empty data.
+
+	* src/activity-api.c, src/auth-api.c, src/blogs-api.c,
+	src/collections-api.c, src/common.c, src/commons-api.c,
+	src/contacts-api.c, src/favorites-api.c, src/flickcurl.h,
+	src/flickcurl_internal.h, src/galleries-api.c, src/groups-api.c,
+	src/groups-members-api.c, src/groups-pools-api.c,
+	src/interestingness-api.c, src/legacy-auth.c,
+	src/machinetags-api.c, src/oauth.c, src/panda-api.c,
+	src/people-api.c, src/photos-api.c, src/photos-comments-api.c,
+	src/photos-geo-api.c, src/photos-licenses-api.c,
+	src/photos-notes-api.c, src/photos-people-api.c,
+	src/photos-transform-api.c, src/photos-upload-api.c,
+	src/photosets-api.c, src/photosets-comments-api.c,
+	src/places-api.c, src/prefs-api.c, src/reflection-api.c,
+	src/stats-api.c, src/tags-api.c, src/test-api.c, src/upload-api.c:
+	Move is_write flag to flickcurl_init_params()
+
+	OAuth needs this flag during prepare which is too late using
+	flickcurl_set_write() later on.
+
+2013-04-10  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac:
+	Bumped version to 1.25
 
 	* Snapshotted flickcurl_1_24 for 1.24 release (GIT
 	874b9f7033ac681925a2f9f260c4d5af510e55d2)
