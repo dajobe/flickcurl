@@ -17,6 +17,39 @@
 <p>Not yet released.
 </p>
 
+<p>More OAuth fixes including getting uploading fully working.
+</p>
+
+<p>Multiple internal OAuth changes to simplify code.
+</p>
+
+<p>Updated the coverage for API calls added in the last year
+approximately.</p>
+
+<p>Added new API calls <code>flickcurl_groups_join()</code>,
+<code>flickcurl_groups_joinRequest()</code> and
+<code>flickcurl_groups_leave()</code> for (some of) the new group API:
+</p>
+<pre>
+  int flickcurl_groups_join(flickcurl* fc, const char* group_id,
+    const char* accept_rules);
+
+  int flickcurl_groups_joinRequest(flickcurl* fc, const char* group_id,
+     const char* message, const char* accept_rules);
+
+  int flickcurl_groups_leave(flickcurl* fc, const char* group_id,
+     const char* delete_photos);
+</pre>
+
+<p>Updated the example code <code>flickrdf.c</code> to use the
+non-deprecated <code>flickcurl_photos_getInfo2()</code>
+</p>
+
+<p>Updated deprecated <code>flickcurl-config(1)</code> program to be
+independent of pkg-config.  This allows <code>make distcheck</code>
+to work.</p>
+
+
 <h2 id="D2013-04-10-V1.24">2013-04-10 Flickcurl Version 1.24 Released</h2>
 
 <p>Fixed uploading with OAuth - incorrect signature since it failed
