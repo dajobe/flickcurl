@@ -446,10 +446,11 @@ utils/Makefile
 examples/Makefile
 docs/Makefile
 docs/version.xml
+flickcurl.spec
 flickcurl.rdf
 flickcurl.pc])
 
-AC_CONFIG_FILES([flickcurl-config flickcurl.spec], [chmod +x flickcurl-config])
+AC_CONFIG_FILES([flickcurl-config], [chmod +x flickcurl-config])
 
 dnl Check for gtk-doc and docbook
 GTK_DOC_CHECK([1.3])
