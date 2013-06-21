@@ -172,7 +172,7 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
  * flickcurl_groups_join:
  * @fc: flickcurl context
  * @group_id: The NSID of the Group in question
- * @accept_rules: If the group has rules, they must be displayed to the user prior to joining. Passing a true value for this argument specifies that the application has displayed the group rules to the user, and that the user has agreed to them. (See flickr.groups.getInfo). API DOCS ISSUE: Not clear what value is true. (or NULL)
+ * @accept_rules: If the group has rules, they must be displayed to the user prior to joining. Passing a true value for this argument specifies that the application has displayed the group rules to the user, and that the user has agreed to them. (See flickr.groups.getInfo). Probably takes a '1' or '0' value (or NULL)
  * 
  * Join a public group as a member.
  *
@@ -221,7 +221,7 @@ flickcurl_groups_join(flickcurl* fc, const char* group_id,
  * @fc: flickcurl context
  * @group_id: The NSID of the group to request joining.
  * @message: Message to the administrators.
- * @accept_rules: If the group has rules, they must be displayed to the user prior to joining. Passing a true value for this argument specifies that the application has displayed the group rules to the user, and that the user has agreed to them. (See flickr.groups.getInfo).   API DOCS ISSUE: Not clear what value is true.
+ * @accept_rules: If the group has rules, they must be displayed to the user prior to joining. Passing a true value for this argument specifies that the application has displayed the group rules to the user, and that the user has agreed to them. (See flickr.groups.getInfo).  Probably takes a '1' or '0' value.
  * 
  * Request to join a group that is invitation-only.
  *
@@ -268,7 +268,7 @@ flickcurl_groups_joinRequest(flickcurl* fc, const char* group_id,
  * flickcurl_groups_leave:
  * @fc: flickcurl context
  * @group_id: The NSID of the Group to leave
- * @delete_photos: Delete all photos by this user from the group.  API DOCS ISSUE: Not clear what values this takes. (or NULL)
+ * @delete_photos: Delete all photos by this user from the group.  Probably takes a '1' or '0' value (or NULL)
  * 
  * Leave a group.
  *
