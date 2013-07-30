@@ -195,7 +195,7 @@ flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
  *
  * Implements flickr.contacts.getPublicList (0.11)
  * 
- * Return value: non-0 on failure
+ * Return value: list of contacts or NULL on failure
  **/
 flickcurl_contact**
 flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
@@ -244,6 +244,83 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
                                     (xmlChar*)"/rsp/contacts/contact", 
                                     &contacts_count);
 
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    contacts = NULL;
+
+  return contacts;
+}
+
+
+/**
+ * flickcurl_contacts_getTaggingSuggestions:
+ * @fc: flickcurl context
+ * @include_self: Return calling user in the list of suggestions. Default: true. (or NULL)
+ * @include_address_book: Include suggestions from the user's address book. Default: false (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or < 0)
+ * @per_page: Number of contacts to return per page. If this argument is omitted, all contacts will be returned. (or < 0)
+ * 
+ * Get suggestions for tagging people in photos based on the calling user's contacts.
+ *
+ * Implements flickr.contacts.getTaggingSuggestions (1.25)
+ *
+ * NOTE: Parameter order is @page, @per_page like all other
+ * flickr.contacts.* calls, NOT @per_page, @page like in the API
+ * docs.
+ * 
+ * Return value: list of contacts or NULL on failure
+ **/
+flickcurl_contact**
+flickcurl_contacts_getTaggingSuggestions(flickcurl* fc,
+                                         const char* include_self,
+                                         const char* include_address_book,
+                                         int page, int per_page)
+{
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_contact** contacts = NULL;
+  int contacts_count = 0;
+  char page_str[10];
+  char per_page_str[10];
+
+  flickcurl_init_params(fc, 0);
+
+  if(include_self)
+    flickcurl_add_param(fc, "include_self", include_self);
+  if(include_address_book)
+    flickcurl_add_param(fc, "include_address_book", include_address_book);
+  if(page >= 0) {
+    sprintf(page_str, "%d", page);
+    flickcurl_add_param(fc, "page", page_str);
+  }
+  if(per_page >= 0) {
+    sprintf(per_page_str, "%d", per_page);
+    flickcurl_add_param(fc, "per_page", per_page_str);
+  }
+
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.contacts.getTaggingSuggestions"))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed = 1;
+    goto tidy;
+  }
+
+  contacts = flickcurl_build_contacts(fc, xpathCtx, 
+                                    (xmlChar*)"/rsp/contacts/contact", 
+                                    &contacts_count);
 
   tidy:
   if(xpathCtx)

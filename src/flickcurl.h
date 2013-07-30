@@ -2227,6 +2227,8 @@ FLICKCURL_API
 flickcurl_contact** flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc, int date_lastupload, const char* filter);
 FLICKCURL_API
 flickcurl_contact** flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id, int page, int per_page);
+FLICKCURL_API
+flickcurl_contact** flickcurl_contacts_getTaggingSuggestions(flickcurl* fc, const char* include_self, const char* include_address_book, int page, int per_page);
 
 /* flickr.photos.comments */
 FLICKCURL_API
