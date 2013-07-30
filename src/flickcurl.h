@@ -2068,6 +2068,8 @@ char* flickcurl_people_findByEmail(flickcurl* fc, const char* email);
 FLICKCURL_API
 char* flickcurl_people_findByUsername(flickcurl* fc, const char* username);
 FLICKCURL_API
+flickcurl_group** flickcurl_people_getGroups(flickcurl* fc, const char* user_id, const char* extras);
+FLICKCURL_API
 flickcurl_person* flickcurl_people_getInfo(flickcurl* fc, const char* user_id);
 FLICKCURL_API
 flickcurl_photos_list* flickcurl_people_getPhotos_params(flickcurl* fc, const char* user_id, int safe_search, const char* min_upload_date, const char* max_upload_date, const char* min_taken_date, const char* max_taken_date, int content_type, int privacy_filter, flickcurl_photos_list_params* list_params);

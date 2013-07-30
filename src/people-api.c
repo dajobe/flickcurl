@@ -82,6 +82,67 @@ flickcurl_people_findByUsername(flickcurl* fc, const char* username)
 }
 
 
+
+/**
+ * flickcurl_people_getGroups:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user to fetch groups for.
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: privacy, throttle, restrictions (or NULL)
+ * 
+ * Returns the list of groups a user is a member of.
+ *
+ * Implements flickr.people.getGroups (1.25)
+ * 
+ * Return value: list of groups or NULL on failure
+ **/
+flickcurl_group**
+flickcurl_people_getGroups(flickcurl* fc, const char* user_id,
+                           const char* extras)
+{
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL; 
+  flickcurl_group** groups = NULL;
+
+  flickcurl_init_params(fc, 0);
+
+  if(!user_id)
+    return NULL;
+
+  flickcurl_add_param(fc, "user_id", user_id);
+  if(extras)
+    flickcurl_add_param(fc, "extras", extras);
+
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.people.getGroups"))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed = 1;
+    goto tidy;
+  }
+
+  groups = flickcurl_build_groups(fc, xpathCtx,
+                                (const xmlChar*)"/rsp/groups/group", NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    groups = NULL;
+
+  return groups;
+}
+
+
 /**
  * flickcurl_people_getInfo:
  * @fc: flickcurl context
@@ -144,7 +205,7 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
  *
  * Implements flickr.people.getPublicGroups (0.13)
  * 
- * Return value: non-0 on failure
+ * Return value: list of groups or NULL on failure
  **/
 flickcurl_group**
 flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)

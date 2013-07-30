@@ -5155,7 +5155,27 @@ command_contacts_getTaggingSuggestions(flickcurl* fc, int argc, char *argv[])
   return (contacts == NULL);
 }
 
+static int
+command_people_getGroups(flickcurl* fc, int argc, char *argv[])
+{
+  char* user_id = argv[1];
+  flickcurl_group** groups = NULL;
+  const char* extras = NULL;
+  int i;
+  
+  groups = flickcurl_people_getGroups(fc, user_id, extras);
+  if(!groups)
+    return 1;
 
+  for(i = 0; groups[i]; i++) {
+    fprintf(stdout, "%s: Group %d\n", program, i);
+    command_print_group(groups[i]);
+  }
+
+  flickcurl_free_groups(groups);
+
+  return 0;
+}
 
 
 
@@ -5356,6 +5376,9 @@ static flickcurl_cmd commands[] = {
   {"people.findByUsername",
    "USERNAME", "get a user's NSID from their USERNAME", 
    command_people_findByUsername,  1, 1},
+  {"people.getGroups",
+   "USER-ID [GROUP-EXTRAS]", "Get list of groups USER-ID is a member of",
+   command_people_getGroups,  1, 2},
   {"people.getInfo",
    "USER-NSID", "Get information about one person with id USER-NSID", 
    command_people_getInfo,  1, 1},
@@ -5825,6 +5848,11 @@ print_help_string(void)
       break;
     printf("    %-16s %s\n", name, label);
   }
+
+  fputs("\n  GROUP-EXTRAS is a comma-separated list of optional fields to return from:\n", stdout);
+  fputs("    privacy\n", stdout);
+  fputs("    throttle\n", stdout);
+  fputs("    restrictions\n", stdout);
 
   fputs("\n  FORMAT is result syntax format:\n", stdout);
   for(i = 0; 1; i++) {

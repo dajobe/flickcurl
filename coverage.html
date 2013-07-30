@@ -25,7 +25,7 @@ or <span class="unsupported">unsupported</span>.
 
 <p>Current Flickr API coverage by Flickcurl: 
 <!-- next line updated by update-coverage -->
-<span class="coverage">89.4% (186/208)</span>
+<span class="coverage">89.9% (187/208)</span>
 </p>
 
 
@@ -207,7 +207,7 @@ or <span class="unsupported">unsupported</span>.
 <ul>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.findByEmail.html">flickr.people.findByEmail</a> (0.8)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.findByUsername.html">flickr.people.findByUsername</a> (0.8)</li>
-  <li><a class="unsupported" href="http://www.flickr.com/services/api/flickr.people.getGroups.html">flickr.people.getGroups</a></li>
+  <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getGroups.html">flickr.people.getGroups</a> (1.25)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getInfo.html">flickr.people.getInfo</a> (0.6)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getPhotos.html">flickr.people.getPhotos</a> (1.18)</li>
   <li><a class="supported" href="http://www.flickr.com/services/api/flickr.people.getPhotosOf.html">flickr.people.getPhotosOf</a> (1.17)</li>
@@ -467,12 +467,14 @@ or <span class="unsupported">unsupported</span>.
 
 <h2>Changes</h2>
 
-<p><strong>1.25</strong>: flickr.contacts.getTaggingSuggestions, flickr.groups.join, flickr.groups.joinRequest, flickr.groups.leave (4 new)</p>
+<p><strong>1.25</strong>: flickr.contacts.getTaggingSuggestions, flickr.groups.join, flickr.groups.joinRequest, flickr.groups.leave, flickr.people.getGroups, flickr.people.getGroups (6 new)</p>
 <pre>
 flickcurl_contact** flickcurl_contacts_getTaggingSuggestions(flickcurl* fc, const char* include_self, const char* include_address_book, int page, int per_page);
 int flickcurl_groups_join(flickcurl* fc, const char* group_id, const char* accept_rules);
 int flickcurl_groups_joinRequest(flickcurl* fc, const char* group_id, const char* message, const char* accept_rules);
 int flickcurl_groups_leave(flickcurl* fc, const char* group_id, const char* delete_photos);
+flickcurl_group** flickcurl_people_getGroups(flickcurl* fc, const char* user_id, const char* extras);
+flickcurl_group** flickcurl_people_getGroups(flickcurl* fc, const char* user_id, const char* extras);
 </pre>
 
 
