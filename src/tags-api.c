@@ -457,6 +457,57 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
 
 
 /**
+ * flickcurl_tags_getMostFrequentlyUsed:
+ * @fc: flickcurl context
+ *
+ * Returns a list of most frequently used tags for a user.
+ *
+ * Implements flickr.tags.getMostFrequentlyUsed (1.25)
+ *
+ * Return value: array of #flickcurl_tag or NULL on failure
+ **/
+flickcurl_tag**
+flickcurl_tags_getMostFrequentlyUsed(flickcurl* fc)
+{
+  xmlDocPtr doc = NULL;
+  xmlXPathContextPtr xpathCtx = NULL;
+  flickcurl_tag** tags = NULL;
+
+  flickcurl_init_params(fc, 0);
+
+  flickcurl_end_params(fc);
+
+  if(flickcurl_prepare(fc, "flickr.tags.getMostFrequentlyUsed"))
+    goto tidy;
+
+  doc = flickcurl_invoke(fc);
+  if(!doc)
+    goto tidy;
+
+  xpathCtx = xmlXPathNewContext(doc);
+  if(!xpathCtx) {
+    flickcurl_error(fc, "Failed to create XPath context for document");
+    fc->failed = 1;
+    goto tidy;
+  }
+
+  tags = flickcurl_build_tags(fc, NULL,
+                              xpathCtx,
+                              (xmlChar*)"/rsp/who/tags/tag",
+                              NULL);
+
+  tidy:
+  if(xpathCtx)
+    xmlXPathFreeContext(xpathCtx);
+
+  if(fc->failed)
+    tags = NULL;
+
+  return tags;
+}
+
+
+/**
  * flickcurl_tags_getRelated:
  * @fc: flickcurl context
  * @tag: tag to fetch related tags for

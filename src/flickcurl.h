@@ -2414,6 +2414,8 @@ flickcurl_tag** flickcurl_tags_getListUserPopular(flickcurl* fc, const char* use
 FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag);
 FLICKCURL_API
+flickcurl_tag** flickcurl_tags_getMostFrequentlyUsed(flickcurl* fc);
+FLICKCURL_API
 flickcurl_tag** flickcurl_tags_getRelated(flickcurl* fc, const char* tag);
 
 /* flickr.test */

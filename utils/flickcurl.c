@@ -5177,6 +5177,22 @@ command_people_getGroups(flickcurl* fc, int argc, char *argv[])
   return 0;
 }
 
+static int
+command_tags_getMostFrequentlyUsed(flickcurl* fc, int argc, char *argv[])
+{
+  flickcurl_tag** tags;
+
+  tags = flickcurl_tags_getMostFrequentlyUsed(fc);
+  if(!tags)
+    return 1;
+
+  command_print_tags(tags, NULL, NULL);
+  free(tags);
+
+  return 0;
+}
+
+
 
 
 
@@ -5734,6 +5750,9 @@ static flickcurl_cmd commands[] = {
   {"tags.getListUserRaw",
    "[TAG]", "Get the raw versions of a TAG (or all tags) for the current user.",
    command_tags_getListUserRaw, 0, 1},
+  {"tags.getMostFrequentlyUsed",
+   "", "Get the most frequently used tags for the current user.",
+   command_tags_getMostFrequentlyUsed, 0, 0},
   {"tags.getRelated",
    "TAG", "Get a list of tags 'related' to TAG based on clustered usage analysis.",
    command_tags_getRelated, 1, 1},
