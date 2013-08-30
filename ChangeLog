@@ -1,3 +1,39 @@
+2013-08-24  Dave Beckett <dave@dajobe.org>
+
+	* README.html: Fix broken link
+
+2013-08-09  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html, src/flickcurl.h, src/tags-api.c, utils/flickcurl.c:
+	Implement flickr.tags.getMostFrequentlyUsed
+
+	(flickcurl_tags_getMostFrequentlyUsed): Added implementing
+	flickr.tags.getMostFrequentlyUsed Updated flickcurl utility to
+	support it.  ISSUE: This does not seeem to work via OAuth 2.0
+	although it works in the API Explorer.
+
+2013-07-29  Dave Beckett <dave@dajobe.org>
+
+	* coverage.html, src/flickcurl.h, src/people-api.c,
+	utils/flickcurl.c: Added flickr.people.getGroups
+
+	(flickcurl_people_getGroups): Added.
+
+	* coverage.html:
+	Added flickr.contacts.getTaggingSuggestions
+
+	* src/contacts-api.c, src/flickcurl.h, utils/flickcurl.c: Added
+	contacts.getTaggingSuggestions
+
+	(flickcurl_contacts_getTaggingSuggestions): Added.  Reordered
+	parameters to match rest of contacts.get* APi calls.  flickcurl:
+	Added new command and adjusted some help text for other
+	contacts.get* API calls.
+
+2013-06-22  Dave Beckett <dave@dajobe.org>
+
+	* ChangeLog: #changes
+
 2013-06-21  Dave Beckett <dave@dajobe.org>
 
 	* src/groups-api.c: Guess that boolean value params take '1' or
