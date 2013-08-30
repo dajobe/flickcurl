@@ -25,9 +25,11 @@
 	* src/contacts-api.c, src/flickcurl.h, utils/flickcurl.c: Added
 	contacts.getTaggingSuggestions
 
-	(flickcurl_contacts_getTaggingSuggestions): Added.  Reordered
-	parameters to match rest of contacts.get* APi calls.  flickcurl:
-	Added new command and adjusted some help text for other
+	(flickcurl_contacts_getTaggingSuggestions): Added.
+
+	Reordered parameters to match rest of contacts.get* API calls.
+
+	flickcurl: Added new command and adjusted some help text for other
 	contacts.get* API calls.
 
 2013-06-22  Dave Beckett <dave@dajobe.org>
