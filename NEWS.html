@@ -26,6 +26,27 @@
 <p>Updated the coverage for API calls added in the last year
 approximately.</p>
 
+<p>Added new API call to get the most frequently used tags for a
+user.  This does not seem to work over OAuth:</p>
+<pre>
+  flickcurl_tag** flickcurl_tags_getMostFrequentlyUsed(flickcurl* fc);
+</pre>
+
+<p>Added new API call to get the groups of a user:</p>
+<pre>
+  flickcurl_group** flickcurl_people_getGroups(flickcurl* fc,
+    const char* user_id, const char* extras);
+</pre>
+
+<p>Added new API call to get contacts tagging suggestions but
+reordered the parameters to match the rest of the contacts.get* API
+calls.</p>
+<pre>
+  flickcurl_contact** flickcurl_contacts_getTaggingSuggestions(flickcurl* fc,
+    const char* include_self, const char* include_address_book,
+    int page, int per_page);
+</pre>
+
 <p>Added new API calls <code>flickcurl_groups_join()</code>,
 <code>flickcurl_groups_joinRequest()</code> and
 <code>flickcurl_groups_leave()</code> for (some of) the new group API:
