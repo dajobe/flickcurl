@@ -157,6 +157,15 @@ Photo tagging.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_tags_getMostFrequentlyUsed ##### -->
+<para>
+
+</para>
+
+@fc: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_tags_getRelated ##### -->
 <para>
 

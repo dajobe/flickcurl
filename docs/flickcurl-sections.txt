@@ -145,6 +145,7 @@ flickcurl_contact
 flickcurl_contacts_getList
 flickcurl_contacts_getListRecentlyUploaded
 flickcurl_contacts_getPublicList
+flickcurl_contacts_getTaggingSuggestions
 flickcurl_free_contact
 flickcurl_free_contacts
 </SECTION>
@@ -256,6 +257,7 @@ flickcurl_person_field_type
 <FILE>section-people</FILE>
 flickcurl_people_findByEmail
 flickcurl_people_findByUsername
+flickcurl_people_getGroups
 flickcurl_people_getInfo
 flickcurl_people_getPhotos
 flickcurl_people_getPhotos_params
@@ -497,6 +499,7 @@ flickcurl_tags_getListPhoto
 flickcurl_tags_getListUser
 flickcurl_tags_getListUserPopular
 flickcurl_tags_getListUserRaw
+flickcurl_tags_getMostFrequentlyUsed
 flickcurl_tags_getRelated
 </SECTION>
 

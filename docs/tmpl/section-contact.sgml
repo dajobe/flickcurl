@@ -69,6 +69,19 @@ A contact of a user.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_contacts_getTaggingSuggestions ##### -->
+<para>
+
+</para>
+
+@fc: 
+@include_self: 
+@include_address_book: 
+@page: 
+@per_page: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_free_contact ##### -->
 <para>
 

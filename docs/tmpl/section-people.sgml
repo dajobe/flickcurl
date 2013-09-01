@@ -40,6 +40,17 @@ Photos taken by people APIs.
 @Returns: 
 
 
+<!-- ##### FUNCTION flickcurl_people_getGroups ##### -->
+<para>
+
+</para>
+
+@fc: 
+@user_id: 
+@extras: 
+@Returns: 
+
+
 <!-- ##### FUNCTION flickcurl_people_getInfo ##### -->
 <para>
 
