@@ -17,7 +17,7 @@
 
 bin_PROGRAMS = flickcurl flickrdf
 
-EXTRA_PROGRAMS = codegen list-methods
+EXTRA_PROGRAMS = codegen list-methods mangen
 
 CLEANFILES=$(EXTRA_PROGRAMS)
 
@@ -66,6 +66,10 @@ if GETOPT
 list_methods_CPPFLAGS += -I$(top_srcdir)/getopt
 list_methods_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
+
+mangen_SOURCES = mangen.c commands.c
+mangen_CPPFLAGS = $(AM_CPPFLAGS)
+mangen_LDADD = $(top_builddir)/src/libflickcurl.la
 
 
 $(top_builddir)/src/libflickcurl.la:

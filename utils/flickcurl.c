@@ -141,12 +141,6 @@ my_message_handler(void *user_data, const char *message)
 #define GETOPT_STRING "a:d:ho:qvV"
 #endif
 
-#ifdef FLICKCURL_MAINTAINER
-#define GETOPT_STRING_MORE "m:"
-#else
-#define GETOPT_STRING_MORE
-#endif
-
 #ifdef HAVE_GETOPT_LONG
 static struct option long_options[] =
 {
@@ -154,9 +148,6 @@ static struct option long_options[] =
   {"auth",    1, 0, 'a'},
   {"delay",   1, 0, 'd'},
   {"help",    0, 0, 'h'},
-#ifdef FLICKCURL_MAINTAINER
-  {"maintainer", 1, 0, 'm'},
-#endif
   {"output",  0, 0, 'o'},
   {"quiet",   0, 0, 'q'},
   {"version", 0, 0, 'v'},
@@ -167,16 +158,6 @@ static struct option long_options[] =
 
 
 static const char *title_format_string = "Flickr API utility %s\n";
-
-#ifdef FLICKCURL_MAINTAINER
-static int flickcurl_cmd_compare(const void *a, const void *b)
-{
-  flickcurl_cmd* a_cmd = (flickcurl_cmd*)a;
-  flickcurl_cmd* b_cmd = (flickcurl_cmd*)b;
-  return strcmp(a_cmd->name, b_cmd->name);
-}
-
-#endif
 
 
 static void
@@ -198,9 +179,6 @@ print_help_string(void)
   puts(HELP_TEXT("a", "auth FROB       ", "Authenticate with a FROB and write auth config"));
   puts(HELP_TEXT("d", "delay DELAY     ", "Set delay between requests in milliseconds"));
   puts(HELP_TEXT("h", "help            ", "Print this help, then exit"));
-#ifdef FLICKCURL_MAINTAINER
-  puts(HELP_TEXT("m", "maintainer TYPE ", "Print formatted fragments for maintainer use, then exit"));
-#endif
   puts(HELP_TEXT("o", "output FILE     ", "Write format = FORMAT results to FILE"));
   puts(HELP_TEXT("q", "quiet           ", "Print less information while running"));
   puts(HELP_TEXT("v", "version         ", "Print the flickcurl version"));
@@ -337,10 +315,9 @@ main(int argc, char *argv[])
 #ifdef HAVE_GETOPT_LONG
     int option_index = 0;
 
-    c = getopt_long (argc, argv, GETOPT_STRING GETOPT_STRING_MORE,
-                     long_options, &option_index);
+    c = getopt_long (argc, argv, GETOPT_STRING, long_options, &option_index);
 #else
-    c = getopt (argc, argv, GETOPT_STRING GETOPT_STRING_MORE);
+    c = getopt (argc, argv, GETOPT_STRING);
 #endif
     if (c == -1)
       break;
@@ -382,99 +359,6 @@ main(int argc, char *argv[])
       case 'h':
         help = 1;
         break;
-
-#ifdef FLICKCURL_MAINTAINER
-      case 'm':
-        /* reusing rc since we set it and return it anyway */
-        rc = atoi(optarg);
-
-        if(rc == 0) {
-          puts(".LP\n"
-               "In the following list of commands:\n"
-               ".br\n"
-               "\\fIPER-PAGE\\fR is photos per result page or '-' for default (10)\n"
-               ".br\n"
-               "\\fIPAGE\\fR is result page number or '-' for default (1 = first page)\n"
-               );
-
-          qsort(commands, FLICKCURL_CMD_COUNT-1,
-                sizeof(flickcurl_cmd), flickcurl_cmd_compare);
-
-          for(i = 0; commands[i].name; i++) {
-            int d, dc, nl = 1, lastdc= -1;
-            printf(".IP \"\\fB%s\\fP \\fI%s\\fP\"\n",
-                   commands[i].name, commands[i].args);
-            for(d = 0; (dc = commands[i].description[d]); d++) {
-              if(nl && dc == ' ') {
-                lastdc = dc;
-                continue;
-              }
-
-              if(dc == ' ' && lastdc == ' ') {
-                puts("\n.br");
-                do {
-                  d++;
-                  dc = commands[i].description[d];
-                } while(dc == ' ');
-              }
-
-              nl = 0;
-              if(dc == '\n') {
-                puts("\n.br");
-                nl = 1;
-              } else
-                putchar(dc);
-              lastdc = dc;
-            }
-            putchar('\n');
-          }
-
-          puts(".SH Extras Fields");
-          puts("The \\fBEXTRAS\\fP parameter can take a comma-separated set of the following values");
-          for(i = 0; 1; i++) {
-            const char* name;
-            const char* label;
-
-            if(flickcurl_get_extras_format_info(i, &name, &label))
-              break;
-            printf(".TP\n\\fB%s\\fP\n%s\n", name, label);
-          }
-
-          puts(".SH Photos List Feed Formats");
-          puts("The \\fBFORMAT\\fP parameter can take any of the following values");
-          for(i = 0; 1; i++) {
-            const char* name;
-            const char* label;
-
-            if(flickcurl_get_feed_format_info(i, &name, &label, NULL))
-              break;
-            printf(".TP\n\\fB%s\\fP\n%s\n", name, label);
-          }
-          rc = 0;
-        } else if (rc == 1) {
-          puts("<variablelist>");
-
-          for(i = 0; 1; i++) {
-            const char* name;
-            const char* label;
-            
-            if(flickcurl_get_extras_format_info(i, &name, &label))
-              break;
-            printf("  <varlistentry>\n"
-                   "    <term>%s</term>\n"
-                   "    <listitem><simpara>%s</simpara></listitem>\n"
-                   "  </varlistentry>\n", name, label);
-          }
-          
-          puts("</variablelist>");
-          rc = 0;
-        } else {
-          fprintf(stderr, "%s: Unknown maintainer info flag %s / %d", program, 
-                  optarg, rc);
-          rc = 1;
-        }
-        goto tidy;
-#endif
 
       case 'o':
         if(optarg) {

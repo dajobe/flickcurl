@@ -97,15 +97,17 @@ search-photos.c: $(srcdir)/../examples/search-photos.c
 	$(SED) -e '1,/^$$/d' $< > $@
 
 if MAINTAINER_MODE
-flickcurl.1: $(srcdir)/flickcurl.1.in $(top_srcdir)/utils/flickcurl.c
-	( cd $(top_builddir)/utils && $(MAKE) flickcurl ) && \
+flickcurl.1: $(srcdir)/flickcurl.1.in $(top_builddir)/utils/mangen
 	sed -ne '1,/SH COMMANDS/p' $(srcdir)/flickcurl.1.in > flickcurl.1.head && \
-	$(top_builddir)/utils/flickcurl -m0 > flickcurl.1.body && \
+	$(top_builddir)/utils/mangen manual > flickcurl.1.body && \
 	sed -ne '/SH SEE ALSO/,$$p' $(srcdir)/flickcurl.1.in > flickcurl.1.tail && \
 	cat flickcurl.1.head flickcurl.1.body flickcurl.1.tail > flickcurl.1 && \
 	rm -f flickcurl.1.head flickcurl.1.body flickcurl.1.tail
 
-flickcurl-extras.xml: $(top_srcdir)/utils/flickcurl.c
-	( cd $(top_builddir)/utils && $(MAKE) flickcurl ) && \
-	$(top_builddir)/utils/flickcurl -m1 > flickcurl-extras.xml
+flickcurl-extras.xml: $(top_builddir)/utils/mangen
+	$(top_builddir)/utils/mangen extras > flickcurl-extras.xml
+
+$(top_builddir)/utils/mangen:
+	cd $(top_builddir)/utils && $(MAKE) mangen
+
 endif

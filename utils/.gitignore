@@ -6,6 +6,7 @@ codegen
 flickcurl
 flickrdf
 list-methods
-search-photos
+mangen
 methods.lst*
 oauth-test
+search-photos
