@@ -454,6 +454,7 @@ AM_SILENT_RULES([no])
 
 AC_CONFIG_FILES([Makefile
 libmtwist/Makefile
+getopt/Makefile
 src/Makefile
 utils/Makefile
 examples/Makefile

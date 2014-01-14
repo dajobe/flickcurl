@@ -24,21 +24,25 @@ CLEANFILES=$(EXTRA_PROGRAMS)
 AM_CPPFLAGS= -I$(top_srcdir)/src -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
 
 flickcurl_SOURCES = flickcurl.c
+flickcurl_CPPFLAGS = $(AM_CPPFLAGS)
+flickcurl_LDADD= $(top_builddir)/src/libflickcurl.la
 if GETOPT
-flickcurl_SOURCES += getopt.c flickcurl_getopt.h
+flickcurl_CPPFLAGS += -I$(top_srcdir)/getopt
+flickcurl_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
 flickcurl_CFLAGS=
 if MAINTAINER_MODE
 flickcurl_CFLAGS += -DFLICKCURL_MAINTAINER
 endif
-flickcurl_LDADD= $(top_builddir)/src/libflickcurl.la
 
 flickrdf_SOURCES = flickrdf.c
+flickrdf_CPPFLAGS = $(AM_CPPFLAGS)
+flickrdf_LDADD = $(top_builddir)/src/libflickcurl.la
 if GETOPT
-flickrdf_SOURCES += getopt.c flickcurl_getopt.h
+flickrdf_CPPFLAGS += -I$(top_srcdir)/getopt
+flickrdf_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
 flickrdf_CFLAGS=
-flickrdf_LDADD= $(top_builddir)/src/libflickcurl.la
 if RAPTOR
 flickrdf_CFLAGS += @RAPTOR_CFLAGS@
 flickrdf_LDADD += @RAPTOR_LIBS@
@@ -48,17 +52,24 @@ flickrdf_SOURCES += raptor_fake.c raptor_fake.h
 endif
 
 codegen_SOURCES = codegen.c
+codegen_CPPFLAGS = $(AM_CPPFLAGS)
+codegen_LDADD = $(top_builddir)/src/libflickcurl.la
 if GETOPT
-codegen_SOURCES += getopt.c flickcurl_getopt.h
+codegen_CPPFLAGS += -I$(top_srcdir)/getopt
+codegen_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
-codegen_LDADD= $(top_builddir)/src/libflickcurl.la
 
 list_methods_SOURCES = list-methods.c
-if GETOPT
-list_methods_SOURCES += getopt.c flickcurl_getopt.h
-endif
+list_methods_CPPFLAGS = $(AM_CPPFLAGS)
 list_methods_LDADD= $(top_builddir)/src/libflickcurl.la
+if GETOPT
+list_methods_CPPFLAGS += -I$(top_srcdir)/getopt
+list_methods_LDADD += $(top_builddir)/getopt/libgetopt.la
+endif
 
 
 $(top_builddir)/src/libflickcurl.la:
 	cd $(top_builddir)/src && $(MAKE) libflickcurl.la
+
+$(top_builddir)/libgetopt/libgetopt.la:
+	cd $(top_builddir)/libgetopt && $(MAKE) libgetopt.la

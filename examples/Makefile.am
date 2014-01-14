@@ -33,14 +33,17 @@ print_photo_info_LDADD=$(top_builddir)/src/libflickcurl.la
 print_photo_info_DEPENDENCIES = $(top_builddir)/src/libflickcurl.la
 
 search_photos_SOURCES = search-photos.c
+search_photos_CPPFLAGS = $(AM_CPPFLAGS)
+search_photos_LDADD = $(top_builddir)/src/libflickcurl.la
 if GETOPT
-search_photos_SOURCES += $(srcdir)/../utils/getopt.c \
-  $(srcdir)/../utils/flickcurl_getopt.h
-search_photos_CPPFLAGS = -I$(srcdir)/../utils
+search_photos_CPPFLAGS += -I$(top_srcdir)/getopt
+search_photos_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
-search_photos_LDADD= $(top_builddir)/src/libflickcurl.la
 
 $(top_builddir)/src/libflickcurl.la:
 	cd $(top_builddir)/src && $(MAKE) libflickcurl.la
+
+$(top_builddir)/libgetopt/libgetopt.la:
+	cd $(top_builddir)/libgetopt && $(MAKE) libgetopt.la
 
 examples: $(example_programs)

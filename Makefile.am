@@ -15,7 +15,13 @@
 # complete terms and further detail along with the license texts for
 # the licenses in COPYING.LIB, COPYING and LICENSE-2.0.txt respectively.
 
-SUBDIRS = libmtwist src utils docs examples
+SUBDIRS = libmtwist
+if GETOPT
+SUBDIRS += getopt
+endif
+SUBDIRS += src utils docs examples
+
+DIST_SUBDIRS = libmtwist getopt src utils docs examples
 
 ACLOCAL_AMFLAGS = -I build
 
