@@ -1,6 +1,31 @@
-2013-09-01  Dave Beckett  <dave@dajobe.org>
+2014-01-13  Dave Beckett <dave@dajobe.org>
 
-	* Snapshotted flickcurl_1_25 for 1.25 release (GIT 4222075303446c1f1241282a41838557876559b2)
+	* src/photo.c:
+	Support staticflickr.com domain
+
+	http://www.flickr.com/services/api/misc.urls.html
+	http://www.flickr.com/services/api/misc.buddyicons.html
+
+	(flickcurl_photo_as_source_uri, flickcurl_user_icon_uri): Use new
+	domain for building image URIs.
+
+	(flickcurl_source_uri_as_photo_id): Accept old static.flickr.com
+	as well as new domain in URIs.
+
+	* src/photo.c: Use smaller fixed buffer sizes on stack
+
+	* src/common.c: Add new extras: url_q, url_n and url_c Document
+	the older urls using info on web site
+
+	* configure.ac: Check for clang to enable correct discovery of
+	supported warnings
+
+2013-09-01  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac: Bumped version to 1.26
+
+	* Snapshotted flickcurl_1_25 for 1.25 release (GIT
+	4222075303446c1f1241282a41838557876559b2)
 
 2013-08-24  Dave Beckett <dave@dajobe.org>
 
