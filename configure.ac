@@ -78,6 +78,14 @@ AM_SANITY_CHECK
 # Checks for programs.
 AM_PROG_AR
 AM_PROG_CC_C_O
+AC_MSG_CHECKING(whether $CC is clang)
+CC_IS_CLANG=no
+if $CC 2>&1 | grep clang >/dev/null 2>&1; then
+  CC_IS_CLANG=yes
+else
+  :
+fi
+AC_MSG_RESULT($CC_IS_CLANG)
 
 dnl Initialize libtool
 LT_INIT
@@ -386,6 +394,10 @@ dnl compiler checks
 AC_DEFUN([FLICKCURL_CC_TRY_FLAG], [
   AC_MSG_CHECKING([whether $CC supports $1])
   flickcurl_save_CFLAGS="$CFLAGS"
+  if test $CC_IS_CLANG = yes; then
+    # Make unknown warnings into errors for clang so the test below works
+    CFLAGS="-Werror $CFLAGS"
+  fi
   CFLAGS="$CFLAGS $1"
   AC_COMPILE_IFELSE([AC_LANG_SOURCE([ ])], [flickcurl_cc_flag=yes], [flickcurl_cc_flag=no])
   CFLAGS="$flickcurl_save_CFLAGS"
