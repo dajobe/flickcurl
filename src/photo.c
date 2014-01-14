@@ -174,7 +174,7 @@ flickcurl_free_photo(flickcurl_photo *photo)
 char*
 flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
 {
-  char buf[1024];
+  char buf[512];
   char *result;
   size_t len;
   
@@ -220,7 +220,7 @@ flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
 char*
 flickcurl_photo_as_page_uri(flickcurl_photo *photo)
 {
-  char buf[1024];
+  char buf[512];
   char *result;
   size_t len;
   
@@ -403,7 +403,7 @@ flickcurl_source_uri_as_photo_id(const char *uri)
 char*
 flickcurl_user_icon_uri(int farm, int server, char *nsid)
 {
-  char buf[1024];
+  char buf[512];
   char *result;
   
   if(server && farm && nsid) {
