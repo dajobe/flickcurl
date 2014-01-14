@@ -2282,7 +2282,7 @@ flickcurl_append_photos_list_params(flickcurl* fc,
 
 
 
-#define EXTRAS_FORMAT_COUNT 19
+#define EXTRAS_FORMAT_COUNT 22
 static struct {
   const char* name;
   const char* label;
@@ -2304,14 +2304,19 @@ flickcurl_extras_format_info[EXTRAS_FORMAT_COUNT+1] = {
   { "path_alias", "Path alias for owner like /photos/USERNAME"},
 
   { "tags", "Item clean tags (safe for HTML, URLs)"},
-  /* http://tech.groups.yahoo.com/group/yws-flickr/message/5053 */
-  { "url_m", "URL of medium size image"},
+  /* http://www.flickr.com/services/api/misc.urls.html */
+  { "url_m", "URL of small, medium size image"},
   { "url_o", "URL of original size image"},
-  { "url_s", "URL of small size image"},
+  { "url_s", "URL of small suqare 75x75 size image"},
   { "url_sq", "URL of square size image"},
-  { "url_t", "URL of thumbnail size image"},
+  { "url_t", "URL of thumbnail, 100 on longest side size image"},
 
   { "views", "Number of times item has been viewed"},
+
+  { "url_q", "URL of large square 150x150 size image"},
+  { "url_n", "URL of small, 320 on longest side size image"},
+  { "url_c", "URL of medium 800, 800 on longest size image"},
+
   { NULL, NULL }
 };
 
