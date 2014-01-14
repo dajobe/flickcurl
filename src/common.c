@@ -1569,8 +1569,8 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
       break;
     *p = '\0';
   }
-  form[i++] = '\0';
-  form[i] = '\0';
+  form[i++] = NULL;
+  form[i] = NULL;
   
   if(count_p)
     *count_p = count;
