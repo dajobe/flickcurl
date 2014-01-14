@@ -23,7 +23,7 @@ CLEANFILES=$(EXTRA_PROGRAMS)
 
 AM_CPPFLAGS= -I$(top_srcdir)/src -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
 
-flickcurl_SOURCES = flickcurl.c
+flickcurl_SOURCES = flickcurl.c commands.c flickcurl_cmd.h
 flickcurl_CPPFLAGS = $(AM_CPPFLAGS)
 flickcurl_LDADD= $(top_builddir)/src/libflickcurl.la
 if GETOPT
