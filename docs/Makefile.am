@@ -96,7 +96,6 @@ dist-hook-local: html-build.stamp
 search-photos.c: $(srcdir)/../examples/search-photos.c
 	$(SED) -e '1,/^$$/d' $< > $@
 
-if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_builddir)/utils/mangen
 	sed -ne '1,/SH COMMANDS/p' $(srcdir)/flickcurl.1.in > flickcurl.1.head && \
 	$(top_builddir)/utils/mangen manpage > flickcurl.1.body && \
@@ -109,5 +108,3 @@ flickcurl-extras.xml: $(top_builddir)/utils/mangen
 
 $(top_builddir)/utils/mangen:
 	cd $(top_builddir)/utils && $(MAKE) mangen
-
-endif

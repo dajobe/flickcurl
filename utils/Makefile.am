@@ -31,9 +31,6 @@ flickcurl_CPPFLAGS += -I$(top_srcdir)/getopt
 flickcurl_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
 flickcurl_CFLAGS=
-if MAINTAINER_MODE
-flickcurl_CFLAGS += -DFLICKCURL_MAINTAINER
-endif
 
 flickrdf_SOURCES = flickrdf.c
 flickrdf_CPPFLAGS = $(AM_CPPFLAGS)
