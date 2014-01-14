@@ -99,7 +99,7 @@ search-photos.c: $(srcdir)/../examples/search-photos.c
 if MAINTAINER_MODE
 flickcurl.1: $(srcdir)/flickcurl.1.in $(top_builddir)/utils/mangen
 	sed -ne '1,/SH COMMANDS/p' $(srcdir)/flickcurl.1.in > flickcurl.1.head && \
-	$(top_builddir)/utils/mangen manual > flickcurl.1.body && \
+	$(top_builddir)/utils/mangen manpage > flickcurl.1.body && \
 	sed -ne '/SH SEE ALSO/,$$p' $(srcdir)/flickcurl.1.in > flickcurl.1.tail && \
 	cat flickcurl.1.head flickcurl.1.body flickcurl.1.tail > flickcurl.1 && \
 	rm -f flickcurl.1.head flickcurl.1.body flickcurl.1.tail
