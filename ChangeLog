@@ -1,4 +1,28 @@
+2014-01-14  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c: Use NULL not '\0' [clang]
+
+	* docs/Makefile.am: mangen manpage
+
+	* docs/Makefile.am, utils/.gitignore, utils/Makefile.am,
+	utils/flickcurl.c, utils/mangen.c: Added mangen utility to
+	generate manpage and extras
+
+	* utils/Makefile.am, utils/commands.c, utils/flickcurl.c,
+	utils/flickcurl_cmd.h: Split utility commands out into commands.c
+	with header
+
 2014-01-13  Dave Beckett <dave@dajobe.org>
+
+	* Makefile.am, configure.ac, examples/Makefile.am,
+	getopt/.gitignore, getopt/Makefile.am, getopt/flickcurl_getopt.h,
+	getopt/getopt.c, utils/Makefile.am, utils/flickcurl_getopt.h,
+	utils/getopt.c: Add libgetopt convenience library
+
+	* Makefile.am, configure.ac, libmtwist, src/Makefile.am: Make
+	libtwist a convenience library
+
+	* src/common.c: sort flickcurl_extras_format_info names
 
 	* src/photo.c:
 	Support staticflickr.com domain
