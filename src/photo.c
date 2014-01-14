@@ -179,24 +179,24 @@ flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
   size_t len;
   
   if(c == 'o') {
-    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{o-secret}_o.(jpg|gif|png) */
-    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s_o.%s", 
+    /* http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{o-secret}_o.(jpg|gif|png) */
+    sprintf(buf, "http://farm%s.staticflickr.com/%s/%s_%s_o.%s",
             photo->fields[PHOTO_FIELD_farm].string,
             photo->fields[PHOTO_FIELD_server].string,
             photo->id,
             photo->fields[PHOTO_FIELD_originalsecret].string,
             photo->fields[PHOTO_FIELD_originalformat].string);
   } else if (c == 'm' || c == 's' || c == 't' || c == 'b') {
-    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}_[mstb].jpg */
-    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s_%c.jpg",
+    /* http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstb].jpg */
+    sprintf(buf, "http://farm%s.staticflickr.com/%s/%s_%s_%c.jpg",
             photo->fields[PHOTO_FIELD_farm].string,
             photo->fields[PHOTO_FIELD_server].string,
             photo->id,
             photo->fields[PHOTO_FIELD_secret].string,
             c);
   } else {
-    /* http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}.jpg */
-    sprintf(buf, "http://farm%s.static.flickr.com/%s/%s_%s.jpg",
+    /* http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg */
+    sprintf(buf, "http://farm%s.staticflickr.com/%s/%s_%s.jpg",
             photo->fields[PHOTO_FIELD_farm].string,
             photo->fields[PHOTO_FIELD_server].string,
             photo->id,
@@ -319,6 +319,8 @@ flickcurl_photo_as_short_uri(flickcurl_photo *photo)
 static const char source_uri_match1[SOURCE_URI_MATCH1_LENGTH+1] = "http://farm";
 #define SOURCE_URI_MATCH2_LENGTH 19
 static const char source_uri_match2[SOURCE_URI_MATCH2_LENGTH+1] = ".static.flickr.com/";
+#define SOURCE_URI_MATCH3_LENGTH 18
+static const char source_uri_match3[SOURCE_URI_MATCH3_LENGTH+1] = ".staticflickr.com/";
 
 /**
  * flickcurl_source_uri_as_photo_id:
@@ -331,6 +333,7 @@ static const char source_uri_match2[SOURCE_URI_MATCH2_LENGTH+1] = ".static.flick
  * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{o-secret}_o.(jpg|gif|png)</code> or
  * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}_[mstb].jpg</code>
  * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}.jpg</code>
+ * (or the same with staticflickr.com)
  * returns the {photo-id}
  *
  * Return value: new photo ID string or NULL on failure
@@ -354,9 +357,13 @@ flickcurl_source_uri_as_photo_id(const char *uri)
   while(isdigit(*p))
     p++;
 
-  if(memcmp(p, source_uri_match2, SOURCE_URI_MATCH2_LENGTH))
-    return NULL;
-  p+= SOURCE_URI_MATCH2_LENGTH;
+  if(memcmp(p, source_uri_match2, SOURCE_URI_MATCH2_LENGTH)) {
+    if(memcmp(p, source_uri_match3, SOURCE_URI_MATCH3_LENGTH))
+      return NULL;
+    p+= SOURCE_URI_MATCH3_LENGTH;
+  } else {
+    p+= SOURCE_URI_MATCH2_LENGTH;
+  }
 
   /* now at {server-id}/{photo_id}_... */
   while(isdigit(*p))
@@ -408,8 +415,8 @@ flickcurl_user_icon_uri(int farm, int server, char *nsid)
   
   if(server && farm && nsid) {
     size_t len;
-    /* http://farm{icon-farm}.static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg */
-    sprintf(buf, "http://farm%d.static.flickr.com/%d/buddicons/%s.jpg", 
+    /* http://farm{icon-farm}.staticflickr.com/{icon-server}/buddyicons/{nsid}.jpg */
+    sprintf(buf, "http://farm%d.staticflickr.com/%d/buddyicons/%s.jpg",
             farm, server, nsid); 
     len = strlen(buf);
     result = (char*)malloc(len + 1);
