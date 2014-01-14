@@ -91,17 +91,16 @@ flickcurl_internal.h \
 sha1.c \
 legacy-auth.c \
 oauth.c \
-$(top_srcdir)/libmtwist/mt.c \
-$(top_srcdir)/libmtwist/seed.c \
-$(top_srcdir)/libmtwist/mtwist.h \
-$(top_srcdir)/libmtwist/mtwist_internal.h \
 mtwist_config.h
 
 AM_CFLAGS = -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
-
-libflickcurl_la_LIBADD =
+libflickcurl_la_LIBADD = $(top_builddir)/libmtwist/libmtwist.la
+libflickcurl_la_DEPENDENCIES = $(top_builddir)/libmtwist/libmtwist.la
 
 libflickcurl_la_LDFLAGS = -version-info @LIBFLICKCURL_LIBTOOL_VERSION@
+
+$(top_builddir)/libmtwist/libmtwist.la:
+	cd $(top_builddir)/libmtwist && $(MAKE) libmtwist.la
 
 if OFFLINE
 if RAPTOR

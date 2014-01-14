@@ -453,6 +453,7 @@ dnl automake 1.11
 AM_SILENT_RULES([no])
 
 AC_CONFIG_FILES([Makefile
+libmtwist/Makefile
 src/Makefile
 utils/Makefile
 examples/Makefile
