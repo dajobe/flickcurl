@@ -58,3 +58,6 @@ README: README.html
 
 NEWS: NEWS.html
 	$(HTML_TO_TEXT) $< > $@
+
+# Some people need a little help
+test: check
