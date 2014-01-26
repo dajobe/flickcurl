@@ -5007,9 +5007,9 @@ command_contacts_getTaggingSuggestions(flickcurl* fc, int argc, char *argv[])
   int per_page = -1;
 
   if(argc >1) {
-    page = parse_page_param(argv[1]);
+    per_page = parse_page_param(argv[1]);
     if(argc >2) {
-      per_page = parse_page_param(argv[2]);
+      page = parse_page_param(argv[2]);
       if(argc >3) {
         include_self = argv[3];
         if(argc >4) {
@@ -5119,16 +5119,16 @@ flickcurl_cmd commands[FLICKCURL_CMD_COUNT] = {
    command_collections_getTree, 0, 2},
 
   {"contacts.getList",
-   "[FILTER [PAGE [PER-PAGE]]]", "Get a list of contacts with optional FILTER",
+   "[FILTER [PER-PAGE [PAGE]]]", "Get a list of contacts with optional FILTER",
    command_contacts_getList, 0, 3},
   {"contacts.getListRecentlyUploaded",
    "[DATE-LAST-UPLOAD [FILTER]]", "Get a list of recent uploading contacts since DATE-LAST-UPLOAD with optional FILTER",
    command_contacts_getListRecentlyUploaded, 0, 2},
   {"contacts.getPublicList",
-   "USER-NSID [PAGE [PER-PAGE]]", "Get the contact list for user USER-NSID",
+   "USER-NSID [PER-PAGE [PAGE]]", "Get the contact list for user USER-NSID",
    command_contacts_getPublicList, 1, 3},
   {"contacts.getTaggingSuggestions",
-   "[PAGE [PER-PAGE [INCLUDE-SELF [INCLUDE-ADDRESS-BOOK]]]]", "Get tagging suggestions",
+   "[PER_PAGE [PAGE [INCLUDE-SELF [INCLUDE-ADDRESS-BOOK]]]]", "Get tagging suggestions",
    command_contacts_getTaggingSuggestions, 0, 4},
 
   {"favorites.add",
