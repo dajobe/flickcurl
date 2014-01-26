@@ -112,7 +112,7 @@ mangen_print_man_page(FILE* fh)
       }
 
       if(dc == ' ' && lastdc == ' ') {
-        fputs("\n.br ", fh);
+        fputs("\n.br\n", fh);
         do {
           d++;
           dc = commands[i].description[d];
@@ -121,7 +121,7 @@ mangen_print_man_page(FILE* fh)
 
       nl = 0;
       if(dc == '\n') {
-        fputs("\n.br ", fh);
+        fputs("\n.br\n", fh);
         nl = 1;
       } else
         fputc(dc, fh);
