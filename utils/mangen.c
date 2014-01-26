@@ -130,8 +130,8 @@ mangen_print_man_page(FILE* fh)
     fputc('\n', fh);
   }
 
-  fputs(".SH Extras Fields", fh);
-  fputs("The \\fBEXTRAS\\fP parameter can take a comma-separated set of the following values", fh);
+  fputs(".SH Extras Fields\n", fh);
+  fputs("The \\fBEXTRAS\\fP parameter can take a comma-separated set of the following values\n", fh);
   for(i = 0; 1; i++) {
     const char* name;
     const char* label;
@@ -142,8 +142,8 @@ mangen_print_man_page(FILE* fh)
     fprintf(fh, ".TP\n\\fB%s\\fP\n%s\n", name, label);
   }
 
-  fputs(".SH Photos List Feed Formats", fh);
-  fputs("The \\fBFORMAT\\fP parameter can take any of the following values", fh);
+  fputs(".SH Photos List Feed Formats\n", fh);
+  fputs("The \\fBFORMAT\\fP parameter can take any of the following values\n", fh);
   for(i = 0; 1; i++) {
     const char* name;
     const char* label;
@@ -162,7 +162,7 @@ mangen_print_extras(FILE* fh)
 {
   int i;
 
-  fputs("<variablelist>", fh);
+  fputs("<variablelist>\n", fh);
 
   for(i = 0; 1; i++) {
     const char* name;
@@ -178,7 +178,7 @@ mangen_print_extras(FILE* fh)
             "  </varlistentry>\n", name, label);
   }
 
-  fputs("</variablelist>", fh);
+  fputs("</variablelist>\n", fh);
 }
 
 
