@@ -1620,7 +1620,7 @@ flickcurl_unixtime_to_sqltimestamp(time_t unix_time)
   
   structured_time = (struct tm*)gmtime(&unix_time);
   len = ISO_DATE_LEN;
-  strftime(date_buffer, len+1, SQL_DATETIME_FORMAT, structured_time);
+  strftime(date_buffer, sizeof(date_buffer), SQL_DATETIME_FORMAT, structured_time);
   
   value = (char*)malloc(len + 1);
   memcpy(value, date_buffer, len + 1);
