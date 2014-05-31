@@ -2723,6 +2723,8 @@ command_blogs_postPhoto(flickcurl* fc, int argc, char *argv[])
 static void
 command_print_activity(flickcurl_activity* a)
 {
+  int i;
+
   fprintf(stdout,
           "  type %s  id %s  owner %s name '%s'  primary %s\n"
           "  secret %s  server %d farm %d\n"
@@ -2737,18 +2739,15 @@ command_print_activity(flickcurl_activity* a)
           a->notes_old, a->notes_new,
           a->views, a->photos, a->faves, a->more,
           a->title);
-  if(a->events) {
-    int i;
 
-    for(i = 0; a->events[i]; i++) {
-      flickcurl_activity_event* ae = a->events[i];
+  for(i = 0; a->events[i]; i++) {
+    flickcurl_activity_event* ae = a->events[i];
 
-      fprintf(stdout,
-              "    activity event %i) type %s  user %s  username %s\n      datetime %d\n      value '%s'\n",
-              i, ae->type, ae->user, ae->username,
-              ae->date_added,
-              ae->value);
-    }
+    fprintf(stdout,
+            "    activity event %i) type %s  user %s  username %s\n      datetime %d\n      value '%s'\n",
+            i, ae->type, ae->user, ae->username,
+            ae->date_added,
+            ae->value);
   }
 }
 
