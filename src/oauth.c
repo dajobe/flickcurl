@@ -516,6 +516,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 #ifdef FLICKCURL_DEBUG
       fprintf(stderr, "flickcurl_oauth_build_key() failed\n");
 #endif
+      free(buf);
       rc = 1;
       goto tidy;
     }
