@@ -55,6 +55,8 @@ flickcurl_free_activity_event(flickcurl_activity_event *activity_event)
 static void
 flickcurl_free_activity(flickcurl_activity *activity)
 {
+  int i;
+
   FLICKCURL_ASSERT_OBJECT_POINTER_RETURN(activity, flickcurl_activity);
 
   if(activity->type)
@@ -71,11 +73,10 @@ flickcurl_free_activity(flickcurl_activity *activity)
     free(activity->secret);
   if(activity->title)
     free(activity->title);
-  if(activity->events) {
-    int i;
-    for(i = 0; activity->events[i]; i++) 
-      flickcurl_free_activity_event(activity->events[i]);
-  }
+
+  for(i = 0; activity->events[i]; i++) 
+    flickcurl_free_activity_event(activity->events[i]);
+
   free(activity);
 }
 
