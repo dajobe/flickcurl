@@ -506,8 +506,11 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
         flickcurl_license* license;
         license = flickcurl_photos_licenses_getInfo_by_id(fc, 
                                                         photo->fields[field].integer);
-        if(!license)
+        if(!license) {
+          if(new_object)
+            free(new_object);
           continue;
+        }
 
         if(license->url) {
           datatype = VALUE_TYPE_URI;
