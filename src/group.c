@@ -160,7 +160,8 @@ flickcurl_build_groups(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       } else if(!strcmp(attr_name, "iconfarm")) {
         g->iconfarm = atoi(attr_value);
         free(attr_value);
-      }
+      } else
+        free(attr_value);
     } /* end attributes */
 
 
