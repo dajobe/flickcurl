@@ -278,7 +278,7 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       
       switch(field) {
         case COLLECTION_FIELD_id:
-          collection->id = string_value;
+          collection->id = string_value; string_value = NULL;
           break;
       
         case COLLECTION_FIELD_child_count:
@@ -287,15 +287,14 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           
         case COLLECTION_FIELD_date_created:
           collection->date_created = int_value;
-          free(string_value);
           break;
           
         case COLLECTION_FIELD_iconlarge:
-          collection->iconlarge = string_value;
+          collection->iconlarge = string_value; string_value = NULL;
           break;
           
         case COLLECTION_FIELD_iconsmall:
-          collection->iconsmall = string_value;
+          collection->iconsmall = string_value; string_value = NULL;
           break;
           
         case COLLECTION_FIELD_server:
@@ -303,15 +302,15 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           break;
           
         case COLLECTION_FIELD_secret:
-          collection->secret = string_value;
+          collection->secret = string_value; string_value = NULL;
           break;
           
         case COLLECTION_FIELD_title:
-          collection->title = string_value;
+          collection->title = string_value; string_value = NULL;
           break;
           
         case COLLECTION_FIELD_description:
-          collection->description = string_value;
+          collection->description = string_value; string_value = NULL;
           break;
           
         case COLLECTION_FIELD_iconphotos:
@@ -319,10 +318,12 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           break;
       }
       
+      if(string_value)
+        free(string_value);
+
       if(fc->failed) {
         if(collection)
           flickcurl_free_collection(collection);
-        free(string_value);
         goto tidy;
       }
     }
