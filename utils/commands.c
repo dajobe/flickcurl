@@ -5023,7 +5023,7 @@ command_contacts_getTaggingSuggestions(flickcurl* fc, int argc, char *argv[])
     }
   }
 
-  contacts = flickcurl_contacts_getTaggingSuggestions(fc, include_self, include_address_book, per_page, page);
+  contacts = flickcurl_contacts_getTaggingSuggestions(fc, include_self, include_address_book, page, per_page);
   if(contacts) {
     int i;
     for(i = 0; contacts[i]; i++)
