@@ -1350,8 +1350,6 @@ flickcurl_invoke_photos_list(flickcurl* fc, const xmlChar* xpathExpr,
   memcpy(photos_list->format, nformat, format_len + 1);
 
   tidy:
-  if(xpathNodeCtx)
-    xmlXPathFreeContext(xpathNodeCtx);
   if(xpathObj)
     xmlXPathFreeObject(xpathObj);
   if(xpathCtx)
