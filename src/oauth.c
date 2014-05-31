@@ -1220,7 +1220,7 @@ static const char* test_token_secret  = NULL;
 
 /* Test DATA fields */
 static const char* test_http_request_method = "GET";
-static const char* test_uri_base_string     = "http://www.flickr.com/services/oauth/request_token";
+static const char* test_uri_base_string     = "https://www.flickr.com/services/oauth/request_token";
 static const char* test_oauth_callback_url  = "http://www.example.com";
 static const char* test_oauth_consumer_key  = "653e7a6ecc1d528c516cc8f92cf98611";
 static const char* test_oauth_nonce         = "95613465";
@@ -1234,10 +1234,10 @@ static const char* expected_key =
       "&";
 static const char* expected_data =
       "GET" "&"
-      "http%3A%2F%2Fwww.flickr.com%2Fservices%2Foauth%2Frequest_token" "&"
+      "https%3A%2F%2Fwww.flickr.com%2Fservices%2Foauth%2Frequest_token" "&"
       "oauth_callback%3Dhttp%253A%252F%252Fwww.example.com%26oauth_consumer_key%3D653e7a6ecc1d528c516cc8f92cf98611%26oauth_nonce%3D95613465%26oauth_signature_method%3DHMAC-SHA1%26oauth_timestamp%3D1305586162%26oauth_version%3D1.0";
 
-static const char* expected_signature = "7w18YS2bONDPL%2FzgyzP5XTr5af4%3D";
+static const char* expected_signature = "2zL7aYEzEEY0IvEgQjT7IqB518U%3D";
 
 static const char* program;
 
