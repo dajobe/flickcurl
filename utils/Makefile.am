@@ -74,3 +74,5 @@ $(top_builddir)/src/libflickcurl.la:
 
 $(top_builddir)/libgetopt/libgetopt.la:
 	cd $(top_builddir)/libgetopt && $(MAKE) libgetopt.la
+
+all-programs: $(bin_PROGRAMS) $(EXTRA_PROGRAMS)
