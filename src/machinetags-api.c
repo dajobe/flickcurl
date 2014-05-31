@@ -246,8 +246,11 @@ flickcurl_machinetags_getPredicates(flickcurl* fc, const char *nspace,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tag_pvs)
+      flickcurl_free_tag_predicate_values(tag_pvs);
     tag_pvs = NULL;
+  }
 
   return tag_pvs;
 }
