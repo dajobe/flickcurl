@@ -179,24 +179,24 @@ flickcurl_photo_as_source_uri(flickcurl_photo *photo, const char c)
   size_t len;
   
   if(c == 'o') {
-    /* http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{o-secret}_o.(jpg|gif|png) */
-    sprintf(buf, "http://farm%s.staticflickr.com/%s/%s_%s_o.%s",
+    /* https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{o-secret}_o.(jpg|gif|png) */
+    sprintf(buf, "https://farm%s.staticflickr.com/%s/%s_%s_o.%s",
             photo->fields[PHOTO_FIELD_farm].string,
             photo->fields[PHOTO_FIELD_server].string,
             photo->id,
             photo->fields[PHOTO_FIELD_originalsecret].string,
             photo->fields[PHOTO_FIELD_originalformat].string);
   } else if (c == 'm' || c == 's' || c == 't' || c == 'b') {
-    /* http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstb].jpg */
-    sprintf(buf, "http://farm%s.staticflickr.com/%s/%s_%s_%c.jpg",
+    /* https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}_[mstb].jpg */
+    sprintf(buf, "https://farm%s.staticflickr.com/%s/%s_%s_%c.jpg",
             photo->fields[PHOTO_FIELD_farm].string,
             photo->fields[PHOTO_FIELD_server].string,
             photo->id,
             photo->fields[PHOTO_FIELD_secret].string,
             c);
   } else {
-    /* http://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg */
-    sprintf(buf, "http://farm%s.staticflickr.com/%s/%s_%s.jpg",
+    /* https://farm{farm-id}.staticflickr.com/{server-id}/{id}_{secret}.jpg */
+    sprintf(buf, "https://farm%s.staticflickr.com/%s/%s_%s.jpg",
             photo->fields[PHOTO_FIELD_farm].string,
             photo->fields[PHOTO_FIELD_server].string,
             photo->id,
@@ -224,8 +224,8 @@ flickcurl_photo_as_page_uri(flickcurl_photo *photo)
   char *result;
   size_t len;
   
-  /* http://www.flickr.com/photos/{owner}/{photo id}/ */
-  sprintf(buf, "http://www.flickr.com/photos/%s/%s", 
+  /* https://www.flickr.com/photos/{owner}/{photo id}/ */
+  sprintf(buf, "https://www.flickr.com/photos/%s/%s",
           photo->fields[PHOTO_FIELD_owner_nsid].string, photo->id);
 
   len = strlen(buf);
@@ -330,9 +330,9 @@ static const char source_uri_match3[SOURCE_URI_MATCH3_LENGTH+1] = ".staticflickr
  *
  * Turns an URL that points to the photo into a photo ID.
  * i.e. given an URI like these:
- * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{o-secret}_o.(jpg|gif|png)</code> or
- * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}_[mstb].jpg</code>
- * <code>http://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}.jpg</code>
+ * <code>https://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{o-secret}_o.(jpg|gif|png)</code> or
+ * <code>https://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}_[mstb].jpg</code>
+ * <code>https://farm{farm-id}.static.flickr.com/{server-id}/{photo-id}_{secret}.jpg</code>
  * (or the same with staticflickr.com)
  * returns the {photo-id}
  *
@@ -415,8 +415,8 @@ flickcurl_user_icon_uri(int farm, int server, char *nsid)
   
   if(server && farm && nsid) {
     size_t len;
-    /* http://farm{icon-farm}.staticflickr.com/{icon-server}/buddyicons/{nsid}.jpg */
-    sprintf(buf, "http://farm%d.staticflickr.com/%d/buddyicons/%s.jpg",
+    /* https://farm{icon-farm}.staticflickr.com/{icon-server}/buddyicons/{nsid}.jpg */
+    sprintf(buf, "https://farm%d.staticflickr.com/%d/buddyicons/%s.jpg",
             farm, server, nsid); 
     len = strlen(buf);
     result = (char*)malloc(len + 1);
@@ -424,7 +424,7 @@ flickcurl_user_icon_uri(int farm, int server, char *nsid)
   } else {
     #define MAGIC_LEN 42
     result = (char*)malloc(MAGIC_LEN + 1);
-    memcpy(result, "http://www.flickr.com/images/buddyicon.jpg", MAGIC_LEN + 1);
+    memcpy(result, "https://www.flickr.com/images/buddyicon.jpg", MAGIC_LEN + 1);
   }
 
   return result;
