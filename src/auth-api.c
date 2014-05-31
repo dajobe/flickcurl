@@ -314,9 +314,6 @@ flickcurl_auth_oauth_getAccessToken(flickcurl* fc)
   }
 
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
-
   if(fc->failed)
     rc = 1;
 
