@@ -249,8 +249,10 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           fc->failed = 1;
       }
       
-      if(fc->failed)
+      if(fc->failed) {
+        free(value);
         goto institutionstidy;
+      }
     } /* end for institution fields */
 
    institutionstidy:
