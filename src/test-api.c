@@ -131,8 +131,11 @@ flickcurl_test_login(flickcurl* fc)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(username)
+      free(username);
     username = NULL;
+  }
 
   return username;
 }

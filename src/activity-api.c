@@ -98,8 +98,11 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(activities)
+      flickcurl_free_activities(activities);
     activities = NULL;
+  }
 
   return activities;
 }
@@ -166,8 +169,11 @@ flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(activities)
+      flickcurl_free_activities(activities);
     activities = NULL;
+  }
 
   return activities;
 }

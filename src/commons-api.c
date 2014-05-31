@@ -89,8 +89,11 @@ flickcurl_commons_getInstitutions(flickcurl* fc)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(institutions)
+      flickcurl_free_institutions(institutions);
     institutions = NULL;
+  }
 
   return institutions;
 }

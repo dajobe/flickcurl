@@ -150,8 +150,11 @@ flickcurl_photosets_create(flickcurl* fc, const char* title,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(photoset_id)
+      free(photoset_id);
     photoset_id = NULL;
+  }
 
   return photoset_id;
 }
@@ -341,8 +344,11 @@ flickcurl_photosets_getContext(flickcurl* fc, const char* photo_id,
   contexts = flickcurl_build_contexts(fc, doc);
 
  tidy:
-  if(fc->failed)
+  if(fc->failed) {
+    if(contexts)
+      flickcurl_free_contexts(contexts);
     contexts = NULL;
+  }
 
   return contexts;
 }
@@ -396,8 +402,11 @@ flickcurl_photosets_getInfo(flickcurl* fc, const char* photoset_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(photoset)
+      flickcurl_free_photoset(photoset);
     photoset = NULL;
+  }
 
   return photoset;
 }
@@ -451,8 +460,11 @@ flickcurl_photosets_getList(flickcurl* fc, const char* user_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(photoset_list)
+      flickcurl_free_photosets(photoset_list);
     photoset_list = NULL;
+  }
 
   return photoset_list;
 }

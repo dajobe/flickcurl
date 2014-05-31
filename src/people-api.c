@@ -136,8 +136,11 @@ flickcurl_people_getGroups(flickcurl* fc, const char* user_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(groups)
+      flickcurl_free_groups(groups);
     groups = NULL;
+  }
 
   return groups;
 }
@@ -189,8 +192,11 @@ flickcurl_people_getInfo(flickcurl* fc, const char* user_id)
  tidy:
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
-  if(fc->failed)
+  if(fc->failed) {
+    if(person)
+      flickcurl_free_person(person);
     person = NULL;
+  }
 
   return person;
 }
@@ -245,8 +251,11 @@ flickcurl_people_getPublicGroups(flickcurl* fc, const char* user_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(groups)
+      flickcurl_free_groups(groups);
     groups = NULL;
+  }
 
   return groups;
 }
@@ -393,8 +402,11 @@ flickcurl_people_getUploadStatus(flickcurl* fc)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(status)
+      flickcurl_free_user_upload_status(status);
     status = NULL;
+  }
 
   return status;
 }

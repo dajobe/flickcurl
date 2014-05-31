@@ -150,8 +150,11 @@ flickcurl_tags_getClusters(flickcurl* fc, const char* tag)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(clusters)
+      flickcurl_free_tag_clusters(clusters);
     clusters = NULL;
+  }
 
   return clusters;
 }
@@ -218,8 +221,11 @@ flickcurl_tags_getHotList(flickcurl* fc, const char* period, int tag_count)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }
@@ -272,8 +278,11 @@ flickcurl_tags_getListPhoto(flickcurl* fc, const char* photo_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }
@@ -330,8 +339,11 @@ flickcurl_tags_getListUser(flickcurl* fc, const char* user_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }
@@ -393,8 +405,11 @@ flickcurl_tags_getListUserPopular(flickcurl* fc, const char* user_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }
@@ -449,8 +464,11 @@ flickcurl_tags_getListUserRaw(flickcurl* fc, const char* tag)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }
@@ -500,8 +518,11 @@ flickcurl_tags_getMostFrequentlyUsed(flickcurl* fc)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }
@@ -557,8 +578,11 @@ flickcurl_tags_getRelated(flickcurl* fc, const char* tag)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }

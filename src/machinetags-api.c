@@ -99,8 +99,11 @@ flickcurl_machinetags_getNamespaces(flickcurl* fc, const char* predicate,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tag_namespaces)
+      flickcurl_free_tag_namespaces(tag_namespaces);
     tag_namespaces = NULL;
+  }
 
   return tag_namespaces;
 }
@@ -171,8 +174,11 @@ flickcurl_machinetags_getPairs(flickcurl* fc, const char *nspace,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tag_pvs)
+      flickcurl_free_tag_predicate_values(tag_pvs);
     tag_pvs = NULL;
+  }
 
   return tag_pvs;
 }
@@ -315,8 +321,11 @@ flickcurl_machinetags_getValues(flickcurl* fc, const char *nspace,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tag_pvs)
+      flickcurl_free_tag_predicate_values(tag_pvs);
     tag_pvs = NULL;
+  }
 
   return tag_pvs;
 }
@@ -387,8 +396,11 @@ flickcurl_machinetags_getRecentValues(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tag_pvs)
+      flickcurl_free_tag_predicate_values(tag_pvs);
     tag_pvs = NULL;
+  }
 
   return tag_pvs;
 }

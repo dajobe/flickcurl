@@ -177,8 +177,11 @@ flickcurl_reflection_getMethodInfo(flickcurl* fc, const char* name)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(method)
+      flickcurl_free_method(method);
     method = NULL;
+  }
 
   return method;
 }

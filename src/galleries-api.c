@@ -87,7 +87,7 @@ flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id,
     goto tidy;
   }
 
-  result = NULL; /* your code here */
+  XXX  result = NULL; /* your code here */
 
   tidy:
   if(xpathCtx)
@@ -467,8 +467,11 @@ flickcurl_galleries_getList(flickcurl* fc, const char* user_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(galleries)
+      flickcurl_free_galleries(galleries);
     galleries = NULL;
+  }
 
   return galleries;
 }
@@ -540,8 +543,11 @@ flickcurl_galleries_getListForPhoto(flickcurl* fc, const char* photo_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(galleries)
+      flickcurl_free_galleries(galleries);
     galleries = NULL;
+  }
 
   return galleries;
 }

@@ -95,8 +95,12 @@ flickcurl_photos_upload_checkTickets(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tickets)
+      flickcurl_free_tickets(tickets);
     tickets = NULL;
+  }
+
   if(tickets_ids_string)
     free(tickets_ids_string);
 

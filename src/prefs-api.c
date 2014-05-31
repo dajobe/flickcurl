@@ -87,7 +87,7 @@ flickcurl_prefs_getContentType(flickcurl* fc)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    content_type= -1;
+    content_type = -1;
 
   return content_type;
 }
@@ -173,7 +173,7 @@ flickcurl_prefs_getHidden(flickcurl* fc)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    hidden= -1;
+    hidden = -1;
 
   return hidden;
 }
@@ -232,7 +232,7 @@ flickcurl_prefs_getPrivacy(flickcurl* fc)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    privacy_level= -1;
+    privacy_level = -1;
 
   return privacy_level;
 }
@@ -287,7 +287,7 @@ flickcurl_prefs_getSafetyLevel(flickcurl* fc)
     xmlXPathFreeContext(xpathCtx);
 
   if(fc->failed)
-    safety_level= -1;
+    safety_level = -1;
 
   return safety_level;
 }

@@ -373,8 +373,11 @@ flickcurl_photos_people_getList(flickcurl* fc, const char* photo_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(people)
+      flickcurl_free_persons(people);
     people = NULL;
+  }
 
   return people;
 }

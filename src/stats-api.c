@@ -134,8 +134,11 @@ flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -218,8 +221,11 @@ flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -368,8 +374,11 @@ flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -451,8 +460,11 @@ flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -532,8 +544,11 @@ flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -616,8 +631,11 @@ flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -760,8 +778,11 @@ flickcurl_stats_getPhotoStats(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stat1)
+      flickcurl_free_stat(stat1);
     stat1 = NULL;
+  }
 
   return stat1;
 }
@@ -836,8 +857,11 @@ flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -915,8 +939,11 @@ flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(stats)
+      flickcurl_free_stats(stats);
     stats = NULL;
+  }
 
   return stats;
 }
@@ -1161,7 +1188,7 @@ flickcurl_stats_getTotalViews(flickcurl* fc, const char* date)
 
   if(fc->failed) {
     if(views)
-      free(views);
+      flickcurl_free_view_stats(views);
     views = NULL;
   }
 

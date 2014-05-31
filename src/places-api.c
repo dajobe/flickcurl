@@ -101,8 +101,11 @@ flickcurl_places_find(flickcurl* fc, const char* query)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(places)
+      flickcurl_free_places(places);
     places = NULL;
+  }
 
   return places;
 }
@@ -176,8 +179,11 @@ flickcurl_places_findByLatLon(flickcurl* fc, double lat, double lon,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(place)
+      flickcurl_free_place(place);
     place = NULL;
+  }
 
   return place;
 }
@@ -267,8 +273,11 @@ flickcurl_places_getChildrenWithPhotosPublic2(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(places)
+      flickcurl_free_places(places);
     places = NULL;
+  }
 
   return places;
 }
@@ -361,8 +370,11 @@ flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(place)
+      flickcurl_free_place(place);
     place = NULL;
+  }
 
   return place;
 }
@@ -421,8 +433,11 @@ flickcurl_places_getInfoByUrl(flickcurl* fc, const char* url)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(place)
+      flickcurl_free_place(place);
     place = NULL;
+  }
 
   return place;
 }
@@ -472,8 +487,11 @@ flickcurl_places_getPlaceTypes(flickcurl* fc)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(place_types)
+      flickcurl_free_place_type_infos(place_types);
     place_types = NULL;
+  }
 
   return place_types;
 }
@@ -547,8 +565,11 @@ flickcurl_places_getShapeHistory(flickcurl* fc, const char* place_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(shapes)
+      flickcurl_free_shapes(shapes);
     shapes = NULL;
+  }
 
   return shapes;
 }
@@ -624,8 +645,11 @@ flickcurl_places_getTopPlacesList(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(places)
+      flickcurl_free_places(places);
     places = NULL;
+  }
 
   return places;
 }
@@ -707,8 +731,11 @@ flickcurl_places_placesForBoundingBox(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(places)
+      flickcurl_free_places(places);
     places = NULL;
+  }
 
   return places;
 }
@@ -829,8 +856,11 @@ flickcurl_places_placesForContacts(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(places)
+      flickcurl_free_places(places);
     places = NULL;
+  }
 
   return places;
 }
@@ -991,8 +1021,11 @@ flickcurl_places_resolvePlaceId(flickcurl* fc, const char* place_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(place)
+      flickcurl_free_place(place);
     place = NULL;
+  }
 
   return place;
 }
@@ -1046,8 +1079,11 @@ flickcurl_places_resolvePlaceURL(flickcurl* fc, const char* url)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(place)
+      flickcurl_free_place(place);
     place = NULL;
+  }
 
   return place;
 }
@@ -1139,8 +1175,11 @@ flickcurl_places_placesForUser(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(places)
+      flickcurl_free_places(places);
     places = NULL;
+  }
 
   return places;
 }
@@ -1257,8 +1296,11 @@ flickcurl_places_tagsForPlace(flickcurl* fc, int woe_id, const char* place_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(tags)
+      flickcurl_free_tags(tags);
     tags = NULL;
+  }
 
   return tags;
 }

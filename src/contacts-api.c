@@ -108,8 +108,11 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(contacts)
+      flickcurl_free_contacts(contacts);
     contacts = NULL;
+  }
 
   return contacts;
 }
@@ -177,8 +180,11 @@ flickcurl_contacts_getListRecentlyUploaded(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(contacts)
+      flickcurl_free_contacts(contacts);
     contacts = NULL;
+  }
 
   return contacts;
 }
@@ -249,8 +255,11 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(contacts)
+      flickcurl_free_contacts(contacts);
     contacts = NULL;
+  }
 
   return contacts;
 }
@@ -326,8 +335,11 @@ flickcurl_contacts_getTaggingSuggestions(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(contacts)
+      flickcurl_free_contacts(contacts);
     contacts = NULL;
+  }
 
   return contacts;
 }

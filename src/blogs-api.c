@@ -82,8 +82,12 @@ flickcurl_blogs_getList(flickcurl* fc)
                               (const xmlChar*)"/rsp/blogs/blog", NULL);
 
   tidy:
-  if(fc->failed)
+  if(fc->failed) {
+    if(blogs)
+      flickcurl_free_blogs(blogs);
+
     blogs = NULL;
+  }
 
   return blogs;
 }
@@ -132,8 +136,11 @@ flickcurl_blogs_getServices(flickcurl* fc)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(services)
+      flickcurl_free_blog_services(services);
     services = NULL;
+  }
 
   return services;
 }

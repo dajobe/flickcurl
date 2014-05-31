@@ -88,8 +88,11 @@ flickcurl_collections_getInfo(flickcurl* fc, const char* collection_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(collection)
+      flickcurl_free_collection(collection);
     collection = NULL;
+  }
 
   return collection;
 }
@@ -148,8 +151,12 @@ flickcurl_collections_getTree(flickcurl* fc, const char* collection_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(collection)
+      flickcurl_free_collection(collection);
+
     collection = NULL;
+  }
 
   return collection;
 }

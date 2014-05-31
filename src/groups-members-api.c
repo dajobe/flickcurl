@@ -116,8 +116,11 @@ flickcurl_groups_members_getList(flickcurl* fc, const char* group_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(members)
+      flickcurl_free_members(members);
     members = NULL;
+  }
 
   return members;
 }

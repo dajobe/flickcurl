@@ -113,8 +113,11 @@ flickcurl_photos_notes_add(flickcurl* fc, const char* photo_id,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(id)
+      free(id);
     id = NULL;
+  }
 
   return id;
 }

@@ -129,8 +129,11 @@ flickcurl_groups_pools_getContext(flickcurl* fc, const char* photo_id,
   contexts = flickcurl_build_contexts(fc, doc);
 
  tidy:
-  if(fc->failed)
+  if(fc->failed) {
+    if(contexts)
+      flickcurl_free_contexts(contexts);
     contexts = NULL;
+  }
 
   return contexts;
 }
@@ -188,8 +191,11 @@ flickcurl_groups_pools_getGroups(flickcurl* fc, int page, int per_page)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(groups)
+      flickcurl_free_groups(groups);
     groups = NULL;
+  }
 
   return groups;
 }

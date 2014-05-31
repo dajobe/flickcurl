@@ -95,8 +95,11 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(category)
+      flickcurl_free_category(category);
     category = NULL;
+  }
 
   return category;
 }
@@ -161,8 +164,11 @@ flickcurl_groups_getInfo(flickcurl* fc, const char* group_id, const char* lang)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(group)
+      flickcurl_free_group(group);
     group = NULL;
+  }
 
   return group;
 }
@@ -374,8 +380,11 @@ flickcurl_groups_search(flickcurl* fc, const char* text, int per_page, int page)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(groups)
+      flickcurl_free_groups(groups);
     groups = NULL;
+  }
 
   return groups;
 }

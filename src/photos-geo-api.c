@@ -237,8 +237,11 @@ flickcurl_photos_geo_getLocation(flickcurl* fc, const char* photo_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(location)
+      flickcurl_free_location(location);
     location = NULL;
+  }
 
   return location;
 }
@@ -293,8 +296,11 @@ flickcurl_photos_geo_getPerms(flickcurl* fc, const char* photo_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(perms)
+      flickcurl_free_perms(perms);
     perms = NULL;
+  }
 
   return perms;
 }
