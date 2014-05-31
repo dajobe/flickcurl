@@ -144,8 +144,10 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
         abort();
     }
       
-    if(fc->failed)
+    if(fc->failed) {
+      free(string_value);
       goto tidy;
+    }
   }
 
   /* As of 2007-04-15 - the response is different from the docs
