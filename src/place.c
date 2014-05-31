@@ -541,8 +541,10 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           fc->failed = 1;
       }
       
-      if(fc->failed)
+      if(fc->failed) {
+        free(value);
         goto placestidy;
+      }
     } /* end for place fields */
 
    placestidy:
