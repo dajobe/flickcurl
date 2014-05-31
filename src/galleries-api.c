@@ -56,9 +56,7 @@ flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id,
                              const char* photo_id, const char* comment_text)
 {
   xmlDocPtr doc = NULL;
-  xmlXPathContextPtr xpathCtx = NULL; 
-  void* result = NULL;
-  
+
   flickcurl_init_params(fc, 1);
 
   if(!gallery_id || !photo_id)
@@ -79,24 +77,9 @@ flickcurl_galleries_addPhoto(flickcurl* fc, const char* gallery_id,
   if(!doc)
     goto tidy;
 
-
-  xpathCtx = xmlXPathNewContext(doc);
-  if(!xpathCtx) {
-    flickcurl_error(fc, "Failed to create XPath context for document");
-    fc->failed = 1;
-    goto tidy;
-  }
-
-  XXX  result = NULL; /* your code here */
-
   tidy:
-  if(xpathCtx)
-    xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
-    result = NULL;
-
-  return (result == NULL);
+  return fc->failed;
 }
 
 
