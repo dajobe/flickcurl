@@ -3135,7 +3135,7 @@ command_print_predicate_values(flickcurl_tag_predicate_value **tag_pvs,
       fprintf(stdout, "usage %d", tpv->usage_count);
     if(tpv->used_in_namespace_count > 0)
       fprintf(stdout, "used in %d namespaces", tpv->used_in_namespace_count);
-      fputc('\n', stdout);
+    fputc('\n', stdout);
   }
 }
 
