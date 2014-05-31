@@ -296,8 +296,12 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           fc->failed = 1;
       }
       
-      if(fc->failed)
+      if(fc->failed) {
+        if(value) {
+          free(value); value = NULL;
+        }
         goto shapestidy;
+      }
     } /* end for shape fields */
 
    shapestidy:
