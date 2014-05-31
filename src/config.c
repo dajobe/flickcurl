@@ -72,12 +72,6 @@ flickcurl_config_read_ini(flickcurl* fc,
   if(!fc || !filename || !section || !handler)
     return 1;
 
-  if(access((const char*)filename, R_OK)) {
-    flickcurl_error(fc, "Failed to access config file %s for reading",
-                    filename);
-    return 1;
-  }
-  
   fh = fopen(filename, "r");
   if(!fh) {
     flickcurl_error(fc, "Failed to open %s for reading - %s", filename,
