@@ -94,24 +94,6 @@ int verbose = 1;
 const char* program;
 FILE* output_fh;
 const char *output_filename = "<stdout>";
-char config_path[1024];
-const char* config_section = "flickr";
-
-/* private to this module */
-static const char* config_filename = ".flickcurl.conf";
-
-
-static const char*
-my_basename(const char *name)
-{
-  char *p;
-  if((p = strrchr(name, '/')))
-    name = p+1;
-  else if((p = strrchr(name, '\\')))
-    name = p+1;
-
-  return name;
-}
 
 
 static void
@@ -235,22 +217,15 @@ main(int argc, char *argv[])
   int cmd_index= -1;
   int read_auth = 1;
   int i;
-  const char* home;
   int request_delay= -1;
   char *command = NULL;
 
   output_fh = stdout;
   
-  flickcurl_init();
-  
-  program = my_basename(argv[0]);
+  flickcurl_init();  
+  flickcurl_cmdline_init();
 
-  home = getenv("HOME");
-  if(home)
-    sprintf(config_path, "%s/%s", home, config_filename);
-  else
-    strcpy(config_path, config_filename);
-  
+  program = flickcurl_cmdline_basename(argv[0]);
 
   /* Initialise the Flickcurl library */
   fc = flickcurl_new();
@@ -262,8 +237,9 @@ main(int argc, char *argv[])
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
   if(read_auth) {
-    if(!access((const char*)config_path, R_OK)) {
-      if(flickcurl_config_read_ini(fc, config_path, config_section, fc,
+    if(!access((const char*)flickcurl_cmdline_config_path, R_OK)) {
+      if(flickcurl_config_read_ini(fc, flickcurl_cmdline_config_path,
+                                   flickcurl_cmdline_config_section, fc,
                                    flickcurl_config_var_handler)) {
         rc = 1;
         goto tidy;
@@ -298,8 +274,8 @@ main(int argc, char *argv[])
 "\n"
 "This will write the configuration file with the OAuth access tokens.\n"
 "See http://librdf.org/flickcurl/api/flickcurl-auth.html for full instructions.\n",
-	      program, config_path,
-              config_path,
+	      program, flickcurl_cmdline_config_path,
+              flickcurl_cmdline_config_path,
               program, program,
               program);
       rc = 1;
@@ -343,11 +319,12 @@ main(int argc, char *argv[])
           
           flickcurl_set_auth_token(fc, auth_token);
 
-          rc = flickcurl_config_write_ini(fc, config_path, config_section);
+          rc = flickcurl_config_write_ini(fc, flickcurl_cmdline_config_path,
+                                          flickcurl_cmdline_config_section);
           if(!rc)
             fprintf(stdout,
                   "%s: Updated configuration file %s with authentication token\n",
-                    program, config_path);
+                    program, flickcurl_cmdline_config_path);
         }
         goto tidy;
 
@@ -381,6 +358,7 @@ main(int argc, char *argv[])
         fputs(flickcurl_version_string, stdout);
         fputc('\n', stdout);
 
+        flickcurl_cmdline_finish();
         exit(0);
 
       case 'V':
@@ -491,6 +469,8 @@ main(int argc, char *argv[])
     flickcurl_free(fc);
 
   flickcurl_finish();
+
+  flickcurl_cmdline_finish();
 
   return(rc);
 }

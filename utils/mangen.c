@@ -48,21 +48,6 @@ int verbose = 1;
 const char* program;
 FILE* output_fh;
 const char *output_filename = "fake";
-char config_path[1024];
-const char* config_section = "fake";
-
-
-static const char*
-my_basename(const char *name)
-{
-  char *p;
-  if((p = strrchr(name, '/')))
-    name = p+1;
-  else if((p = strrchr(name, '\\')))
-    name = p+1;
-
-  return name;
-}
 
 
 /* Not using getopt here */
@@ -192,14 +177,16 @@ main(int argc, char *argv[])
   int mode = 0;
 
   flickcurl_init();
+  flickcurl_cmdline_init();
 
-  program = my_basename(argv[0]);
+  program = flickcurl_cmdline_basename(argv[0]);
 
   if(argc > 1 && *argv[1] == '-') {
     if(!strcmp(argv[1], "-v")) {
       fputs(flickcurl_version_string, stdout);
       fputc('\n', stdout);
 
+      flickcurl_cmdline_finish();
       exit(0);
     }
 

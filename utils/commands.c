@@ -42,6 +42,8 @@
 #include <curl/curl.h>
 
 
+extern const char* program;
+
 static int
 command_test_echo(flickcurl* fc, int argc, char *argv[])
 {
@@ -4927,11 +4929,12 @@ command_oauth_verify(flickcurl* fc, int argc, char *argv[])
           flickcurl_get_oauth_token(fc),
           flickcurl_get_oauth_token_secret(fc));
 
-  rc = flickcurl_config_write_ini(fc, config_path, config_section);
+  rc = flickcurl_config_write_ini(fc, flickcurl_cmdline_config_path,
+                                  flickcurl_cmdline_config_section);
   if(!rc)
     fprintf(stdout,
             "%s: Updated configuration file %s with OAuth tokens\n",
-            program, config_path);
+            program, flickcurl_cmdline_config_path);
 
   return 0;
 }
@@ -4954,11 +4957,12 @@ command_oauth_upgrade(flickcurl* fc, int argc, char *argv[])
           flickcurl_get_oauth_token(fc),
           flickcurl_get_oauth_token_secret(fc));
 
-  rc = flickcurl_config_write_ini(fc, config_path, config_section);
+  rc = flickcurl_config_write_ini(fc, flickcurl_cmdline_config_path,
+                                  flickcurl_cmdline_config_section);
   if(!rc)
     fprintf(stdout,
             "%s: Updated configuration file %s with OAuth tokens\n",
-            program, config_path);
+            program, flickcurl_cmdline_config_path);
 
   return 0;
 }

@@ -48,6 +48,7 @@
 
 #include <flickcurl.h>
 
+#include <flickcurl_cmd.h>
 
 
 #ifdef NEED_OPTIND_DECLARATION
@@ -56,20 +57,7 @@ extern char *optarg;
 #endif
 
 
-static const char* program;
-
-static const char*
-my_basename(const char *name)
-{
-  char *p;
-  if((p = strrchr(name, '/')))
-    name = p+1;
-  else if((p = strrchr(name, '\\')))
-    name = p+1;
-
-  return name;
-}
-
+const char* program;
 
 static void
 my_message_handler(void *user_data, const char *message)
@@ -106,9 +94,6 @@ static struct option long_options[] =
 
 static const char *title_format_string = "List Flickr API methods utility %s\n";
 
-static const char* config_filename = ".flickcurl.conf";
-static const char* config_section = "flickr";
-
 
 static
 int compare_strings(const void *a, const void *b)
@@ -126,21 +111,13 @@ main(int argc, char *argv[])
   int help = 0;
   int read_auth = 1;
   int i;
-  const char* home;
-  char config_path[1024];
   char** methods = NULL;
   int count = 0;
   
   flickcurl_init();
+  flickcurl_cmdline_init();
   
-  program = my_basename(argv[0]);
-
-  home = getenv("HOME");
-  if(home)
-    sprintf(config_path, "%s/%s", home, config_filename);
-  else
-    strcpy(config_path, config_filename);
-  
+  program = flickcurl_cmdline_basename(argv[0]);
 
   while (!usage && !help)
   {
@@ -169,6 +146,7 @@ main(int argc, char *argv[])
         fputs(flickcurl_version_string, stdout);
         fputc('\n', stdout);
 
+        flickcurl_cmdline_finish();
         exit(0);
     }
     
@@ -230,8 +208,9 @@ main(int argc, char *argv[])
 
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
-  if(read_auth && !access((const char*)config_path, R_OK)) {
-    if(flickcurl_config_read_ini(fc, config_path, config_section, fc,
+  if(read_auth && !access((const char*)flickcurl_cmdline_config_path, R_OK)) {
+    if(flickcurl_config_read_ini(fc, flickcurl_cmdline_config_path,
+                                 flickcurl_cmdline_config_section, fc,
                                  flickcurl_config_var_handler)) {
       rc = 1;
       goto tidy;

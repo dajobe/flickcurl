@@ -55,6 +55,8 @@
 #include <raptor_fake.h>
 #endif
 
+#include <flickcurl_cmd.h>
+
 
 #ifdef NEED_OPTIND_DECLARATION
 extern int optind;
@@ -62,23 +64,9 @@ extern char *optarg;
 #endif
 
 
-static const char* program;
-
 static int debug = 0;
 
-
-
-static const char*
-my_basename(const char *name)
-{
-  char *p;
-  if((p = strrchr(name, '/')))
-    name = p+1;
-  else if((p = strrchr(name, '\\')))
-    name = p+1;
-
-  return name;
-}
+const char* program;
 
 
 static void
@@ -200,8 +188,6 @@ static flickcurl_serializer_factory flickrdf_serializer_factory = {
 
 static const char *title_format_string = "Flickrdf - triples from flickrs %s\n";
 
-static const char* config_filename = ".flickcurl.conf";
-static const char* config_section = "flickr";
 
 int
 main(int argc, char *argv[]) 
@@ -210,8 +196,6 @@ main(int argc, char *argv[])
   int rc = 0;
   int usage = 0;
   int help = 0;
-  const char* home;
-  char config_path[1024];
   char* photo_id = NULL;
   const char* prefix_uri = "http://www.flickr.com/photos/";
   size_t prefix_uri_len = strlen(prefix_uri);
@@ -222,19 +206,13 @@ main(int argc, char *argv[])
   flickcurl_serializer* fs = NULL;
   flickcurl_photo* photo = NULL;
 
-  program = my_basename(argv[0]);
-
   flickcurl_init();
+  flickcurl_cmdline_init();
+
+  program = flickcurl_cmdline_basename(argv[0]);
 
   rworld = raptor_new_world();
   raptor_world_open(rworld);
-
-  home = getenv("HOME");
-  if(home)
-    sprintf(config_path, "%s/%s", home, config_filename);
-  else
-    strcpy(config_path, config_filename);
-  
 
   while (!usage && !help)
   {
@@ -299,6 +277,7 @@ main(int argc, char *argv[])
         fputs(flickcurl_version_string, stdout);
         fputc('\n', stdout);
 
+        flickcurl_cmdline_finish();
         exit(0);
     }
     
@@ -373,8 +352,9 @@ main(int argc, char *argv[])
 
   flickcurl_set_error_handler(fc, my_message_handler, NULL);
 
-  if(!access((const char*)config_path, R_OK)) {
-    if(flickcurl_config_read_ini(fc, config_path, config_section, fc,
+  if(!access((const char*)flickcurl_cmdline_config_path, R_OK)) {
+    if(flickcurl_config_read_ini(fc, flickcurl_cmdline_config_path,
+                                 flickcurl_cmdline_config_section, fc,
                                  flickcurl_config_var_handler)) {
       rc = 1;
       goto tidy;
@@ -481,6 +461,8 @@ main(int argc, char *argv[])
     raptor_free_world(rworld);
 
   flickcurl_finish();
+
+  flickcurl_cmdline_finish();
 
   return(rc);
 }
