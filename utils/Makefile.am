@@ -23,7 +23,7 @@ CLEANFILES=$(EXTRA_PROGRAMS)
 
 AM_CPPFLAGS= -I$(top_srcdir)/src -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
 
-flickcurl_SOURCES = flickcurl.c commands.c flickcurl_cmd.h
+flickcurl_SOURCES = flickcurl.c commands.c flickcurl_cmd.h cmdline.c
 flickcurl_CPPFLAGS = $(AM_CPPFLAGS)
 flickcurl_LDADD= $(top_builddir)/src/libflickcurl.la
 if GETOPT
@@ -32,7 +32,7 @@ flickcurl_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
 flickcurl_CFLAGS=
 
-flickrdf_SOURCES = flickrdf.c
+flickrdf_SOURCES = flickrdf.c flickcurl_cmd.h cmdline.c
 flickrdf_CPPFLAGS = $(AM_CPPFLAGS)
 flickrdf_LDADD = $(top_builddir)/src/libflickcurl.la
 if GETOPT
@@ -48,7 +48,7 @@ if !RAPTOR
 flickrdf_SOURCES += raptor_fake.c raptor_fake.h
 endif
 
-codegen_SOURCES = codegen.c
+codegen_SOURCES = codegen.c flickcurl_cmd.h cmdline.c
 codegen_CPPFLAGS = $(AM_CPPFLAGS)
 codegen_LDADD = $(top_builddir)/src/libflickcurl.la
 if GETOPT
@@ -56,7 +56,7 @@ codegen_CPPFLAGS += -I$(top_srcdir)/getopt
 codegen_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
 
-list_methods_SOURCES = list-methods.c
+list_methods_SOURCES = list-methods.c flickcurl_cmd.h cmdline.c
 list_methods_CPPFLAGS = $(AM_CPPFLAGS)
 list_methods_LDADD= $(top_builddir)/src/libflickcurl.la
 if GETOPT
@@ -64,7 +64,7 @@ list_methods_CPPFLAGS += -I$(top_srcdir)/getopt
 list_methods_LDADD += $(top_builddir)/getopt/libgetopt.la
 endif
 
-mangen_SOURCES = mangen.c commands.c
+mangen_SOURCES = mangen.c commands.c flickcurl_cmd.h cmdline.c
 mangen_CPPFLAGS = $(AM_CPPFLAGS)
 mangen_LDADD = $(top_builddir)/src/libflickcurl.la
 
