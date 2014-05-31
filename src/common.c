@@ -1581,9 +1581,6 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
   return form;
 
   tidy:
-  if(form)
-    free(form);
-
   if(content)
     free(content);
   
