@@ -322,6 +322,7 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       if(fc->failed) {
         if(collection)
           flickcurl_free_collection(collection);
+        free(string_value);
         goto tidy;
       }
     }
