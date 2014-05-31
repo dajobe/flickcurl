@@ -1575,6 +1575,9 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
   if(count_p)
     *count_p = count;
 
+  if(content)
+    free(content);
+
   return form;
 
   tidy:
