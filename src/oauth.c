@@ -212,15 +212,15 @@ flickcurl_oauth_build_key(flickcurl_oauth_data* od)
     return 1;
   
   p = od->key;
-  if(od->client_secret_len) {
+  if(od->client_secret && od->client_secret_len) {
     memcpy(p, od->client_secret, od->client_secret_len);
     p += od->client_secret_len;
   }
   *p++ = '&';
-  if(od->request_token_secret_len) {
+  if(od->request_token_secret && od->request_token_secret_len) {
     memcpy(p, od->request_token_secret, od->request_token_secret_len);
     p += od->request_token_secret_len;
-  } else if(od->token_secret_len) {
+  } else if(od->token_secret && od->token_secret_len) {
     memcpy(p, od->token_secret, od->token_secret_len);
     p += od->token_secret_len;
   }
