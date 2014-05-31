@@ -149,8 +149,11 @@ flickcurl_galleries_create(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(gallery_id)
+      free(gallery_id);
     gallery_id = NULL;
+  }
 
   return gallery_id;
 }
