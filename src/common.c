@@ -2305,7 +2305,7 @@ flickcurl_extras_format_info[EXTRAS_FORMAT_COUNT+1] = {
 
   { "tags", "Item clean tags (safe for HTML, URLs)"},
 
-  /* http://www.flickr.com/services/api/misc.urls.html */
+  /* https://www.flickr.com/services/api/misc.urls.html */
   { "url_c", "URL of medium 800, 800 on longest size image"},
   { "url_m", "URL of small, medium size image"},
   { "url_n", "URL of small, 320 on longest side size image"},

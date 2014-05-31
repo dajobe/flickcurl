@@ -167,7 +167,7 @@ flickcurl_free_photo(flickcurl_photo *photo)
  * Get a photo's image source URIs
  *
  * @c can be s,m,t,b for sizes, o for original, otherwise default
- * http://www.flickr.com/services/api/misc.urls.html
+ * https://www.flickr.com/services/api/misc.urls.html
  *
  * Return value: new source URI string or NULL on failure
  */
@@ -401,9 +401,9 @@ flickcurl_source_uri_as_photo_id(const char *uri)
  * The icon URI returned is always a 48x48 pixel JPEG.
  *
  * If @server is 0 (or the other fields are NULL), the default icon URI of
- * http://www.flickr.com/images/buddyicon.jpg is returned.
+ * https://www.flickr.com/images/buddyicon.jpg is returned.
  *
- * Defined by http://www.flickr.com/services/api/misc.buddyicons.html
+ * Defined by https://www.flickr.com/services/api/misc.buddyicons.html
  *
  * Return value: new icon URI string or NULL on failure
  */
