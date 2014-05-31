@@ -266,8 +266,11 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
         case VALUE_TYPE_FLOAT:
         case VALUE_TYPE_URI:
           break;
-          
+
+        /* This case is handled above */
         case VALUE_TYPE_ICON_PHOTOS:
+          abort();
+          
         case VALUE_TYPE_PHOTO_ID:
         case VALUE_TYPE_PHOTO_URI:
         case VALUE_TYPE_MEDIA_TYPE:
