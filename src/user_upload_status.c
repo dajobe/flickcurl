@@ -142,6 +142,8 @@ flickcurl_build_user_upload_status(flickcurl* fc, xmlXPathContextPtr xpathCtx,
           free(attr_value);
         } else if(!strcmp(attr_name, "remaining"))
           u->sets_remaining = attr_value;
+        else
+          free(attr_value);
       }
     }
 

@@ -135,8 +135,7 @@ flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       else if(!strcmp(attr_name, "count")) {
         c->count = atoi(attr_value);
         free(attr_value);
-      }
-      else
+      } else
         free(attr_value);
     }
 

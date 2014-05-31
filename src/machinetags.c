@@ -107,12 +107,11 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       
       if(!strcmp(attr_name, "usage")) {
         tn->usage_count = atoi(attr_value);
-        free(attr_value);
       } else if(!strcmp(attr_name, "predicates")) {
         tn->predicates_count = atoi(attr_value);
-        free(attr_value);
-      } else
-        free(attr_value);
+      }
+
+      free(attr_value);
     }
 
     /* Walk children for text */

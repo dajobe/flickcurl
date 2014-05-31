@@ -133,26 +133,21 @@ flickcurl_build_contacts(flickcurl* fc,
       else if(!strcmp(attr_name, "iconserver")) {
         contact_object->iconserver = atoi((const char*)attr_value);
         free(attr_value);
-      }
-      else if(!strcmp(attr_name, "realname"))
+      } else if(!strcmp(attr_name, "realname"))
         contact_object->realname = attr_value;
       else if(!strcmp(attr_name, "friend")) {
         contact_object->is_friend = atoi((const char*)attr_value);
         free(attr_value);
-      }
-      else if(!strcmp(attr_name, "family")) {
+      } else if(!strcmp(attr_name, "family")) {
         contact_object->is_family = atoi((const char*)attr_value);
         free(attr_value);
-      }
-      else if(!strcmp(attr_name, "ignored")) {
+      } else if(!strcmp(attr_name, "ignored")) {
         contact_object->ignored = atoi((const char*)attr_value);
         free(attr_value);
-      }
-      else if(!strcmp(attr_name, "uploaded")) {
+      } else if(!strcmp(attr_name, "uploaded")) {
         contact_object->uploaded = atoi((const char*)attr_value);
         free(attr_value);
-      }
-      else
+      } else
         free(attr_value);
     }
 
