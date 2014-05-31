@@ -94,8 +94,11 @@ flickcurl_photosets_comments_addComment(flickcurl* fc,
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(id)
+      free(id);
     id = NULL;
+  }
 
   return id;
 }
@@ -244,8 +247,11 @@ flickcurl_photosets_comments_getList(flickcurl* fc, const char* photoset_id)
   if(xpathCtx)
     xmlXPathFreeContext(xpathCtx);
 
-  if(fc->failed)
+  if(fc->failed) {
+    if(comments)
+      flickcurl_free_comments(comments);
     comments = NULL;
+  }
 
   return comments;
 }
