@@ -545,6 +545,7 @@ flickcurl_serialize_photo(flickcurl_serializer* fcs, flickcurl_photo* photo)
           type= FLICKCURL_TERM_TYPE_RESOURCE;
           break;
           
+          /* these value can never been seen; code above never sets it */
         case VALUE_TYPE_NONE:
         case VALUE_TYPE_PHOTO_ID:
         case VALUE_TYPE_PHOTO_URI:
