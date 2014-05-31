@@ -82,8 +82,7 @@ include $(top_srcdir)/gtk-doc.make
 EXTRA_DIST+= \
 $(man_MANS) \
 flickcurl.1.in \
-version.xml.in \
-flickcurl-extras.xml
+version.xml.in
 
 CLEANFILES+= search-photos.c
 
