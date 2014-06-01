@@ -623,7 +623,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   if(values_len)
     free(values_len);
 
-  if(nonce && free_nonce)
+  if(free_nonce)
     free(nonce);
 
   if(timestamp)
