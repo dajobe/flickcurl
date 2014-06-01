@@ -226,20 +226,19 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
 
       switch(institution_field) {
         case INSTITUTION_NSID:
-          institution->nsid = value;
+          institution->nsid = value; value = NULL;
           break;
           
         case INSTITUTION_DATE_LAUNCH:
           institution->date_launch = atoi(value);
-          value = NULL;
           break;
 
         case INSTITUTION_NAME:
-          institution->name = value;
+          institution->name = value; value = NULL;
           break;
 
         case INSTITUTION_URL:
-          institution->urls[(int)institution_url_type] = value;
+          institution->urls[(int)institution_url_type] = value; value = NULL;
           break;
 
         case INSTITUTION_NONE:
@@ -248,11 +247,12 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
                           (int)institution_url_type);
           fc->failed = 1;
       }
-      
-      if(fc->failed) {
+
+      if(value)
         free(value);
+
+      if(fc->failed)
         goto institutionstidy;
-      }
     } /* end for institution fields */
 
    institutionstidy:
