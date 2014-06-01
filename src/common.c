@@ -1554,8 +1554,11 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
    * and owned by this array and stored in form[0].
    */
   form = (char**)calloc(2*(count + 1), sizeof(char*));
-  if(!form)
+  if(!form) {
+    if(content)
+      free(content);
     return NULL;
+  }
 
   for(p = content, i = 0; *p; p++) {
     char *start = p;
