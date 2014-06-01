@@ -1529,23 +1529,38 @@ flickcurl_free_form(char **form, int count)
 }
 
 
+/*
+* flickcurl_invoke_get_form_content:
+* @fc: flickcurl object
+* @count_p: pointer to store count (or NULL)
+*
+* INTERNAL - decoded content from current request as HTTP FORM and return fields
+*
+* NOTE: The result may be an empty array with just two NULL
+* terminating pointers if there are no fields.
+*
+* Return value: array of [char* field name, char* field value] with
+* NULL pair terminating or NULL on failure
+*/
 char**
 flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
 {
   char* content = NULL;
   char** form = NULL;
   char *p;
-  int count;
+  int count = 0;
   int i;
 
   if(flickcurl_invoke_common(fc, &content, NULL, NULL))
     return NULL;
 
-  for(p = content, count = 0; *p; p++) {
-    if(*p == '&')
-      count++;
+  if(content) {
+    for(p = content; *p; p++) {
+      if(*p == '&')
+        count++;
+    }
+    count++; /* counting separators so need +1 for number of contents */
   }
-  count++; /* counting separators so need +1 for number of contents */
   
   /* Allocate count + 1 sized array of char* (key, value) pointers
    * The last pair are always (NULL, NULL).
@@ -1560,26 +1575,27 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
     return NULL;
   }
 
-  for(p = content, i = 0; *p; p++) {
-    char *start = p;
-    
-    while(*p && *p != '&' && *p != '=')
-      p++;
+  if(content) {
+    for(p = content, i = 0; *p; p++) {
+      char *start = p;
 
-    form[i++] = start;
+      while(*p && *p != '&' && *p != '=')
+        p++;
 
-    if(!*p)
-      break;
-    *p = '\0';
+      form[i++] = start;
+
+      if(!*p)
+        break;
+      *p = '\0';
+    }
+    form[i++] = NULL;
+    form[i] = NULL;
+
+    free(content);
   }
-  form[i++] = NULL;
-  form[i] = NULL;
-  
+
   if(count_p)
     *count_p = count;
-
-  if(content)
-    free(content);
 
   return form;
 }
