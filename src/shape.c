@@ -305,8 +305,7 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     } /* end for shape fields */
 
    shapestidy:
-    if(xpathNodeCtx)
-      xmlXPathFreeContext(xpathNodeCtx);
+    xmlXPathFreeContext(xpathNodeCtx);
 
     shapes[shape_count++] = shape;
   } /* for shapes */
