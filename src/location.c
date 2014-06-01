@@ -111,7 +111,7 @@ flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
             location->latitude, location->longitude, location->accuracy);
 #endif
 
-    /* Handle only first perm */
+    /* Handle only first location */
     break;
   } /* for nodes */
 
