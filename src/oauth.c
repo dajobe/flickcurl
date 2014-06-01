@@ -294,7 +294,7 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   char* nonce = NULL;
   int free_nonce = 0;
   char* timestamp = NULL;
-  int rc = 0;
+  int rc = 1;
   int is_oauth_method = 0;
   char *p;
 
@@ -336,6 +336,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   if(method) { 
     size_t len = strlen(method);
     fc->method = (char*)malloc(len + 1);
+    if(!fc->method)
+      goto tidy;
+
     memcpy(fc->method, method, len + 1);
     is_oauth_method = !strncmp(method, "flickr.oauth.", 13);
   } else
@@ -366,6 +369,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   nonce = (char*)od->nonce;
   if(!nonce) {
     nonce = (char*)malloc(20);
+    if(!nonce)
+      goto tidy;
+
     free_nonce = 1;
     sprintf(nonce, "%ld", mtwist_u32rand(fc->mt));
   }
@@ -375,6 +381,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   flickcurl_add_param(fc, "oauth_signature_method", "HMAC-SHA1");
 
   timestamp = (char*)malloc(20);
+  if(!timestamp)
+    goto tidy;
+
   if(od->timestamp)
     sprintf(timestamp, "%ld", (long)od->timestamp);
   else {
@@ -398,8 +407,16 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
 
   /* +FLICKCURL_FLICKCURL_MAX_OAUTH_PARAM_COUNT for oauth fields +1 for NULL terminating pointer */
   fc->param_fields = (char**)calloc(fc->count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  if(!fc->param_fields)
+    goto tidy;
+
   fc->param_values = (char**)calloc(fc->count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(char*));
+  if(!fc->param_values)
+    goto tidy;
+
   values_len       = (size_t*)calloc(fc->count + FLICKCURL_MAX_OAUTH_PARAM_COUNT + 1, sizeof(size_t));
+  if(!values_len)
+    goto tidy;
 
   if((need_auth && (od->client_secret || od->token_secret)) || fc->sign)
     flickcurl_sort_args(fc);
@@ -422,9 +439,15 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
       fc->parameters[i][1] = "";
     }
     fc->param_fields[i] = (char*)malloc(param_len + 1);
+    if(!fc->param_fields[i])
+      goto tidy;
+
     memcpy(fc->param_fields[i], fc->parameters[i][0], param_len + 1);
 
     fc->param_values[i] = (char*)malloc(values_len[i] + 1);
+    if(!fc->param_values[i])
+      goto tidy;
+
     memcpy(fc->param_values[i], fc->parameters[i][1], values_len[i] + 1);
 
     /* 3x value len is conservative URI %XX escaping on every char */
@@ -434,10 +457,16 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   if(upload_field) {
     size_t len = strlen(upload_field);
     fc->upload_field = (char*)malloc(len + 1);
+    if(!fc->upload_field)
+      goto tidy;
+
     memcpy(fc->upload_field, upload_field, len + 1);
 
     len = strlen(upload_value);
     fc->upload_value = (char*)malloc(len + 1);
+    if(!fc->upload_value)
+      goto tidy;
+
     memcpy(fc->upload_value, upload_value, len + 1);
   }
 
@@ -457,6 +486,9 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     for(i = 0; fc->parameters[i][0]; i++)
       param_buf_len += strlen(fc->parameters[i][0]) + 3 + (3 * values_len[i]) + 3;
     param_buf = (char*)malloc(param_buf_len + 1);
+    if(!param_buf)
+      goto tidy;
+
     *param_buf = '\0';
     
     p = param_buf;
@@ -488,6 +520,10 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     buf_len += param_buf_len * 3;
 
     buf = (char*)malloc(buf_len + 1);
+    if(!buf) {
+      free(param_buf);
+      goto tidy;
+    }
 
     p = buf;
     memcpy(p, http_method, http_method_len);
@@ -517,7 +553,6 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
       fprintf(stderr, "flickcurl_oauth_build_key() failed\n");
 #endif
       free(buf);
-      rc = 1;
       goto tidy;
     }
 
@@ -542,9 +577,15 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     values_len[fc->count] = vlen;
     /* 15 = strlen(oauth_signature) */
     fc->param_fields[fc->count] = (char*)malloc(15 + 1);
+    if(!fc->param_fields[fc->count])
+      goto tidy;
+
     memcpy(fc->param_fields[fc->count], fc->parameters[fc->count][0], 15 + 1);
 
     fc->param_values[fc->count] = (char*)malloc(vlen + 1);
+    if(!fc->param_values[fc->count])
+      goto tidy;
+
     memcpy(fc->param_values[fc->count], fc->parameters[fc->count][1], vlen + 1);
 
     full_uri_len += 15 /* "oauth_signature" */ + 1 /* = */ + vlen;
@@ -569,6 +610,8 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
   if(fc->uri_len < full_uri_len) {
     free(fc->uri);
     fc->uri = (char*)malloc(full_uri_len + 1);
+    if(!fc->uri)
+      goto tidy;
     fc->uri_len = full_uri_len;
   }
   /* fc_uri_len is strlen(service_uri) at this point */
@@ -615,6 +658,8 @@ flickcurl_oauth_prepare_common(flickcurl *fc,
     }
   } while(0);
 #endif
+
+  rc = 0;
 
   tidy:
   if(signature_string)
