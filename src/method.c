@@ -117,11 +117,13 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
   method = (flickcurl_method*)calloc(sizeof(flickcurl_method), 1);
   
   for(expri = 0; method_fields_table[expri].xpath; expri++) {
+    flickcurl_method_field_type mft = method_fields_table[expri].field;
     char *string_value = flickcurl_xpath_eval(fc, xpathCtx, 
                                               method_fields_table[expri].xpath);
-    switch(method_fields_table[expri].field) {
+
+    switch(mft) {
       case METHOD_FIELD_name:
-        method->name = string_value;
+        method->name = string_value; string_value = NULL;
         break;
         
       case METHOD_FIELD_needslogin:
@@ -129,25 +131,27 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
         break;
         
       case METHOD_FIELD_description:
-        method->description = string_value;
+        method->description = string_value; string_value = NULL;
         break;
         
       case METHOD_FIELD_response:
-        method->response = string_value;
+        method->response = string_value; string_value = NULL;
         break;
         
       case METHOD_FIELD_explanation:
-        method->explanation = string_value;
+        method->explanation = string_value; string_value = NULL;
         break;
 
       default:
-        abort();
+          flickcurl_error(fc, "Unknown method field %d", (int)mft);
+          fc->failed = 1;
     }
       
-    if(fc->failed) {
+    if(string_value)
       free(string_value);
+
+    if(fc->failed)
       goto tidy;
-    }
   }
 
   /* As of 2007-04-15 - the response is different from the docs
