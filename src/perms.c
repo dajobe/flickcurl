@@ -76,12 +76,9 @@ flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     xmlNodePtr node = nodes->nodeTab[i];
     xmlAttr* attr;
     
-    if(node->type != XML_ELEMENT_NODE) {
-      flickcurl_error(fc, "Got unexpected node type %d", node->type);
-      fc->failed = 1;
-      break;
-    }
-    
+    if(node->type != XML_ELEMENT_NODE)
+      continue;
+
     perms = (flickcurl_perms*)calloc(sizeof(flickcurl_perms), 1);
     
     for(attr = node->properties; attr; attr = attr->next) {
