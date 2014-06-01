@@ -1152,8 +1152,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       memcpy(photo->media_type, "photo", PHOTO_STR_LEN + 1);
     }
 
-    if(xpathNodeCtx)
-      xmlXPathFreeContext(xpathNodeCtx);
+    xmlXPathFreeContext(xpathNodeCtx);
 
     photos[photo_count++] = photo;
   } /* for photos */

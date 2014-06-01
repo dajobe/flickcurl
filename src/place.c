@@ -548,8 +548,7 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     } /* end for place fields */
 
    placestidy:
-    if(xpathNodeCtx)
-      xmlXPathFreeContext(xpathNodeCtx);
+    xmlXPathFreeContext(xpathNodeCtx);
 
     places[place_count++] = place;
   } /* for places */

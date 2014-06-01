@@ -256,8 +256,7 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     } /* end for institution fields */
 
    institutionstidy:
-    if(xpathNodeCtx)
-      xmlXPathFreeContext(xpathNodeCtx);
+    xmlXPathFreeContext(xpathNodeCtx);
 
     institutions[institution_count++] = institution;
   } /* for institutions */

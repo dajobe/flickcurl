@@ -368,8 +368,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       persons[person_count++] = person;
     }
     
-    if(xpathNodeCtx)
-      xmlXPathFreeContext(xpathNodeCtx);
+    xmlXPathFreeContext(xpathNodeCtx);
 
     if(fc->failed)
       goto tidy;
