@@ -1555,7 +1555,7 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
    */
   form = (char**)calloc(2*(count + 1), sizeof(char*));
   if(!form)
-    goto tidy;
+    return NULL;
 
   for(p = content, i = 0; *p; p++) {
     char *start = p;
@@ -1579,12 +1579,6 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
     free(content);
 
   return form;
-
-  tidy:
-  if(content)
-    free(content);
-  
-  return NULL;
 }
 
 
