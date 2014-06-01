@@ -163,8 +163,7 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
 
   tidy:
   if(fc->failed) {
-    if(method)
-      flickcurl_free_method(method);
+    flickcurl_free_method(method);
     method = NULL;
   }
 
