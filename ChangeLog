@@ -1,4 +1,238 @@
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): Protect for NULL content
+	Related to coverity CID 56692
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): free context on error
+	[coverity CID 56647]
+
+	* src/shape.c: Remove not-needed if(xpathNodeCtx) on cleanup path
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): Check malloc failures
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): Use free_nonce [coverity CID
+	56698]
+
+	* src/perms.c:
+	(flickcurl_build_perms): Look for first element. [coverity CID
+	56709]
+
+	* src/location.c: comment
+
+	* src/location.c:
+	(flickcurl_build_location): Look for first element. [coverity CID
+	56708]
+
+	* src/method.c:
+	(flickcurl_build_method): Remove if(method) check around cleanup
+	[coverity CID 56697]
+
+	* src/institution.c, src/person.c, src/photo.c, src/place.c:
+	Remove not-needed if(xpathNodeCtx) on cleanup paths
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): Clean tidy path
+
+	* src/method.c:
+	(flickcurl_build_method): Resource leak [coverity CID 56681]
+
+	* src/institution.c:
+	(flickcurl_build_institutions): Resource leak [coverity CID 58665]
+
+2014-05-31  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c:
+	(flickcurl_oauth_build_key): More caution about memcpy on NULL ptrs
+	[coverity CID 56618]
+
+	* src/collection.c:
+	(flickcurl_build_collections): Note handled above [coverity CID
+	56616]
+
+	* src/serializer.c: note
+
+	* src/auth-api.c:
+	(flickcurl_auth_oauth_getAccessToken): xpathNodeCtx always NULL on
+	tidy [coverity CID 56614]
+
+	* src/photo.c:
+	(flickcurl_invoke_photos_list): xpathNodeCtx always NULL on tidy
+	[coverity CID 56612]
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): Error path never need
+	free(form) [coverity CID 56611]
+
+	* src/activity.c:
+	(flickcurl_free_activity): array is never NULL [coverity CID 56622]
+
+	* utils/commands.c:
+	(command_print_activity): array is never NULL [coverity CID 56623]
+
+	* utils/commands.c: ws
+
+	* src/collection.c:
+	(flickcurl_build_collections): Free string_value always Coverity CID
+	65388
+
+	* docs/Makefile.am:
+	Do not ship flickcurl-extras.xml; build it
+
+	* utils/Makefile.am:
+	Added all-programs target to build all programs
+
+	* src/config.c:
+	(flickcurl_config_read_ini): Remove access() call not needed
+	Coverity CID 56706
+
+	* utils/commands.c: Invoke
+	flickcurl_contacts_getTaggingSuggestions() page, per_page
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): Free content [coverity CID
+	56647]
+
+	* src/galleries-api.c:
+	(flickcurl_galleries_create): Error path leak [coverity CID 56655]
+
+	* src/place.c:
+	(flickcurl_build_places): Error path leak [coverity CID 56660]
+
+	* src/institution.c:
+	(flickcurl_build_institutions): Error path leak [coverity CID 56665]
+
+	* src/machinetags-api.c:
+	(flickcurl_machinetags_getPredicates) Error path leak [coverity CID
+	56668]
+
+	* src/serializer.c:
+	(flickcurl_serialize_photo): Error path leak [coverity CID 56679]
+
+	* src/collection.c:
+	(flickcurl_build_collections): Error path leak [coverity CID 56680]
+
+	* src/method.c:
+	(flickcurl_build_method): Resource leak [coverity CID 56681]
+
+	* utils/codegen.c, utils/commands.c, utils/flickcurl.c,
+	utils/flickrdf.c, utils/list-methods.c, utils/mangen.c: Use
+	cmdline common code in utils
+
+	* utils/Makefile.am, utils/cmdline.c, utils/flickcurl_cmd.h: Added
+	cmdline.c common command line code
+
+	* src/common.c:
+	(flickcurl_unixtime_to_sqltimestamp): Use SQL_DATETIME_LEN
+	Coverity CID 56623
+
+	* NEWS.html: 1.26
+
+	* src/oauth.c: Update oauth test for https flickr urls
+
+	* src/common.c, src/panda-api.c, src/photo.c: doc https
+
+	* src/photo.c: Fix images and icons to https
+
+	* src/common.c: Oauth services are on https www.flickr.com
+
+	* src/galleries-api.c:
+	(flickcurl_galleries_addPhoto): Simplify and fix response
+
+	* src/activity-api.c, src/blogs-api.c, src/collections-api.c,
+	src/commons-api.c, src/contacts-api.c, src/galleries-api.c,
+	src/groups-api.c, src/groups-members-api.c,
+	src/groups-pools-api.c, src/machinetags-api.c, src/method.c,
+	src/people-api.c, src/photos-api.c, src/photos-comments-api.c,
+	src/photos-geo-api.c, src/photos-notes-api.c,
+	src/photos-people-api.c, src/photos-upload-api.c,
+	src/photosets-api.c, src/places-api.c, src/prefs-api.c,
+	src/reflection-api.c, src/stats-api.c, src/tags-api.c,
+	src/test-api.c: Fix a pile of resource leak on error path from
+	coverity
+
+	* src/category.c, src/contacts.c, src/machinetags.c,
+	src/user_upload_status.c: Fix leaks in free attr_value in XML
+	parsing
+
+	* src/group.c:
+	Fix attribute value leak [coverity CID 56687]
+
+	* src/oauth.c:
+	Fix error path leak [coverity CID 56688]
+
+	* src/shape.c:
+	Fix error path leak [coverity CID 56689]
+
+	* src/photosets-comments-api.c: Fix error path leaks [coverity CID
+	56690 56691]
+
+	* src/common.c:
+	Switch to https for all service endpoints. HTTP EOL 2014-06-27
+
+	2014-04-30 Flickr announced that it would be HTTPS only from
+	2014-06-27
+	http://code.flickr.net/2014/04/30/flickr-api-going-ssl-only-on-june-27th-2014/
+
+2014-05-12  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_unixtime_to_sqltimestamp): sizeof date_buffer Coverity
+	CID 56623
+
+2014-05-10  Dave Beckett <dave@dajobe.org>
+
+	* utils/commands.c:
+	(command_places_getShapeHistory): Use woe_id < 0
+
+	Problem reported by David Binderman - thanks!
+
+2014-01-26  Dave Beckett <dave@dajobe.org>
+
+	* utils/mangen.c: Add \n to fputs()
+
+2014-01-26  Dave Beckett <dave@dajobe.org>
+
+	* utils/mangen.c: Fix .br better
+
+	* utils/mangen.c: Emit a space after .br
+
+	* utils/commands.c: Utility args consistency for PER-PAGE / PAGE
+	Based on Debian bug 635989
+	http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=635989
+
+	(command_contacts_getTaggingSuggestions): Use PER-PAGE, PAGE
+	order.
+
+	contacts.getList, contacts.getPublicList: Fix documentation; order
+	was always PER-PAGE, PAGE
+
+	contacts.getTaggingSuggestions: Document PER-PAGE, PAGE order.
+
+2014-01-15  Dave Beckett <dave@dajobe.org>
+
+	* autogen.sh:
+	Create NEWS and README
+
 2014-01-14  Dave Beckett <dave@dajobe.org>
+
+	* Makefile.am: Fix HTML rules
+
+	* Makefile.am: make test
+
+	* docs/Makefile.am, utils/Makefile.am: Build docs/flickcurl.1
+	outside maintainer mode
+
+	* .travis.yml: update
+
+	* .travis.yml: Travis CI
+
+	* NEWS.html: 1.26
+
+	* LICENSE.html, NEWS.html, README.html, src/common.c: 2014
 
 	* src/common.c: Use NULL not '\0' [clang]
 
