@@ -7,11 +7,12 @@ language: c
 branches:
   only:
     - master
-before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq -y gtk-doc-tools
 compiler:
   - gcc
   - clang
+# Sets up configure, enables maintainer mode and gtk doc
 before_script: ./autogen.sh
-
+script: make && make test
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq -y gtk-doc-tools
