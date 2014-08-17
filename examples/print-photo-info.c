@@ -43,32 +43,38 @@ int main(int argc, char *argv[]) {
                             fc, flickcurl_config_var_handler);
   */  
 
+  /* Pick your own photo ID */
+  #define PHOTO_ID "123456789"
 
-  photo = flickcurl_photos_getInfo(fc, "123456789"); /* photo ID */
+  photo = flickcurl_photos_getInfo(fc, PHOTO_ID); 
+  if(!photo) {
+    fprintf(stderr, "flickcurl_photos_getInfo(%s) failed\n", PHOTO_ID);
+  } else {
+    for(field_type = 0; field_type <= PHOTO_FIELD_LAST; field_type++) {
+      flickcurl_field_value_type datatype = photo->fields[field_type].type;
 
-  for(field_type = 0; field_type <= PHOTO_FIELD_LAST; field_type++) {
-    flickcurl_field_value_type datatype = photo->fields[field_type].type;
-    
-    if(datatype != VALUE_TYPE_NONE)
-      fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
-              flickcurl_get_photo_field_label(field_type), (int)field_type,
-              flickcurl_get_field_value_type_label(datatype),
-              photo->fields[field_type].string,
-              photo->fields[field_type].integer);
+      if(datatype != VALUE_TYPE_NONE)
+        fprintf(stderr, "field %s (%d) with %s value: '%s' / %d\n", 
+                flickcurl_get_photo_field_label(field_type), (int)field_type,
+                flickcurl_get_field_value_type_label(datatype),
+                photo->fields[field_type].string,
+                photo->fields[field_type].integer);
+    }
+
+    for(i = 0; i < photo->tags_count; i++) {
+      flickcurl_tag* tag=photo->tags[i];
+      fprintf(stderr,
+              "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
+              i, (tag->machine_tag ? "machine" : "regular"),
+              tag->id, tag->author, 
+              (tag->authorname ? tag->authorname : "(Unknown)"), 
+              tag->raw, tag->cooked,
+              tag->count);
+    }
+
+    flickcurl_free_photo(photo);
   }
-
-  for(i = 0; i < photo->tags_count; i++) {
-    flickcurl_tag* tag=photo->tags[i];
-    fprintf(stderr,
-            "%d) %s tag: id %s author ID %s name %s raw '%s' cooked '%s' count %d\n",
-            i, (tag->machine_tag ? "machine" : "regular"),
-            tag->id, tag->author, 
-            (tag->authorname ? tag->authorname : "(Unknown)"), 
-            tag->raw, tag->cooked,
-            tag->count);
-  }
-
-  flickcurl_free_photo(photo);
+  
   flickcurl_free(fc);
   flickcurl_finish(); /* optional static free of resources */
 
