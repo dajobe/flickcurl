@@ -84,14 +84,13 @@ $(man_MANS) \
 flickcurl.1.in \
 version.xml.in
 
-CLEANFILES+= search-photos.c
-
 dist-hook-local: html-build.stamp
 	@file=$(srcdir)/html/style.css; \
 	$(ECHO) "Fixing CSS in $$file"; \
 	$(SED) -e '/position: fixed/d' $$file > $$file.new && \
 	mv $$file.new $$file
 
+if MAINTAINER_MODE
 search-photos.c: $(srcdir)/../examples/search-photos.c
 	$(SED) -e '1,/^$$/d' $< > $@
 
@@ -107,3 +106,4 @@ flickcurl-extras.xml: $(top_builddir)/utils/mangen
 
 $(top_builddir)/utils/mangen:
 	cd $(top_builddir)/utils && $(MAKE) mangen
+endif
