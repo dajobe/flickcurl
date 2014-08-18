@@ -1,3 +1,86 @@
+2014-08-16  Dave Beckett <dave@dajobe.org>
+
+	* .travis.yml: preserve maintainer mode
+
+	* docs/Makefile.am: Build generated files in maintainer mode.
+
+	* examples/print-photo-info.c: a little error handling
+
+	* NEWS.html: 1.26
+
+	* ChangeLog: #changes
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): Protect for NULL content
+	Related to coverity CID 56692
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): free context on error [coverity
+	CID 56647]
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/shape.c:
+	Remove not-needed if(xpathNodeCtx) on cleanup path
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): Check malloc failures
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/oauth.c:
+	(flickcurl_oauth_prepare_common): Use free_nonce [coverity CID
+	56698]
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/perms.c:
+	(flickcurl_build_perms): Look for first element. [coverity CID
+	56709]
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/location.c:
+	comment
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/location.c:
+	(flickcurl_build_location): Look for first element. [coverity CID
+	56708]
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/method.c:
+	(flickcurl_build_method): Remove if(method) check around cleanup
+	[coverity CID 56697]
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/institution.c, src/person.c, src/photo.c, src/place.c:
+	Remove
+	not-needed if(xpathNodeCtx) on cleanup paths
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_invoke_get_form_content): Clean tidy path
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* src/method.c:
+	(flickcurl_build_method): Resource leak [coverity CID 56681]
+
+2014-06-01  Dave Beckett <dave@dajobe.org>
+
+	* (flickcurl_build_institutions): Resource leak [coverity CID 58665]
+
 2014-06-01  Dave Beckett <dave@dajobe.org>
 
 	* src/common.c:
