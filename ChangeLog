@@ -1,3 +1,8 @@
+2014-08-17  Dave Beckett  <dave@dajobe.org>
+
+	* Snapshotted flickcurl_1_26 for 1.26 release (GIT
+	0eee7c4e17d29ea9026acab05294c79c92827c0e)
+
 2014-08-16  Dave Beckett <dave@dajobe.org>
 
 	* .travis.yml: preserve maintainer mode
