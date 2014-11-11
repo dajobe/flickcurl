@@ -1953,8 +1953,12 @@ int flickcurl_favorites_add(flickcurl* fc, const char* photo_id);
 FLICKCURL_API
 flickcurl_photos_list** flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id, const char* user_id, int num_prev, int num_next, const char* extras);
 FLICKCURL_API
+flickcurl_photo** flickcurl_favorites_getList2(flickcurl* fc, const char* user_id, const char* min_fave_date, const char* max_fave_date, const char* extras, int per_page, int page);
+FLICKCURL_API FLICKCURL_DEPRECATED
 flickcurl_photo** flickcurl_favorites_getList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);
 FLICKCURL_API
+flickcurl_photos_list* flickcurl_favorites_getList2_params(flickcurl* fc, const char* user_id, const char* min_fave_date, const char* max_fave_date, flickcurl_photos_list_params* list_params);
+FLICKCURL_API FLICKCURL_DEPRECATED
 flickcurl_photos_list* flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id, flickcurl_photos_list_params* list_params);
 FLICKCURL_API
 flickcurl_photo** flickcurl_favorites_getPublicList(flickcurl* fc, const char* user_id, const char* extras, int per_page, int page);

@@ -2603,21 +2603,34 @@ static int
 command_favorites_getList(flickcurl* fc, int argc, char *argv[])
 {
   char *user_id = argv[1];
+  char *min_fave_date = NULL;
+  char *max_fave_date = NULL;
   flickcurl_photos_list* photos_list = NULL;
   flickcurl_photos_list_params list_params;
 
   flickcurl_photos_list_params_init(&list_params);
 
   if(argc >2) {
-    list_params.per_page = parse_page_param(argv[2]);
+    if(strcmp(argv[2], "-"))
+      min_fave_date = argv[2];
     if(argc >3) {
-      list_params.page = parse_page_param(argv[3]);
-      if(argc >4)
-        list_params.format = argv[4];
+      if(strcmp(argv[3], "-"))
+        max_fave_date = argv[3];
+      if(argc >4) {
+        list_params.per_page = parse_page_param(argv[4]);
+        if(argc >5) {
+          list_params.page = parse_page_param(argv[5]);
+          if(argc >6)
+            list_params.format = argv[6];
+        }
+      }
     }
   }
 
-  photos_list = flickcurl_favorites_getList_params(fc, user_id, &list_params);
+  photos_list = flickcurl_favorites_getList2_params(fc, user_id,
+                                                    min_fave_date,
+                                                    max_fave_date,
+                                                    &list_params);
   if(!photos_list) {
     fprintf(stderr, "%s: Getting favorites failed\n", program);
   } else {
@@ -5141,8 +5154,8 @@ flickcurl_cmd commands[FLICKCURL_CMD_COUNT] = {
    "PHOTO-ID USER-NSID [NUM-PREV [NUM-NEXT [EXTRAS]]]", "Get context photos around USER-ID's favorite PHOTO-ID.",
    command_favorites_getContext, 2, 5},
   {"favorites.getList",
-   "USER-NSID [PER-PAGE [PAGE [FORMAT]]]", "Get a list of USER-NSID's favorite photos.",
-   command_favorites_getList, 1, 4},
+   "USER-NSID [MIN-FAVE-DATE|- [MAX-FAVE-DATE|- [PER-PAGE [PAGE [FORMAT]]]]]", "Get a list of USER-NSID's favorite photos.",
+   command_favorites_getList, 1, 6},
   {"favorites.getPublicList",
    "USER-NSID [PER-PAGE [PAGE [FORMAT]]]", "Get a list of USER-NSID's favorite public photos.",
    command_favorites_getPublicList, 1, 4},

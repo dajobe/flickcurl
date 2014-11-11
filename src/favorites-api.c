@@ -219,6 +219,8 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
  * flickcurl_favorites_getList_params:
  * @fc: flickcurl context
  * @user_id: The NSID of the user to fetch the favorites list for. If this argument is omitted, the favorites list for the calling user is returned. (or NULL)
+ * @min_fave_date: Minimum date that a photo was favorited on. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_fave_date: Maximum date that a photo was favorited on. The date should be in the form of a unix timestamp. (or NULL)
  * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
  * 
  * Returns a list of the user's favorite photos.
@@ -233,11 +235,16 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
  * Optional extra type 'media' that will return an extra media = VALUE
  * for VALUE "photo" or "video".  API addition 2008-04-07.
  *
+ * Parameters @min_fave_date and @max_fave_date were added some time
+ * after 2008.
+ *
  * Return value: non-0 on failure
  **/
 flickcurl_photos_list*
-flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
-                                   flickcurl_photos_list_params* list_params)
+flickcurl_favorites_getList2_params(flickcurl* fc, const char* user_id,
+                                    const char* min_fave_date,
+                                    const char* max_fave_date,
+                                    flickcurl_photos_list_params* list_params)
 {
   flickcurl_photos_list* photos_list = NULL;
   const char* format = NULL;
@@ -247,6 +254,12 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
   /* API parameters */
   if(user_id) {
     flickcurl_add_param(fc, "user_id", user_id);
+  }
+  if(min_fave_date) {
+    flickcurl_add_param(fc, "min_fave_date", min_fave_date);
+  }
+  if(max_fave_date) {
+    flickcurl_add_param(fc, "max_fave_date", max_fave_date);
   }
   /* Photos List parameters */
   flickcurl_append_photos_list_params(fc, list_params, &format);
@@ -272,24 +285,28 @@ flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
 
 
 /**
- * flickcurl_favorites_getList:
+ * flickcurl_favorites_getList2:
  * @fc: flickcurl context
  * @user_id: The NSID of the user to fetch the favorites list for. If this argument is omitted, the favorites list for the calling user is returned. (or NULL)
+ * @min_fave_date: Minimum date that a photo was favorited on. The date should be in the form of a unix timestamp. (or NULL)
+ * @max_fave_date: Maximum date that a photo was favorited on. The date should be in the form of a unix timestamp. (or NULL)
  * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
  * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
  * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
  * 
  * Returns a list of the user's favorite photos.
  *
- * See flickcurl_favorites_getList_params() for details of parameters.
+ * See flickcurl_favorites_getList2_params() for details of parameters.
  *
- * Implements flickr.favorites.getList (1.0)
+ * Implements flickr.favorites.getList (1.27)
  * 
  * Return value: non-0 on failure
  **/
 flickcurl_photo**
-flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
-                            const char* extras, int per_page, int page)
+flickcurl_favorites_getList2(flickcurl* fc, const char* user_id,
+                             const char* min_fave_date,
+                             const char* max_fave_date,
+                             const char* extras, int per_page, int page)
 {
   flickcurl_photos_list_params list_params;
   flickcurl_photos_list* photos_list;
@@ -301,7 +318,10 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
   list_params.per_page = per_page;
   list_params.page     = page;
 
-  photos_list = flickcurl_favorites_getList_params(fc, user_id, &list_params);
+  photos_list = flickcurl_favorites_getList2_params(fc, user_id,
+                                                    min_fave_date,
+                                                    max_fave_date,
+                                                    &list_params);
   if(!photos_list)
     return NULL;
 
@@ -311,6 +331,57 @@ flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
   flickcurl_free_photos_list(photos_list);
 
   return photos;
+}
+
+
+/**
+ * flickcurl_favorites_getList_params:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user to fetch the favorites list for. If this argument is omitted, the favorites list for the calling user is returned. (or NULL)
+ * @list_params: #flickcurl_photos_list_params result parameters (or NULL)
+ *
+ * Returns a list of the user's favorite photos.
+ *
+ * Deprecated for @flickcurl_favorites_getList2_params that takes extra
+ * parameters.
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_photos_list*
+flickcurl_favorites_getList_params(flickcurl* fc, const char* user_id,
+                                   flickcurl_photos_list_params* list_params)
+{
+  return flickcurl_favorites_getList2_params(fc, user_id,
+                                             NULL /* min_fave_date */,
+                                             NULL /* max_fave_date */,
+                                             list_params);
+}
+
+
+/**
+ * flickcurl_favorites_getList:
+ * @fc: flickcurl context
+ * @user_id: The NSID of the user to fetch the favorites list for. If this argument is omitted, the favorites list for the calling user is returned. (or NULL)
+ * @extras: A comma-delimited list of extra information to fetch for each returned record. Currently supported fields are: license, date_upload, date_taken, owner_name, icon_server, original_format, last_update, geo, tags, machine_tags. (or NULL)
+ * @per_page: Number of photos to return per page. If this argument is omitted, it defaults to 100. The maximum allowed value is 500. (or NULL)
+ * @page: The page of results to return. If this argument is omitted, it defaults to 1. (or NULL)
+ *
+ * Returns a list of the user's favorite photos.
+ *
+ * See flickcurl_favorites_getList2_params() for details of parameters.
+ *
+ * Deprecated for @flickcurl_favorites_getList2 that adds newer parameters.
+ *
+ * Return value: non-0 on failure
+ **/
+flickcurl_photo**
+flickcurl_favorites_getList(flickcurl* fc, const char* user_id,
+                            const char* extras, int per_page, int page)
+{
+  return flickcurl_favorites_getList2(fc, user_id,
+                                      NULL /* min_fave_date */,
+                                      NULL /* max_fave_date */,
+                                      extras, per_page, page);
 }
 
 

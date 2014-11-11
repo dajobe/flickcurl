@@ -170,7 +170,9 @@ flickcurl_free_exifs
 <FILE>section-favorite</FILE>
 flickcurl_favorites_add
 flickcurl_favorites_getContext
+flickcurl_favorites_getList2
 flickcurl_favorites_getList
+flickcurl_favorites_getList2_params
 flickcurl_favorites_getList_params
 flickcurl_favorites_getPublicList
 flickcurl_favorites_getPublicList_params
