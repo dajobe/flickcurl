@@ -1934,7 +1934,7 @@ flickcurl_array_join(const char *array[], char delim)
     size_t item_len = strlen(array[i]);
     memcpy(p, array[i], item_len);
     p += item_len;
-    if(i < array_size)
+    if(i < array_size - 1)
       *p++ = delim;
   }
   *p = '\0';
