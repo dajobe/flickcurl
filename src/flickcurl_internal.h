@@ -119,7 +119,7 @@ xmlDocPtr flickcurl_invoke(flickcurl *fc);
 char* flickcurl_invoke_get_content(flickcurl *fc, size_t* size_p);
 /* Invoke URI prepared above and get back 'count' key/values */
 char** flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p);
-void flickcurl_free_form(char **form, int count);
+void flickcurl_free_form(char **form);
 
 /* args.c */
 void flickcurl_free_arg(flickcurl_arg *arg);

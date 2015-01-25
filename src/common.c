@@ -1516,14 +1516,18 @@ flickcurl_invoke_get_content(flickcurl *fc, size_t* size_p)
 }
 
 
+/*
+ * INTERNAL - free a form.
+ */
 void
-flickcurl_free_form(char **form, int count)
+flickcurl_free_form(char **form)
 {
   if(!form)
     return;
 
   /* free content which is the first key */
-  free(form[0]);
+  if(form[0])
+    free(form[0]);
 
   free(form);
 }
@@ -1537,10 +1541,16 @@ flickcurl_free_form(char **form, int count)
 * INTERNAL - decoded content from current request as HTTP FORM and return fields
 *
 * NOTE: The result may be an empty array with just two NULL
-* terminating pointers if there are no fields.
+* terminating pointers if there are no fields or no content.
 *
-* Return value: array of [char* field name, char* field value] with
-* NULL pair terminating or NULL on failure
+* If @count_p is not NULL, *@count_p is set to the number of pairs of
+* fields.
+*
+* Index 0 is used to store the raw content.
+*
+* Return value: NULL on failure or an array of [char* field name,
+* char* field value] starting at index 1, terminated by a NULL pair.
+*
 */
 char**
 flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
@@ -1562,21 +1572,24 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
     count++; /* counting separators so need +1 for number of contents */
   }
   
-  /* Allocate count + 1 sized array of char* (key, value) pointers
+  /* Allocate 1+ count + 1 sized array of char* (key, value) pointers
    * The last pair are always (NULL, NULL).
    *
    * The pointers are into the 'content' buffer which is kept around
    * and owned by this array and stored in form[0].
    */
-  form = (char**)calloc(2*(count + 1), sizeof(char*));
+  form = (char**)calloc(1 + 2*(count + 1), sizeof(char*));
   if(!form) {
     if(content)
       free(content);
     return NULL;
   }
 
+  /* the form owns the content array */
+  form[0] = content;
+
   if(content) {
-    for(p = content, i = 0; *p; p++) {
+    for(p = content, i = 1; *p; p++) {
       char *start = p;
 
       while(*p && *p != '&' && *p != '=')
@@ -1590,8 +1603,6 @@ flickcurl_invoke_get_form_content(flickcurl *fc, int* count_p)
     }
     form[i++] = NULL;
     form[i] = NULL;
-
-    free(content);
   }
 
   if(count_p)

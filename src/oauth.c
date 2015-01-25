@@ -741,11 +741,12 @@ flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback)
           uri, count);
 #endif
 
-  for(i = 0; i < (2 * count); i += 2) {
-    if(!strcmp(form[i], "oauth_token")) {
-      request_token = form[i+1];
-    } else if(!strcmp(form[i], "oauth_token_secret")) {
-      request_token_secret = form[i+1];
+  for(i = 0; i < count; i++) {
+    int offset = 1 + (2 * i);
+    if(!strcmp(form[offset], "oauth_token")) {
+      request_token = form[offset+1];
+    } else if(!strcmp(form[offset], "oauth_token_secret")) {
+      request_token_secret = form[offset+1];
     }
   }
 
@@ -771,7 +772,7 @@ flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback)
   
   tidy:
   if(form)
-    flickcurl_free_form(form, count);
+    flickcurl_free_form(form);
   
   return rc;
 }
@@ -888,15 +889,16 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
           uri, count);
 #endif
 
-  for(i = 0; i < (2 * count); i += 2) {
-    if(!strcmp(form[i], "oauth_token")) {
-      access_token = form[i+1];
-    } else if(!strcmp(form[i], "oauth_token_secret")) {
-      access_token_secret = form[i+1];
-    } else if(!strcmp(form[i], "username")) {
-      username = form[i+1];
-    } else if(!strcmp(form[i], "user_nsid")) {
-      user_nsid = form[i+1];
+  for(i = 0; i < count; i++) {
+    int offset = 1 + (2 * i);
+    if(!strcmp(form[offset], "oauth_token")) {
+      access_token = form[offset+1];
+    } else if(!strcmp(form[offset], "oauth_token_secret")) {
+      access_token_secret = form[offset+1];
+    } else if(!strcmp(form[offset], "username")) {
+      username = form[offset+1];
+    } else if(!strcmp(form[offset], "user_nsid")) {
+      user_nsid = form[offset+1];
     }
     /* ignoring: fullname */
   }
@@ -952,7 +954,7 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
   
   tidy:
   if(form)
-    flickcurl_free_form(form, count);
+    flickcurl_free_form(form);
   
   return rc;
 }
