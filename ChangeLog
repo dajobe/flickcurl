@@ -1,3 +1,38 @@
+2015-01-25  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c, src/flickcurl_internal.h, src/oauth.c: Make form
+	use/free api saner and prevent double free.
+
+	Closes #28
+
+2015-01-18  Dave Beckett <dave@dajobe.org>
+
+	* src/common.c:
+	(flickcurl_array_join): Do not add trailing ,
+
+	Closes #27
+
+2014-11-10  Dave Beckett <dave@dajobe.org>
+
+	* docs/flickcurl-sections.txt, src/favorites-api.c,
+	src/flickcurl.h, utils/commands.c: Added min_fave_date and
+	max_fave_date to flickcurl_favorites_getList
+
+	(flickcurl_favorites_getList2, flickcurl_favorites_getList2_params):
+	Added based on older methods but with min_fave_date and
+	max_fave_date arguments added.
+
+	(flickcurl_favorites_getList): Deprecated for
+	flickcurl_favorites_getList2
+
+	(flickcurl_favorites_getList_params): Deprecated for
+	flickcurl_favorites_getList2_params
+
+2014-08-18  Dave Beckett <dave@dajobe.org>
+
+	* NEWS.html, configure.ac:
+	Bumped version to 1.27
+
 2014-08-17  Dave Beckett  <dave@dajobe.org>
 
 	* Snapshotted flickcurl_1_26 for 1.26 release (GIT
