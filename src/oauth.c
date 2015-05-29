@@ -709,7 +709,7 @@ flickcurl_oauth_create_request_token(flickcurl* fc, const char* callback)
   int i;
   int count;
 
-  flickcurl_end_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* Require signature */
   flickcurl_set_sign(fc);
@@ -857,7 +857,7 @@ flickcurl_oauth_create_access_token(flickcurl* fc, const char* verifier)
   if(!verifier)
     return 1;
 
-  flickcurl_end_params(fc);
+  flickcurl_init_params(fc, 0);
 
   /* Require signature */
   flickcurl_set_sign(fc);
