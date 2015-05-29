@@ -869,7 +869,8 @@ flickcurl_prepare_noauth(flickcurl *fc, const char* method)
                                   fc->service_uri,
                                   method,
                                   NULL, NULL,
-                                  1, 0);
+                                  /* parameters_in_url */ 1,
+                                  /* need_auth */ 0);
 }
 
 
