@@ -3749,10 +3749,14 @@ command_collections_getTree(flickcurl* fc, int argc, char *argv[])
   char *user_id = NULL;
   flickcurl_collection *collection = NULL;
 
-  if(strcmp(argv[1], "-"))
-    collection_id = argv[1];
-  if(strcmp(argv[2], "-"))
-    user_id = argv[2];
+  if(argc >1) {
+    if(strcmp(argv[1], "-"))
+      collection_id = argv[1];
+    if(argc >2) {
+      if(strcmp(argv[2], "-"))
+        user_id = argv[2];
+    }
+  }
 
   collection = flickcurl_collections_getTree(fc, collection_id, user_id);
   if(collection) {
