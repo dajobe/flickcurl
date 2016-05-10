@@ -55,7 +55,10 @@
 #undef HAVE_STDLIB_H
 #endif
 
-
+#if defined(_MSC_VER) && _MSC_VER >= 1600
+  #include <stdint.h>
+  typedef uint32_t u32;
+#else
 #if u32 == MISSING
   #undef u32
   #if SIZEOF_UNSIGNED_INT == 4
@@ -66,7 +69,7 @@
     #error u32 type not defined
   #endif
 #endif
-
+#endif
 
 
 /* original code from header - function names have changed */

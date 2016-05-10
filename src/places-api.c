@@ -330,7 +330,7 @@ flickcurl_place* flickcurl_places_getInfo(flickcurl* fc,
  * Return value: new place object or NULL on failure
  **/
 flickcurl_place*
-flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, int woe_id)
+flickcurl_places_getInfo2(flickcurl* fc, const char* place_id, const int woe_id)
 {
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 

@@ -926,7 +926,7 @@ int gettimeofday(struct timeval* tp, void *tzp);
 /* factor to convert high-dword count into seconds = NSEC100 * (2<<32) */
 #define FOUR_GIGA_NSEC100 (4294967296e-7)
 
-static int
+int
 gettimeofday(struct timeval* tp, void* tzp)
 {
   FILETIME ft;
@@ -956,11 +956,13 @@ gettimeofday(struct timeval* tp, void* tzp)
 #else
 
 #ifdef WIN32
+#ifndef HAVE_STRUCT_TIMESPEC
 struct timespec
 {
   long int tv_sec;              /* seconds */
   long int tv_nsec;             /* nanoseconds */
 };
+#endif
 #endif
 
 static int
