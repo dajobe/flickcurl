@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <LibIncPaths>..\..\..\curl-7.49.0-20160417\builds\libcurl-vc14-x86-debug-static-ipv6-sspi-winssl\include;..\..\..\libiconv-1.14\include;..\..\..\libxml2-2.9.3\include;..\..\src;..\..\libmtwist;..\..\getopt</LibIncPaths>
+    <PreprocessorCommonDefinitions>WIN32;FLICKCURL_STATIC;_CRT_SECURE_NO_WARNINGS;CURL_STATICLIB;MTWIST_CONFIG;LIBXML_STATIC</PreprocessorCommonDefinitions>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="LibIncPaths">
+      <Value>$(LibIncPaths)</Value>
+    </BuildMacro>
+    <BuildMacro Include="PreprocessorCommonDefinitions">
+      <Value>$(PreprocessorCommonDefinitions)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
