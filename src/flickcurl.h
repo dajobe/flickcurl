@@ -2291,6 +2291,7 @@ FLICKCURL_API
 int flickcurl_photos_notes_delete(flickcurl* fc, const char* note_id);
 FLICKCURL_API
 int flickcurl_photos_notes_edit(flickcurl* fc, const char* note_id, int note_x, int note_y, int note_w, int note_h, const char* note_text);
+FLICKCURL_API
 
 /* flickr.photos.upload */
 FLICKCURL_API

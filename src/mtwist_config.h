@@ -4,12 +4,7 @@
  * Adjusts symbols to be all flickcurl_ prefixed
  */
 
-#ifdef HAVE_CONFIG_H
 #include <config.h>
-#endif
-#ifdef WIN32
-#include <win32_flickcurl_config.h>
-#endif
 
 #define mtwist_new flickcurl_mtwist_new
 #define mtwist_free flickcurl_mtwist_free

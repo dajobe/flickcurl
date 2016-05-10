@@ -34,14 +34,7 @@ extern "C" {
 
 
 /* MS names for these functions */
-/* This check is not strictly correct, we want to check against SDK used */
-#if _MSC_VER >= 1900
-#	define HAVE_C99_VSNPRINTF 1
-#	define HAVE_STRUCT_TIMESPEC 1
-#else
-#	define vsnprintf _vsnprintf
-#endif
-
+#define vsnprintf _vsnprintf
 #define access _access
 
 /* define missing flag for access() - the only one used here */
@@ -62,12 +55,7 @@ extern "C" {
 #define HAVE_VSNPRINTF 1
 
 /* FIXME - rest of win32 config defines should go here */
-#define HAVE_STDINT_H 1
-#undef HAVE_GETTIMEOFDAY
-int gettimeofday(struct timeval* tp, void* tzp);
 
-/* Version number of package */
-#define VERSION "1.27"
 
 #ifdef __cplusplus
 }

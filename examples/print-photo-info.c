@@ -31,9 +31,6 @@ int main(int argc, char *argv[]) {
   flickcurl_init(); /* optional static initialising of resources */
   fc = flickcurl_new();
 
-#if defined(WIN32) && defined(_MSC_VER)
-  flickcurl_config_read_ini(fc, ".flickcurl.conf", "flickr", fc, flickcurl_config_var_handler);
-#else
   /* Set configuration explicitly: ... */
   flickcurl_set_oauth_client_key(fc, "...");
   flickcurl_set_oauth_client_secret(fc, "...");
@@ -45,7 +42,7 @@ int main(int argc, char *argv[]) {
   flickcurl_config_read_ini(fc, "/home/user/.flickcurl.conf", "flickr",
                             fc, flickcurl_config_var_handler);
   */  
-#endif
+
   /* Pick your own photo ID */
   #define PHOTO_ID "123456789"
 
