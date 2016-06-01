@@ -1,0 +1,6 @@
+Debug/
+Release/
+x64/
+*.suo
+*.sdf
+.flickcurl.conf
