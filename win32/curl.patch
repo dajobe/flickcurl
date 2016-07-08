@@ -1,0 +1,22 @@
+diff -Nur -x builds -x '*OBJS.inc' ./curl-7.49.0-20160417/lib/config-win32.h ./curl-7.49.0-20160417.vc/lib/config-win32.h
+--- ./curl-7.49.0-20160417/lib/config-win32.h	2016-03-20 04:30:14.000000000 +0300
++++ ./curl-7.49.0-20160417.vc/lib/config-win32.h	2016-04-25 14:24:07.634288500 +0300
+@@ -1,5 +1,6 @@
+ #ifndef HEADER_CURL_CONFIG_WIN32_H
+ #define HEADER_CURL_CONFIG_WIN32_H
++#define HTTP_ONLY
+ /***************************************************************************
+  *                                  _   _ ____  _
+  *  Project                     ___| | | |  _ \| |
+diff -Nur -x builds -x '*OBJS.inc' ./curl-7.49.0-20160417/lib/vtls/schannel.c ./curl-7.49.0-20160417.vc/lib/vtls/schannel.c
+--- ./curl-7.49.0-20160417/lib/vtls/schannel.c	2016-04-04 03:30:14.000000000 +0300
++++ ./curl-7.49.0-20160417.vc/lib/vtls/schannel.c	2016-04-25 14:24:07.644288500 +0300
+@@ -63,7 +63,7 @@
+ 
+ /* ALPN requires version 8.1 of the  Windows SDK, which was
+    shipped with Visual Studio 2013, aka _MSC_VER 1800*/
+-#if defined(_MSC_VER) && (_MSC_VER >= 1800)
++#if defined(_MSC_VER) && (_MSC_VER >= 1800) && (_WIN32_WINNT >= _WIN32_WINNT_WINBLUE)
+ #  define HAS_ALPN 1
+ #endif
+ 
