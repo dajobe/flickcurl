@@ -6,3 +6,4 @@ x64/
 .flickcurl.conf
 *.VC.opendb
 *.VC.db
+*.vcxproj.user
