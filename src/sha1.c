@@ -92,6 +92,7 @@ A million repetitions of "a"
 #include <string.h>
 #include <stdarg.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include <flickcurl.h>
 #include <flickcurl_internal.h>
