@@ -133,6 +133,7 @@ AC_LINK_IFELSE([AC_LANG_PROGRAM([[#ifdef HAVE_GETOPT_H
 if test $ac_cv_func_vsnprintf = yes; then
   AC_MSG_CHECKING(vsnprintf has C99 compatible return value)
   AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stdarg.h>
+#include <stdio.h>
 int is_c99(char *s, ...) {
   char buffer[32];
   va_list args;
