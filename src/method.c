@@ -115,7 +115,7 @@ flickcurl_build_method(flickcurl* fc, xmlXPathContextPtr xpathCtx)
   int expri;
   flickcurl_method* method = NULL;
   
-  method = (flickcurl_method*)calloc(sizeof(flickcurl_method), 1);
+  method = (flickcurl_method*)calloc(1, sizeof(flickcurl_method));
   
   for(expri = 0; method_fields_table[expri].xpath; expri++) {
     flickcurl_method_field_type mft = method_fields_table[expri].field;

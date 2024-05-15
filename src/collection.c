@@ -195,7 +195,7 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  collections = (flickcurl_collection**)calloc(sizeof(flickcurl_collection*), nodes_count+1);
+  collections = (flickcurl_collection**)calloc(nodes_count+1, sizeof(flickcurl_collection*));
 
   for(i = 0, collection_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -209,7 +209,7 @@ flickcurl_build_collections(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    collection = (flickcurl_collection*)calloc(sizeof(flickcurl_collection), 1);
+    collection = (flickcurl_collection*)calloc(1, sizeof(flickcurl_collection));
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);

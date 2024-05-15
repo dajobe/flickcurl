@@ -425,7 +425,7 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  places = (flickcurl_place**)calloc(sizeof(flickcurl_place*), nodes_count+1);
+  places = (flickcurl_place**)calloc(nodes_count+1, sizeof(flickcurl_place*));
 
   for(i = 0, place_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -439,7 +439,7 @@ flickcurl_build_places(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    place = (flickcurl_place*)calloc(sizeof(flickcurl_place), 1);
+    place = (flickcurl_place*)calloc(1, sizeof(flickcurl_place));
     place->type = FLICKCURL_PLACE_LOCATION;
 
     /* set up a new XPath context relative to the current node */

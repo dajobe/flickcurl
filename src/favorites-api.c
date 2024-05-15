@@ -160,7 +160,7 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
   }
 
   /* 3 lists of photo lists: prev, next and NULL to end the list */
-  photos_lists = (flickcurl_photos_list**)calloc(sizeof(flickcurl_photos_list*), 3);
+  photos_lists = (flickcurl_photos_list**)calloc(3, sizeof(flickcurl_photos_list*));
 
   /* Decode the prev and next into photo lists */
   for(i = 0; i < 2; i++) {

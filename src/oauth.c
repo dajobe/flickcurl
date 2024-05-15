@@ -85,7 +85,7 @@ flickcurl_base64_encode(const unsigned char *data, size_t len,
     return NULL;
 
   /* len + 1 to round up for partial sizes when (len % 3) is not 0 */
-  out = (char*)calloc(sizeof(char), (len + 1) * 4/3 + 1);
+  out = (char*)calloc((len + 1) * 4/3 + 1, sizeof(char));
   if(!out)
     return NULL;
   

@@ -109,8 +109,8 @@ flickcurl_build_galleries(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  galleries = (flickcurl_gallery**)calloc(sizeof(flickcurl_gallery*),
-                                          nodes_count+1);
+  galleries = (flickcurl_gallery**)calloc(nodes_count+1,
+                                          sizeof(flickcurl_gallery*));
   
   for(i = 0, gallery_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -124,16 +124,16 @@ flickcurl_build_galleries(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    g = (flickcurl_gallery*)calloc(sizeof(flickcurl_gallery), 1);
+    g = (flickcurl_gallery*)calloc(1, sizeof(flickcurl_gallery));
     
     /* initialise primary photo object */
-    g->primary_photo = (flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
+    g->primary_photo = (flickcurl_photo*)calloc(1, sizeof(flickcurl_photo));
     /* assumes it is a photo */
 #define PHOTO_STR_LEN 5
     g->primary_photo->media_type = (char*)malloc(PHOTO_STR_LEN + 1);
     memcpy(g->primary_photo->media_type, "photo", PHOTO_STR_LEN + 1);
     /* empty list of tags (1 NULL pointer) */
-    g->primary_photo->tags = (flickcurl_tag**)calloc(sizeof(flickcurl_tag*), 1);
+    g->primary_photo->tags = (flickcurl_tag**)calloc(1, sizeof(flickcurl_tag*));
 
     
     for(attr = node->properties; attr; attr = attr->next) {

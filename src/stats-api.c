@@ -1145,7 +1145,7 @@ flickcurl_stats_getTotalViews(flickcurl* fc, const char* date)
     goto tidy;
   }
 
-  views = (flickcurl_view_stats*)calloc(sizeof(*views), 1);
+  views = (flickcurl_view_stats*)calloc(1, sizeof(*views));
   if(!views) {
     fc->failed = 1;
     goto tidy;

@@ -992,7 +992,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  photos = (flickcurl_photo**)calloc(sizeof(flickcurl_photo*), nodes_count+1);
+  photos = (flickcurl_photo**)calloc(nodes_count+1, sizeof(flickcurl_photo*));
 
   for(i = 0, photo_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -1006,7 +1006,7 @@ flickcurl_build_photos(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    photo = (flickcurl_photo*)calloc(sizeof(flickcurl_photo), 1);
+    photo = (flickcurl_photo*)calloc(1, sizeof(flickcurl_photo));
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);

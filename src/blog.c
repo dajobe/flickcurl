@@ -92,7 +92,7 @@ flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  blogs = (flickcurl_blog**)calloc(sizeof(flickcurl_blog*), nodes_count+1);
+  blogs = (flickcurl_blog**)calloc(nodes_count+1, sizeof(flickcurl_blog*));
   
   for(i = 0, blog_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -105,7 +105,7 @@ flickcurl_build_blogs(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    b = (flickcurl_blog*)calloc(sizeof(flickcurl_blog), 1);
+    b = (flickcurl_blog*)calloc(1, sizeof(flickcurl_blog));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);
@@ -207,7 +207,7 @@ flickcurl_build_blog_services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  blog_services = (flickcurl_blog_service**)calloc(sizeof(flickcurl_blog_service*), nodes_count+1);
+  blog_services = (flickcurl_blog_service**)calloc(nodes_count+1, sizeof(flickcurl_blog_service*));
   
   for(i = 0, blog_services_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -221,7 +221,7 @@ flickcurl_build_blog_services(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    b = (flickcurl_blog_service*)calloc(sizeof(flickcurl_blog_service), 1);
+    b = (flickcurl_blog_service*)calloc(1, sizeof(flickcurl_blog_service));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

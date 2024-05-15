@@ -81,7 +81,7 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  tag_namespaces = (flickcurl_tag_namespace**)calloc(sizeof(flickcurl_tag_namespace*), nodes_count + 1);
+  tag_namespaces = (flickcurl_tag_namespace**)calloc(nodes_count + 1, sizeof(flickcurl_tag_namespace*));
   
   for(i = 0, tag_namespace_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -95,7 +95,7 @@ flickcurl_build_tag_namespaces(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    tn = (flickcurl_tag_namespace*)calloc(sizeof(flickcurl_tag_namespace), 1);
+    tn = (flickcurl_tag_namespace*)calloc(1, sizeof(flickcurl_tag_namespace));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);
@@ -232,7 +232,7 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  tag_pvs = (flickcurl_tag_predicate_value**)calloc(sizeof(flickcurl_tag_predicate_value*), nodes_count + 1);
+  tag_pvs = (flickcurl_tag_predicate_value**)calloc(nodes_count + 1, sizeof(flickcurl_tag_predicate_value*));
   
   for(i = 0, tag_predicate_value_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -246,7 +246,7 @@ flickcurl_build_tag_predicate_values(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    tpv = (flickcurl_tag_predicate_value*)calloc(sizeof(flickcurl_tag_predicate_value), 1);
+    tpv = (flickcurl_tag_predicate_value*)calloc(1, sizeof(flickcurl_tag_predicate_value));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

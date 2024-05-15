@@ -61,7 +61,7 @@ flickcurl_build_pandas(flickcurl* fc,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  pandas = (char**)calloc(sizeof(char*), nodes_count+1);
+  pandas = (char**)calloc(nodes_count+1, sizeof(char*));
   
   for(i = 0, panda_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];

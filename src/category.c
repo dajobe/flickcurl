@@ -104,7 +104,7 @@ flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  categories = (flickcurl_category**)calloc(sizeof(flickcurl_category*), nodes_count+1);
+  categories = (flickcurl_category**)calloc(nodes_count+1, sizeof(flickcurl_category*));
   
   for(i = 0, category_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -117,7 +117,7 @@ flickcurl_build_categories(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    c = (flickcurl_category*)calloc(sizeof(flickcurl_category), 1);
+    c = (flickcurl_category*)calloc(1, sizeof(flickcurl_category));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

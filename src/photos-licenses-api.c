@@ -110,7 +110,7 @@ flickcurl_read_licenses(flickcurl *fc)
       break;
     }
     
-    l = (flickcurl_license*)calloc(sizeof(flickcurl_license), 1);
+    l = (flickcurl_license*)calloc(1, sizeof(flickcurl_license));
 
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

@@ -80,7 +80,7 @@ flickcurl_build_perms(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     if(node->type != XML_ELEMENT_NODE)
       continue;
 
-    perms = (flickcurl_perms*)calloc(sizeof(flickcurl_perms), 1);
+    perms = (flickcurl_perms*)calloc(1, sizeof(flickcurl_perms));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

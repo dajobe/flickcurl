@@ -257,7 +257,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  persons = (flickcurl_person**)calloc(sizeof(flickcurl_person*), nodes_count+1);
+  persons = (flickcurl_person**)calloc(nodes_count+1, sizeof(flickcurl_person*));
 
   for(i = 0, person_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -271,7 +271,7 @@ flickcurl_build_persons(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    person = (flickcurl_person*)calloc(sizeof(flickcurl_person), 1);
+    person = (flickcurl_person*)calloc(1, sizeof(flickcurl_person));
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);

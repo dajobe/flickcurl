@@ -125,8 +125,8 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
       nodes_count++;
   }
 
-  contexts = (flickcurl_context**)calloc(sizeof(flickcurl_context*),
-                                         nodes_count + 1);
+  contexts = (flickcurl_context**)calloc(nodes_count + 1,
+                                         sizeof(flickcurl_context*));
 
   /* walk children elements of root element */
   xnp = xmlDocGetRootElement(doc);
@@ -154,7 +154,7 @@ flickcurl_build_contexts(flickcurl* fc, xmlDocPtr doc)
     if(type == FLICKCURL_CONTEXT_NONE)
       continue;
     
-    context = (flickcurl_context*)calloc(sizeof(flickcurl_context), 1);
+    context = (flickcurl_context*)calloc(1, sizeof(flickcurl_context));
     context->type = type;
 
     for(attr = node->properties; attr; attr = attr->next) {

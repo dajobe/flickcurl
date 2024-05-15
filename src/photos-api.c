@@ -492,7 +492,7 @@ flickcurl_build_photocounts(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
 
-  photocounts = (int**)calloc(sizeof(int*), nodes_count+1);
+  photocounts = (int**)calloc(nodes_count+1, sizeof(int*));
   
   for(i = 0, photocount_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -506,7 +506,7 @@ flickcurl_build_photocounts(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    row = (int*)calloc(sizeof(int), row_size);
+    row = (int*)calloc(row_size, sizeof(int));
     for(j = 0; j < row_size; j++)
       row[j]= -1;
     

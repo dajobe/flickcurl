@@ -85,7 +85,7 @@ flickcurl_build_location(flickcurl* fc, xmlXPathContextPtr xpathCtx,
     if(node->type != XML_ELEMENT_NODE)
       continue;
 
-    location = (flickcurl_location*)calloc(sizeof(flickcurl_location), 1);
+    location = (flickcurl_location*)calloc(1, sizeof(flickcurl_location));
     
     for(attr = node->properties; attr; attr = attr->next) {
       const char *attr_name = (const char*)attr->name;

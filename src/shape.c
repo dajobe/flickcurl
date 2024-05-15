@@ -190,7 +190,7 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  shapes = (flickcurl_shapedata**)calloc(sizeof(flickcurl_shapedata*), nodes_count+1);
+  shapes = (flickcurl_shapedata**)calloc(nodes_count+1, sizeof(flickcurl_shapedata*));
 
   for(i = 0, shape_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -204,7 +204,7 @@ flickcurl_build_shapes(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    shape = (flickcurl_shapedata*)calloc(sizeof(flickcurl_shapedata), 1);
+    shape = (flickcurl_shapedata*)calloc(1, sizeof(flickcurl_shapedata));
 
     /* set up a new XPath context relative to the current node */
     xpathNodeCtx = xmlXPathNewContext(xpathCtx->doc);

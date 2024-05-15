@@ -104,7 +104,7 @@ flickcurl_build_contacts(flickcurl* fc,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  contacts = (flickcurl_contact**)calloc(sizeof(flickcurl_contact*), nodes_count+1);
+  contacts = (flickcurl_contact**)calloc(nodes_count+1, sizeof(flickcurl_contact*));
   
   for(i = 0, contact_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -117,7 +117,7 @@ flickcurl_build_contacts(flickcurl* fc,
       break;
     }
     
-    contact_object = (flickcurl_contact*)calloc(sizeof(flickcurl_contact), 1);
+    contact_object = (flickcurl_contact*)calloc(1, sizeof(flickcurl_contact));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

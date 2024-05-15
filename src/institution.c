@@ -185,7 +185,7 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  institutions = (flickcurl_institution**)calloc(sizeof(flickcurl_institution*), nodes_count+1);
+  institutions = (flickcurl_institution**)calloc(nodes_count+1, sizeof(flickcurl_institution*));
 
   for(i = 0, institution_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -199,7 +199,7 @@ flickcurl_build_institutions(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    institution = (flickcurl_institution*)calloc(sizeof(flickcurl_institution), 1);
+    institution = (flickcurl_institution*)calloc(1, sizeof(flickcurl_institution));
     institution->urls = (char**)calloc(FLICKCURL_INSTITUTION_URL_LAST+1,
                                        sizeof(char*));
 

@@ -79,7 +79,7 @@ flickcurl_build_user_upload_status(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
   
-  u = (flickcurl_user_upload_status*)calloc(sizeof(flickcurl_user_upload_status), 1);
+  u = (flickcurl_user_upload_status*)calloc(1, sizeof(flickcurl_user_upload_status));
 
 
   for(i = 0; i < nodes_count; i++) {

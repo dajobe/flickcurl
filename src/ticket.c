@@ -92,7 +92,7 @@ flickcurl_build_tickets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max ticket - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  tickets = (flickcurl_ticket**)calloc(sizeof(flickcurl_ticket*), nodes_count+1);
+  tickets = (flickcurl_ticket**)calloc(nodes_count+1, sizeof(flickcurl_ticket*));
   
   for(i = 0, ticket_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -105,7 +105,7 @@ flickcurl_build_tickets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    t = (flickcurl_ticket*)calloc(sizeof(flickcurl_ticket), 1);
+    t = (flickcurl_ticket*)calloc(1, sizeof(flickcurl_ticket));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

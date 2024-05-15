@@ -110,7 +110,7 @@ flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  photosets = (flickcurl_photoset**)calloc(sizeof(flickcurl_photoset*), nodes_count+1);
+  photosets = (flickcurl_photoset**)calloc(nodes_count+1, sizeof(flickcurl_photoset*));
   
   for(i = 0, photoset_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -124,7 +124,7 @@ flickcurl_build_photosets(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    ps = (flickcurl_photoset*)calloc(sizeof(flickcurl_photoset), 1);
+    ps = (flickcurl_photoset*)calloc(1, sizeof(flickcurl_photoset));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

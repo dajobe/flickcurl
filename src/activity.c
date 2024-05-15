@@ -109,7 +109,7 @@ flickcurl_build_activity_event(flickcurl* fc, xmlNodePtr node)
   xmlAttr* attr;
   xmlNodePtr chnode;
 
-  ae = (flickcurl_activity_event*)calloc(sizeof(flickcurl_activity_event), 1);
+  ae = (flickcurl_activity_event*)calloc(1, sizeof(flickcurl_activity_event));
   if(!ae)
     return NULL;
     
@@ -172,7 +172,7 @@ flickcurl_build_activities(flickcurl* fc, xmlXPathContextPtr xpathCtx,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  activities = (flickcurl_activity**)calloc(sizeof(flickcurl_activity*), nodes_count+1);
+  activities = (flickcurl_activity**)calloc(nodes_count+1, sizeof(flickcurl_activity*));
   
   for(i = 0, activity_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -187,7 +187,7 @@ flickcurl_build_activities(flickcurl* fc, xmlXPathContextPtr xpathCtx,
       break;
     }
     
-    a = (flickcurl_activity*)calloc(sizeof(flickcurl_activity), 1);
+    a = (flickcurl_activity*)calloc(1, sizeof(flickcurl_activity));
     
     for(attr = node->properties; attr; attr = attr->next) {
       size_t attr_len = strlen((const char*)attr->children->content);

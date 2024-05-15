@@ -101,7 +101,7 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
-  tags = (flickcurl_tag**)calloc(sizeof(flickcurl_tag*), nodes_count+1);
+  tags = (flickcurl_tag**)calloc(nodes_count+1, sizeof(flickcurl_tag*));
   
   for(i = 0, tag_count = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -116,7 +116,7 @@ flickcurl_build_tags(flickcurl* fc, flickcurl_photo* photo,
       break;
     }
     
-    t = (flickcurl_tag*)calloc(sizeof(flickcurl_tag), 1);
+    t = (flickcurl_tag*)calloc(1, sizeof(flickcurl_tag));
     t->photo = photo;
     
     for(attr = node->properties; attr; attr = attr->next) {
@@ -210,14 +210,14 @@ flickcurl_build_tags_from_string(flickcurl* fc, flickcurl_photo* photo,
       nodes_count++;
   }
   
-  tags = (flickcurl_tag**)calloc(sizeof(flickcurl_tag*), nodes_count+1);
+  tags = (flickcurl_tag**)calloc(nodes_count+1, sizeof(flickcurl_tag*));
   
   for(i = 0, tag_count = 0; i < nodes_count; i++) {
     flickcurl_tag* t;
     const char *p = string;
     size_t len;
     
-    t = (flickcurl_tag*)calloc(sizeof(flickcurl_tag), 1);
+    t = (flickcurl_tag*)calloc(1, sizeof(flickcurl_tag));
     t->photo = photo;
 
     while(*p && *p != ' ')
@@ -306,14 +306,14 @@ flickcurl_build_tag_clusters(flickcurl* fc,
     goto tidy;
   }
   
-  tcs = (flickcurl_tag_clusters*)calloc(sizeof(flickcurl_tag_clusters), 1);
+  tcs = (flickcurl_tag_clusters*)calloc(1, sizeof(flickcurl_tag_clusters));
 
   /* <cluster> XML element nodes */
   nodes = xpathObj->nodesetval;
   /* This is a max size - it can include nodes that are CDATA */
   nodes_count = xmlXPathNodeSetGetLength(nodes);
 
-  tcs->clusters = (flickcurl_tag_cluster**)calloc(sizeof(flickcurl_tag_cluster*), nodes_count+1);
+  tcs->clusters = (flickcurl_tag_cluster**)calloc(nodes_count+1, sizeof(flickcurl_tag_cluster*));
   
   for(i = 0; i < nodes_count; i++) {
     xmlNodePtr node = nodes->nodeTab[i];
@@ -328,7 +328,7 @@ flickcurl_build_tag_clusters(flickcurl* fc,
       break;
     }
 
-    tc = (flickcurl_tag_cluster*)calloc(sizeof(flickcurl_tag_cluster), 1);
+    tc = (flickcurl_tag_cluster*)calloc(1, sizeof(flickcurl_tag_cluster));
     if(!tc) {
       fc->failed = 1;
       break;
@@ -348,7 +348,7 @@ flickcurl_build_tag_clusters(flickcurl* fc,
       continue;
     }
     
-    tc->tags = (char**)calloc(sizeof(char*), tags_count+1);
+    tc->tags = (char**)calloc(tags_count+1, sizeof(char*));
 
     /* Walk children nodes of <cluster> for <tag> elements */
     for(chnode = node->children; chnode; chnode = chnode->next) {
