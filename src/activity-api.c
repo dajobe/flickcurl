@@ -60,8 +60,8 @@ flickcurl_activity_userComments(flickcurl* fc, int per_page, int page)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_activity** activities = NULL;
-  char page_str[10];
-  char per_page_str[10];
+  char page_str[11];
+  char per_page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -128,8 +128,8 @@ flickcurl_activity_userPhotos(flickcurl* fc, const char* timeframe,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_activity** activities = NULL;
-  char page_str[10];
-  char per_page_str[10];
+  char page_str[11];
+  char per_page_str[11];
 
   flickcurl_init_params(fc, 0);
 

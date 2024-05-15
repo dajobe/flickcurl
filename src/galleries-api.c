@@ -410,8 +410,8 @@ flickcurl_galleries_getList(flickcurl* fc, const char* user_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_gallery** galleries = NULL;
-  char page_str[10];
-  char per_page_str[10];
+  char page_str[11];
+  char per_page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -486,8 +486,8 @@ flickcurl_galleries_getListForPhoto(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_gallery** galleries = NULL;
-  char page_str[10];
-  char per_page_str[10];
+  char page_str[11];
+  char per_page_str[11];
   
   flickcurl_init_params(fc, 0);
 

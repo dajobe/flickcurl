@@ -89,8 +89,8 @@ flickcurl_stats_getCollectionDomains(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -175,8 +175,8 @@ flickcurl_stats_getCollectionReferrers(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -329,8 +329,8 @@ flickcurl_stats_getPhotoDomains(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -414,8 +414,8 @@ flickcurl_stats_getPhotoReferrers(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -499,8 +499,8 @@ flickcurl_stats_getPhotosetDomains(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -585,8 +585,8 @@ flickcurl_stats_getPhotosetReferrers(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -815,8 +815,8 @@ flickcurl_stats_getPhotostreamDomains(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 
@@ -896,8 +896,8 @@ flickcurl_stats_getPhotostreamReferrers(flickcurl* fc, const char* date,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_stat** stats = NULL;
-  char per_page_str[10];
-  char page_str[10];
+  char per_page_str[11];
+  char page_str[11];
   
   flickcurl_init_params(fc, 0);
 

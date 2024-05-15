@@ -65,8 +65,8 @@ flickcurl_contacts_getList(flickcurl* fc, const char* filter,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_contact** contacts = NULL;
   int contacts_count = 0;
-  char page_str[10];
-  char per_page_str[10];
+  char page_str[11];
+  char per_page_str[11];
 
   flickcurl_init_params(fc, 1);
 
@@ -211,8 +211,8 @@ flickcurl_contacts_getPublicList(flickcurl* fc, const char* user_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_contact** contacts = NULL;
   int contacts_count = 0;
-  char page_str[10];
-  char per_page_str[10];
+  char page_str[11];
+  char per_page_str[11];
  
   flickcurl_init_params(fc, 1);
 
@@ -293,8 +293,8 @@ flickcurl_contacts_getTaggingSuggestions(flickcurl* fc,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_contact** contacts = NULL;
   int contacts_count = 0;
-  char page_str[10];
-  char per_page_str[10];
+  char page_str[11];
+  char per_page_str[11];
 
   flickcurl_init_params(fc, 0);
 
