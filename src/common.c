@@ -894,12 +894,12 @@ flickcurl_prepare(flickcurl *fc, const char* method)
 int
 flickcurl_prepare_upload(flickcurl *fc, 
                          const char* url,
-                         const char* upload_field, const char* upload_value)
+                         const char* upload_field, const char* upload_filename)
 {
   return flickcurl_prepare_common(fc,
                                   url,
                                   NULL,
-                                  upload_field, upload_value,
+                                  upload_field, upload_filename,
                                   /* parameters_in_url */ 0,
                                   /* need_auth */ 1);
 }
@@ -1100,7 +1100,6 @@ flickcurl_get_current_request_wait(flickcurl *fc)
 #endif
 }
 
-
 static int
 flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
                         xmlDocPtr* docptr_p)
@@ -1112,6 +1111,10 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   char filename[200];
 #endif
   int rc = 0;
+#ifdef HAVE_LIBCURL_CURL_MIME_INIT
+  curl_mime *mime = NULL;
+  curl_mimepart *part = NULL;
+#endif
   
 #if defined(OFFLINE) || defined(CAPTURE)
 
@@ -1290,21 +1293,34 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
   fprintf(stderr, "Preparing CURL with URI '%s' and method %s\n", 
           fc->uri, ((fc->is_write || fc->upload_field) ? "POST" : "GET"));
 #endif
-  
+
   if(fc->upload_field) {
+#ifdef HAVE_LIBCURL_CURL_MIME_INIT
+#else
     struct curl_httppost* post = NULL;
     struct curl_httppost* last = NULL;
+#endif
+
     int i;
     
+#ifdef HAVE_LIBCURL_CURL_MIME_INIT
+    mime = curl_mime_init(fc->curl_handle);
+#endif
     /* Main parameters */
     for(i = 0; fc->param_fields[i]; i++) {
 #ifdef FLICKCURL_DEBUG
       fprintf(stderr, "  form param %2d) %-23s: '%s'\n",
               i, fc->param_fields[i], fc->param_values[i]);
 #endif
+#ifdef HAVE_LIBCURL_CURL_MIME_INIT
+      part = curl_mime_addpart(mime);
+      curl_mime_data(part, fc->param_values[i], CURL_ZERO_TERMINATED);
+      curl_mime_name(part, fc->param_fields[i]);
+#else
       curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->param_fields[i],
                    CURLFORM_PTRCONTENTS, fc->param_values[i],
                    CURLFORM_END);
+#endif
     }
     
     /* Upload parameter */
@@ -1312,11 +1328,18 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     fprintf(stderr, "  Upload form parameter %s: <File '%s'>\n",
             fc->upload_field, fc->upload_value);
 #endif
+#ifdef HAVE_LIBCURL_CURL_MIME_INIT
+    part = curl_mime_addpart(mime);
+    curl_mime_filedata(part, fc->upload_value); /* file name */
+    curl_mime_name(part, fc->upload_field);
+    /* Set the form info */
+    curl_easy_setopt(fc->curl_handle, CURLOPT_MIMEPOST, mime);
+#else
     curl_formadd(&post, &last, CURLFORM_PTRNAME, fc->upload_field,
                  CURLFORM_FILE, fc->upload_value, CURLFORM_END);
-
     /* Set the form info */
     curl_easy_setopt(fc->curl_handle, CURLOPT_HTTPPOST, post);
+#endif
   }
 
   if(fc->curl_setopt_handler)
@@ -1357,6 +1380,11 @@ flickcurl_invoke_common(flickcurl *fc, char** content_p, size_t* size_p,
     }
 
   }
+
+#ifdef HAVE_LIBCURL_CURL_MIME_INIT
+  if(mime)
+    curl_mime_free(mime);
+#endif
 
   if(slist)
     curl_slist_free_all(slist);

@@ -97,9 +97,7 @@ raptor_min_version=2.0.0
 libcurl_min_version=7.10.0
 
 # Checks for header files.
-AC_HEADER_STDC
-AC_CHECK_HEADERS([errno.h getopt.h stdlib.h stdint.h time.h string.h unistd.h])
-AC_HEADER_TIME
+AC_CHECK_HEADERS([errno.h getopt.h setjmp.h stddef.h stdlib.h strings.h string.h stdint.h sys/stat.h sys/time.h time.h unistd.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
@@ -309,6 +307,10 @@ fi
 
 LIBS="$LIBS `$CURL_CONFIG --libs`"
 CFLAGS="`$CURL_CONFIG --cflags` $CFLAGS"
+
+AC_CHECK_HEADER(curl/curl.h)
+AC_CHECK_FUNC(curl_mime_init, have_curl_mime_init=1, have_curl_mime_init=0)
+AC_DEFINE_UNQUOTED(HAVE_LIBCURL_CURL_MIME_INIT, $have_curl_mime_init, [Define to 1 if you have the libcurl curl_mime_init function.])
 
 if test $libcurl_source = "pkg-config"; then
   if test "X$PKG_CONFIG_REQUIRES" != X; then

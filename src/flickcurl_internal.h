@@ -111,7 +111,7 @@ int flickcurl_prepare(flickcurl *fc, const char* method);
 /* Prepare Flickr API request - GET or POST with URI parameters without auth */
 int flickcurl_prepare_noauth(flickcurl *fc, const char* method);
 /* Prepare Flickr API request - POST with form-data parameters */
-int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_field, const char* upload_value);
+int flickcurl_prepare_upload(flickcurl *fc, const char* url, const char* upload_field, const char* upload_filename);
 
 /* Invoke Flickr API at URi prepared above and get back an XML document DOM */
 xmlDocPtr flickcurl_invoke(flickcurl *fc);
