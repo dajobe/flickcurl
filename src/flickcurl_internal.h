@@ -20,6 +20,16 @@
  * 
  */
 
+#ifndef FLICKCURL_INTERNAL_H
+#define FLICKCURL_INTERNAL_H
+
+#if defined(_MSC_VER) && _MSC_VER < 1600
+typedef unsigned __int32 uint32_t;
+typedef __int16 int16_t;
+#else
+#include <stdint.h>
+#endif
+
 #include <libxml/tree.h>
 #include <libxml/xpath.h>
 
@@ -483,3 +493,5 @@ int flickcurl_legacy_prepare_common(flickcurl *fc, const char* url, const char* 
 void flickcurl_oauth_free(flickcurl_oauth_data* od);
 char* flickcurl_oauth_compute_signature(flickcurl_oauth_data* od, size_t* len_p);
 int flickcurl_oauth_prepare_common(flickcurl *fc, const char* url, const char* method, const char* upload_field, const char* upload_value, int parameters_in_url, int need_auth);
+
+#endif
