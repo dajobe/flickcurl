@@ -66,10 +66,10 @@ flickcurl_photos_people_add(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   int rc = 0;
-  char person_x_str[10];
-  char person_y_str[10];
-  char person_w_str[10];
-  char person_h_str[10];
+  char person_x_str[11];
+  char person_y_str[11];
+  char person_w_str[11];
+  char person_h_str[11];
   
   flickcurl_init_params(fc, 1);
 
@@ -270,10 +270,10 @@ flickcurl_photos_people_editCoords(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   int rc = 0;
-  char person_x_str[10];
-  char person_y_str[10];
-  char person_w_str[10];
-  char person_h_str[10];
+  char person_x_str[11];
+  char person_y_str[11];
+  char person_w_str[11];
+  char person_h_str[11];
   
   flickcurl_init_params(fc, 1);
 

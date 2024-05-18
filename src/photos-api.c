@@ -2180,8 +2180,8 @@ flickcurl_photos_setSafetyLevel(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   int result = 1;
-  char safety_level_str[2];
-  char hidden_str[2];
+  char safety_level_str[11];
+  char hidden_str[11];
   
   flickcurl_init_params(fc, 1);
 

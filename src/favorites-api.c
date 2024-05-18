@@ -116,8 +116,8 @@ flickcurl_favorites_getContext(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_photos_list** photos_lists = NULL;
-  char num_prev_str[10];
-  char num_next_str[10];
+  char num_prev_str[11];
+  char num_next_str[11];
   int i;
 
   flickcurl_init_params(fc, 0);

@@ -71,8 +71,8 @@ flickcurl_groups_members_getList(flickcurl* fc, const char* group_id,
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_member** members = NULL;
   int members_count = 0;
-  char per_page_s[10];
-  char page_s[10];
+  char per_page_s[11];
+  char page_s[11];
   
   flickcurl_init_params(fc, 0);
 

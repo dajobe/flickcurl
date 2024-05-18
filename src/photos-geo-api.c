@@ -71,7 +71,7 @@ flickcurl_photos_geo_batchCorrectLocation(flickcurl* fc,
   char latitude_s[50];
   char longitude_s[50];
   char accuracy_s[50];
-  char woe_id_str[10];
+  char woe_id_str[11];
   int result = 0;
 
   flickcurl_init_params(fc, 1);
@@ -145,7 +145,7 @@ flickcurl_photos_geo_correctLocation(flickcurl* fc, const char* photo_id,
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   void* result = NULL;
-  char woe_id_str[10];
+  char woe_id_str[11];
   
   flickcurl_init_params(fc, 0);
 

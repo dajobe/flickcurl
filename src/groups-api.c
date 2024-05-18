@@ -59,7 +59,7 @@ flickcurl_groups_browse(flickcurl* fc, int cat_id)
   xmlDocPtr doc = NULL;
   xmlXPathContextPtr xpathCtx = NULL; 
   flickcurl_category* category = NULL;
-  char cat_id_str[10];
+  char cat_id_str[11];
   
   flickcurl_init_params(fc, 0);
 
