@@ -328,8 +328,6 @@ static void MD5Transform(uint32_t buf[4], uint32_t const in[MD5_DIGEST_LEN])
 
 /* my code from here */
 
-char* MD5_string(char *string);
-
 
 char*
 MD5_string(char *string)
