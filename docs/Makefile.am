@@ -85,8 +85,8 @@ flickcurl.1.in \
 version.xml.in
 
 dist-hook-local: html-build.stamp
-	@file=$(srcdir)/html/style.css; \
-	$(ECHO) "Fixing CSS in $$file"; \
+	@file=html/style.css; \
+	$(RECHO) "Fixing CSS in $$file"; \
 	$(SED) -e '/position: fixed/d' $$file > $$file.new && \
 	mv $$file.new $$file
 
