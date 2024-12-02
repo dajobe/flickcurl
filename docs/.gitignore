@@ -8,6 +8,7 @@ flickcurl-undeclared.txt
 flickcurl-undocumented.txt
 flickcurl-unused.txt
 flickcurl.1
+flickcurl.actions
 flickcurl.args
 flickcurl.hierarchy
 flickcurl.interfaces
