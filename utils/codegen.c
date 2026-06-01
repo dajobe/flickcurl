@@ -225,17 +225,16 @@ main(int argc, char *argv[])
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
 
-  strcpy(section, "flickr.");
-  strcpy(section+7, argv[1]);
-  
+  snprintf(section, sizeof(section), "flickr.%s", argv[1]);
+
   /* allow old format commands to work */
   for(i = 0; section[i]; i++) {
     if(section[i] == '-')
       section[i] = '.';
   }
-  
+
   if(!strncmp(section, "flickr.flickr", 13))
-    strcpy(section, section+7);
+    memmove(section, section+7, strlen(section+7)+1);
   section_len = strlen(section);
   
   fprintf(stderr, "%s: section '%s'\n", program, section);
@@ -323,7 +322,7 @@ main(int argc, char *argv[])
        )
       is_write = 1;
     
-    strcpy(function_name, "flickcurl_");
+    memcpy(function_name, "flickcurl_", 10);
     for(j = 0; (c = methods[i][j+7]); j++) {
       if(c == '.')
         c = '_';
