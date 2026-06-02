@@ -19,7 +19,9 @@ bin_PROGRAMS = flickcurl flickrdf
 
 EXTRA_PROGRAMS = codegen list-methods mangen
 
-CLEANFILES=$(EXTRA_PROGRAMS)
+TESTS = codegen_test
+
+CLEANFILES=$(EXTRA_PROGRAMS) $(TESTS)
 
 AM_CPPFLAGS= -I$(top_srcdir)/src -DMTWIST_CONFIG -I$(top_srcdir)/libmtwist
 
@@ -74,5 +76,9 @@ $(top_builddir)/src/libflickcurl.la:
 
 $(top_builddir)/libgetopt/libgetopt.la:
 	cd $(top_builddir)/libgetopt && $(MAKE) libgetopt.la
+
+codegen_test: $(srcdir)/codegen_test.c codegen
+	$(LINK) $(DEFS) $(CPPFLAGS) $(AM_CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) \
+	  $(srcdir)/codegen_test.c $(LIBS)
 
 all-programs: $(bin_PROGRAMS) $(EXTRA_PROGRAMS)

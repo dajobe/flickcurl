@@ -225,6 +225,12 @@ main(int argc, char *argv[])
   if(request_delay >= 0)
     flickcurl_set_request_delay(fc, request_delay);
 
+  if(strlen(argv[1]) + 7 + 1 > sizeof(section)) {
+    fprintf(stderr, "%s: Section name too long (max %zu characters)\n",
+            program, sizeof(section) - 7 - 1);
+    rc = 1;
+    goto tidy;
+  }
   snprintf(section, sizeof(section), "flickr.%s", argv[1]);
 
   /* allow old format commands to work */
@@ -322,6 +328,12 @@ main(int argc, char *argv[])
        )
       is_write = 1;
     
+    if(strlen(methods[i]) - 7 + 10 + 1 > sizeof(function_name)) {
+      fprintf(stderr, "%s: Skipping method '%s': name too long for function_name buffer\n",
+              program, methods[i]);
+      flickcurl_free_method(method);
+      continue;
+    }
     memcpy(function_name, "flickcurl_", 10);
     for(j = 0; (c = methods[i][j+7]); j++) {
       if(c == '.')
