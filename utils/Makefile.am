@@ -76,3 +76,15 @@ $(top_builddir)/libgetopt/libgetopt.la:
 	cd $(top_builddir)/libgetopt && $(MAKE) libgetopt.la
 
 all-programs: $(bin_PROGRAMS) $(EXTRA_PROGRAMS)
+
+# Test programs
+if MAINTAINER_MODE
+check_PROGRAMS = codegen_test
+TESTS = codegen_test
+
+codegen_test_SOURCES = codegen_test.c
+codegen_test_CPPFLAGS = $(AM_CPPFLAGS)
+codegen_test_LDADD = 
+
+CLEANFILES += $(check_PROGRAMS)
+endif
